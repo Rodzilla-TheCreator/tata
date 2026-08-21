@@ -14,6 +14,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/05-producto-y-negocio.md` | Escala de madurez, costos, retorno |
 | `docs/06-simuladores.md` | Los dos simuladores y cómo se usan |
 | `docs/07-estado-y-siguientes-pasos.md` | Qué falta, en orden, con puertas de decisión |
+| `docs/08-setup-git-agente.md` | **Cómo dejar la máquina lista para empujar y cómo trabajar con git** |
 
 ## Lo mínimo para no meter la pata
 
