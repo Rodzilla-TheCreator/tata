@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Almacén RETHINK 2026 — mapa 3D</title>
+<style>
+html,body{position:fixed;top:0;left:0;width:100%;height:100%;margin:0;padding:0;
+  overflow:hidden;overscroll-behavior:none;touch-action:none;
+  -webkit-text-size-adjust:100%;-webkit-user-select:none;user-select:none}
+canvas{touch-action:none;display:block}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#0d1117;
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#e6edf3}
+  #app{position:fixed;inset:0}
+  canvas{display:block}
+  .panel{position:absolute;background:rgba(13,17,23,.86);backdrop-filter:blur(10px);
+    border:1px solid #30363d;border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.5}
+  #hud{top:14px;left:14px;max-width:290px}
+  #hud h1{margin:0 0 2px;font-size:15px;letter-spacing:.2px}
+  #hud .sub{color:#8b949e;font-size:11.5px;margin-bottom:12px}
+  .stat{display:flex;justify-content:space-between;gap:14px;padding:3px 0;border-bottom:1px solid #21262d}
+  .stat:last-child{border-bottom:0}
+  .stat b{color:#58a6ff;font-variant-numeric:tabular-nums}
+  #ctl{top:14px;right:14px;width:236px;max-height:calc(100% - 28px);overflow:auto;z-index:6}
+  #ctl h2{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:#8b949e}
+  .row{display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;user-select:none}
+  .row:hover{color:#58a6ff}
+  .row input{accent-color:#58a6ff;cursor:pointer;width:15px;height:15px}
+  .sep{height:1px;background:#30363d;margin:11px 0}
+  .btn{display:block;width:100%;text-align:left;background:#21262d;border:1px solid #30363d;
+    color:#e6edf3;border-radius:8px;padding:8px 11px;margin:5px 0;cursor:pointer;font-size:12.5px;font-family:inherit}
+  .btn:hover{background:#30363d;border-color:#58a6ff}
+  .btn.on{background:#1f6feb;border-color:#1f6feb}
+  #help{bottom:14px;left:14px;color:#8b949e;font-size:11.5px;max-width:430px}
+  #help kbd{background:#21262d;border:1px solid #30363d;border-bottom-width:2px;border-radius:4px;
+    padding:1px 5px;font-family:ui-monospace,monospace;font-size:10.5px;color:#e6edf3}
+  #legend{font-size:11.5px}
+  .lg{display:flex;align-items:center;gap:8px;padding:2.5px 0}
+  .sw{width:13px;height:13px;border-radius:3px;flex:none}
+  #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:#0d1117;z-index:99;font-size:14px;color:#8b949e}
+  #tip{position:absolute;left:50%;transform:translateX(-50%);bottom:60px;font-size:12px;
+    padding:7px 14px;opacity:0;transition:opacity .3s;pointer-events:none}
+  #tip.show{opacity:1}
+  #drive{left:14px;top:14px;bottom:auto;width:252px;display:none;
+    max-height:calc(100% - 92px);overflow:auto}
+  #drive.on{display:block}
+  #drive h2{margin:0 0 9px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:#8b949e}
+  #drive .stat b{font-variant-numeric:tabular-nums}
+  #drive.hit{border-color:#f85149;box-shadow:0 0 0 1px #f85149,0 0 26px rgba(248,81,73,.4)}
+  .bar{height:6px;background:#21262d;border-radius:3px;overflow:hidden;margin-top:7px}
+  .bar i{display:block;height:100%;background:#3fb950;width:0%}
+  #crash{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 130px rgba(248,81,73,0);
+    transition:box-shadow .12s}
+  #crash.on{box-shadow:inset 0 0 130px rgba(248,81,73,.75)}
+  select{width:100%;background:#21262d;border:1px solid #30363d;color:#e6edf3;
+    border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;cursor:pointer}
+  #params{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:430px;
+    max-height:88%;overflow:auto;display:none;z-index:20}
+  #params.on{display:block}
+  #params h1{margin:0 0 3px;font-size:15px}
+  #params .grp{margin:13px 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:#8b949e}
+  .prm{display:flex;align-items:center;gap:9px;padding:4px 0;font-size:12.5px}
+  .prm span{flex:0 0 152px;color:#c9d1d9}
+  .prm input[type=range]{flex:1;accent-color:#58a6ff}
+  .prm b{flex:0 0 66px;text-align:right;color:#58a6ff;font-variant-numeric:tabular-nums}
+  #params .out{margin-top:12px;padding:10px 12px;background:#161b22;border:1px solid #30363d;border-radius:9px}
+  #pclose{position:absolute;top:10px;right:12px;background:none;border:0;color:#8b949e;
+    font-size:19px;cursor:pointer;width:auto;padding:0;margin:0}
+  #backdrop{position:absolute;inset:0;background:rgba(1,4,9,.6);display:none;z-index:19}
+  #backdrop.on{display:block}
+  .pill{display:inline-block;padding:1px 7px;border-radius:20px;font-size:10.5px;
+    background:#21262d;border:1px solid #30363d;margin-left:6px}
+
+/* ── modo cabina ── */
+#tch{display:none;position:fixed;left:0;top:0;width:100%;height:100svh;height:100vh;
+  pointer-events:none;z-index:55}
+@supports (height:100svh){#tch{height:100svh}}
+body.cabina #tch{display:block}
+#tch > *{pointer-events:auto}
+/* las 4 esquinas son de la barra del navegador: no ponemos nada ahí */
+#tch{--esq:64px}
+@media (max-height:430px){#tch{--esq:52px}}
+#tjoy{position:absolute;left:calc(var(--esq) + env(safe-area-inset-left));bottom:calc(16px + env(safe-area-inset-bottom));
+  width:132px;height:132px;border-radius:50%;background:rgba(12,15,20,.5);border:2px solid #39415233;
+  z-index:60;touch-action:none}
+#tnub{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;
+  background:rgba(245,197,24,.85);box-shadow:0 2px 12px #0009;pointer-events:none}
+#tbtns{position:absolute;right:calc(var(--esq) + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));
+  display:grid;grid-template-columns:repeat(3,62px);gap:8px;z-index:60}
+#tbtns button{height:52px;border-radius:12px;border:1px solid #39415a;background:rgba(20,25,33,.86);
+  color:#e6edf3;font:700 15px/1 system-ui,sans-serif;touch-action:none;-webkit-tap-highlight-color:transparent;
+  backdrop-filter:blur(6px);padding:0;cursor:pointer}
+#tbtns button:active,#tbtns button.dn{background:#f5c518;color:#14171c;border-color:#f5c518}
+#tbtns .wide{grid-column:span 3;height:44px;font-size:13px}
+#tbtns .go{background:rgba(57,217,138,.16);border-color:#39d98a;color:#39d98a}
+/* pantallas bajas (celular horizontal con la barra del navegador visible) */
+@media (max-height:430px){
+  #tbtns{grid-template-columns:repeat(3,54px);gap:6px}
+  #tbtns button{height:42px;font-size:13px}
+  #tbtns .wide{height:34px;font-size:11px}
+  #tjoy{width:104px;height:104px}
+  #tnub{width:46px;height:46px;margin:-23px 0 0 -23px}
+  #camwin{width:min(30vw,300px)}
+}
+@media (max-height:340px){
+  #tbtns button{height:36px}#tbtns .wide{height:30px;font-size:10.5px}
+  #tjoy{width:92px;height:92px}
+}
+/* ventana de la cámara frontal */
+#camwin{display:none;position:absolute;top:calc(var(--esq) + env(safe-area-inset-top));
+  right:calc(var(--esq) + env(safe-area-inset-right));width:min(34vw,420px);aspect-ratio:16/10;
+  border:1px solid #39415a;border-radius:10px;z-index:55;pointer-events:none;
+  box-shadow:0 8px 30px #000a;overflow:hidden}
+#tch #camwin{display:none}
+body.cabina #tch #camwin{display:block}
+body.cabina #ctl,body.cabina #help{display:none!important}
+body.cabina #drive{max-height:calc(100vh - 210px);overflow:auto}
+#camwin .lbl{position:absolute;top:6px;left:8px;font:600 10.5px/1 system-ui,sans-serif;color:#f5c518;
+  letter-spacing:1.2px;text-shadow:0 1px 4px #000}
+#camwin .rec{position:absolute;top:6px;right:8px;width:8px;height:8px;border-radius:50%;background:#ff5a52;
+  animation:pulso 1.4s infinite}
+@keyframes pulso{50%{opacity:.25}}
+.segm{display:flex;gap:5px}
+.segm button{flex:1;padding:6px 4px;border-radius:7px;border:1px solid #39415a;background:#1b2029;
+  color:#8b949e;font:600 10.5px/1.2 system-ui,sans-serif;cursor:pointer}
+.segm button:hover{border-color:#58a6ff;color:#e6edf3}
+.segm button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
+#btn-cab{width:100%;margin-top:9px;padding:8px;border-radius:8px;border:1px solid #39415a;
+  background:#1b2029;color:#e6edf3;font:600 12px/1 system-ui,sans-serif;cursor:pointer}
+#btn-cab:hover{border-color:#f5c518}
+#btn-cab.on{background:#f5c518;color:#14171c;border-color:#f5c518}
+.mapcol{display:flex;gap:14px;margin-top:8px;color:#8b949e;font-size:10.5px;line-height:1.65}
+.mapcol h4{margin:0 0 3px;font-size:9.5px;letter-spacing:1.1px;color:#6e7681;font-weight:700}
+.mapcol > div{flex:1}
+body.operador #op-hide-a,body.operador #op-hide-b,
+body.operador #op-hide-c,body.operador #op-hide-d{display:none!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="loading">cargando modelo…</div>
+
+<div class="panel" id="hud">
+  <h1>Almacén RETHINK 2026</h1>
+  <div class="sub">Reconstruido desde RETHINK_2026.dwg · ELCATEX</div>
+  <div id="stats"></div>
+</div>
+
+<div class="panel" id="ctl">
+  <div id="op-hide-a">
+  <h2>Capas</h2>
+  <label class="row"><input type="checkbox" id="c_plan" checked> Plano en el piso</label>
+  <label class="row"><input type="checkbox" id="c_rack" checked> Estructura de rack</label>
+  <label class="row"><input type="checkbox" id="c_cube" checked> Maxicubos</label>
+  <label class="row"><input type="checkbox" id="c_veh" checked> Montacargas</label>
+  <label class="row"><input type="checkbox" id="c_col" checked> Columnas</label>
+  <label class="row"><input type="checkbox" id="c_lbl" checked> Etiquetas de zona</label>
+  <label class="row"><input type="checkbox" id="c_wall" checked> Muros</label>
+  <label class="row"><input type="checkbox" id="c_roof"> Techo (H=9.20 m)</label>
+  <label class="row"><input type="checkbox" id="c_aisle"> Resaltar pasillos</label>
+  <label class="row"><input type="checkbox" id="c_trail" checked> Rastro de barrido</label>
+  <label class="row"><input type="checkbox" id="c_guide" checked> Guía de trayectoria</label>
+  <div class="sep"></div>
+  </div>
+  <h2>Sectores del plano</h2>
+  <div id="s_sectores"></div>
+  <div id="op-hide-b">
+  <label class="row"><input type="checkbox" id="c_prop" checked> Propuesta TaTa (sector C)</label>
+  <label class="row"><input type="checkbox" id="c_seczone" checked> Franjas y rótulos de sector</label>
+  <div id="s_propcfg" style="display:none">
+    <div class="sep"></div>
+    <h2>Propuesta · parámetros</h2>
+    <label class="row" style="gap:6px"><span style="width:58px">Pasillo</span>
+      <input type="range" id="pp_aisle" min="3.0" max="7.0" step="0.05" value="4.50" style="flex:1">
+      <b id="pp_aislev" style="width:52px;text-align:right;color:#58a6ff">4.50</b></label>
+    <label class="row" style="gap:6px"><span style="width:58px">Margen</span>
+      <input type="range" id="pp_marg" min="0.5" max="3.0" step="0.05" value="1.50" style="flex:1">
+      <b id="pp_margv" style="width:52px;text-align:right;color:#58a6ff">1.50</b></label>
+    <label class="row" style="gap:6px"><span style="width:58px">Niveles</span>
+      <input type="range" id="pp_niv" min="2" max="6" step="1" value="5" style="flex:1">
+      <b id="pp_nivv" style="width:52px;text-align:right;color:#58a6ff">5</b></label>
+    <div class="stat"><span>Ubicaciones propuesta</span><b id="pp_ocup">—</b></div>
+    <button class="btn" id="pp_probar">🚜 Probar el equipo en este pasillo</button>
+  </div>
+  <div id="s_secinfo" style="margin-top:8px"></div>
+  <div class="sep"></div>
+  <h2>Organización del almacén</h2>
+  <select id="s_scheme">
+    <option value="none">Sin categorizar</option>
+    <option value="abc">Rotación ABC</option>
+    <option value="fam">Familia fija por zona</option>
+    <option value="rand">SKU aleatorio (caótico)</option>
+    <option value="lvl">Por nivel / accesibilidad</option>
+    <option value="fifo">Antigüedad (FIFO / FEFO)</option>
+  </select>
+  <div id="s_legend" style="margin-top:8px"></div>
+  <div class="sep"></div>
+  <h2>Vista</h2>
+  <button class="btn" id="v_iso">Isométrica</button>
+  <button class="btn" id="v_top">Planta cenital</button>
+  <button class="btn" id="v_rethink">Nave RETHINK</button>
+  <button class="btn" id="v_amp">Ampliación proyectada</button>
+  <button class="btn" id="v_carga">Zona de carga</button>
+  </div>
+  <div class="sep"></div>
+  <h2>Modo</h2>
+  <button class="btn" id="bo-btn">🛰 Control de flota (Botoni)</button>
+  <button class="btn" id="m_drive">🚜 Manejar montacargas</button>
+  <button class="btn" id="m_walk">Caminar en pasillo</button>
+  <button class="btn" id="m_spin">Órbita automática</button>
+  <div class="sep"></div>
+  <h2>Referencia</h2>
+  <div id="legend">
+    <div class="lg"><span class="sw" style="background:#4a90d9"></span>Rack 5 niveles</div>
+    <div class="lg"><span class="sw" style="background:#7d5ba6"></span>Rack 4 niveles</div>
+    <div class="lg"><span class="sw" style="background:#c9d1d9"></span>Maxicubo 1.20 × 1.00 m</div>
+    <div class="lg"><span class="sw" style="background:#f5a623"></span>Montacargas 2.44 × 0.79 m</div>
+    <div class="lg"><span class="sw" style="background:#e8703a"></span>Paleteira 1.62 × 0.88 m</div>
+    <div class="lg"><span class="sw" style="background:#3fb950"></span>Pasillo de operación</div>
+    <div class="lg"><span class="sw" style="background:#58a6ff"></span>Pasillo transversal</div>
+    <div class="lg"><span class="sw" style="background:#d29922"></span>Espalda con espalda</div>
+  </div>
+</div>
+
+<div class="panel" id="drive">
+  <h2>Montacargas · 2.44 × 0.79 m</h2>
+  <div class="stat"><span>Velocidad</span><b id="d_v">0.0 km/h</b></div>
+  <div class="stat"><span>Libre izquierda</span><b id="d_l">—</b></div>
+  <div class="stat"><span>Libre derecha</span><b id="d_r">—</b></div>
+  <div class="stat"><span>Libre al frente</span><b id="d_f">—</b></div>
+  <div class="stat"><span>Radio de giro</span><b id="d_rad">∞</b></div>
+  <div class="stat"><span>Golpes</span><b id="d_hits">0</b></div>
+  <div class="bar"><i id="d_bar"></i></div>
+  <div class="mapcol">
+    <div><h4>TECLADO</h4>
+      <kbd>W</kbd><kbd>S</kbd> acelerar<br><kbd>A</kbd><kbd>D</kbd> volante<br>
+      <kbd>Espacio</kbd> freno<br><kbd>↑</kbd><kbd>↓</kbd> uñas<br>
+      <kbd>←</kbd><kbd>→</kbd> inclinar<br><kbd>Z</kbd><kbd>X</kbd> separar<br>
+      <b style="color:#3fb950">E</b> tomar/dejar · <b>G</b> al piso<br>
+      <kbd>Q</kbd><kbd>R</kbd> cambiar destino<br><kbd>C</kbd> recentrar cámara
+    </div>
+    <div><h4>CONTROL</h4>
+      <b>RT</b> / <b>LT</b> acelerar<br>Stick izq. volante<br>
+      <b>B</b> freno (mantener)<br>D-pad ↑↓ uñas<br>
+      D-pad ←→ inclinar<br><b>LB</b> / <b>RB</b> separar<br>
+      <b style="color:#3fb950">A</b> tomar/dejar · <b>X</b> al piso<br>
+      <b>Y</b> reubicar<br>Stick der. cámara<br><b>Back</b> salir de manejo
+    </div>
+  </div>
+  <div class="sep"></div>
+  <h2 style="margin-bottom:7px">Manejo</h2>
+  <div class="segm" id="seg-esq" style="margin-bottom:7px">
+    <button class="on" data-e="clasico">Clásico</button>
+    <button data-e="obed">Modo Obed</button>
+  </div>
+  <div id="edr-info" style="display:none;margin:0 0 7px;padding:7px 8px;border-radius:7px;
+       background:#161b22;border:1px solid #30363d;font-size:10.5px;color:#8b949e;line-height:1.6">
+    <div style="display:flex;gap:9px;align-items:center">
+      <svg id="timon-svg" width="62" height="62" viewBox="-50 -50 100 100" style="flex:0 0 auto">
+        <g id="timon-g">
+          <circle r="40" fill="none" stroke="#4a5568" stroke-width="9"/>
+          <circle r="40" fill="none" stroke="#8b949e" stroke-width="2.5"/>
+          <line x1="-38" y1="0" x2="38" y2="0" stroke="#8b949e" stroke-width="7" stroke-linecap="round"/>
+          <line x1="0" y1="0" x2="0" y2="38" stroke="#8b949e" stroke-width="7" stroke-linecap="round"/>
+          <circle r="11" fill="#30363d" stroke="#8b949e" stroke-width="2"/>
+          <circle cx="0" cy="-40" r="5.5" fill="#f5c518"/>
+        </g>
+      </svg>
+      <div style="flex:1">
+        Timón <b id="d_timon" style="color:#58a6ff">0°</b>
+        <span id="d_tope" style="color:#d29922;display:none"> · TOPE</span><br>
+        Sentido <b id="d_sentido" style="color:#3fb950">ADELANTE</b><br>
+        Pantógrafo <b id="d_reach" style="color:#58a6ff">0.00 m</b><br>
+        Nivel <b id="d_nivel" style="color:#58a6ff">piso</b>
+      </div>
+    </div>
+    <div style="margin-top:6px;border-top:1px solid #30363d;padding-top:5px">
+      <b style="color:#e6edf3">RT</b> acelerador · <b style="color:#e6edf3">LT</b> freno · analógicos<br>
+      <b style="color:#e6edf3">Palanca izq. ←→</b> gira el timón · se queda donde lo dejás<br>
+      <b style="color:#e6edf3">Palanca izq. ↑↓</b> sube y baja de nivel · <b style="color:#e6edf3">B</b> sentido<br>
+      <b style="color:#e6edf3">Flechas ↑↓</b> pantógrafo, sólo detenido · <b style="color:#e6edf3">←→</b> desplazador
+    </div>
+  </div>
+  <div class="segm" id="seg-trac">
+    <button class="on" data-t="trasera">Tracción trasera</button>
+    <button data-t="delantera">Delantera</button>
+  </div>
+  <label class="row" style="margin-top:5px"><input type="checkbox" id="c_invad"> Invertir <kbd>A</kbd><kbd>D</kbd></label>
+  <label class="row"><input type="checkbox" id="c_invws"> Invertir <kbd>W</kbd><kbd>S</kbd></label>
+  <div class="sep"></div>
+  <button id="btn-cab">Modo cabina</button>
+  <div style="margin-top:7px;color:#8b949e;font-size:11px">
+    Arrastrá la pantalla para girar la cámara · doble click recentra
+  </div>
+  <div class="sep"></div>
+  <div class="stat"><span>Uñas · altura</span><b id="d_lift">0.00 m</b></div>
+  <div class="stat"><span>Uñas · inclinación</span><b id="d_tilt">0°</b></div>
+  <div class="stat"><span id="d_spreadlbl">Uñas · separación</span><b id="d_spread">0.80 m</b></div>
+  <div class="sep"></div>
+  <div style="font-size:11px;color:#8b949e;margin-bottom:4px">Ubicación apuntada</div>
+  <div id="d_target" style="font-size:12px;color:#e6edf3;min-height:34px">—</div>
+  <div class="stat"><span>Llevando</span><b id="d_load">vacío</b></div>
+  <div class="stat"><span>Movimientos</span><b id="d_moves">0</b></div>
+  <div id="d_pad" style="margin-top:9px;font-size:11px;color:#8b949e">🎮 Sin control conectado</div>
+  <div id="op-hide-c">
+  <button class="btn" id="d_padhelp" style="margin-top:6px">Ver mapeo del control</button>
+  <div id="d_padmap" style="display:none;font-size:11px;color:#8b949e;line-height:1.75;margin-top:6px">
+    <b style="color:#e6edf3">RT / LT</b> acelerar · reversa<br>
+    <b style="color:#e6edf3">Stick izq.</b> volante<br>
+    <b style="color:#e6edf3">Stick der.</b> mover la cámara<br>
+    <b style="color:#e6edf3">A</b> tomar / dejar carga<br>
+    <b style="color:#e6edf3">Cruceta ↑↓</b> subir / bajar uñas<br>
+    <b style="color:#e6edf3">Cruceta ←→</b> juntar / separar uñas<br>
+    <b style="color:#e6edf3">LB / RB</b> inclinar atrás / adelante<br>
+    <b style="color:#e6edf3">B</b> freno (mantener) · <b style="color:#e6edf3">L3</b> freno alterno<br>
+    <b style="color:#e6edf3">R3</b> recentrar cámara · <b style="color:#e6edf3">X</b> dejar al piso<br>
+    <b style="color:#e6edf3">Y</b> reubicar · <b style="color:#e6edf3">Start</b> parámetros ·
+    <b style="color:#e6edf3">Back</b> salir
+  </div>
+  </div>
+  <div id="op-hide-d">
+  <button class="btn" id="d_params" style="margin-top:8px">⚙ Parámetros del montacargas</button>
+  </div>
+  <button class="btn" id="d_next">Siguiente pasillo</button>
+  <button class="btn" id="d_test">¿Cabe el giro de 90°?</button>
+  <div id="d_res" style="margin-top:8px;font-size:11.5px;color:#8b949e"></div>
+</div>
+
+<div id="backdrop"></div>
+<div class="panel" id="params">
+  <button id="pclose">✕</button>
+  <h1>Parámetros del montacargas</h1>
+  <div style="color:#8b949e;font-size:11.5px">Meté las medidas reales de la flota y el modelo recalcula todo</div>
+
+  <div class="grp">Equipo</div>
+  <select id="p_preset">
+    <option value="kbe20">Baoli KBE 20 — 2.0 t (ficha VDI 2198)</option>
+    <option value="kbe18">Baoli KBE 18 — 1.75 t (ficha VDI 2198)</option>
+    <option value="reach">Reach truck típico 1.6 t</option>
+    <option value="dwg">Bloque del plano DWG (símbolo, no real)</option>
+    <option value="custom">Personalizado</option>
+  </select>
+  <div id="p_ficha" style="margin-top:7px;font-size:11px;color:#8b949e"></div>
+
+  <div class="grp">Chasis</div>
+  <label class="prm"><span>Largo del cuerpo</span><input type="range" id="p_len" min="1.0" max="3.8" step="0.02" value="2.29"><b id="p_lenv">2.29 m</b></label>
+  <label class="prm"><span>Ancho</span><input type="range" id="p_wid" min="0.6" max="1.8" step="0.02" value="0.79"><b id="p_widv">0.79 m</b></label>
+  <label class="prm"><span>Distancia entre ejes</span><input type="range" id="p_wb" min="0.8" max="2.2" step="0.02" value="1.35"><b id="p_wbv">1.35 m</b></label>
+  <label class="prm"><span>Ángulo máx. de dirección</span><input type="range" id="p_steer" min="30" max="85" step="1" value="75"><b id="p_steerv">75°</b></label>
+
+  <div class="grp">Tracción</div>
+  <label class="prm"><span>Velocidad máxima</span><input type="range" id="p_vmax" min="1" max="6" step="0.1" value="3.2"><b id="p_vmaxv">3.2 m/s</b></label>
+  <label class="prm"><span>Aceleración</span><input type="range" id="p_acc" min="0.5" max="6" step="0.1" value="3.0"><b id="p_accv">3.0 m/s²</b></label>
+
+  <div class="grp">Mástil y uñas</div>
+  <label class="prm"><span>Elevación máxima</span><input type="range" id="p_lift" min="2" max="9" step="0.1" value="6.4"><b id="p_liftv">6.4 m</b></label>
+  <label class="prm"><span>Velocidad de elevación</span><input type="range" id="p_lspd" min="0.1" max="1.2" step="0.05" value="0.5"><b id="p_lspdv">0.50 m/s</b></label>
+  <label class="prm"><span>Inclinación adelante</span><input type="range" id="p_tf" min="0" max="12" step="0.5" value="4"><b id="p_tfv">4°</b></label>
+  <label class="prm"><span>Inclinación atrás</span><input type="range" id="p_tb" min="0" max="15" step="0.5" value="8"><b id="p_tbv">8°</b></label>
+  <label class="prm"><span>Largo de uñas</span><input type="range" id="p_flen" min="0.8" max="1.8" step="0.02" value="1.15"><b id="p_flenv">1.15 m</b></label>
+  <label class="prm"><span>Separación mínima</span><input type="range" id="p_smin" min="0.15" max="0.7" step="0.01" value="0.25"><b id="p_sminv">0.25 m</b></label>
+  <label class="prm"><span>Separación máxima</span><input type="range" id="p_smax" min="0.7" max="1.6" step="0.01" value="1.05"><b id="p_smaxv">1.05 m</b></label>
+
+  <div class="out" id="p_out"></div>
+  <div style="margin-top:9px;color:#8b949e;font-size:11px">
+    En modo manejo: <kbd>↑</kbd><kbd>↓</kbd> subir/bajar uñas · <kbd>←</kbd><kbd>→</kbd> inclinar ·
+    <kbd>Z</kbd><kbd>X</kbd> juntar/separar · <kbd>E</kbd> tomar o dejar carga
+  </div>
+</div>
+<div id="crash"></div>
+
+<div class="panel" id="help">
+  <b>Arrastrar</b> girar · <b>Rueda</b> zoom · <b>Click der / Shift+arrastrar</b> mover ·
+  <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> volar · <kbd>Q</kbd><kbd>E</kbd> subir/bajar · <kbd>Shift</kbd> rápido
+</div>
+
+<div class="panel" id="tip"></div>
+
+<script>__THREE__</script>
+<script>
+const DATA = __DATA__;
+const TEX  = "__TEX__";
+
+const B = DATA.bounds;
+const CX = (B.x0 + B.x1) / 2, CY = (B.y0 + B.y1) / 2;
+const SPAN_X = B.x1 - B.x0, SPAN_Z = B.y1 - B.y0;
+// DXF -> escena
+const tx = x => x - CX;
+const tz = y => -(y - CY);
+
+const LEVEL_PITCH = 1.45, CUBE_H = 1.16, ROOF_H = 9.20;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+scene.fog = new THREE.Fog(0x0d1117, 150, 400);
+
+const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 2000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.getElementById('app').appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xbcd4f0, 0x1b2430, 0.85));
+const sun = new THREE.DirectionalLight(0xffffff, 0.95);
+sun.position.set(60, 110, 55);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+const S = 110;
+sun.shadow.camera.left = -S; sun.shadow.camera.right = S;
+sun.shadow.camera.top = S; sun.shadow.camera.bottom = -S;
+sun.shadow.camera.far = 400;
+scene.add(sun);
+scene.add(new THREE.DirectionalLight(0x93b5d8, 0.28).translateX(-70).translateY(50).translateZ(-60));
+
+const G = {};
+for (const k of ['plan','rack','cube','veh','col','lbl','roof','aisle','wall','trail','drive','guide',
+                 'prop','seczone']) {
+  G[k] = new THREE.Group(); scene.add(G[k]);
+}
+
+/* ============ COLISIONES: lista de obstáculos como OBB 2D (plano XZ) ============ */
+const OBST = [];
+function addOBB(cx, cz, hx, hz, rot, kind) {
+  OBST.push({ cx, cz, hx, hz, c: Math.cos(rot), s: Math.sin(rot), kind });
+}
+// SAT entre dos rectángulos orientados
+function obbHit(A, B) {
+  const dx = B.cx - A.cx, dz = B.cz - A.cz;
+  if (dx * dx + dz * dz > Math.pow(A.hx + A.hz + B.hx + B.hz, 2)) return false;
+  const axes = [[A.c, A.s], [-A.s, A.c], [B.c, B.s], [-B.s, B.c]];
+  for (const [ax, az] of axes) {
+    const pd = Math.abs(dx * ax + dz * az);
+    const ra = Math.abs(A.hx * (A.c * ax + A.s * az)) + Math.abs(A.hz * (-A.s * ax + A.c * az));
+    const rb = Math.abs(B.hx * (B.c * ax + B.s * az)) + Math.abs(B.hz * (-B.s * ax + B.c * az));
+    if (pd > ra + rb) return false;
+  }
+  return true;
+}
+// distancia de un rayo (origen o, dirección d unitaria) al OBB más cercano
+function rayOBB(ox, oz, dx, dz, O, maxD) {
+  const px = ox - O.cx, pz = oz - O.cz;
+  const lx = px * O.c + pz * O.s, lz = -px * O.s + pz * O.c;
+  const ldx = dx * O.c + dz * O.s, ldz = -dx * O.s + dz * O.c;
+  let t0 = -Infinity, t1 = Infinity;
+  for (const [p, d, h] of [[lx, ldx, O.hx], [lz, ldz, O.hz]]) {
+    if (Math.abs(d) < 1e-9) { if (Math.abs(p) > h) return Infinity; continue; }
+    let a = (-h - p) / d, b = (h - p) / d;
+    if (a > b) { const t = a; a = b; b = t; }
+    t0 = Math.max(t0, a); t1 = Math.min(t1, b);
+    if (t0 > t1) return Infinity;
+  }
+  return (t1 < 0) ? Infinity : (t0 < 0 ? 0 : (t0 > maxD ? Infinity : t0));
+}
+function clearance(ox, oz, dx, dz, maxD) {
+  let best = maxD;
+  for (const O of OBST) {
+    const t = rayOBB(ox, oz, dx, dz, O, maxD);
+    if (t < best) best = t;
+  }
+  return best;
+}
+
+/* ---------- piso con el plano ---------- */
+const loader = new THREE.TextureLoader();
+loader.load(TEX, t => {
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(SPAN_X, SPAN_Z),
+    new THREE.MeshStandardMaterial({ map: t, color: 0xc4ccd6, roughness: .95, metalness: 0 })
+  );
+  m.rotation.x = -Math.PI / 2;
+  m.receiveShadow = true;
+  G.plan.add(m);
+  document.getElementById('loading').style.display = 'none';
+});
+const slab = new THREE.Mesh(
+  new THREE.BoxGeometry(SPAN_X + 6, 0.4, SPAN_Z + 6),
+  new THREE.MeshStandardMaterial({ color: 0x161b22, roughness: 1 })
+);
+slab.position.y = -0.22; slab.receiveShadow = true; scene.add(slab);
+
+/* ---------- helper instanciado ---------- */
+function inst(geo, mat, n, group, shadow) {
+  const im = new THREE.InstancedMesh(geo, mat, n);
+  im.castShadow = !!shadow; im.receiveShadow = true;
+  im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  group.add(im);
+  return im;
+}
+const D = new THREE.Object3D();
+
+/* ---------- racks ---------- */
+const matPost5 = new THREE.MeshStandardMaterial({ color: 0x4a90d9, roughness: .55, metalness: .35 });
+const matPost4 = new THREE.MeshStandardMaterial({ color: 0x7d5ba6, roughness: .55, metalness: .35 });
+const matBeam  = new THREE.MeshStandardMaterial({ color: 0xd9772f, roughness: .5,  metalness: .35 });
+
+let nPost5 = 0, nPost4 = 0, nBeam = 0;
+for (const r of DATA.racks) {
+  const p = r.bays + 1;
+  if (r.levels >= 5) nPost5 += p * 2; else nPost4 += p * 2;
+  nBeam += r.levels * 2;
+}
+const post5 = inst(new THREE.BoxGeometry(0.09, 1, 0.09), matPost5, nPost5, G.rack, true);
+const post4 = inst(new THREE.BoxGeometry(0.09, 1, 0.09), matPost4, nPost4, G.rack, true);
+const beam  = inst(new THREE.BoxGeometry(1, 0.11, 0.07), matBeam, nBeam, G.rack, true);
+
+let i5 = 0, i4 = 0, ib = 0;
+for (const r of DATA.racks) {
+  const H = r.levels * LEVEL_PITCH;
+  const zc = tz(r.y), d = r.cd;
+  for (let i = 0; i <= r.bays; i++) {
+    const xw = tx(r.x0 + i * r.cw);
+    for (const s of [-1, 1]) {
+      D.position.set(xw, H / 2, zc + s * d / 2);
+      D.scale.set(1, H, 1); D.rotation.set(0, 0, 0); D.updateMatrix();
+      if (r.levels >= 5) post5.setMatrixAt(i5++, D.matrix); else post4.setMatrixAt(i4++, D.matrix);
+    }
+  }
+  D.scale.set(1, 1, 1);
+  const len = r.x1 - r.x0, xc = tx((r.x0 + r.x1) / 2);
+  for (let L = 0; L < r.levels; L++) {
+    const y = L * LEVEL_PITCH + (L === 0 ? 0.06 : 0);
+    for (const s of [-1, 1]) {
+      D.position.set(xc, y, zc + s * d / 2);
+      D.scale.set(len, 1, 1); D.updateMatrix();
+      beam.setMatrixAt(ib++, D.matrix);
+    }
+  }
+}
+D.scale.set(1, 1, 1);
+for (const r of DATA.racks) {
+  addOBB(tx((r.x0 + r.x1) / 2), tz(r.y), (r.x1 - r.x0) / 2, r.cd / 2, 0, 'rack');
+}
+
+/* ================= SECTORES: el DWG trae 3 propuestas lado a lado ================= */
+const SEC = DATA.sectores;
+SEC.forEach(s => {
+  const w = s.x1 - s.x0;
+  const piso = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, SPAN_Z),
+    new THREE.MeshBasicMaterial({ color: s.color, transparent: true, opacity: .045, depthWrite: false })
+  );
+  piso.rotation.x = -Math.PI / 2;
+  piso.position.set(tx((s.x0 + s.x1) / 2), 0.02, 0);
+  G.seczone.add(piso);
+  for (const bx of [s.x0, s.x1]) {
+    if (bx <= B.x0 + .1 || bx >= B.x1 - .1) continue;
+    const l = new THREE.Mesh(new THREE.BoxGeometry(0.22, 11, SPAN_Z),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .07, depthWrite: false }));
+    l.position.set(tx(bx), 5.5, 0);
+    G.seczone.add(l);
+  }
+});
+
+/* ---------- muros ---------- */
+const WALL_H = 3.0;
+const wallMat = new THREE.MeshStandardMaterial({ color: 0x8892a0, roughness: .92, metalness: .02 });
+const wallI = inst(new THREE.BoxGeometry(1, WALL_H, 0.16), wallMat, DATA.walls.length, G.wall, true);
+DATA.walls.forEach((w, i) => {
+  const ax = tx(w[0]), az = tz(w[1]), bx = tx(w[2]), bz = tz(w[3]);
+  const len = Math.hypot(bx - ax, bz - az);
+  const ang = Math.atan2(bz - az, bx - ax);
+  D.position.set((ax + bx) / 2, WALL_H / 2, (az + bz) / 2);
+  D.rotation.set(0, -ang, 0);
+  D.scale.set(len, 1, 1);
+  D.updateMatrix();
+  wallI.setMatrixAt(i, D.matrix);
+  addOBB((ax + bx) / 2, (az + bz) / 2, len / 2, 0.09, ang, 'muro');
+});
+D.scale.set(1, 1, 1); D.rotation.set(0, 0, 0);
+
+/* ================= UBICACIONES: código, categoría y esquemas ================= */
+// PRNG determinista para que el "aleatorio" sea reproducible
+let _seed = 20260815;
+const rnd = () => (_seed = (_seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+
+const FAMILIAS = [
+  { k: 'HILO',    c: 0x58a6ff }, { k: 'TELA',   c: 0x3fb950 },
+  { k: 'QUIMIC',  c: 0xd29922 }, { k: 'ACAB',   c: 0xa371f7 },
+  { k: 'EMPAQ',   c: 0xf85149 }, { k: 'REPUES', c: 0x39c5cf },
+];
+const ABC_COL = { A: 0xf85149, B: 0xd29922, C: 0x3fb950 };
+const LVL_COL = [0x3fb950, 0x58a6ff, 0xa371f7, 0xd29922, 0xf85149];
+
+// agrupar filas en bloques (naves) por solape en X — también lo usa el análisis de pasillos
+const blocks = [];
+for (const r of [...DATA.racks].sort((a, b) => a.x0 - b.x0 || b.y - a.y)) {
+  const b = blocks.find(b => Math.min(b.x1, r.x1) - Math.max(b.x0, r.x0) > 5);
+  if (b) { b.rows.push(r); b.x0 = Math.min(b.x0, r.x0); b.x1 = Math.max(b.x1, r.x1); }
+  else blocks.push({ x0: r.x0, x1: r.x1, rows: [r] });
+}
+blocks.forEach((b, i) => { b.n = i + 1; b.rows.sort((p, q) => q.y - p.y).forEach((r, j) => { r.blk = b.n; r.fila = j + 1; }); });
+
+const pad = (n, w) => String(n).padStart(w, '0');
+const SLOTS = [];
+for (const r of DATA.racks) {
+  const zc = tz(r.y);
+  for (let L = 0; L < r.levels; L++) {
+    for (let i = 0; i < r.bays; i++) {
+      SLOTS.push({
+        x: tx(r.x0 + (i + 0.5) * r.cw), z: zc,
+        y: L * LEVEL_PITCH + CUBE_H / 2 + 0.12,
+        lvl: L + 1, bay: i + 1, row: r, ocupado: true,
+        code: `N${r.blk}-F${pad(r.fila, 2)}-B${pad(i + 1, 2)}-N${L + 1}`,
+      });
+    }
+  }
+}
+// referencia de rotación: el acceso principal / muelles quedan al oeste de la nave
+const REFX = tx(719), REFZ = tz(-812);
+SLOTS.forEach(s => { s.dist = Math.hypot(s.x - REFX, s.z - REFZ) + s.lvl * 2.2; });
+const dsort = [...SLOTS].sort((a, b) => a.dist - b.dist);
+dsort.forEach((s, i) => {
+  const f = i / dsort.length;
+  s.abc = f < 0.2 ? 'A' : (f < 0.5 ? 'B' : 'C');
+});
+// asignaciones simuladas
+SLOTS.forEach(s => {
+  s.fam = FAMILIAS[Math.floor(rnd() * FAMILIAS.length)];
+  s.famFija = FAMILIAS[(s.row.blk - 1 + Math.floor((s.row.fila - 1) / 2)) % FAMILIAS.length];
+  s.edad = Math.floor(rnd() * 180);                       // días en almacén
+  s.ocupado = rnd() < 0.82;                               // ocupación simulada 82 %
+  s.sku = `SKU-${pad(Math.floor(rnd() * 9000) + 1000, 4)}`;
+});
+
+const NCUBE = SLOTS.length;
+const cubeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .8, metalness: .05 });
+const cageMat = new THREE.MeshStandardMaterial({ color: 0x6e7681, roughness: .6, metalness: .4, wireframe: true });
+const cubes = inst(new THREE.BoxGeometry(1.14, CUBE_H, 0.94), cubeMat, NCUBE, G.cube, true);
+const cages = inst(new THREE.BoxGeometry(1.16, CUBE_H + .02, 0.96), cageMat, NCUBE, G.cube, false);
+cubes.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(NCUBE * 3), 3);
+
+const _c = new THREE.Color();
+function refreshSlots() {
+  const esq = document.getElementById('s_scheme').value;
+  const cnt = {};
+  SLOTS.forEach((s, i) => {
+    D.position.set(s.x, s.y, s.z); D.rotation.set(0, 0, 0);
+    D.scale.setScalar(s.ocupado ? 1 : 0.0001);
+    D.updateMatrix();
+    cubes.setMatrixAt(i, D.matrix); cages.setMatrixAt(i, D.matrix);
+    let col = 0xc9d1d9, key = 'ocupado';
+    if (esq === 'abc')       { col = ABC_COL[s.abc]; key = 'Rotación ' + s.abc; }
+    else if (esq === 'fam')  { col = s.famFija.c; key = s.famFija.k; }
+    else if (esq === 'rand') { col = s.fam.c; key = s.fam.k; }
+    else if (esq === 'lvl')  { col = LVL_COL[(s.lvl - 1) % 5]; key = 'Nivel ' + s.lvl; }
+    else if (esq === 'fifo') { const t = s.edad / 180; col = _c.setHSL(0.34 * (1 - t), .65, .55).getHex();
+                               key = s.edad < 60 ? '< 60 días' : (s.edad < 120 ? '60–120 días' : '> 120 días'); }
+    if (s.ocupado && esq !== 'none') cnt[key] = (cnt[key] || 0) + 1;
+    _c.setHex(col);
+    cubes.instanceColor.setXYZ(i, _c.r, _c.g, _c.b);
+  });
+  D.scale.setScalar(1);
+  cubes.instanceMatrix.needsUpdate = true;
+  cages.instanceMatrix.needsUpdate = true;
+  cubes.instanceColor.needsUpdate = true;
+
+  const ocup = SLOTS.filter(s => s.ocupado).length;
+  document.getElementById('s_legend').innerHTML =
+    `<div class="stat"><span>Ubicaciones</span><b>${SLOTS.length.toLocaleString('es')}</b></div>` +
+    `<div class="stat"><span>Ocupadas</span><b>${ocup.toLocaleString('es')} · ${(ocup / SLOTS.length * 100).toFixed(0)}%</b></div>` +
+    Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 7)
+      .map(([k, v]) => `<div class="stat"><span>${k}</span><b>${v}</b></div>`).join('');
+}
+
+/* ---------- columnas ---------- */
+const colMat = new THREE.MeshStandardMaterial({ color: 0x8b949e, roughness: .85 });
+const colI = inst(new THREE.BoxGeometry(0.4, ROOF_H, 0.4), colMat, DATA.columns.length, G.col, true);
+DATA.columns.forEach((c, i) => {
+  D.position.set(tx(c.x), ROOF_H / 2, tz(c.y)); D.rotation.set(0, 0, 0); D.updateMatrix();
+  colI.setMatrixAt(i, D.matrix);
+  addOBB(tx(c.x), tz(c.y), 0.2, 0.2, 0, 'columna');
+});
+
+/* ---------- vehículos ---------- */
+function vehicle(v, override) {
+  const g = new THREE.Group();
+  const isFork = v.kind === 'montacargas';
+  const col = override !== undefined ? override : (isFork ? 0xf5a623 : 0xe8703a);
+  const bodyH = isFork ? 1.15 : 0.55;
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(v.W, bodyH, v.L * 0.55),
+    new THREE.MeshStandardMaterial({ color: col, roughness: .45, metalness: .25 })
+  );
+  body.position.y = bodyH / 2 + 0.12; body.castShadow = true; g.add(body);
+  const forks = new THREE.Mesh(
+    new THREE.BoxGeometry(v.W * 0.92, 0.1, v.L * 0.45),
+    new THREE.MeshStandardMaterial({ color: 0xbfc7d0, roughness: .4, metalness: .6 })
+  );
+  forks.position.set(0, 0.1, -(v.L * 0.5)); forks.castShadow = true; g.add(forks);
+  if (isFork) {
+    const mast = new THREE.Mesh(
+      new THREE.BoxGeometry(v.W * 0.85, 3.2, 0.14),
+      new THREE.MeshStandardMaterial({ color: 0x30363d, roughness: .5, metalness: .55 })
+    );
+    mast.position.set(0, 1.7, -(v.L * 0.28)); mast.castShadow = true; g.add(mast);
+    const guard = new THREE.Mesh(
+      new THREE.BoxGeometry(v.W, 0.07, v.L * 0.5),
+      new THREE.MeshStandardMaterial({ color: 0x30363d, roughness: .6 })
+    );
+    guard.position.set(0, 2.15, v.L * 0.08); g.add(guard);
+  }
+  g.position.set(tx(v.x), 0, tz(v.y));
+  g.rotation.y = THREE.MathUtils.degToRad(v.rot);
+  return g;
+}
+DATA.vehicles.forEach(v => {
+  G.veh.add(vehicle(v));
+  // rotation.y = r  =>  el eje local X apunta a (cos r, -sin r) en (X,Z)
+  const r = THREE.MathUtils.degToRad(v.rot);
+  addOBB(tx(v.x), tz(v.y), v.W / 2, v.L / 2, -r, 'vehículo');
+});
+
+/* ---------- etiquetas ---------- */
+function label(text, x, y, z, size) {
+  const c = document.createElement('canvas'), ctxc = c.getContext('2d');
+  const F = 44; ctxc.font = `600 ${F}px ui-sans-serif,system-ui,sans-serif`;
+  const w = Math.ceil(ctxc.measureText(text).width) + 34;
+  c.width = w; c.height = 74;
+  ctxc.font = `600 ${F}px ui-sans-serif,system-ui,sans-serif`;
+  ctxc.fillStyle = 'rgba(13,17,23,.82)';
+  ctxc.strokeStyle = 'rgba(88,166,255,.85)'; ctxc.lineWidth = 3;
+  const rr = 12;
+  ctxc.beginPath();
+  ctxc.moveTo(rr, 2); ctxc.lineTo(w - rr, 2); ctxc.quadraticCurveTo(w - 2, 2, w - 2, rr);
+  ctxc.lineTo(w - 2, 72 - rr); ctxc.quadraticCurveTo(w - 2, 72, w - rr, 72);
+  ctxc.lineTo(rr, 72); ctxc.quadraticCurveTo(2, 72, 2, 72 - rr);
+  ctxc.lineTo(2, rr); ctxc.quadraticCurveTo(2, 2, rr, 2); ctxc.closePath();
+  ctxc.fill(); ctxc.stroke();
+  ctxc.fillStyle = '#e6edf3'; ctxc.textBaseline = 'middle';
+  ctxc.fillText(text, 17, 39);
+  const t = new THREE.CanvasTexture(c);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, depthTest: false, transparent: true }));
+  const h = size || 1.5;
+  sp.scale.set(h * w / 74, h, 1);
+  sp.position.set(x, y, z);
+  return sp;
+}
+DATA.zones.forEach(z => G.lbl.add(label(z.t, tx(z.x), 9.6, tz(z.y), 1.25)));
+SEC.forEach(s => G.seczone.add(
+  label(`SECTOR ${s.id} · ${s.nom.toUpperCase()}`, tx((s.x0 + s.x1) / 2), 13.5, tz(-760), 3.4)));
+
+/* ============ PROPUESTA TaTa: generador paramétrico sobre las salas reales ========
+   Las salas salen de analizar el espacio libre entre los muros del DWG. En el sector
+   IT hay un muro divisorio en x≈868.4 que parte la bodega en dos naves; la propuesta
+   se genera dentro de cada una, sin pisar estructura.                              */
+const PR = DATA.propuesta;
+let PROP_ROWS = [], PROP_OBST = [];
+
+function generarPropuesta(pasilloMin, margen, niveles) {
+  PROP_ROWS = [];
+  const DEP = PR.depth, FLU = PR.flue, BAY = PR.bay;
+  const salas = [];
+  for (const s of PR.salas) {
+    // pasillo transversal en el extremo este: sin él no se puede cambiar de pasillo
+    const transv = Math.max(pasilloMin, 4.0);
+    const largo = (s.x1 - s.x0) - margen - transv;
+    const fondo = (s.y1 - s.y0) - 2 * margen;
+    const bays = Math.floor(largo / BAY);
+    if (bays < 4 || fondo < 2 * DEP + pasilloMin) { salas.push({ ...s, filas: 0, bays: 0 }); continue; }
+    // patrón: fila simple contra muro │ pasillo │ par │ pasillo │ … │ fila simple
+    const npar = Math.max(0, Math.floor((fondo - 2 * DEP - pasilloMin) / (2 * DEP + FLU + pasilloMin)));
+    const npas = npar + 1;
+    const ocupado = 2 * DEP + npar * (2 * DEP + FLU);
+    const pasillo = (fondo - ocupado) / npas;           // el sobrante se reparte: pasillos más anchos
+    const x0 = s.x0 + margen, x1 = x0 + bays * BAY;
+    const xTrans = (x1 + s.x1) / 2;              // eje del pasillo transversal
+    let y = s.y1 - margen;                               // desde el muro norte hacia el sur
+    const push = yc => PROP_ROWS.push({
+      x0: +x0.toFixed(2), x1: +x1.toFixed(2), y: +yc.toFixed(2),
+      bays, cw: BAY, cd: DEP, levels: niveles, sala: s.nom });
+    push(y - DEP / 2); y -= DEP;                         // simple contra muro norte
+    for (let i = 0; i < npar; i++) {
+      y -= pasillo;
+      push(y - DEP / 2);
+      push(y - DEP - FLU - DEP / 2);
+      y -= 2 * DEP + FLU;
+    }
+    y -= pasillo;
+    push(y - DEP / 2);                                   // simple contra muro sur
+    salas.push({ ...s, filas: 2 + npar * 2, bays, pasillo, npas, transv, xTrans, rowX1: x1 });
+  }
+  PR.salasCalc = salas;
+  PR.pasilloReal = salas.filter(s => s.pasillo).length
+    ? Math.min(...salas.filter(s => s.pasillo).map(s => s.pasillo)) : 0;
+  PR.posiciones = PROP_ROWS.reduce((a, r) => a + r.bays * r.levels, 0);
+  construirPropuesta();
+}
+
+const matU = new THREE.MeshStandardMaterial({ color: 0x3fb950, roughness: .5, metalness: .35 });
+const matV = new THREE.MeshStandardMaterial({ color: 0x1f8f45, roughness: .5, metalness: .35 });
+const matC = new THREE.MeshStandardMaterial({ color: 0xdff5e6, roughness: .8 });
+
+function construirPropuesta() {
+  // limpiar lo anterior
+  while (G.prop.children.length) {
+    const c = G.prop.children.pop();
+    if (c.geometry) c.geometry.dispose();
+  }
+  for (const o of PROP_OBST) { const i = OBST.indexOf(o); if (i >= 0) OBST.splice(i, 1); }
+  PROP_OBST = [];
+  if (!PROP_ROWS.length) return;
+
+  let nP = 0, nB = 0, nC = 0;
+  PROP_ROWS.forEach(r => { nP += (r.bays + 1) * 2; nB += r.levels * 2; nC += r.bays * r.levels; });
+  const post = inst(new THREE.BoxGeometry(0.09, 1, 0.09), matU, nP, G.prop, true);
+  const beam = inst(new THREE.BoxGeometry(1, 0.11, 0.07), matV, nB, G.prop, true);
+  const cube = inst(new THREE.BoxGeometry(1.14, CUBE_H, 0.94), matC, nC, G.prop, true);
+  let ip = 0, ib = 0, ic = 0;
+  for (const r of PROP_ROWS) {
+    const H = r.levels * LEVEL_PITCH, zc = tz(r.y), d = r.cd;
+    for (let i = 0; i <= r.bays; i++) {
+      const xw = tx(r.x0 + i * r.cw);
+      for (const s of [-1, 1]) {
+        D.position.set(xw, H / 2, zc + s * d / 2); D.scale.set(1, H, 1);
+        D.rotation.set(0, 0, 0); D.updateMatrix(); post.setMatrixAt(ip++, D.matrix);
+      }
+    }
+    D.scale.set(1, 1, 1);
+    const len = r.x1 - r.x0, xc = tx((r.x0 + r.x1) / 2);
+    for (let L = 0; L < r.levels; L++) {
+      for (const s of [-1, 1]) {
+        D.position.set(xc, L * LEVEL_PITCH + (L === 0 ? .06 : 0), zc + s * d / 2);
+        D.scale.set(len, 1, 1); D.updateMatrix(); beam.setMatrixAt(ib++, D.matrix);
+      }
+      D.scale.set(1, 1, 1);
+      for (let i = 0; i < r.bays; i++) {
+        D.position.set(tx(r.x0 + (i + .5) * r.cw), L * LEVEL_PITCH + CUBE_H / 2 + .12, zc);
+        D.updateMatrix(); cube.setMatrixAt(ic++, D.matrix);
+      }
+    }
+    const o = { cx: tx((r.x0 + r.x1) / 2), cz: zc, hx: (r.x1 - r.x0) / 2, hz: r.cd / 2,
+                c: 1, s: 0, kind: 'rack propuesto' };
+    OBST.push(o); PROP_OBST.push(o);
+  }
+  // a qué pasillo da cada fila (para que el planificador sepa por dónde acercarse)
+  for (const sala of PR.salasCalc) {
+    const rws = PROP_ROWS.filter(r => r.sala === sala.nom).sort((a, b) => b.y - a.y);
+    for (let i = 0; i < rws.length; i++) {
+      const arriba = i > 0 ? (rws[i - 1].y - rws[i - 1].cd / 2) - (rws[i].y + rws[i].cd / 2) : -1;
+      const abajo = i < rws.length - 1 ? (rws[i].y - rws[i].cd / 2) - (rws[i + 1].y + rws[i + 1].cd / 2) : -1;
+      rws[i].zAisle = (arriba >= abajo)
+        ? tz(rws[i].y + rws[i].cd / 2 + Math.max(arriba, 1.2) / 2)
+        : tz(rws[i].y - rws[i].cd / 2 - Math.max(abajo, 1.2) / 2);
+      rws[i].xTrans = sala.xTrans;
+    }
+  }
+
+  // ---- ubicaciones interactuables de la propuesta ----
+  PSLOTS = [];
+  propCubes = cube;
+  let k = 0;
+  const porSala = {};
+  for (const r of PROP_ROWS) porSala[r.sala] = (porSala[r.sala] || 0) + 1;
+  const contFila = {};
+  for (const r of PROP_ROWS) {
+    const ini = r.sala.includes('este') ? 'E' : 'O';
+    contFila[r.sala] = (contFila[r.sala] || 0) + 1;
+    const nf = contFila[r.sala];
+    for (let L = 0; L < r.levels; L++) {
+      for (let i = 0; i < r.bays; i++) {
+        PSLOTS.push({
+          idx: k++, prop: true, x: tx(r.x0 + (i + .5) * r.cw), z: tz(r.y),
+          y: L * LEVEL_PITCH + CUBE_H / 2 + .12, lvl: L + 1, bay: i + 1,
+          ocupado: rnd() < 0.35, sku: `SKU-${pad(Math.floor(rnd() * 9000) + 1000, 4)}`,
+          abc: L === 0 ? 'A' : (L < 3 ? 'B' : 'C'), sala: r.sala,
+          zAp: r.zAisle, xTrans: tx(r.xTrans),
+          code: `C-${ini}-F${pad(nf, 2)}-B${pad(i + 1, 2)}-N${L + 1}`,
+        });
+      }
+    }
+  }
+  refreshProp();
+
+  // pasillos con su cota
+  PROP_PAS = [];
+  for (const sala of PR.salasCalc) {
+    const rows = PROP_ROWS.filter(r => r.sala === sala.nom).sort((a, b) => b.y - a.y);
+    for (let i = 0; i < rows.length - 1; i++) {
+      const a = rows[i], c = rows[i + 1];
+      const gap = (a.y - a.cd / 2) - (c.y + c.cd / 2);
+      if (gap < 1.0) continue;
+      const zc = tz((a.y - a.cd / 2 + c.y + c.cd / 2) / 2);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(a.x1 - a.x0, gap),
+        new THREE.MeshBasicMaterial({ color: 0x3fb950, transparent: true, opacity: .17, depthWrite: false }));
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(tx((a.x0 + a.x1) / 2), 0.05, zc);
+      G.prop.add(m);
+      G.prop.add(label(gap.toFixed(2) + ' m', m.position.x, 1.1, zc, 1.4));
+      PROP_PAS.push({ x0: a.x0, x1: a.x1, z: zc, gap });
+    }
+    if (sala.transv) {
+      const t = new THREE.Mesh(new THREE.PlaneGeometry(sala.transv, sala.y1 - sala.y0 - 1),
+        new THREE.MeshBasicMaterial({ color: 0x58a6ff, transparent: true, opacity: .16, depthWrite: false }));
+      t.rotation.x = -Math.PI / 2;
+      t.position.set(tx(sala.xTrans), 0.05, tz((sala.y0 + sala.y1) / 2));
+      G.prop.add(t);
+      G.prop.add(label('transversal ' + sala.transv.toFixed(2) + ' m',
+        tx(sala.xTrans), 2.2, tz((sala.y0 + sala.y1) / 2), 1.4));
+    }
+    G.prop.add(label(`${sala.nom} · ${sala.filas} filas × ${sala.bays} bahías`,
+      tx((sala.x0 + sala.x1) / 2), 8.5, tz((sala.y0 + sala.y1) / 2), 1.9));
+  }
+}
+let PROP_PAS = [], PSLOTS = [], propCubes = null;
+
+/* ---- zona donde el camión deja los maxicubos (sector IT, junto a la rampa) ---- */
+const MUELLE = { x: tx(893.7), z: tz(-792.6), w: 4.4, d: 5.2 };
+
+
+function refreshProp() {
+  if (!propCubes) return;
+  PSLOTS.forEach(s => {
+    D.position.set(s.x, s.y, s.z); D.rotation.set(0, 0, 0);
+    D.scale.setScalar(s.ocupado ? 1 : 0.0001); D.updateMatrix();
+    propCubes.setMatrixAt(s.idx, D.matrix);
+  });
+  D.scale.setScalar(1);
+  propCubes.instanceMatrix.needsUpdate = true;
+  const oc = PSLOTS.filter(s => s.ocupado).length;
+  const el = document.getElementById('pp_ocup');
+  if (el) el.textContent = `${oc} / ${PSLOTS.length} ocupadas`;
+}
+// todas las ubicaciones con las que puede interactuar el equipo
+const todosSlots = () => SLOTS.concat(PSLOTS);
+
+/* ---------- techo ---------- */
+const roofMat = new THREE.MeshStandardMaterial({
+  color: 0x58a6ff, transparent: true, opacity: .1, side: THREE.DoubleSide, roughness: 1
+});
+const roof = new THREE.Mesh(new THREE.PlaneGeometry(SPAN_X, SPAN_Z), roofMat);
+roof.rotation.x = -Math.PI / 2; roof.position.y = ROOF_H; G.roof.add(roof);
+G.roof.visible = false;
+
+/* ---------- pasillos (usa los bloques ya calculados arriba) ---------- */
+const aisleMat = new THREE.MeshBasicMaterial({ color: 0x3fb950, transparent: true, opacity: .22 });
+const crossMat = new THREE.MeshBasicMaterial({ color: 0x58a6ff, transparent: true, opacity: .16 });
+const flueMat  = new THREE.MeshBasicMaterial({ color: 0xd29922, transparent: true, opacity: .3 });
+const opGaps = [], flGaps = [], xGaps = [];
+for (const b of blocks) {
+  const rows = b.rows.sort((p, q) => q.y - p.y);
+  for (let i = 0; i < rows.length - 1; i++) {
+    const a = rows[i], c = rows[i + 1];
+    const gap = (a.y - a.cd / 2) - (c.y + c.cd / 2);
+    const ox = Math.min(a.x1, c.x1) - Math.max(a.x0, c.x0);
+    if (ox < 4 || gap <= 0) continue;
+    let mat;
+    if (gap < 1.0) { flGaps.push(gap); mat = flueMat; }
+    else if (gap > 4.5) { xGaps.push(gap); mat = crossMat; }
+    else { opGaps.push(gap); mat = aisleMat; }
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(ox, gap), mat);
+    m.rotation.x = -Math.PI / 2;
+    m.position.set(tx((Math.max(a.x0, c.x0) + Math.min(a.x1, c.x1)) / 2), 0.06,
+                   tz((a.y - a.cd / 2 + c.y + c.cd / 2) / 2));
+    G.aisle.add(m);
+    if (gap >= 1.0) G.aisle.add(label(gap.toFixed(2) + ' m', m.position.x, 1.0, m.position.z, 1.0));
+  }
+}
+G.aisle.visible = false;
+
+/* ---------- stats ---------- */
+const st = DATA.stats;
+const med = a => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0; };
+const rng = a => a.length ? Math.min(...a).toFixed(2) + '–' + Math.max(...a).toFixed(2) + ' m' : '—';
+const rows = [
+  ['Filas de rack', st.filas],
+  ['Posiciones a piso', st.posiciones_piso],
+  ['Posiciones totales (4–5 niv.)', st.posiciones_totales.toLocaleString('es')],
+  ['Pasillo de operación', rng(opGaps)],
+  ['Pasillo típico (mediana)', med(opGaps).toFixed(2) + ' m'],
+  ['Espalda con espalda', rng(flGaps)],
+  ['Pasillo transversal', rng(xGaps)],
+  ['Montacargas dibujados', st.montacargas],
+  ['Paleteiras', st.paleteiras],
+  ['Altura a cumbrera', ROOF_H.toFixed(2) + ' m'],
+];
+document.getElementById('stats').innerHTML =
+  rows.map(r => `<div class="stat"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
+
+/* ---------- controles ---------- */
+const target = new THREE.Vector3(0, 3, 0);
+let radius = 130, theta = -Math.PI / 4, phi = 1.02, spin = false, walk = false;
+function applyCam() {
+  phi = Math.max(0.05, Math.min(Math.PI / 2 - 0.02, phi));
+  radius = Math.max(4, Math.min(500, radius));
+  // casi cenital: fijar el norte arriba y el este a la derecha, como el plano
+  if (phi < 0.16) camera.up.set(0, 0, -1); else camera.up.set(0, 1, 0);
+  camera.position.set(
+    target.x + radius * Math.sin(phi) * Math.cos(theta),
+    target.y + radius * Math.cos(phi),
+    target.z + radius * Math.sin(phi) * Math.sin(theta)
+  );
+  camera.lookAt(target);
+}
+applyCam();
+
+const el = renderer.domElement;
+let drag = null;
+el.addEventListener('contextmenu', e => e.preventDefault());
+el.addEventListener('pointerdown', e => {
+  drag = { x: e.clientX, y: e.clientY, pan: e.button === 2 || e.shiftKey };
+  el.setPointerCapture(e.pointerId);
+});
+el.addEventListener('pointerup', e => { drag = null; });
+el.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.x = e.clientX; drag.y = e.clientY;
+  if (drv.on) {
+    // manejando: arrastrar orbita alrededor del montacargas, sin soltar el seguimiento
+    drv.camYaw -= dx * 0.005;
+    drv.camPhi = Math.max(0.18, Math.min(1.45, drv.camPhi - dy * 0.005));
+    return;
+  }
+  if (drag.pan) {
+    const s = radius * 0.0016;
+    const fwd = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
+    const rgt = new THREE.Vector3(-Math.sin(theta), 0, Math.cos(theta));
+    target.addScaledVector(rgt, -dx * s).addScaledVector(fwd, -dy * s);
+  } else {
+    theta -= dx * 0.005; phi -= dy * 0.005; spin = false;
+  }
+  applyCam();
+});
+el.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (drv.on) { drv.camR = Math.max(2.2, Math.min(40, drv.camR * Math.pow(1.0016, e.deltaY))); return; }
+  radius *= Math.pow(1.0016, e.deltaY);
+  applyCam();
+}, { passive: false });
+el.addEventListener('dblclick', () => { if (drv.on) { drv.camYaw = 0; drv.camPhi = 0.98; drv.camR = 9.5; } });
+
+const keys = {};
+const CONF = { traccion: 'trasera', invAD: false, invWS: false,
+               esquema: 'clasico',   // 'clasico' | 'obed'
+               dir: 1 };             // sentido seleccionado en el esquema EDR
+const TCH = { on:true, thr:0, steer:0, brake:false, liftU:0, liftD:0, tiltB:0, tiltF:0 };
+addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (drv.on && ['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
+  if (e.code === 'KeyE' && drv.on) pickDrop(false);
+  if (e.code === 'KeyG' && drv.on) pickDrop(true);
+  if (e.code === 'KeyQ' && drv.on) cicloTarget(-1);
+  if (e.code === 'KeyR' && drv.on) cicloTarget(1);
+  if (e.code === 'Backspace' && drv.on) { G.trail.clear(); placeDrv(drv.spawn); }
+  if (e.code === 'Escape') { if (document.getElementById('params').classList.contains('on')) showParams(false);
+                             else if (drv.on) setDrive(false); }
+});
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+function fly(dt) {
+  const sp = (keys.ShiftLeft || keys.ShiftRight ? 46 : 15) * dt;
+  const fwd = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
+  const rgt = new THREE.Vector3(-Math.sin(theta), 0, Math.cos(theta));
+  let m = false;
+  if (keys.KeyW) { target.addScaledVector(fwd, -sp); m = true; }
+  if (keys.KeyS) { target.addScaledVector(fwd, sp); m = true; }
+  if (keys.KeyA) { target.addScaledVector(rgt, -sp); m = true; }
+  if (keys.KeyD) { target.addScaledVector(rgt, sp); m = true; }
+  if (keys.KeyQ) { target.y += sp; m = true; }
+  if (keys.KeyE) { target.y -= sp; m = true; }
+  if (m) applyCam();
+}
+
+function goto(tx0, ty0, tz0, r, th, ph) {
+  const from = { x: target.x, y: target.y, z: target.z, r: radius, th: theta, ph: phi };
+  const t0 = performance.now();
+  spin = false;
+  (function anim() {
+    const k = Math.min(1, (performance.now() - t0) / 900);
+    const e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    target.set(from.x + (tx0 - from.x) * e, from.y + (ty0 - from.y) * e, from.z + (tz0 - from.z) * e);
+    radius = from.r + (r - from.r) * e;
+    theta = from.th + (th - from.th) * e;
+    phi = from.ph + (ph - from.ph) * e;
+    applyCam();
+    if (k < 1) requestAnimationFrame(anim);
+  })();
+}
+
+const bind = (id, fn) => document.getElementById(id).addEventListener('click', fn);
+bind('v_iso',     () => { walk = false; goto(0, 3, 0, 130, -Math.PI / 4, 1.02); });
+bind('v_top',     () => { walk = false; goto(0, 0, 0, 118, -Math.PI / 2, 0.06); });
+bind('v_rethink', () => { walk = false; goto(tx(736), 3, tz(-810), 46, -Math.PI / 3, 1.05); });
+bind('v_amp',     () => { walk = false; goto(tx(797), 3, tz(-800), 52, -Math.PI / 3, 1.0); });
+bind('v_carga',   () => { walk = false; goto(tx(821), 2, tz(-817), 22, -Math.PI / 2.2, 1.2); });
+bind('m_spin',    e => { spin = !spin; e.target.classList.toggle('on', spin); });
+bind('m_drive',   () => setDrive(!drv.on));
+bind('d_next',    () => { drv.spawn++; G.trail.clear(); placeDrv(drv.spawn); });
+bind('d_test',    runTurnTest);
+bind('d_padhelp', () => {
+  const m = document.getElementById('d_padmap');
+  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+});
+
+
+bind('m_walk',    e => {
+  if (drv.on) setDrive(false);
+  walk = !walk; e.target.classList.toggle('on', walk);
+  if (walk) { goto(tx(730), 1.6, tz(-809.6), 9, -Math.PI, 1.45); showTip('Modo pasillo — usa W/A/S/D para recorrerlo'); }
+  else goto(0, 3, 0, 130, -Math.PI / 4, 1.02);
+});
+
+for (const [id, k] of [['c_plan','plan'],['c_rack','rack'],['c_cube','cube'],['c_veh','veh'],
+                       ['c_col','col'],['c_lbl','lbl'],['c_roof','roof'],['c_aisle','aisle'],
+                       ['c_wall','wall'],['c_trail','trail'],['c_guide','guide'],
+                       ['c_prop','prop'],['c_seczone','seczone']]) {
+  document.getElementById(id).addEventListener('change', e => { G[k].visible = e.target.checked; });
+}
+
+/* ================= MODO MANEJAR MONTACARGAS ================= */
+const FK = {
+  L: 2.29, W: 1.15, WB: 1.50, MAXS: THREE.MathUtils.degToRad(76),
+  VMAX: 3.3, ACC: 3.0,
+  LIFT: 6.4, LSPD: 0.5, TF: 6, TB: 10, FLEN: 1.07, SMIN: 0.25, SMAX: 1.05,
+  SSHIFT: 0.10, SSPD: 0.10,
+  // Timón: se maneja por velocidad, no por posición. Tope real de 1.5 vueltas
+  // a cada lado, y se queda donde lo dejás — no vuelve solo al centro.
+  LOCK: 1.5 * 2 * Math.PI, TRATE: 1.0 * 2 * Math.PI,
+  REACH: 0.61, RSPD: 0.35,
+  // Alturas de trabajo: el piso y las cinco vigas. El operador no busca una
+  // altura cualquiera, selecciona un nivel — y así lo va a hacer el kit.
+  NIVELES: [0.12, 0.70, 2.15, 3.60, 5.05, 6.50],
+};
+// Carga de referencia: maxicubo 1000 × 1200. Puesto de través sobre las uñas,
+// el frente mide 1.20 m y la profundidad 1.00 m (igual que el Ast de VDI 2198).
+const LOAD_W = 1.20, LOAD_D = 1.00;
+// Huella de maniobra: chasis + lo que sobresale (uñas o carga), y el ancho mayor
+const effL = () => FK.L + Math.max(FK.FLEN, LOAD_D);
+const effW = () => Math.max(FK.W, LOAD_W);
+
+/* Fichas reales. Fuente: hoja de datos Baoli KBE 15-35 (VDI 2198).
+   l2 = largo hasta la cara de las uñas · b1 = ancho · y = entre ejes
+   Wa = radio de giro · Ast = pasillo de estiba a 90° con tarima 1000×1200 de través */
+const PRESETS = {
+  /* Mitsubishi EDR18N2 · reach truck pantográfico de operador parado.
+     Cotas de ficha: ancho 1.054 m · entre ejes 1.562 m · radio de giro 1.797 m ·
+     techo de protección 2.413 m · pantógrafo 0.61 m · velocidad de catálogo 12 km/h.
+     Largo total 2.91 m medido en sitio con las uñas de 1.21 m que trae la flota.
+     VMAX puesta en 8 km/h: es el tope que usa el taller, no el de la máquina. */
+  edr18n2: { nom: 'Mitsubishi EDR18N2', cap: '1.58 t', L: 1.70, W: 1.054, WB: 1.562,
+             FLEN: 1.21, Wa: 1.797, Ast: null, LIFT: 7.0, TF: 3, TB: 4,
+             VMAX: 2.22, l1: 2.91, kg: 3350, SSHIFT: 0.12, parado: true, reach: 0.61 },
+  kbe20: { nom: 'Baoli KBE 20', cap: '2.0 t', L: 2.29, W: 1.147, WB: 1.50, FLEN: 1.07,
+           Wa: 2.12, Ast: 3.824, LIFT: 3.0, TF: 6, TB: 10, VMAX: 3.33, l1: 3.36, kg: 3860 },
+  kbe18: { nom: 'Baoli KBE 18', cap: '1.75 t', L: 2.09, W: 1.13, WB: 1.25, FLEN: 0.92,
+           Wa: 1.894, Ast: 3.547, LIFT: 3.0, TF: 6, TB: 12, VMAX: 3.61, l1: 3.01, kg: 3260 },
+  reach: { nom: 'Reach truck típico', cap: '1.6 t', L: 1.62, W: 1.27, WB: 1.35, FLEN: 1.15,
+           Wa: 1.60, Ast: 2.80, LIFT: 7.5, TF: 3, TB: 5, VMAX: 2.8, l1: 2.77, kg: 3400 },
+  dwg:   { nom: 'Bloque del plano', cap: '—', L: 1.37, W: 0.79, WB: 1.10, FLEN: 1.07,
+           Wa: null, Ast: null, LIFT: 6.4, TF: 4, TB: 8, VMAX: 3.2, l1: 2.44, kg: null },
+};
+
+// Ajusta el ángulo máximo de dirección para reproducir el radio de giro de la ficha
+function calibrarDireccion(Wa) {
+  if (!Wa) return;
+  let lo = 0.15, hi = 1.48;
+  for (let i = 0; i < 40; i++) {
+    const m = (lo + hi) / 2;
+    if (outerRadiusChasis(m) > Wa) lo = m; else hi = m;
+  }
+  FK.MAXS = hi;
+}
+const drv = {
+  on: false, x: 0, z: 0, th: 0, v: 0, steer: 0, hits: 0, hitT: 0,
+  mesh: null, spawn: 0, lastTrail: 0,
+  lift: 0.12, tilt: 0, spread: 0.8, shift: 0, timon: 0, reach: 0, reachCmd: 0, nivel: 0, nivLatch: 0, load: null, moves: 0, target: null,
+  camYaw: 0, camPhi: 0.98, camR: 9.5,     // la cámara sigue al equipo pero el usuario la gira
+};
+
+/* ================= ENTRADAS: teclado + control (Gamepad API) ================= */
+const IN = { thr: 0, steer: 0, brake: false, liftU: 0, liftD: 0, tiltF: 0, tiltB: 0,
+             sprIn: 0, sprOut: 0, camX: 0, camY: 0, pick: false, pickFloor: false, recenter: false };
+const PAD = { idx: null, id: '', prev: [], blocked: false, embedded: false };
+try { PAD.embedded = window.self !== window.top; } catch (e) { PAD.embedded = true; }
+
+// El visor incrustado puede bloquear la Gamepad API por permissions policy.
+// Envolvemos la llamada para que nunca tumbe el simulador.
+function getPads() {
+  if (PAD.blocked) return [];
+  try {
+    return (navigator.getGamepads && navigator.getGamepads()) || [];
+  } catch (e) {
+    if (!PAD.blocked) {
+      PAD.blocked = true;
+      updatePadUI();
+      showTip('El visor bloquea el control — abrí el archivo en una pestaña propia');
+    }
+    return [];
+  }
+}
+
+addEventListener('gamepadconnected', e => {
+  PAD.idx = e.gamepad.index; PAD.id = e.gamepad.id; PAD.blocked = false;
+  updatePadUI(); showTip('Control conectado: ' + e.gamepad.id.slice(0, 40));
+});
+addEventListener('gamepaddisconnected', () => { PAD.idx = null; updatePadUI(); });
+function updatePadUI() {
+  const el = document.getElementById('d_pad');
+  if (!el) return;
+  if (PAD.blocked) {
+    el.innerHTML = '🎮 <b style="color:#f85149">Control bloqueado por el visor</b><br>' +
+      '<span style="opacity:.85">Esta ventana no tiene permiso de <code>gamepad</code>. ' +
+      'Descargá el archivo y abrilo directo en el navegador.</span>' +
+      '<button class="btn" id="d_popout" style="margin-top:6px">Abrir en pestaña propia</button>';
+    const btn = document.getElementById('d_popout');
+    if (btn) btn.onclick = () => { try { window.open(location.href, '_blank'); } catch (e) {} };
+  } else if (PAD.idx === null) {
+    el.innerHTML = '🎮 Sin control conectado <span style="opacity:.7">— apretá un botón del control</span>' +
+      (PAD.embedded ? '<br><span style="opacity:.7;font-size:10.5px">Estás en el visor incrustado; ' +
+       'si no lo detecta, abrí el archivo en una pestaña propia.</span>' : '');
+  } else {
+    el.innerHTML = `🎮 <b style="color:#3fb950">${PAD.id.slice(0, 38)}</b>`;
+  }
+}
+const dz = (v, d = 0.14) => Math.abs(v) < d ? 0 : (v - Math.sign(v) * d) / (1 - d);
+
+function readInputs() {
+  // teclado
+  IN.brakeA = 0;
+  if (CONF.esquema === 'obed') {
+    // acelerador único; el sentido lo manda el selector, como en la máquina real
+    IN.thr   = (keys.KeyW ? 1 : 0) * CONF.dir;
+    IN.brakeA = (keys.KeyS || keys.Space) ? 1 : 0;
+  } else {
+    IN.thr   = (keys.KeyW ? 1 : 0) - (keys.KeyS ? 1 : 0);
+    IN.brakeA = keys.Space ? 1 : 0;
+  }
+  IN.steer = (keys.KeyA ? 1 : 0) - (keys.KeyD ? 1 : 0);
+  IN.brake = IN.brakeA > 0.5;
+  IN.liftU = keys.ArrowUp ? 1 : 0;      IN.liftD = keys.ArrowDown ? 1 : 0;
+  IN.tiltB = keys.ArrowLeft ? 1 : 0;    IN.tiltF = keys.ArrowRight ? 1 : 0;
+  IN.sprIn = keys.KeyZ ? 1 : 0;         IN.sprOut = keys.KeyX ? 1 : 0;
+  IN.camX = 0; IN.camY = 0; IN.pick = false; IN.pickFloor = false; IN.recenter = !!keys.KeyC;
+  IN.reachOut = 0; IN.reachIn = 0; IN.nivelSel = 0;
+  if (CONF.esquema === 'obed') {
+    // en modo Obed las flechas verticales son el pantógrafo
+    if (keys.ArrowUp)   { IN.reachOut = 1; IN.liftU = 0; }
+    if (keys.ArrowDown) { IN.reachIn  = 1; IN.liftD = 0; }
+    if (keys.KeyR) IN.reachOut = 1;
+    if (keys.KeyF) IN.reachIn = 1;
+  }
+
+  // táctil (sólo en modo cabina)
+  if (typeof CAB !== 'undefined' && CAB) {
+    if (Math.abs(TCH.thr) > Math.abs(IN.thr)) IN.thr = TCH.thr;
+    if (Math.abs(TCH.steer) > Math.abs(IN.steer)) IN.steer = TCH.steer;
+    if (TCH.brake) { IN.brake = true; IN.brakeA = 1; }
+    IN.liftU = Math.max(IN.liftU, TCH.liftU); IN.liftD = Math.max(IN.liftD, TCH.liftD);
+    IN.tiltB = Math.max(IN.tiltB, TCH.tiltB); IN.tiltF = Math.max(IN.tiltF, TCH.tiltF);
+  }
+
+  // control
+  const pads = getPads();
+  let gp = PAD.idx !== null ? pads[PAD.idx] : null;
+  if (!gp) { for (const g of pads) if (g && g.connected) { gp = g; PAD.idx = g.index; PAD.id = g.id; updatePadUI(); break; } }
+  if (!gp) { aplicarInversiones(); return; }
+
+  const b = i => gp.buttons[i] ? (gp.buttons[i].value || (gp.buttons[i].pressed ? 1 : 0)) : 0;
+  const p = i => gp.buttons[i] ? gp.buttons[i].pressed : false;
+  const ax = i => gp.axes.length > i ? gp.axes[i] : 0;
+
+  const rt = b(7), lt = b(6);
+  if (CONF.esquema === 'obed') {
+    // RT es el acelerador, LT el freno, los dos analógicos.
+    // El sentido lo cambia B, igual que la palanca del EDR.
+    if (rt > 0.03) IN.thr = rt * CONF.dir;
+    if (lt > 0.03) { IN.brakeA = Math.max(IN.brakeA, lt); IN.brake = IN.brakeA > 0.5; }
+  } else {
+    let thr = rt - lt;
+    if (Math.abs(thr) < 0.03) thr = -dz(ax(1));
+    if (Math.abs(thr) > Math.abs(IN.thr)) IN.thr = thr;
+  }
+
+  const st = -dz(ax(0));
+  if (Math.abs(st) > Math.abs(IN.steer)) IN.steer = st;
+  if (CONF.esquema === 'obed') {
+    // palanca izquierda: X gira el timón, Y sube y baja de NIVEL (un empujón, un nivel)
+    const ry = -dz(ax(1), 0.55);
+    if (ry > 0.5 && drv.nivLatch === 0) { IN.nivelSel = +1; drv.nivLatch = 1; }
+    else if (ry < -0.5 && drv.nivLatch === 0) { IN.nivelSel = -1; drv.nivLatch = 1; }
+    else if (Math.abs(ry) < 0.25) drv.nivLatch = 0;
+  }
+  if (CONF.esquema === 'obed') {
+    if (p(12)) { IN.reachOut = 1; IN.liftU = 0; }   // cruceta arriba: pantógrafo afuera
+    if (p(13)) { IN.reachIn  = 1; IN.liftD = 0; }   // cruceta abajo: pantógrafo adentro
+  }
+
+  IN.camX += dz(ax(2)) * 2.2;
+  IN.camY += dz(ax(3)) * 1.6;
+
+  if (p(12)) IN.liftU = 1;
+  if (p(13)) IN.liftD = 1;
+  if (p(14)) IN.sprIn = 1;
+  if (p(15)) IN.sprOut = 1;
+  if (p(4))  IN.tiltB = 1;
+  if (p(5))  IN.tiltF = 1;
+  if (CONF.esquema !== 'obed' && p(1)) { IN.brake = true; IN.brakeA = 1; }
+  if (p(10)) { IN.brake = true; IN.brakeA = 1; }
+  if (p(11)) IN.recenter = true;
+
+  // flancos (pulsación, no mantener)
+  const edge = i => { const now = p(i), was = PAD.prev[i]; PAD.prev[i] = now; return now && !was; };
+  if (edge(0)) IN.pick = true;
+  if (edge(2)) IN.pickFloor = true;
+  if (CONF.esquema === 'edr' && edge(1)) cambiarSentido();
+  if (edge(8)) setDrive(false);        // Back/Select · salir de manejo
+  if (edge(3)) { G.trail.clear(); placeDrv(drv.spawn); }
+  if (edge(9)) showParams(!document.getElementById('params').classList.contains('on'));
+  for (const i of [1, 4, 5, 10, 11, 12, 13, 14, 15]) PAD.prev[i] = p(i);
+  aplicarInversiones();
+}
+
+// se aplica al final, sobre el mando que haya ganado (teclado, control o táctil)
+function aplicarInversiones() {
+  if (CONF.invWS) IN.thr = -IN.thr;
+  if (CONF.invAD) IN.steer = -IN.steer;
+}
+
+function rumble(strong, weak, ms) {
+  const gp = PAD.idx !== null ? getPads()[PAD.idx] : null;
+  try { gp && gp.vibrationActuator &&
+        gp.vibrationActuator.playEffect('dual-rumble',
+          { duration: ms, strongMagnitude: strong, weakMagnitude: weak }); } catch (e) {}
+}
+
+// puntos de arranque: centro de cada pasillo de operación, etiquetados por sector
+const SPAWNS_ALL = [];
+for (const b of blocks) {
+  const rows = [...b.rows].sort((p, q) => q.y - p.y);
+  for (let i = 0; i < rows.length - 1; i++) {
+    const a = rows[i], c = rows[i + 1];
+    const gap = (a.y - a.cd / 2) - (c.y + c.cd / 2);
+    const ox = Math.min(a.x1, c.x1) - Math.max(a.x0, c.x0);
+    if (gap < 1.2 || gap > 4.5 || ox < 6) continue;
+    // el pasillo corre a lo largo de X: arrancar mirando hacia +X
+    SPAWNS_ALL.push({
+      x: tx(Math.max(a.x0, c.x0) + 2.5),
+      z: tz((a.y - a.cd / 2 + c.y + c.cd / 2) / 2),
+      th: -Math.PI / 2, gap, sec: a.sec
+    });
+  }
+}
+// los pasillos de la propuesta también sirven de arranque (sector C)
+let SPAWNS = SPAWNS_ALL;
+function refrescarSpawns() {
+  const prop = (typeof PROP_PAS !== 'undefined' ? PROP_PAS : []).map(p => ({
+    x: tx(p.x0) + 2.5, z: p.z, th: -Math.PI / 2, gap: p.gap, sec: 'C' }));
+  const todo = SPAWNS_ALL.concat(prop);
+  const sec = (typeof secSel !== 'undefined') ? secSel : 'ALL';
+  const f = sec === 'ALL' ? todo : todo.filter(s => s.sec === sec);
+  SPAWNS = f.length ? f : todo;
+  drv.spawn = 0;
+}
+
+/* ---- montacargas manejable: chasis + mástil + carro con uñas separables ---- */
+const M = {
+  chasis: new THREE.MeshStandardMaterial({ color: 0x3fb950, roughness: .45, metalness: .3 }),
+  acero:  new THREE.MeshStandardMaterial({ color: 0x30363d, roughness: .5, metalness: .6 }),
+  una:    new THREE.MeshStandardMaterial({ color: 0xd8dee6, roughness: .35, metalness: .75 }),
+};
+function buildForklift() {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(FK.W, 1.15, FK.L * 0.62), M.chasis);
+  body.position.set(0, 0.72, FK.L * 0.14); body.castShadow = true; g.add(body);
+  const guard = new THREE.Mesh(new THREE.BoxGeometry(FK.W, 0.07, FK.L * 0.5), M.acero);
+  guard.position.set(0, 2.18, FK.L * 0.14); g.add(guard);
+  for (const s of [-1, 1]) {
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.35, 0.06), M.acero);
+    p.position.set(s * FK.W * 0.42, 1.5, FK.L * 0.14); g.add(p);
+  }
+  // conjunto que se inclina (mástil + carro)
+  const tiltG = new THREE.Group();
+  tiltG.position.set(0, 0.1, -FK.L * 0.3);
+  g.add(tiltG);
+  g.userData.tiltG = tiltG;
+
+  const mastH = FK.LIFT * 0.55 + 0.6;
+  for (const s of [-1, 1]) {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(0.09, mastH, 0.11), M.acero);
+    rail.position.set(s * FK.W * 0.34, mastH / 2, 0); rail.castShadow = true; tiltG.add(rail);
+  }
+  const carro = new THREE.Group();
+  tiltG.add(carro);
+  g.userData.carro = carro;
+
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(FK.W * 0.9, 0.5, 0.07), M.acero);
+  plate.position.set(0, 0.26, 0); carro.add(plate);
+  const forks = [];
+  for (const s of [-1, 1]) {
+    const f = new THREE.Group();
+    const vert = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.42, 0.05), M.una);
+    vert.position.set(0, 0.21, 0); f.add(vert);
+    const horiz = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.045, FK.FLEN), M.una);
+    horiz.position.set(0, 0.022, -FK.FLEN / 2); horiz.castShadow = true; f.add(horiz);
+    carro.add(f); forks.push(f);
+  }
+  g.userData.forks = forks;
+  g.userData.loadSlot = new THREE.Group();
+  g.userData.loadSlot.position.set(0, 0.05, -FK.FLEN * 0.52);
+  carro.add(g.userData.loadSlot);
+  return g;
+}
+drv.mesh = buildForklift();
+G.drive.add(drv.mesh);
+G.drive.visible = false;
+
+function syncForks() {
+  const u = drv.mesh.userData;
+  u.tiltG.rotation.x = THREE.MathUtils.degToRad(drv.tilt);
+  u.carro.position.y = drv.lift;
+  u.carro.position.x = drv.shift;                 // desplazador lateral: mueve el juego entero
+  u.tiltG.position.z = -FK.L * 0.3 - drv.reach;   // pantógrafo: saca el mástil al frente
+  u.forks[0].position.x = -drv.spread / 2;
+  u.forks[1].position.x =  drv.spread / 2;
+}
+
+/* ---- resaltador de la ubicación apuntada ---- */
+const hi = new THREE.Mesh(
+  new THREE.BoxGeometry(1.26, CUBE_H + .12, 1.06),
+  new THREE.MeshBasicMaterial({ color: 0x58a6ff, wireframe: true, depthTest: false, transparent: true })
+);
+hi.renderOrder = 999; hi.visible = false; scene.add(hi);
+// caja sólida translúcida para que se vea desde la cámara a bordo
+const hiFill = new THREE.Mesh(
+  new THREE.BoxGeometry(1.2, CUBE_H + .06, 1.0),
+  new THREE.MeshBasicMaterial({ color: 0x58a6ff, transparent: true, opacity: .22, depthWrite: false })
+);
+hiFill.visible = false; scene.add(hiFill);
+// flecha que cae sobre la ubicación apuntada
+const hiArrow = new THREE.Mesh(
+  new THREE.ConeGeometry(0.34, 0.8, 4),
+  new THREE.MeshBasicMaterial({ color: 0x58a6ff, depthTest: false, transparent: true })
+);
+hiArrow.rotation.x = Math.PI; hiArrow.renderOrder = 999;
+hiArrow.visible = false; scene.add(hiArrow);
+let hiPulse = 0;
+function pintarHi(col, x, y, z) {
+  const t = (performance.now() % 1200) / 1200;
+  const k = 1 + 0.05 * Math.sin(t * Math.PI * 2);
+  for (const m of [hi, hiFill]) { m.visible = true; m.position.set(x, y, z); m.material.color.setHex(col); }
+  hi.scale.setScalar(k);
+  hiArrow.visible = true;
+  hiArrow.position.set(x, y + CUBE_H / 2 + 0.75 + 0.12 * Math.sin(t * Math.PI * 2), z);
+  hiArrow.material.color.setHex(col);
+}
+function ocultarHi() { hi.visible = hiFill.visible = hiArrow.visible = false; }
+const cargoMat = new THREE.MeshStandardMaterial({ color: 0xffd166, roughness: .75 });
+const FLOOR_CUBES = [];
+
+/* ---- zona de camiones: marcado y pila de maxicubos esperando ---- */
+(function marcarMuelle() {
+  const g = new THREE.Group(); scene.add(g);
+  const piso = new THREE.Mesh(new THREE.PlaneGeometry(MUELLE.w, MUELLE.d),
+    new THREE.MeshBasicMaterial({ color: 0xf85149, transparent: true, opacity: .13, depthWrite: false }));
+  piso.rotation.x = -Math.PI / 2; piso.position.set(MUELLE.x, 0.05, MUELLE.z); g.add(piso);
+  const bordeMat = new THREE.MeshBasicMaterial({ color: 0xf85149 });
+  for (const [dx, dz, w, d] of [[0, -MUELLE.d / 2, MUELLE.w, .12], [0, MUELLE.d / 2, MUELLE.w, .12],
+                                [-MUELLE.w / 2, 0, .12, MUELLE.d], [MUELLE.w / 2, 0, .12, MUELLE.d]]) {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(w, .12, d), bordeMat);
+    b.position.set(MUELLE.x + dx, .06, MUELLE.z + dz); g.add(b);
+  }
+  g.add(label('ZONA DE DESCARGA · llega el camión', MUELLE.x, 5.0, MUELLE.z, 1.7));
+  // pila de maxicubos esperando
+  MUELLE.pila = [];
+  for (let i = 0; i < 6; i++) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(1.14, CUBE_H, .94),
+      new THREE.MeshStandardMaterial({ color: 0xffd166, roughness: .75 }));
+    m.position.set(MUELLE.x - 1.3 + (i % 3) * 1.3, CUBE_H / 2 + .02, MUELLE.z - 1.2 + Math.floor(i / 3) * 2.4);
+    m.castShadow = true; scene.add(m);
+    MUELLE.pila.push(m);
+    FLOOR_CUBES.push({ x: m.position.x, z: m.position.z, y: m.position.y,
+                       sku: `SKU-${pad(Math.floor(rnd() * 9000) + 1000, 4)}`,
+                       code: 'MUELLE', piso: true, obj: m, ocupado: true });
+  }
+})();
+
+/* ---- guía: a dónde te lleva el volante que tenés puesto ---- */
+const GUIDE_N = 46;
+const guideGeo = new THREE.BufferGeometry();
+guideGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(GUIDE_N * 3), 3));
+const guideLine = new THREE.Line(guideGeo, new THREE.LineBasicMaterial({ color: 0x3fb950 }));
+G.guide.add(guideLine);
+const ghostMat = new THREE.MeshBasicMaterial({ color: 0x3fb950, transparent: true, opacity: .34,
+  side: THREE.DoubleSide, depthWrite: false, depthTest: false });
+const GHOSTS = [];
+for (let i = 0; i < 5; i++) {
+  const g = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), ghostMat.clone());
+  g.rotation.x = -Math.PI / 2; G.guide.add(g); GHOSTS.push(g);
+}
+
+function updateGuide() {
+  if (!G.guide.visible) return;
+  const pos = guideGeo.attributes.position.array;
+  let x = drv.x, z = drv.z, th = drv.th;
+  const v = Math.abs(drv.v) < 0.2 ? 0.9 : drv.v;   // parado: mostrar el arco hacia adelante
+  const dt = 0.1;
+  let choca = false;
+  const marcas = [];
+  for (let i = 0; i < GUIDE_N; i++) {
+    pos[i * 3] = x; pos[i * 3 + 1] = 0.09; pos[i * 3 + 2] = z;
+    if (i % 11 === 0 && marcas.length < GHOSTS.length) marcas.push([x, z, th]);
+    if (!choca && collides(x, z, th)) choca = true;
+    th -= (v / FK.WB) * Math.tan(drv.steer) * dt;
+    x += Math.sin(th) * -v * dt;
+    z += Math.cos(th) * -v * dt;
+  }
+  guideGeo.attributes.position.needsUpdate = true;
+  guideGeo.computeBoundingSphere();
+  const col = choca ? 0xf85149 : 0x3fb950;
+  guideLine.material.color.setHex(col);
+  const sal = drv.load ? Math.max(FK.FLEN, LOAD_D) : FK.FLEN;
+  GHOSTS.forEach((g, i) => {
+    const m = marcas[i];
+    g.visible = !!m;
+    if (!m) return;
+    g.scale.set(drv.load ? Math.max(FK.W, LOAD_W) : FK.W, FK.L + sal, 1);
+    g.position.set(m[0] - Math.sin(m[2]) * sal / 2, 0.07, m[1] - Math.cos(m[2]) * sal / 2);
+    g.rotation.set(-Math.PI / 2, 0, -m[2]);
+    g.material.color.setHex(col);
+  });
+}
+
+const trailMat = new THREE.MeshBasicMaterial({ color: 0x3fb950, transparent: true, opacity: .13,
+  side: THREE.DoubleSide, depthWrite: false });
+const trailGeo = new THREE.PlaneGeometry(FK.W, FK.L);
+const TRAIL_MAX = 420;
+
+function placeDrv(i) {
+  const s = SPAWNS.length ? SPAWNS[i % SPAWNS.length] : { x: 0, z: 0, th: -Math.PI / 2 };
+  drv.th = s.th; drv.v = 0; drv.steer = 0;
+  // buscar un punto libre a lo largo del pasillo con pista despejada por delante
+  let bestX = s.x, bestRun = -1;
+  for (let d = 0; d <= 30; d += 0.5) {
+    const x = s.x + d;
+    if (collides(x, s.z, s.th)) continue;
+    let run = 0;
+    while (run < 14 && !collides(x + run + 0.5, s.z, s.th)) run += 0.5;
+    if (run > bestRun) { bestRun = run; bestX = x; }
+    if (run >= 12) break;
+  }
+  drv.x = bestX; drv.z = s.z;
+  syncDrv();
+  showTip(s.gap
+    ? `Pasillo de ${s.gap.toFixed(2)} m · ${bestRun.toFixed(0)} m de pista libre al frente`
+    : 'Listo');
+}
+function syncDrv() {
+  drv.mesh.position.set(drv.x, 0, drv.z);
+  drv.mesh.rotation.y = drv.th;
+}
+// radio exterior de giro: distancia del centro instantáneo a la esquina más lejana.
+// El punto de referencia es el eje delantero; el centro está a R = WB/tan(δ) perpendicular.
+function radioEsquinas(steer, W, L) {
+  const R = FK.WB / Math.tan(Math.abs(steer));
+  const cxL = R, czL = FK.WB / 2;   // centro instantáneo, en coordenadas del equipo
+  let m = 0;
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    m = Math.max(m, Math.hypot(sx * W / 2 - cxL, sz * L / 2 - czL));
+  }
+  return m;
+}
+// radio del chasis solo (comparable con el Wa de la ficha técnica)
+const outerRadiusChasis = steer => radioEsquinas(steer, FK.W, FK.L);
+// radio con uñas y carga incluidas: lo que de verdad barre en el pasillo
+const outerRadius = steer => radioEsquinas(steer, effW(), effL());
+
+function drvOBB(x, z, th) {
+  // las uñas sobresalen siempre; con carga además cuenta el ancho del maxicubo
+  const salida = drv.load ? Math.max(FK.FLEN, LOAD_D) : FK.FLEN;
+  const ancho = drv.load ? Math.max(FK.W, LOAD_W) : FK.W;
+  const fx = -Math.sin(th), fz = -Math.cos(th);
+  return { cx: x + fx * salida / 2, cz: z + fz * salida / 2,
+           hx: ancho / 2, hz: (FK.L + salida) / 2,
+           c: Math.cos(-th), s: Math.sin(-th) };
+}
+function collides(x, z, th) {
+  const A = drvOBB(x, z, th);
+  for (const O of OBST) if (obbHit(A, O)) return O;
+  return null;
+}
+
+/* ---- uñas: subir/bajar, inclinar, juntar/separar ---- */
+function stepForks(dt) {
+  if (CONF.esquema === 'obed') {
+    const N = FK.NIVELES.filter(h => h <= FK.LIFT + 0.01);
+    if (IN.nivelSel) {
+      drv.nivel = Math.max(0, Math.min(N.length - 1, drv.nivel + IN.nivelSel));
+      showTip(drv.nivel === 0 ? 'Nivel piso' : 'Nivel ' + drv.nivel + ' · ' + N[drv.nivel].toFixed(2) + ' m');
+    }
+    // la torre viaja sola hasta el nivel elegido
+    const meta = N[drv.nivel];
+    const paso = FK.LSPD * 2.2 * dt;
+    if (Math.abs(drv.lift - meta) <= paso) drv.lift = meta;
+    else drv.lift += Math.sign(meta - drv.lift) * paso;
+  } else {
+    if (IN.liftU) drv.lift = Math.min(FK.LIFT, drv.lift + FK.LSPD * dt * IN.liftU);
+    if (IN.liftD) drv.lift = Math.max(0.04, drv.lift - FK.LSPD * dt * IN.liftD);
+  }
+  if (IN.tiltB) drv.tilt = Math.min(FK.TB, drv.tilt + 9 * dt);
+  if (IN.tiltF) drv.tilt = Math.max(-FK.TF, drv.tilt - 9 * dt);
+  if (CONF.esquema === 'obed') {
+    // El pantógrafo es de dos estados: recogido o a tope. Nunca a medias, y nunca
+    // extendido en tránsito — así trabaja el operador y así va a trabajar el kit.
+    if (IN.reachOut) {
+      if (Math.abs(drv.v) > 0.08) showTip('Sólo se extiende detenido · frená primero');
+      else drv.reachCmd = 1;
+    }
+    if (IN.reachIn) drv.reachCmd = 0;
+    if (Math.abs(drv.v) > 0.15 && drv.reachCmd) {
+      drv.reachCmd = 0; showTip('Pantógrafo recogido: no se transita extendido');
+    }
+    const meta = drv.reachCmd * FK.REACH, paso = FK.RSPD * 1.6 * dt;
+    if (Math.abs(drv.reach - meta) <= paso) drv.reach = meta;
+    else drv.reach += Math.sign(meta - drv.reach) * paso;
+  }
+  if (CONF.esquema === 'obed') {
+    // el EDR no separa uñas: mueve el juego completo de lado (desplazador)
+    const R = FK.SSHIFT;
+    if (IN.sprIn)  drv.shift = Math.max(-R, drv.shift - FK.SSPD * dt);
+    if (IN.sprOut) drv.shift = Math.min( R, drv.shift + FK.SSPD * dt);
+  } else {
+    if (IN.sprIn)  drv.spread = Math.max(FK.SMIN, drv.spread - 0.35 * dt);
+    if (IN.sprOut) drv.spread = Math.min(FK.SMAX, drv.spread + 0.35 * dt);
+  }
+  syncForks();
+  document.getElementById('d_lift').textContent = drv.lift.toFixed(2) + ' m';
+  document.getElementById('d_tilt').textContent = drv.tilt.toFixed(1) + '°';
+  const sp = document.getElementById('d_spread');
+  const et = document.getElementById('d_spreadlbl');
+  if (CONF.esquema === 'obed') {
+    if (et) et.textContent = 'Uñas · desplazador';
+    sp.textContent = (drv.shift >= 0 ? '+' : '') + (drv.shift * 100).toFixed(0) + ' cm';
+    sp.style.color = Math.abs(drv.shift) > FK.SSHIFT * 0.92 ? '#d29922' : '#58a6ff';
+  } else {
+    if (et) et.textContent = 'Uñas · separación';
+    sp.textContent = drv.spread.toFixed(2) + ' m';
+    sp.style.color = (drv.spread < 0.45 || drv.spread > 1.05) ? '#d29922' : '#58a6ff';
+  }
+}
+
+/* ---- ubicación apuntada por las uñas: tolerante y con candidatos ---- */
+let CAND = [], candIdx = 0;
+function findTarget() {
+  const fx = -Math.sin(drv.th), fz = -Math.cos(drv.th);
+  const ox = drv.x + fx * (FK.L * 0.3 + drv.reach), oz = drv.z + fz * (FK.L * 0.3 + drv.reach);
+  const alturaUnas = drv.lift + CUBE_H / 2;
+  const lista = [];
+  const consider = (s, y) => {
+    const dx = s.x - ox, dz = s.z - oz;
+    const fwd = dx * fx + dz * fz;              // qué tan al frente está
+    // el desvío lateral se mide contra DONDE ESTÁN LAS UÑAS, no contra el centro del
+    // chasis: el desplazador se come el error, que es justo para lo que existe
+    const lat = Math.abs((-dx * fz + dz * fx) - drv.shift);
+    const dy = Math.abs(y - alturaUnas);        // diferencia de altura
+    if (fwd < -0.3 || fwd > 3.2 || lat > 1.1 || dy > 0.95) return;
+    lista.push({ s, d: Math.abs(fwd - 1.1) + lat * 1.6 + dy * 1.4, fwd, lat, dy });
+  };
+  const todos = todosSlots();
+  if (drv.load) todos.forEach(s => { if (!s.ocupado) consider(s, s.y); });
+  else          todos.forEach(s => { if (s.ocupado)  consider(s, s.y); });
+  if (!drv.load) FLOOR_CUBES.forEach(c => consider(c, c.y));
+  lista.sort((a, b) => a.d - b.d);
+  CAND = lista.slice(0, 6);
+  if (candIdx >= CAND.length) candIdx = 0;
+  return CAND.length ? CAND[candIdx].s : null;
+}
+function cicloTarget(d) {
+  if (!CAND.length) return;
+  candIdx = (candIdx + d + CAND.length) % CAND.length;
+  drv.target = CAND[candIdx].s;
+}
+
+function pickDrop(alPiso) {
+  if (CONF.esquema === 'obed' && !alPiso && drv.reach < FK.REACH - 0.02) {
+    showTip('Extendé el pantógrafo a tope antes de tomar o dejar · flecha arriba');
+    return;
+  }
+  const t = drv.target;
+  const u = drv.mesh.userData;
+  if (!drv.load) {
+    if (!t) { showTip('No hay carga alineada con las uñas'); return; }
+    if (CONF.esquema !== 'obed' && Math.abs(drv.spread - 0.8) > 0.45) {
+      showTip('Separación de uñas fuera de rango para este maxicubo'); return; }
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(1.14, CUBE_H, 0.94), cargoMat.clone());
+    mesh.castShadow = true;
+    mesh.position.set(0, CUBE_H / 2, 0);
+    u.loadSlot.add(mesh);
+    drv.load = { sku: t.sku || 'SKU-????', from: t.code || 'piso', mesh };
+    if (t.piso) { G.drive.parent.remove(t.obj); scene.remove(t.obj);
+                  FLOOR_CUBES.splice(FLOOR_CUBES.indexOf(t), 1); }
+    else { t.ocupado = false; t.prop ? refreshProp() : refreshSlots(); }
+    drv.moves++;
+    showTip(`Tomado ${drv.load.sku} de ${drv.load.from}`);
+  } else {
+    if (t) {
+      t.ocupado = true; t.sku = drv.load.sku;
+      t.prop ? refreshProp() : refreshSlots();
+      showTip(`✓ Depositado ${drv.load.sku} en ${t.code}`);
+    } else if (!alPiso) {
+      showTip('No hay ubicación libre alineada · G o botón X para dejar en el piso');
+      return;                       // ya no cae al piso por accidente
+    } else {
+      // dejar en el piso, al frente de las uñas
+      const fx = -Math.sin(drv.th), fz = -Math.cos(drv.th);
+      const px = drv.x + fx * (FK.L * 0.3 + FK.FLEN * 0.55), pz = drv.z + fz * (FK.L * 0.3 + FK.FLEN * 0.55);
+      const m = new THREE.Mesh(new THREE.BoxGeometry(1.14, CUBE_H, 0.94), cargoMat.clone());
+      m.position.set(px, CUBE_H / 2 + 0.02, pz); m.rotation.y = drv.th; m.castShadow = true;
+      scene.add(m);
+      FLOOR_CUBES.push({ x: px, z: pz, y: CUBE_H / 2 + 0.02, sku: drv.load.sku,
+                         code: 'PISO', piso: true, obj: m, ocupado: true });
+      showTip(`Dejado ${drv.load.sku} en el piso`);
+    }
+    u.loadSlot.remove(drv.load.mesh);
+    drv.load = null;
+    drv.moves++;
+  }
+  document.getElementById('d_moves').textContent = drv.moves;
+  document.getElementById('d_load').textContent = drv.load ? drv.load.sku : 'vacío';
+}
+
+function pintarTimon() {
+  const g = document.getElementById('timon-g');
+  if (!g) return;
+  const grados = drv.timon * 180 / Math.PI;
+  g.setAttribute('transform', 'rotate(' + (-grados).toFixed(1) + ')');
+  const d = document.getElementById('d_timon');
+  if (d) d.textContent = Math.abs(grados) < 1 ? 'centrado'
+        : Math.abs(grados).toFixed(0) + '° ' + (grados > 0 ? 'izq' : 'der');
+  const tope = document.getElementById('d_tope');
+  if (tope) tope.style.display = Math.abs(drv.timon) > FK.LOCK * 0.995 ? 'inline' : 'none';
+  const r = document.getElementById('d_reach');
+  if (r) {
+    const fuera = drv.reach > FK.REACH - 0.02, quieto = drv.reach < 0.02;
+    r.textContent = fuera ? 'A TOPE' : quieto ? 'recogido' : 'moviendose';
+    r.style.color = fuera ? '#d29922' : quieto ? '#3fb950' : '#8b949e';
+  }
+  const nv = document.getElementById('d_nivel');
+  if (nv) { const N = FK.NIVELES.filter(h => h <= FK.LIFT + 0.01);
+            nv.textContent = drv.nivel === 0 ? 'piso' : drv.nivel + ' · ' + N[drv.nivel].toFixed(2) + ' m';
+            nv.style.color = Math.abs(drv.lift - N[drv.nivel]) < 0.02 ? '#3fb950' : '#d29922'; }
+}
+
+function cambiarSentido() {
+  CONF.dir = -CONF.dir;
+  const e = document.getElementById('d_sentido');
+  if (e) { e.textContent = CONF.dir > 0 ? 'ADELANTE' : 'REVERSA';
+           e.style.color = CONF.dir > 0 ? '#3fb950' : '#d29922'; }
+  showTip(CONF.dir > 0 ? 'Sentido: adelante' : 'Sentido: reversa');
+  rumble(0.3, 0.2, 90);
+}
+
+function stepDrive(dt) {
+  readInputs();
+  if (IN.pick) pickDrop(false);
+  if (IN.pickFloor) pickDrop(true);
+  stepForks(dt);
+
+  // el freno manda sobre el acelerador y es progresivo: cuánto lo apretás, cuánto frena
+  const bA = Math.min(1, Math.max(0, IN.brakeA || 0));
+  // con el pantografo afuera la maquina no se mueve: enclavamiento, no consejo
+  const trabado = CONF.esquema === 'obed' && drv.reach > 0.02;
+  const acc = trabado ? 0 : IN.thr * FK.ACC * (1 - bA);
+  if (trabado) drv.v *= Math.pow(0.02, dt);
+  drv.v += acc * dt;
+  if (bA > 0.02) drv.v *= Math.pow(0.02, dt * bA);
+  drv.v *= Math.pow(0.55, dt);                       // fricción
+  drv.v = Math.max(-FK.VMAX * 0.62, Math.min(FK.VMAX, drv.v));
+  if (!acc && Math.abs(drv.v) < 0.04) drv.v = 0;
+
+  if (CONF.esquema === 'obed') {
+    // el mando pide VELOCIDAD de giro; el timón guarda su propia posición
+    drv.timon = Math.max(-FK.LOCK, Math.min(FK.LOCK, drv.timon + IN.steer * FK.TRATE * dt));
+    drv.steer = (drv.timon / FK.LOCK) * FK.MAXS;
+    pintarTimon();
+  } else {
+    drv.steer += (IN.steer * FK.MAXS - drv.steer) * Math.min(1, dt * 6);
+    drv.timon = (drv.steer / FK.MAXS) * FK.LOCK;
+  }
+  // a tope de volante el equipo real no anda rápido; ayuda a maniobrar
+  const limite = FK.VMAX * (1 - 0.62 * Math.abs(drv.steer) / FK.MAXS);
+  if (Math.abs(drv.v) > limite) drv.v = Math.sign(drv.v) * limite;
+
+  // cámara: stick derecho y recentrado
+  if (IN.camX || IN.camY) {
+    drv.camYaw -= IN.camX * dt;
+    drv.camPhi = Math.max(0.18, Math.min(1.45, drv.camPhi + IN.camY * dt));
+  }
+  if (IN.recenter) {
+    drv.camYaw *= Math.pow(0.02, dt);
+    drv.camPhi += (0.98 - drv.camPhi) * Math.min(1, dt * 5);
+  }
+
+  // dirección trasera: el punto de referencia es el eje delantero (lado de las uñas)
+  // Trasera (montacargas): las ruedas que giran van atrás y el punto de referencia
+  // es el eje delantero, del lado de las uñas. Delantera (automóvil): al revés.
+  const signo = CONF.traccion === 'trasera' ? -1 : 1;
+  const dth = signo * (drv.v / FK.WB) * Math.tan(drv.steer) * dt;
+  const nth = drv.th + dth;
+  const nx = drv.x + Math.sin(nth) * -drv.v * dt;
+  const nz = drv.z + Math.cos(nth) * -drv.v * dt;
+
+  const hit = collides(nx, nz, nth);
+  if (hit) {
+    drv.v = -drv.v * 0.22;
+    drv.hitT = 0.28;
+    if (performance.now() - (drv.lastHit || 0) > 450) {   // no contar el mismo golpe 60 veces
+      drv.lastHit = performance.now();
+      drv.hits++;
+      document.getElementById('d_hits').textContent = drv.hits;
+      showTip('Golpe contra ' + hit.kind);
+      rumble(0.85, 0.5, 220);
+    }
+  } else {
+    drv.x = nx; drv.z = nz; drv.th = nth;
+    syncDrv();
+    if (G.trail.visible && Math.abs(drv.v) > 0.25 &&
+        performance.now() - drv.lastTrail > 110) {
+      drv.lastTrail = performance.now();
+      const q = new THREE.Mesh(trailGeo, trailMat);
+      q.rotation.set(-Math.PI / 2, 0, -drv.th);
+      q.position.set(drv.x, 0.045, drv.z);
+      G.trail.add(q);
+      if (G.trail.children.length > TRAIL_MAX) G.trail.remove(G.trail.children[0]);
+    }
+  }
+
+  // holguras: rayos perpendiculares y frontal desde el centro
+  const fx = -Math.sin(drv.th), fz = -Math.cos(drv.th);
+  const rx = Math.cos(drv.th), rz = -Math.sin(drv.th);
+  const L = clearance(drv.x, drv.z, -rx, -rz, 8) - FK.W / 2;
+  const R = clearance(drv.x, drv.z,  rx,  rz, 8) - FK.W / 2;
+  const F = clearance(drv.x, drv.z,  fx,  fz, 8) - FK.L / 2;
+  const fmt = q => q >= 7 ? '> 7 m' : Math.max(0, q).toFixed(2) + ' m';
+  const gL = document.getElementById('d_l'), gR = document.getElementById('d_r');
+  gL.textContent = fmt(L); gR.textContent = fmt(R);
+  gL.style.color = L < 0.35 ? '#f85149' : '#58a6ff';
+  gR.style.color = R < 0.35 ? '#f85149' : '#58a6ff';
+  document.getElementById('d_f').textContent = fmt(F);
+  document.getElementById('d_v').textContent = (Math.abs(drv.v) * 3.6).toFixed(1) + ' km/h';
+  document.getElementById('d_rad').textContent =
+    Math.abs(drv.steer) < 0.03 ? '∞' : outerRadius(drv.steer).toFixed(2) + ' m';
+  document.getElementById('d_bar').style.width = Math.min(100, Math.abs(drv.v) / FK.VMAX * 100) + '%';
+
+  updateGuide();
+
+  // ubicación apuntada
+  drv.target = findTarget();
+  const te = document.getElementById('d_target');
+  if (drv.target) {
+    const s = drv.target;
+    pintarHi(drv.load ? 0x3fb950 : 0x58a6ff, s.x, s.y, s.z);
+    te.innerHTML =
+      `<div style="font-size:13px;font-weight:700;color:${drv.load ? '#3fb950' : '#58a6ff'}">` +
+      `${drv.load ? '▼ DEJAR EN' : '▲ TOMAR DE'} ${s.code}</div>` +
+      (s.piso ? '' : `<span class="pill">nivel ${s.lvl}</span><span class="pill">${s.abc}</span>`) +
+      `<span class="pill">${CAND.length} cerca · Q/R cambia</span>` +
+      `<br><span style="color:#8b949e">${drv.load ? 'E o botón A' : (s.sku || '') + ' · E o botón A'}</span>`;
+  } else {
+    ocultarHi();
+    te.innerHTML = `<span style="color:#8b949e">${drv.load
+      ? 'acercate a una bahía libre y ajustá la altura de uñas · G deja en el piso'
+      : 'alineá las uñas con un maxicubo'}</span>`;
+  }
+
+  // la cámara sigue al equipo pero conserva el giro que le diste con el mouse o el stick
+  target.set(drv.x, 1.5 + Math.min(2.2, drv.lift * 0.45), drv.z);
+  theta = Math.atan2(-fz, -fx) + drv.camYaw;
+  radius = drv.camR;
+  // si al girar la cámara queda un rack de por medio, la subimos por encima
+  // en vez de meterla adentro: r·sen(phi) es la distancia horizontal
+  const libre = clearance(drv.x, drv.z, Math.cos(theta), Math.sin(theta), drv.camR + 2) - 0.5;
+  const maxPhi = Math.asin(Math.max(0.1, Math.min(1, libre / drv.camR)));
+  phi = Math.min(drv.camPhi, maxPhi);
+  applyCam();
+
+  if (drv.hitT > 0) {
+    drv.hitT -= dt;
+    document.getElementById('crash').classList.add('on');
+    document.getElementById('drive').classList.add('hit');
+  } else {
+    document.getElementById('crash').classList.remove('on');
+    document.getElementById('drive').classList.remove('hit');
+  }
+}
+
+/* ---- prueba de maniobra: giro de 90° dentro de un pasillo de ancho W ----
+   Misma cinemática de dirección trasera. Permite maniobras de vaivén
+   (adelante-izquierda / atrás-derecha), como haría un operador real.        */
+function turnFits(W, maxShuffles = 8) {
+  let x = 0, z = 0, th = 0, dir = 1, sh = 0;
+  const dt = 0.02, v = 0.6, st = FK.MAXS, half = W / 2;
+  const hw = effW() / 2, hl = effL() / 2;    // uñas y carga incluidas
+  const corners = (x, z, th) => {
+    const c = Math.cos(-th), s = Math.sin(-th), out = [];
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+      const lx = sx * hw, lz = sz * hl;
+      out.push(z + (lx * -s + lz * c));      // sólo interesa la coordenada Z
+    }
+    return out;
+  };
+  for (let i = 0; i < 6000; i++) {
+    const vv = v * dir, ss = st * dir;
+    const nth = th - (vv / FK.WB) * Math.tan(ss) * dt;
+    const nx = x + Math.sin(nth) * -vv * dt;
+    const nz = z + Math.cos(nth) * -vv * dt;
+    if (corners(nx, nz, nth).some(q => Math.abs(q) > half)) {
+      if (++sh > maxShuffles) return false;
+      dir = -dir;
+      continue;
+    }
+    x = nx; z = nz; th = nth;
+    if (Math.abs(th) >= Math.PI / 2) return true;
+  }
+  return false;
+}
+function minTurnWidth() {
+  let lo = 1.5, hi = 8.0;
+  if (!turnFits(hi)) return null;
+  for (let i = 0; i < 26; i++) {
+    const m = (lo + hi) / 2;
+    if (turnFits(m)) hi = m; else lo = m;
+  }
+  return hi;
+}
+
+function runTurnTest() {
+  const s = SPAWNS.length ? SPAWNS[drv.spawn % SPAWNS.length] : null;
+  const w = s ? s.gap : 0;
+  const need1 = minTurnWidth();                       // con vaivén
+  const needNo = (() => {                             // de una sola pasada
+    let lo = 1.5, hi = 8.0;
+    if (!turnFits(hi, 0)) return null;
+    for (let i = 0; i < 26; i++) { const m = (lo + hi) / 2; if (turnFits(m, 0)) hi = m; else lo = m; }
+    return hi;
+  })();
+  const ok = w >= need1;
+  const el = document.getElementById('d_res');
+  el.innerHTML =
+    `<b style="color:${ok ? '#3fb950' : '#f85149'}">${ok ? 'SÍ cabe' : 'NO cabe'}</b>` +
+    ` en este pasillo de <b>${w.toFixed(2)} m</b><br>` +
+    `Mínimo de una pasada: <b>${needNo ? needNo.toFixed(2) + ' m' : '—'}</b><br>` +
+    `Mínimo con vaivén: <b>${need1 ? need1.toFixed(2) + ' m' : '—'}</b>`;
+  showTip(ok ? 'El giro de 90° cabe en este pasillo' : 'El giro de 90° NO cabe — hay que maniobrar');
+}
+
+function setDrive(on) {
+  drv.on = on; walk = false; spin = false;
+  G.drive.visible = on;
+  document.getElementById('drive').classList.toggle('on', on);
+  document.getElementById('hud').style.display = on ? 'none' : '';
+  document.getElementById('m_drive').classList.toggle('on', on);
+  if (on) {
+    drv.camYaw = 0; drv.camPhi = 0.98; drv.camR = 9.5;
+    refrescarSpawns();                 // arranca en el sector que tengas seleccionado
+    updatePadUI(); placeDrv(drv.spawn);
+    showTip(PAD.idx !== null ? 'Control listo · RT acelera, stick izq. volante, A toma/deja'
+                             : 'W/S acelerar · A/D volante · arrastrá el mouse para girar la cámara');
+  }
+  else { G.trail.clear(); goto(0, 3, 0, 130, -Math.PI / 4, 1.02); }
+}
+
+const tipEl = document.getElementById('tip');
+let tipT;
+function showTip(s) {
+  tipEl.textContent = s; tipEl.classList.add('show');
+  clearTimeout(tipT); tipT = setTimeout(() => tipEl.classList.remove('show'), 3200);
+}
+
+/* ---- panel de parámetros ---- */
+const PRM = [
+  ['p_len','L',   'm',  2, v=>v],                  ['p_wid','W','m',2,v=>v],
+  ['p_wb', 'WB',  'm',  2, v=>v],                  ['p_steer','MAXS','°',0,v=>THREE.MathUtils.degToRad(v)],
+  ['p_vmax','VMAX','m/s',1, v=>v],                 ['p_acc','ACC','m/s²',1,v=>v],
+  ['p_lift','LIFT','m', 1, v=>v],                  ['p_lspd','LSPD','m/s',2,v=>v],
+  ['p_tf', 'TF',  '°',  1, v=>v],                  ['p_tb','TB','°',1,v=>v],
+  ['p_flen','FLEN','m', 2, v=>v],                  ['p_smin','SMIN','m',2,v=>v],
+  ['p_smax','SMAX','m', 2, v=>v],
+];
+function applyParams(rebuild) {
+  for (const [id, key, unit, dec, conv] of PRM) {
+    const el = document.getElementById(id);
+    const raw = +el.value;
+    FK[key] = conv(raw);
+    document.getElementById(id + 'v').textContent = raw.toFixed(dec) + (unit === '°' ? '°' : ' ' + unit);
+  }
+  if (FK.SMAX < FK.SMIN + 0.1) FK.SMAX = FK.SMIN + 0.1;
+  drv.spread = Math.min(FK.SMAX, Math.max(FK.SMIN, drv.spread));
+  drv.lift = Math.min(FK.LIFT, drv.lift);
+
+  if (rebuild) {
+    const keep = drv.load;
+    G.drive.remove(drv.mesh);
+    drv.mesh = buildForklift();
+    G.drive.add(drv.mesh);
+    if (keep) { keep.mesh.position.set(0, CUBE_H / 2, 0); drv.mesh.userData.loadSlot.add(keep.mesh); }
+    syncDrv(); syncForks();
+  }
+  document.querySelector('#drive h2').textContent =
+    `Montacargas · ${FK.L.toFixed(2)} × ${FK.W.toFixed(2)} m`;
+
+  // salida derivada
+  let lo = 1.5, hi2 = 9;
+  const fits1 = turnFits(hi2, 0);
+  if (fits1) { for (let i = 0; i < 24; i++) { const m = (lo + hi2) / 2; if (turnFits(m, 0)) hi2 = m; else lo = m; } }
+  const una = fits1 ? hi2 : null;
+  const vai = minTurnWidth();
+  const ANGOSTO = 3.07, ANCHO = 3.35;
+  const P = PRESETS[document.getElementById('p_preset').value];
+  const ficha = P && P.Ast ? P.Ast : null;
+  const ok = una !== null && una <= ANGOSTO;
+  const okAncho = una !== null && una <= ANCHO;
+  const veredicto = ok ? ['#3fb950', '✓ Opera en todos los pasillos actuales']
+    : okAncho ? ['#d29922', '⚠ Sólo entra en los pasillos anchos (3.35 m), no en los de 3.07 m']
+    : ['#f85149', '✗ NO gira 90° en ningún pasillo del almacén'];
+  document.getElementById('p_out').innerHTML =
+    `<div class="stat"><span>Radio de giro del chasis (Wa)</span><b>${outerRadiusChasis(FK.MAXS).toFixed(2)} m</b></div>` +
+    `<div class="stat"><span>Radio barrido con uñas y carga</span><b>${outerRadius(FK.MAXS).toFixed(2)} m</b></div>` +
+    `<div class="stat"><span>Huella maniobrando</span><b>${effL().toFixed(2)} × ${effW().toFixed(2)} m</b></div>` +
+    `<div class="stat"><span>Pasillo mín. simulado (una pasada)</span><b>${una ? una.toFixed(2) + ' m' : '—'}</b></div>` +
+    (ficha ? `<div class="stat"><span>Ast de ficha VDI (+200 mm seg.)</span><b>${ficha.toFixed(2)} m</b></div>` : '') +
+    `<div class="stat"><span>Pasillo mín. con vaivén</span><b>${vai ? vai.toFixed(2) + ' m' : '—'}</b></div>` +
+    `<div class="stat"><span>Pasillos reales del almacén</span><b>${ANGOSTO.toFixed(2)}–${ANCHO.toFixed(2)} m</b></div>` +
+    `<div style="margin-top:8px;color:${veredicto[0]};font-weight:600">${veredicto[1]}</div>`;
+}
+
+/* ---- fichas técnicas reales ---- */
+function aplicarPreset(k) {
+  const _p = PRESETS[k];
+  if (_p && _p.SSHIFT) FK.SSHIFT = _p.SSHIFT;
+  if (_p && _p.reach)  FK.REACH  = _p.reach;
+  const P = PRESETS[k];
+  if (!P) return;
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
+  set('p_len', P.L); set('p_wid', P.W); set('p_wb', P.WB); set('p_flen', P.FLEN);
+  set('p_lift', P.LIFT); set('p_tf', P.TF); set('p_tb', P.TB); set('p_vmax', P.VMAX);
+  applyParams(true);
+  if (P.Wa) { calibrarDireccion(P.Wa); set('p_steer', Math.round(THREE.MathUtils.radToDeg(FK.MAXS))); }
+  document.getElementById('p_ficha').innerHTML = P.Wa
+    ? `<b style="color:#e6edf3">${P.nom}</b> · ${P.cap} · largo total ${P.l1.toFixed(2)} m · ` +
+      `Wa ${P.Wa.toFixed(2)} m` + (P.Ast ? ` · Ast ${P.Ast.toFixed(2)} m` : '') +
+      (P.reach ? ` · pantógrafo ${P.reach.toFixed(2)} m` : '') +
+      ` · ${(P.VMAX * 3.6).toFixed(1)} km/h` + (P.kg ? ' · ' + P.kg + ' kg' : '') +
+      (P.parado ? '<br><span style="color:#8b949e">Operador parado, con reach y cámara en las uñas. ' +
+        'Tope de velocidad puesto en el estándar del taller, no en el de catálogo.</span>' : '') +
+      (k === 'reach' ? '<br><span style="color:#d29922">Ojo: la simulación usa cinemática de ' +
+        'contrabalanceado con dirección trasera. Un reach truck real maniobra mejor que esto, ' +
+        'así que el pasillo simulado le sale peor de lo que es.</span>' : '')
+    : `<b style="color:#d29922">${P.nom}</b> — símbolo del CAD, no corresponde a un equipo real`;
+  applyParams(true);
+}
+document.getElementById('p_preset').addEventListener('change', e => aplicarPreset(e.target.value));
+PRM.forEach(([id]) => document.getElementById(id).addEventListener('input',
+  () => { document.getElementById('p_preset').value = 'custom';
+          document.getElementById('p_ficha').textContent = ''; }));
+PRM.forEach(([id]) => document.getElementById(id).addEventListener('input', () => applyParams(true)));
+
+const showParams = on => {
+  document.getElementById('params').classList.toggle('on', on);
+  document.getElementById('backdrop').classList.toggle('on', on);
+  if (on) applyParams(false);
+};
+bind('d_params', () => showParams(true));
+bind('pclose',   () => showParams(false));
+document.getElementById('backdrop').addEventListener('click', () => showParams(false));
+
+/* ---- selector de sector ---- */
+function secStats(id) {
+  const rr = DATA.racks.filter(r => r.sec === id);
+  const gaps = [];
+  for (const b of blocks) {
+    const rows = [...b.rows].filter(r => r.sec === id).sort((p, q) => q.y - p.y);
+    for (let i = 0; i < rows.length - 1; i++) {
+      const g = (rows[i].y - rows[i].cd / 2) - (rows[i + 1].y + rows[i + 1].cd / 2);
+      const ox = Math.min(rows[i].x1, rows[i + 1].x1) - Math.max(rows[i].x0, rows[i + 1].x0);
+      if (g > 1.0 && g < 4.5 && ox > 4) gaps.push(g);
+    }
+  }
+  return { filas: rr.length, pos: rr.reduce((s, r) => s + r.bays * r.levels, 0),
+           gmin: gaps.length ? Math.min(...gaps) : null, gmax: gaps.length ? Math.max(...gaps) : null };
+}
+document.getElementById('s_sectores').innerHTML =
+  SEC.map(s => `<button class="btn" data-sec="${s.id}" style="border-left:4px solid ${s.color}">
+      <b>${s.id}</b> · ${s.nom}</button>`).join('') +
+  `<button class="btn" data-sec="ALL">Ver los tres</button>`;
+
+let secSel = 'ALL';
+function irSector(id) {
+  secSel = id;
+  const info = document.getElementById('s_secinfo');
+  document.getElementById('s_propcfg').style.display = id === 'C' ? '' : 'none';
+  if (id === 'ALL') {
+    goto(0, 3, 0, 190, -Math.PI / 2, 0.10);
+    info.innerHTML = SEC.map(s => {
+      const st = secStats(s.id);
+      return `<div class="stat"><span style="color:${s.color}">${s.id} ${s.nom}</span>` +
+             `<b>${st.pos ? st.pos.toLocaleString('es') : '—'}</b></div>`;
+    }).join('') +
+    `<div class="stat"><span style="color:#3fb950">C con propuesta TaTa</span>` +
+    `<b>${PR.posiciones.toLocaleString('es')}</b></div>`;
+    return;
+  }
+  const s = SEC.find(q => q.id === id);
+  goto(tx((s.x0 + s.x1) / 2), 3, tz(-800), Math.max(52, (s.x1 - s.x0) * 1.05), -Math.PI / 2, 0.55);
+  const st = secStats(id);
+  const esC = id === 'C';
+  info.innerHTML =
+    `<div style="font-size:11.5px;color:#8b949e;margin-bottom:6px">${s.titulo}<br>${s.desc}</div>` +
+    `<div class="stat"><span>Filas de rack dibujadas</span><b>${st.filas}</b></div>` +
+    `<div class="stat"><span>Ubicaciones</span><b>${st.pos ? st.pos.toLocaleString('es') : '0 — sin diseñar'}</b></div>` +
+    (st.gmin ? `<div class="stat"><span>Pasillo</span><b>${st.gmin.toFixed(2)}–${st.gmax.toFixed(2)} m</b></div>` : '') +
+    (esC ? propInfoHTML() : '');
+}
+
+function propInfoHTML() {
+  let lo = 1.5, hi = 9;
+  const necesita = turnFits(hi, 0)
+    ? (() => { for (let i = 0; i < 24; i++) { const m = (lo + hi) / 2; if (turnFits(m, 0)) hi = m; else lo = m; } return hi; })()
+    : null;
+  const real = PR.pasilloReal || 0;
+  const ok = necesita !== null && real >= necesita;
+  return `<div class="sep"></div>
+    <div style="font-size:11.5px;color:#3fb950;font-weight:600">Propuesta TaTa · dos naves reales</div>
+    <div style="font-size:11px;color:#8b949e;margin:4px 0 6px">
+      Un muro divisorio en x≈868 parte la bodega en dos. La propuesta se genera
+      dentro de cada nave sin pisar estructura.</div>` +
+    PR.salasCalc.map(s => `<div class="stat"><span>${s.nom} · ${(s.x1 - s.x0).toFixed(1)}×${(s.y1 - s.y0).toFixed(1)} m</span>` +
+      `<b>${s.filas ? s.filas + ' filas × ' + s.bays : 'no cabe'}</b></div>`).join('') +
+    `<div class="stat"><span>Ubicaciones totales</span><b>${PR.posiciones.toLocaleString('es')}</b></div>
+     <div class="stat"><span>Pasillo real generado</span><b style="color:#3fb950">${real.toFixed(2)} m</b></div>
+     <div class="stat"><span>Mínimo del equipo actual</span><b>${necesita ? necesita.toFixed(2) + ' m' : '—'}</b></div>
+     <div style="margin-top:7px;color:${ok ? '#3fb950' : '#f85149'};font-weight:600;font-size:12px">
+       ${ok ? '✓ El equipo gira de una pasada en estos pasillos'
+            : '✗ Subí el pasillo: el equipo no gira de una pasada'}</div>`;
+}
+document.querySelectorAll('#s_sectores button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#s_sectores button').forEach(o => o.classList.remove('on'));
+    b.classList.add('on');
+    irSector(b.dataset.sec);
+    refrescarSpawns();
+    if (drv.on) { G.trail.clear(); placeDrv(0); showTip('Montacargas movido al sector ' + b.dataset.sec); }
+  };
+});
+
+/* ---- parámetros de la propuesta, en vivo ---- */
+function regenProp() {
+  const a = +document.getElementById('pp_aisle').value;
+  const m = +document.getElementById('pp_marg').value;
+  const n = +document.getElementById('pp_niv').value;
+  document.getElementById('pp_aislev').textContent = a.toFixed(2);
+  document.getElementById('pp_margv').textContent = m.toFixed(2);
+  document.getElementById('pp_nivv').textContent = n;
+  generarPropuesta(a, m, n);
+  refrescarSpawns();
+  if (typeof boRutas === 'function') boRutas();
+  if (secSel === 'C') irSector('C');
+}
+['pp_aisle', 'pp_marg', 'pp_niv'].forEach(id =>
+  document.getElementById(id).addEventListener('input', regenProp));
+bind('pp_probar', () => {
+  secSel = 'C'; refrescarSpawns();
+  if (!drv.on) setDrive(true); else { G.trail.clear(); placeDrv(0); }
+  runTurnTest();
+});
+
+generarPropuesta(PR.pasillo_min, PR.margen, PR.niveles);
+irSector('ALL');
+refrescarSpawns();
+
+document.getElementById('s_scheme').addEventListener('change', refreshSlots);
+refreshSlots();
+aplicarPreset('kbe20');
+
+let rzT = null, rzW = innerWidth, rzH = innerHeight;
+function aplicarTam() {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  rzW = innerWidth; rzH = innerHeight;
+}
+addEventListener('resize', () => {
+  // la barra del navegador en el celular cambia el alto sin que cambie nada real
+  const soloAlto = innerWidth === rzW && Math.abs(innerHeight - rzH) < 140;
+  clearTimeout(rzT);
+  rzT = setTimeout(aplicarTam, soloAlto ? 420 : 60);
+});
+
+let last = performance.now(), loopErr = false;
+(function loop() {
+  requestAnimationFrame(loop);
+  const now = performance.now(), dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  try {
+    if (drv.on) stepDrive(dt); else fly(dt);
+    if (spin) { theta += dt * 0.12; applyCam(); }
+    if (typeof boLoop === 'function') boLoop(dt);
+  } catch (err) {
+    if (!loopErr) { loopErr = true; console.error(err); showTip('Error: ' + (err.message || err)); }
+  }
+  if (!(typeof boActive !== 'undefined' && boActive)) {
+    renderer.render(scene, camera);
+    if (typeof CAB !== 'undefined' && CAB) { if (drv.on) pintarCamFront(); else setCabina(false); }
+  }
+})();
+
+setTimeout(() => showTip('W/A/S/D para volar por la nave · prueba "Resaltar pasillos"'), 1600);
+</script>
+
+__BOTONI__
+
+<script>
+document.getElementById('bo-btn').addEventListener('click', () => boOpen(!boActive));
+addEventListener('keydown', e => { if (e.code === 'Escape' && boActive && !boCab) boOpen(false); });
+
+/* ───────── modo cabina ───────── */
+let CAB = false;
+const camFront = new THREE.PerspectiveCamera(72, 16 / 10, 0.08, 400);
+
+function setCabina(on) {
+  CAB = !!on && drv.on;
+  document.body.classList.toggle('cabina', CAB);
+  const b = document.getElementById('btn-cab');
+  if (b) { b.classList.toggle('on', CAB); b.textContent = CAB ? 'Salir de cabina' : 'Modo cabina'; }
+  if (CAB) showTip('Modo cabina · controles táctiles y cámara frontal del montacargas');
+}
+
+function initCabina() {
+  // Documents/Safari sacan sus barras con un tap sobre la página: cortamos el gesto
+  // ...pero nunca sobre botones o paneles: ahí el tap tiene que funcionar
+  const frenar = e => {
+    if (!CAB || !e.cancelable) return;
+    const o = e.target;
+    if (o && o.closest && o.closest('button,input,select,label,.panel,#tbtns,#tjoy')) return;
+    e.preventDefault();
+  };
+  ['touchstart','touchmove','touchend'].forEach(ev =>
+    document.addEventListener(ev, frenar, { passive: false }));
+
+  const joy = document.getElementById('tjoy'), nub = document.getElementById('tnub');
+  if (!joy) return;
+  let jid = null; const R = 48;
+  function mover(e) {
+    const r = joy.getBoundingClientRect();
+    let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    const d = Math.hypot(dx, dy);
+    if (d > R) { dx *= R / d; dy *= R / d; }
+    nub.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    const zm = v => Math.abs(v) < 0.16 ? 0 : (v - Math.sign(v) * 0.16) / 0.84;
+    TCH.steer = -zm(dx / R); TCH.thr = -zm(dy / R);
+  }
+  joy.addEventListener('pointerdown', e => { jid = e.pointerId; joy.setPointerCapture(jid); mover(e); e.preventDefault(); });
+  joy.addEventListener('pointermove', e => { if (e.pointerId === jid) { mover(e); e.preventDefault(); } });
+  const soltar = e => { if (e.pointerId !== jid) return; jid = null; TCH.thr = TCH.steer = 0;
+                        nub.style.transform = 'translate(0,0)'; };
+  joy.addEventListener('pointerup', soltar); joy.addEventListener('pointercancel', soltar);
+
+  document.querySelectorAll('#tbtns button').forEach(bt => {
+    const h = bt.dataset.h, tp = bt.dataset.t;
+    if (h) {
+      const on = e => { e.preventDefault(); bt.classList.add('dn'); if (h === 'brake') TCH.brake = true; else TCH[h] = 1; };
+      const off = e => { e.preventDefault(); bt.classList.remove('dn'); if (h === 'brake') TCH.brake = false; else TCH[h] = 0; };
+      bt.addEventListener('pointerdown', on);
+      ['pointerup','pointercancel','pointerleave'].forEach(ev => bt.addEventListener(ev, off));
+    } else if (tp) {
+      bt.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        if (tp === 'pick') pickDrop(false); else if (tp === 'floor') pickDrop(true);
+        else if (tp === 'prev') cicloTarget(-1); else if (tp === 'next') cicloTarget(1);
+      });
+    }
+  });
+  document.querySelectorAll('#seg-esq button').forEach(bt => {
+    bt.addEventListener('click', () => {
+      CONF.esquema = bt.dataset.e;
+      document.querySelectorAll('#seg-esq button').forEach(o => o.classList.toggle('on', o === bt));
+      document.getElementById('edr-info').style.display = CONF.esquema === 'obed' ? 'block' : 'none';
+      CONF.dir = 1; drv.shift = 0; drv.timon = 0; drv.reach = 0; drv.reachCmd = 0; drv.steer = 0;
+      drv.nivel = 0; drv.nivLatch = 0; syncForks(); pintarTimon();
+      const sd = document.getElementById('d_sentido');
+      if (sd) { sd.textContent = 'ADELANTE'; sd.style.color = '#3fb950'; }
+      if (CONF.esquema === 'obed') {
+        aplicarPreset('edr18n2');
+        const sel = document.getElementById('p_preset'); if (sel) sel.value = 'edr18n2';
+        showTip('Modo Obed · el timón gira mientras sostenés la palanca y se queda donde lo dejes');
+      } else {
+        showTip('Esquema clásico · W/S acelera, flechas separan las uñas');
+      }
+    });
+  });
+  document.querySelectorAll('#seg-trac button').forEach(bt => {
+    bt.addEventListener('click', () => {
+      CONF.traccion = bt.dataset.t;
+      document.querySelectorAll('#seg-trac button').forEach(o => o.classList.toggle('on', o === bt));
+      drv.steer = 0;
+      showTip(CONF.traccion === 'trasera'
+        ? 'Tracción trasera · como el montacargas real: la cola sale hacia afuera al girar'
+        : 'Tracción delantera · como un carro: gira apuntando adonde ves');
+    });
+  });
+  const inv = (id, k) => { const e = document.getElementById(id);
+    if (e) e.addEventListener('change', () => { CONF[k] = e.checked; }); };
+  inv('c_invad', 'invAD'); inv('c_invws', 'invWS');
+
+  const bc = document.getElementById('btn-cab');
+  if (bc) bc.addEventListener('click', () => setCabina(!CAB));
+}
+if (document.readyState === 'loading') addEventListener('DOMContentLoaded', initCabina);
+else initCabina();
+
+// la cámara frontal sigue al montacargas
+function ponerCamFront() {
+  const fx = -Math.sin(drv.th), fz = -Math.cos(drv.th);
+  camFront.position.set(drv.x + fx * 0.55, 1.52, drv.z + fz * 0.55);
+  camFront.lookAt(drv.x + fx * 18, 1.15, drv.z + fz * 18);
+}
+
+// dibuja la ventana de la cámara frontal sobre el render principal
+function pintarCamFront() {
+  const w = document.getElementById('camwin');
+  if (!w || !CAB) return;
+  const r = w.getBoundingClientRect();
+  if (r.width < 20) return;
+  ponerCamFront();
+  camFront.aspect = r.width / r.height;
+  camFront.updateProjectionMatrix();
+  const y = innerHeight - r.bottom;
+  renderer.setScissorTest(true);
+  renderer.setViewport(r.left, y, r.width, r.height);
+  renderer.setScissor(r.left, y, r.width, r.height);
+  renderer.render(scene, camFront);
+  renderer.setScissorTest(false);
+  renderer.setViewport(0, 0, innerWidth, innerHeight);
+}
+
+</script>
+
+<div id="tch">
+  <div id="tjoy"><div id="tnub"></div></div>
+  <div id="tbtns">
+    <button data-h="liftU">▲</button><button data-h="tiltB">◤</button><button data-h="tiltF">◢</button>
+    <button data-h="liftD">▼</button><button data-t="prev">◀</button><button data-t="next">▶</button>
+    <button class="wide go" data-t="pick">TOMAR / DEJAR</button>
+    <button class="wide" data-t="floor">DEJAR AL PISO</button>
+    <button class="wide" data-h="brake">FRENO</button>
+  </div>
+  <div id="camwin"><span class="lbl">CÁMARA FRONTAL</span><span class="rec"></span></div>
+</div>
+</body>
+</html>

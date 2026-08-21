@@ -1,0 +1,974 @@
+<style>
+/* ═══════════ BOTONI · control de flota ═══════════ */
+#botoni{position:fixed;inset:0;z-index:400;display:none;background:#0e0f11;
+  --bo-panel:#16181c;--bo-panel2:#1d2024;--bo-line:#2a2e34;--bo-ink:#ecebe6;--bo-muted:#868d97;
+  --hazard:#f5c518;--live:#39d98a;--cyan:#37c3ff;--danger:#ff4d4d;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace;
+  color:var(--bo-ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  user-select:none}
+#botoni.show{display:flex;flex-direction:column}
+#bo-top{display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--bo-panel);
+  border-bottom:1px solid var(--bo-line);flex-shrink:0}
+#bo-brand{font-family:var(--mono);font-size:11px;letter-spacing:2px;font-weight:800;color:var(--hazard)}
+#bo-brand small{color:var(--bo-muted);letter-spacing:1.2px;font-weight:700}
+.bo-units{display:flex;gap:1px;background:var(--bo-line);border:1px solid var(--bo-line);border-radius:8px;overflow:hidden}
+.bo-unit{background:var(--bo-panel2);border:0;color:var(--bo-muted);padding:5px 13px;
+  font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px}
+.bo-unit .u-dot{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor}
+.bo-unit.on{background:var(--hazard);color:#111}
+.bo-unit.on .u-dot{box-shadow:none}
+.bo-grow{flex:1}
+.bo-pill{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:999px;
+  border:1px solid var(--bo-line);background:var(--bo-panel2);color:var(--bo-muted);white-space:nowrap}
+#bo-grid{flex:1;display:grid;grid-template-columns:2fr 3fr;grid-template-rows:1fr 1fr;
+  gap:1px;background:var(--bo-line);min-height:0}
+.bo-quad{background:#0e0f11;overflow:hidden;display:flex;flex-direction:column;min-width:0;min-height:0}
+.bo-qh{display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--bo-panel);
+  border-bottom:1px solid var(--bo-line);flex-shrink:0}
+.bo-qt{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--bo-muted);font-weight:700;display:flex;align-items:center;gap:6px}
+.bo-qt::before{content:"";width:8px;height:8px;border-radius:2px;background:#8a7212}
+.bo-tog{display:flex;border:1px solid var(--bo-line);border-radius:7px;overflow:hidden;
+  font-family:var(--mono);font-size:10px}
+.bo-tog button{background:var(--bo-panel2);color:var(--bo-muted);border:0;padding:4px 9px;font-weight:700;cursor:pointer}
+.bo-tog button.on{background:var(--hazard);color:#111}
+.bo-tog button.on.flow{background:var(--cyan);color:#111}
+
+#bo-camwrap{position:relative;flex:1;background:#000;min-height:0}
+#bo-camwrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bo-hud{position:absolute;left:10px;bottom:8px;font-family:var(--mono);font-size:10px;
+  color:#fff;text-shadow:0 1px 3px #000;line-height:1.6;pointer-events:none}
+.bo-cabbtn{position:absolute;right:8px;bottom:8px;background:rgba(8,9,10,.7);color:#fff;
+  border:1px solid rgba(255,255,255,.25);border-radius:7px;padding:5px 11px;
+  font-family:var(--mono);font-size:11px;cursor:pointer;z-index:3}
+.bo-xhair{position:absolute;left:50%;top:50%;width:22px;height:22px;transform:translate(-50%,-50%);
+  pointer-events:none;opacity:.5}
+.bo-xhair::before,.bo-xhair::after{content:"";position:absolute;background:#fff}
+.bo-xhair::before{left:50%;top:0;bottom:0;width:1px}
+.bo-xhair::after{top:50%;left:0;right:0;height:1px}
+
+/* FSM */
+#bo-fsmcv{flex:1;background:#f3f4f6;overflow:auto;padding:14px 12px;min-height:0}
+.bo-fsmrow{display:flex;align-items:center;gap:0;min-width:min-content}
+.bo-fb{border-radius:9px;padding:9px 12px;min-width:78px;text-align:center;color:#fff;
+  font-family:var(--mono);cursor:pointer;border:2px solid transparent;flex-shrink:0}
+.bo-fb .bn{display:block;font-size:12px;font-weight:800;letter-spacing:.5px}
+.bo-fb .bs{display:block;font-size:9px;opacity:.85;margin-top:1px}
+.bo-fb.cur{border-color:#111;box-shadow:0 0 0 3px rgba(245,197,24,.55)}
+.bo-fb.done{opacity:.45}
+.bo-arr{display:flex;flex-direction:column;align-items:center;padding:0 4px;flex-shrink:0}
+.bo-arr svg{width:26px;height:16px}
+.bo-arr span{font-family:var(--mono);font-size:8px;color:#6b7280;white-space:nowrap;margin-top:2px}
+#bo-vars{background:var(--bo-panel);border-top:1px solid var(--bo-line);padding:7px 11px;flex-shrink:0}
+#bo-varsT{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--bo-muted);text-transform:uppercase}
+#bo-varsR{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}
+.bo-var{font-family:var(--mono);font-size:10px;background:var(--bo-panel2);
+  border:1px solid var(--bo-line);border-radius:5px;padding:3px 8px}
+.bo-var b{color:var(--cyan)}
+
+/* mapa */
+#bo-mapwrap{position:relative;flex:1;background:#0b0c0e;min-height:0}
+#bo-map{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bo-zoom{position:absolute;right:8px;bottom:8px;display:flex;gap:4px;z-index:3}
+.bo-zoom button{width:26px;height:26px;background:rgba(8,9,10,.75);border:1px solid var(--bo-line);
+  color:#fff;border-radius:6px;font-family:var(--mono);font-size:14px;cursor:pointer;line-height:1}
+
+/* controles */
+#bo-ctrl{flex:1;display:flex;gap:1px;background:var(--bo-line);min-height:0}
+.bo-col{flex:1;background:#0e0f11;display:flex;flex-direction:column;gap:7px;padding:9px;overflow:auto;min-width:0}
+.bo-lab{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--bo-muted);text-transform:uppercase}
+.bo-joy{position:relative;width:100%;aspect-ratio:1/1;max-height:190px;margin:0 auto;border-radius:50%;
+  background:rgba(20,22,26,.5);border:2px solid rgba(255,255,255,.2);touch-action:none;flex-shrink:0}
+.bo-joy.flow{border-color:rgba(55,195,255,.35);opacity:.5}
+.bo-joy .cross{position:absolute;background:rgba(255,255,255,.13)}
+.bo-joy .cross.h{left:12px;right:12px;top:50%;height:1px}
+.bo-joy .cross.v{top:12px;bottom:12px;left:50%;width:1px}
+.bo-joy .nub{position:absolute;width:34%;height:34%;left:33%;top:33%;border-radius:50%;
+  transition:transform .05s linear;border:2px solid rgba(0,0,0,.5);
+  background:radial-gradient(circle at 40% 35%,rgba(255,224,102,.95),rgba(245,197,24,.85) 55%,rgba(184,148,15,.85))}
+.bo-btn{background:var(--bo-panel2);border:1px solid var(--bo-line);color:var(--bo-ink);
+  border-radius:8px;padding:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer}
+.bo-btn:hover{border-color:var(--hazard)}
+.bo-btn.start{background:#14532d;border-color:#166534;color:#86efac}
+.bo-btn.stop{background:#4c1111;border-color:#7f1d1d;color:#fca5a5}
+.bo-row2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bo-slider{display:flex;align-items:center;gap:8px}
+.bo-slider input{flex:1;accent-color:var(--hazard)}
+.bo-slider b{font-family:var(--mono);font-size:11px;color:var(--cyan);width:52px;text-align:right}
+.bo-tel{font-family:var(--mono);font-size:10px;color:var(--bo-muted);line-height:1.85}
+.bo-tel b{color:var(--bo-ink);float:right}
+
+/* cabina */
+#bo-cab{position:fixed;inset:0;z-index:500;background:#000;display:none}
+#bo-cab.show{display:block}
+#bo-cab canvas{position:absolute;inset:0;width:100%;height:100%}
+.cab-top{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;
+  justify-content:space-between;z-index:6}
+.cab-chip{background:rgba(8,9,10,.7);border:1px solid rgba(255,255,255,.22);border-radius:8px;
+  padding:6px 14px;font-family:var(--mono);font-size:12px;font-weight:800;color:#fff;backdrop-filter:blur(4px)}
+.cab-x{background:rgba(8,9,10,.7);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;
+  padding:6px 12px;font-family:var(--mono);font-size:14px;cursor:pointer}
+#bo-cabjoy{position:absolute;right:26px;bottom:26px;width:34vh;max-width:210px;aspect-ratio:1/1;z-index:6}
+#bo-cabfork{position:absolute;left:20px;top:50%;transform:translateY(-50%);z-index:6;
+  display:flex;flex-direction:column;gap:5px}
+#bo-cabfork button{background:rgba(8,9,10,.7);border:1px solid rgba(255,255,255,.22);color:#fff;
+  border-radius:7px;padding:7px 12px;font-family:var(--mono);font-size:11px;cursor:pointer}
+.cab-hud{position:absolute;left:20px;bottom:22px;font-family:var(--mono);font-size:12px;
+  color:#fff;text-shadow:0 1px 4px #000;line-height:1.7;z-index:6}
+</style>
+
+<div id="botoni">
+  <div id="bo-top">
+    <div id="bo-brand">TaTa <small id="bo-word">FLOTA</small> CONTROL</div>
+    <div class="bo-units" id="bo-units"></div>
+    <div class="bo-grow"></div>
+    <span class="bo-pill" id="bo-clock">—</span>
+    <span class="bo-pill" id="bo-fleetstat">—</span>
+    <button class="bo-btn" id="bo-exit" style="padding:5px 12px">✕ SALIR</button>
+  </div>
+
+  <div id="bo-grid">
+    <!-- Q1 cámara -->
+    <div class="bo-quad">
+      <div class="bo-qh"><div class="bo-qt">Cámara</div><div class="bo-grow"></div>
+        <span class="bo-pill" id="bo-camid">—</span></div>
+      <div id="bo-camwrap">
+        <div class="bo-xhair"></div>
+        <div class="bo-hud" id="bo-camhud"></div>
+        <button class="bo-cabbtn" id="bo-cabbtn">⛶ Cabina</button>
+      </div>
+    </div>
+
+    <!-- Q2 FSM -->
+    <div class="bo-quad">
+      <div class="bo-qh"><div class="bo-qt">Máquina de estados</div>
+        <span class="bo-pill" id="bo-task">—</span>
+        <div class="bo-grow"></div>
+        <div class="bo-tog" id="bo-modetog">
+          <button id="bo-mMan" class="on">MANUAL</button>
+          <button id="bo-mFlow" class="flow">FLOW</button>
+        </div>
+      </div>
+      <div id="bo-fsmcv"><div class="bo-fsmrow" id="bo-fsmrow"></div></div>
+      <div id="bo-vars"><div id="bo-varsT">selecciona un estado ↑</div><div id="bo-varsR"></div></div>
+    </div>
+
+    <!-- Q3 mapa -->
+    <div class="bo-quad">
+      <div class="bo-qh"><div class="bo-qt">Mapa</div><div class="bo-grow"></div>
+        <span class="bo-pill" id="bo-pose">—</span>
+        <div class="bo-tog" id="bo-followtog">
+          <button id="bo-fFollow" class="on">SEGUIR</button>
+          <button id="bo-fAll">TODO</button>
+        </div>
+      </div>
+      <div id="bo-mapwrap">
+        <canvas id="bo-map"></canvas>
+        <div class="bo-zoom">
+          <button id="bo-zin">+</button><button id="bo-zout">−</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 controles -->
+    <div class="bo-quad">
+      <div class="bo-qh"><div class="bo-qt">Control de misión</div><div class="bo-grow"></div>
+        <span class="bo-pill" id="bo-ctrlid">—</span></div>
+      <div id="bo-ctrl">
+        <div class="bo-col">
+          <div class="bo-lab">Joystick · /cmd_vel</div>
+          <div class="bo-joy" id="bo-joy">
+            <div class="cross h"></div><div class="cross v"></div><div class="nub" id="bo-nub"></div>
+          </div>
+          <div class="bo-tel" id="bo-twist"></div>
+        </div>
+        <div class="bo-col">
+          <div class="bo-lab">Misión</div>
+          <button class="bo-btn start" id="bo-start">▶ START</button>
+          <button class="bo-btn stop" id="bo-stop">■ STOP</button>
+          <div class="bo-row2">
+            <button class="bo-btn" id="bo-prev">◀ EST</button>
+            <button class="bo-btn" id="bo-next">EST ▶</button>
+          </div>
+          <button class="bo-btn" id="bo-toggleload">⇅ TOMAR / DEJAR</button>
+          <div class="bo-lab" style="margin-top:4px">Telemetría</div>
+          <div class="bo-tel" id="bo-tel"></div>
+        </div>
+        <div class="bo-col">
+          <div class="bo-lab">Altura de uñas · /fork_cmd</div>
+          <div class="bo-slider">
+            <input type="range" id="bo-fork" min="0.04" max="6.4" step="0.01" value="0.12">
+            <b id="bo-forkv">0.12 m</b>
+          </div>
+          <div class="bo-lab">Inclinación</div>
+          <div class="bo-slider">
+            <input type="range" id="bo-tilt" min="-6" max="10" step="0.5" value="0">
+            <b id="bo-tiltv">0.0°</b>
+          </div>
+          <div class="bo-lab">Separación de uñas</div>
+          <div class="bo-slider">
+            <input type="range" id="bo-spread" min="0.25" max="1.05" step="0.01" value="0.8">
+            <b id="bo-spreadv">0.80 m</b>
+          </div>
+          <div class="bo-lab" style="margin-top:2px">Presets de nivel</div>
+          <div id="bo-presets" class="bo-row2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="bo-cab">
+  <div class="cab-top">
+    <button class="cab-x" id="bo-cabx">✕</button>
+    <div class="cab-chip" id="bo-cabstate">—</div>
+    <div class="bo-tog">
+      <button id="bo-cabMan" class="on">MANUAL</button>
+      <button id="bo-cabFlow" class="flow">FLOW</button>
+    </div>
+  </div>
+  <div id="bo-cabfork"></div>
+  <div class="cab-hud" id="bo-cabhud"></div>
+  <div class="bo-joy" id="bo-cabjoy">
+    <div class="cross h"></div><div class="cross v"></div><div class="nub" id="bo-cabnub"></div>
+  </div>
+</div>
+
+<script>
+/* ═════════════ BOTONI · control de flota ═════════════ */
+// Palabra del rótulo. Opciones: FLOTA · UNIDAD · EQUIPO · MANDO · TORRE · HANGAR · PATIO · CUADRILLA
+const FLEET_WORD = 'FLOTA';
+document.getElementById('bo-word').textContent = FLEET_WORD;
+
+const P = (x, y) => ({ x: tx(x), z: tz(y) });
+
+/* zonas de piso: donde el camión descarga y donde se despacha */
+const ZONA = {
+  descarga: { x: MUELLE.x, z: MUELLE.z, nom: 'descarga' },
+  carga:    { x: tx(893.7), z: tz(-811.3), nom: 'carga' },
+};   // punto DXF → escena
+
+/* Arquitectura de relevo: el muelle es un solo punto y los pasillos son de un carril.
+   Si las tres unidades van al muelle, se estorban. Si cada una se queda en su nave,
+   nadie cruza el camino de nadie y el cuello de botella se ve de inmediato.        */
+const FLEET = [
+  {
+    id: 'MC-01', rol: 'Rack arriba', color: 0xf85149, hex: '#f85149',
+    modo: 'ingreso', pasIdx: 0,
+    tarea: 'Descarga → rack de arriba',
+    fsm: [
+      { s: 'STALL',   sub: 'espera',    c: '#6366f1', ev: 'CAMIÓN:LLEGÓ' },
+      { s: 'NAV',     sub: 'DESCARGA',  c: '#f59e0b', ev: 'NAV:DOCK' },
+      { s: 'PICK',    sub: 'del piso',  c: '#0ea5e9', ev: 'LOAD:OK' },
+      { s: 'NAV',     sub: 'TRANSV',    c: '#f59e0b', ev: 'NAV:CROSS' },
+      { s: 'NAV',     sub: 'PASILLO',   c: '#f59e0b', ev: 'NAV:AISLE' },
+      { s: 'INSERT',  sub: 'estiba',    c: '#10b981', ev: 'DONE' },
+      { s: 'RETURN',  sub: 'sale',      c: '#8b5cf6', ev: '' },
+    ],
+    vars: [['destino', u => u.mision ? u.mision.slot.code : '—'],
+           ['turno', u => CHOREO.token === u.id ? 'MÍO' : (u.espera ? 'cede el paso' : 'libre')],
+           ['en descarga', () => cubosEn(ZONA.descarga).length + ' · camión #' + camiones],
+           ['estibados', u => u.hechos || 0]],
+  },
+  {
+    id: 'MC-02', rol: 'Rack enmedio', color: 0x37c3ff, hex: '#37c3ff',
+    modo: 'ingreso', pasIdx: 1,
+    tarea: 'Descarga → rack de enmedio',
+    fsm: [
+      { s: 'STALL',   sub: 'espera',    c: '#6366f1', ev: 'BUFFER:OK' },
+      { s: 'NAV',     sub: 'DESCARGA',  c: '#f59e0b', ev: 'NAV:DOCK' },
+      { s: 'PICK',    sub: 'del piso',  c: '#0ea5e9', ev: 'LOAD:OK' },
+      { s: 'NAV',     sub: 'TRANSV',    c: '#f97316', ev: 'NAV:CROSS' },
+      { s: 'NAV',     sub: 'PASILLO',   c: '#f59e0b', ev: 'NAV:AISLE' },
+      { s: 'INSERT',  sub: 'estiba',    c: '#10b981', ev: 'DONE' },
+      { s: 'RETURN',  sub: 'sale',      c: '#8b5cf6', ev: '' },
+    ],
+    vars: [['destino', u => u.mision ? u.mision.slot.code : '—'],
+           ['turno', u => CHOREO.token === u.id ? 'MÍO' : (u.espera ? 'cede el paso' : 'libre')],
+           ['estibados', u => u.hechos || 0]],
+  },
+  {
+    id: 'MC-03', rol: 'Rack abajo', color: 0x39d98a, hex: '#39d98a',
+    modo: 'egreso', pasIdx: 2,
+    tarea: 'Rack de abajo → zona de carga',
+    fsm: [
+      { s: 'STALL',   sub: 'espera',    c: '#6366f1', ev: 'PEDIDO' },
+      { s: 'NAV',     sub: 'TRANSV',    c: '#f59e0b', ev: 'NAV:CROSS' },
+      { s: 'NAV',     sub: 'PASILLO',   c: '#f59e0b', ev: 'NAV:AISLE' },
+      { s: 'EXTRACT', sub: 'saca',      c: '#0ea5e9', ev: 'LOAD:OK' },
+      { s: 'NAV',     sub: 'CARGA',     c: '#f59e0b', ev: 'NAV:REACHED' },
+      { s: 'DROP',    sub: 'despacha',  c: '#10b981', ev: 'DONE' },
+      { s: 'RETURN',  sub: 'vuelve',    c: '#8b5cf6', ev: '' },
+    ],
+    vars: [['origen', u => u.mision ? u.mision.slot.code : '—'],
+           ['despachados', u => u.hechos || 0],
+           ['en carga', () => cubosEn(ZONA.carga).length]],
+  },
+];
+
+
+(function marcarCarga() {
+  const g = new THREE.Group(); scene.add(g);
+  const piso = new THREE.Mesh(new THREE.PlaneGeometry(4.4, 5.2),
+    new THREE.MeshBasicMaterial({ color: 0x39d98a, transparent: true, opacity: .13, depthWrite: false }));
+  piso.rotation.x = -Math.PI / 2; piso.position.set(ZONA.carga.x, 0.05, ZONA.carga.z); g.add(piso);
+  const mat = new THREE.MeshBasicMaterial({ color: 0x39d98a });
+  for (const [dx, dz, w, d] of [[0, -2.6, 4.4, .12], [0, 2.6, 4.4, .12],
+                                [-2.2, 0, .12, 5.2], [2.2, 0, .12, 5.2]]) {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(w, .12, d), mat);
+    b.position.set(ZONA.carga.x + dx, .06, ZONA.carga.z + dz); g.add(b);
+  }
+  g.add(label('ZONA DE CARGA · despacho', ZONA.carga.x, 5.0, ZONA.carga.z, 1.7));
+})();
+
+let boActive = false, boSel = 0, boMode = 'FLOW', boFollow = true, boZoom = 6.5, boCab = false;
+let boJX = 0, boJY = 0;
+
+/* ---- al regenerar la propuesta hay que replanificar ---- */
+function boRutas() {
+  const pas = pasillosNaveEste();
+  CHOREO.token = 'MC-02'; CHOREO.turno = 1;   // arranca el azul, turno pre-asignado
+  CHOREO.log = 'los tres en fila · arranca MC-02';
+  FLEET.forEach((u, i) => {
+    u.mision = null; u.guion = null; u.paso = 0; u.st = 0; u.bloq = 0; u.espera = false;
+    u.load = false; if (u.mesh) u.mesh.userData.cargo.visible = false;
+    const p = pas[u.pasIdx];
+    u.pasillo = p ? p.gap.toFixed(2) + ' m' : '—';
+    // en fila para arrancar, pero después cada quien espera dentro de SU pasillo
+    u.espPos = p ? espLibre(p) : { x: ZONA.descarga.x, z: ZONA.descarga.z + 5 + i * 5 };
+    u.base = { x: u.espPos.x, z: u.espPos.z };   // en fila, cada uno en su propia calle
+    u.x = u.base.x; u.z = u.base.z;
+    u.th = -Math.PI / 2;                          // los tres mirando al corredor (hacia el este)
+    u.v = 0; u.steer = 0; u.lift = 0.15;
+    // arranque escalonado: verde sale primero porque su pasillo queda lejos
+    u.pausa = u.id === 'MC-03' ? 0.5 : (u.id === 'MC-02' ? 1.2 : 14.0);
+  });
+}
+
+/* ---- estado dinámico de cada unidad ---- */
+FLEET.forEach((u, i) => {
+  u.th = 0; u.v = 0; u.steer = 0; u.tilt = 0; u.spread = 0.8; u.load = false;
+  u.paso = 0; u.st = 0; u.run = true; u.pausa = 0; u.mesh = null; u.espera = false;
+  u.bat = 100 - i * 9; u.hechos = 0; u.mision = null; u.guion = null;
+  u.x = 0; u.z = 0; u.base = { x: 0, z: 0 };
+});
+
+/* ---- modelos 3D de la flota ---- */
+const boGroup = new THREE.Group(); scene.add(boGroup);
+function boBuild(u) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color: u.color, roughness: .45, metalness: .3 });
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.147, 1.15, 1.42), mat);
+  body.position.set(0, 0.72, 0.32); body.castShadow = true; g.add(body);
+  const mast = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.05, 0.13),
+    new THREE.MeshStandardMaterial({ color: 0x30363d, roughness: .5, metalness: .6 }));
+  mast.position.set(0, 1.05, -0.72); g.add(mast);
+  const guard = new THREE.Mesh(new THREE.BoxGeometry(1.147, 0.07, 1.2),
+    new THREE.MeshStandardMaterial({ color: 0x30363d }));
+  guard.position.set(0, 2.18, 0.3); g.add(guard);
+  const carro = new THREE.Group(); carro.position.set(0, 0, -0.78); g.add(carro);
+  for (const s of [-1, 1]) {
+    const f = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.05, 1.07),
+      new THREE.MeshStandardMaterial({ color: 0xd8dee6, metalness: .75, roughness: .35 }));
+    f.position.set(s * 0.4, 0.06, -0.53); carro.add(f);
+  }
+  const cargo = new THREE.Mesh(new THREE.BoxGeometry(1.14, 1.16, 0.94),
+    new THREE.MeshStandardMaterial({ color: 0xffd166, roughness: .75 }));
+  cargo.position.set(0, 0.66, -0.55); cargo.visible = u.load; carro.add(cargo);
+  g.userData = { carro, cargo };
+  boGroup.add(g);
+  return g;
+}
+FLEET.forEach(u => { u.mesh = boBuild(u); });
+
+/* ---- misiones reales: cada unidad toma y deja maxicubos de verdad ---- */
+
+/* ═══════ COREOGRAFÍA FIJA ═══════
+   Un solo turno a la vez en la zona de descarga. Cada unidad tiene su pasillo
+   propio, así que dentro del rack nunca se cruzan. Lento y con paradas.      */
+const CHOREO = { token: null, cola: ['MC-03', 'MC-02', 'MC-01'], turno: 0, t: 0, log: '—' };
+const V_LENTA = 1.45, V_MANIOBRA = 0.60, PAUSA = 0.7;
+
+// busca un lugar de espera despejado dentro del pasillo, entrando desde el este
+function espLibre(p) {
+  for (let d = 3.0; d < 16; d += 0.7) {
+    const x = tx(p.x1) - d;
+    const A = { cx: x, cz: p.z, hx: 0.7, hz: 1.9, c: 1, s: 0 };
+    if (!OBST.some(O => obbHit(A, O))) return { x, z: p.z };
+  }
+  return { x: tx(p.x1) - 4, z: p.z };
+}
+function pasillosNaveEste() {
+  const sala = (PR.salasCalc || []).find(q => q.nom === 'Nave este');
+  if (!sala) return [];
+  return PROP_PAS.filter(p => Math.abs(p.x0 - (sala.x0 + PR.margen)) < 2.5)
+                 .sort((a, b) => a.z - b.z);   // z creciente = norte → sur
+}
+function slotsDePasillo(z, ocupado) {
+  return PSLOTS.filter(s => Math.abs(s.zAp - z) < 0.6 && s.ocupado === ocupado && s.lvl <= 3);
+}
+function cubosEn(zona, r = 6) {
+  return FLOOR_CUBES.filter(c => Math.hypot(c.x - zona.x, c.z - zona.z) < r);
+}
+let camiones = 0;
+function reponerDescarga() {
+  if (cubosEn(ZONA.descarga).length) return;
+  camiones++;
+  for (let i = 0; i < 6; i++) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(1.14, CUBE_H, .94),
+      new THREE.MeshStandardMaterial({ color: 0xffd166, roughness: .75 }));
+    m.position.set(ZONA.descarga.x - 1.3 + (i % 3) * 1.3, CUBE_H / 2 + .02,
+                   ZONA.descarga.z - 1.2 + Math.floor(i / 3) * 2.4);
+    m.castShadow = true; scene.add(m);
+    FLOOR_CUBES.push({ x: m.position.x, z: m.position.z, y: m.position.y,
+      sku: `SKU-${pad(Math.floor(rnd() * 9000) + 1000, 4)}`,
+      code: 'DESCARGA', piso: true, obj: m, ocupado: true });
+  }
+}
+
+/* ---- guion de cada unidad: lista de pasos con acción explícita ---- */
+function guionIngreso(u) {
+  const pas = pasillosNaveEste();
+  const mi = pas[u.pasIdx];
+  if (!mi) return null;
+  reponerDescarga();
+  const pila = cubosEn(ZONA.descarga);
+  if (!pila.length) return null;
+  const libres = slotsDePasillo(mi.z, false);
+  if (!libres.length) return null;
+  const cubo = pila[0], sl = libres[Math.floor(rnd() * libres.length)];
+  u.mision = { tipo: 'ingreso', cubo, slot: sl };
+  return [
+    { x: sl.xTrans, z: mi.z, nom: 'sale al transversal', v: V_MANIOBRA, tok: true },
+    { x: ZONA.descarga.x, z: ZONA.descarga.z + 4.2, nom: 'sube al muelle', v: V_LENTA, tok: true },
+    { x: cubo.x, z: cubo.z + 1.85, nom: 'alinea', v: V_MANIOBRA, tok: true, uñas: 0.15 },
+    { x: cubo.x, z: cubo.z + 1.5, nom: 'toma', v: V_MANIOBRA, tok: true, act: 'tomarPiso', pausa: 1.5 },
+    { x: sl.xTrans, z: ZONA.descarga.z + 4.2, nom: 'baja', v: V_MANIOBRA, tok: true },
+    { x: sl.xTrans, z: mi.z, nom: 'dobla a su fila', v: V_LENTA, tok: true, pausa: 1.0 },
+    { x: sl.x + 2.4, z: mi.z, nom: 'entra al pasillo', v: V_LENTA, libera: true, uñas: 'slot' },
+    { x: sl.x, z: mi.z, nom: 'bahía', v: V_MANIOBRA, act: 'estibar', pausa: 1.6, uñas: 'slot' },
+    { x: u.espPos.x, z: u.espPos.z, nom: 'espera en su fila', v: V_MANIOBRA, uñas: 0.15, pausa: 1.0 },
+  ];
+}
+function guionEgreso(u) {
+  const pas = pasillosNaveEste();
+  const mi = pas[u.pasIdx];
+  if (!mi) return null;
+  const llenos = slotsDePasillo(mi.z, true);
+  if (!llenos.length) return null;
+  const sl = llenos[Math.floor(rnd() * llenos.length)];
+  u.mision = { tipo: 'egreso', slot: sl };
+  return [
+    { x: sl.x + 2.4, z: mi.z, nom: 'va a la bahía', v: V_LENTA, uñas: 'slot' },
+    { x: sl.x, z: mi.z, nom: 'saca', v: V_MANIOBRA, act: 'sacar', pausa: 1.6, uñas: 'slot' },
+    { x: u.espPos.x, z: mi.z, nom: 'a la salida', v: V_MANIOBRA, uñas: 0.15, pausa: .6 },
+    { x: ZONA.carga.x, z: ZONA.carga.z - 4.2, nom: 'baja a carga', v: V_LENTA, tok: true },
+    { x: ZONA.carga.x, z: ZONA.carga.z - 1.1, nom: 'despacha', v: V_MANIOBRA, tok: true, act: 'dejarPiso', pausa: 1.6 },
+    { x: ZONA.carga.x, z: ZONA.carga.z - 4.6, nom: 'sale', v: V_MANIOBRA, tok: true, pausa: .8 },
+    { x: u.espPos.x, z: u.espPos.z, nom: 'vuelve a su fila', v: V_LENTA, tok: true, libera: true, pausa: 1.0 },
+  ];
+}
+
+function ejecutarAccion(u, act) {
+  const m = u.mision; if (!m) return;
+  if (act === 'tomarPiso') {
+    if (m.cubo && m.cubo.obj) {
+      scene.remove(m.cubo.obj);
+      const i = FLOOR_CUBES.indexOf(m.cubo); if (i >= 0) FLOOR_CUBES.splice(i, 1);
+    }
+    u.load = true; u.mesh.userData.cargo.visible = true;
+    u.evento = 'tomó de descarga'; CHOREO.log = u.id + ' tomó un maxicubo';
+  } else if (act === 'estibar') {
+    m.slot.ocupado = true; refreshProp();
+    u.load = false; u.mesh.userData.cargo.visible = false;
+    u.evento = 'estibó ' + m.slot.code; u.hechos = (u.hechos || 0) + 1;
+    CHOREO.log = u.id + ' estibó en ' + m.slot.code;
+  } else if (act === 'sacar') {
+    m.slot.ocupado = false; refreshProp();
+    u.load = true; u.mesh.userData.cargo.visible = true;
+    u.evento = 'sacó ' + m.slot.code; CHOREO.log = u.id + ' sacó ' + m.slot.code;
+  } else if (act === 'dejarPiso') {
+    const g = new THREE.Mesh(new THREE.BoxGeometry(1.14, CUBE_H, .94),
+      new THREE.MeshStandardMaterial({ color: 0x39d98a, roughness: .75 }));
+    g.position.set(u.x - Math.sin(u.th) * -1.9, CUBE_H / 2 + .02, u.z - Math.cos(u.th) * -1.9);
+    g.castShadow = true; scene.add(g);
+    FLOOR_CUBES.push({ x: g.position.x, z: g.position.z, y: g.position.y,
+      sku: m.slot.sku, code: 'CARGA', piso: true, obj: g, ocupado: true });
+    u.load = false; u.mesh.userData.cargo.visible = false;
+    u.evento = 'despachó'; u.hechos = (u.hechos || 0) + 1;
+    CHOREO.log = u.id + ' despachó al camión';
+    const enCarga = cubosEn(ZONA.carga);
+    if (enCarga.length > 5) for (const c of enCarga) {
+      scene.remove(c.obj); const i = FLOOR_CUBES.indexOf(c); if (i >= 0) FLOOR_CUBES.splice(i, 1);
+    }
+  }
+}
+
+/* ---- piloto: sigue el guion, despacio y frenando en cada paso ---- */
+function boAuto(u, dt) {
+  if (!u.run) { u.v *= Math.pow(0.02, dt); return; }
+  if (u.pausa > 0) { u.pausa -= dt; u.v *= Math.pow(0.01, dt); u.steer *= 0.9; return; }
+
+  // sin guion: arma el siguiente ciclo
+  if (!u.guion) {
+    u.espera = false;
+    u.guion = u.modo === 'egreso' ? guionEgreso(u) : guionIngreso(u);
+    u.paso = 0; u.st = 1;
+    if (!u.guion) u.pausa = 2.0;
+    return;
+  }
+
+  const p = u.guion[u.paso];
+  if (!p) {                                   // fin del ciclo
+    u.guion = null; u.mision = null; u.st = 0; u.pausa = 1.2;
+    if (CHOREO.token === u.id) { CHOREO.token = null;
+      CHOREO.turno = (CHOREO.cola.indexOf(u.id) + 1) % CHOREO.cola.length;
+      CHOREO.log = u.id + ' liberó el transversal'; }
+    return;
+  }
+
+  // el transversal es de un solo carril: hay que pedir el turno para entrar
+  if (p.tok && CHOREO.token !== u.id) {
+    u.espera = true; u.pide = true;
+    u.v *= Math.pow(0.02, dt); u.steer *= 0.92;
+    return;
+  }
+  u.espera = false;
+
+  // altura de uñas del paso
+  const sl = u.mision && u.mision.slot;
+  const objetivo = p.uñas === 'slot' && sl ? sl.y - CUBE_H / 2 : (typeof p.uñas === 'number' ? p.uñas : 0.15);
+  u.lift += Math.max(-0.45 * dt, Math.min(0.45 * dt, objetivo - u.lift));
+
+  const dx = p.x - u.x, dz = p.z - u.z, d = Math.hypot(dx, dz);
+  if (d < 0.45) {
+    if (p.act) ejecutarAccion(u, p.act);
+    if (p.libera && CHOREO.token === u.id) {   // ya está dentro de su fila: suelta el transversal
+      CHOREO.token = null;
+      CHOREO.turno = (CHOREO.cola.indexOf(u.id) + 1) % CHOREO.cola.length;
+      CHOREO.log = u.id + ' ya está en su fila · transversal libre';
+    }
+    u.pausa = p.pausa || PAUSA;
+    u.paso++;
+    u.st = Math.min(u.fsm.length - 1, u.st + 1);
+    u.v = 0;
+    return;
+  }
+
+  const want = Math.atan2(-dx, -dz);
+  const norm = a => ((a + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+  let err = norm(want - u.th);
+  // si el punto queda atrás, va en reversa en vez de intentar dar la vuelta:
+  // el pasillo no da para maniobrar y así opera un montacargas de verdad
+  let dirV = 1;
+  if (Math.abs(err) > 1.9) { dirV = -1; err = norm(err + Math.PI); }
+  u.reversa = dirV < 0;
+  u.steer += (Math.max(-1, Math.min(1, -err / 1.1)) * dirV * FK.MAXS - u.steer) * Math.min(1, dt * 3.0);
+  const vTope = (p.v || V_LENTA) * (1 - 0.55 * Math.abs(u.steer) / FK.MAXS) * (dirV < 0 ? 0.62 : 1);
+  const vt = dirV * Math.min(vTope, 0.22 + d * 0.65);
+  u.v += (vt - u.v) * Math.min(1, dt * 2.6);
+
+  const nth = u.th - (u.v / FK.WB) * Math.tan(u.steer) * dt;
+  const nx = u.x + Math.sin(nth) * -u.v * dt;
+  const nz = u.z + Math.cos(nth) * -u.v * dt;
+  const A = { cx: nx, cz: nz, hx: 0.62, hz: 1.75, c: Math.cos(-nth), s: Math.sin(-nth) };
+  const miPrio = FLEET.indexOf(u);
+  const cede = FLEET.some(o => o !== u && Math.hypot(o.x - nx, o.z - nz) < 4.2);
+  if (OBST.some(O => obbHit(A, O)) || cede) {
+    u.v *= 0.05;
+    u.bloq = (u.bloq || 0) + dt;
+    u.cediendo = cede;
+    if (u.bloq > 10) { u.bloq = 0; u.guion = null; u.mision = null;
+      if (CHOREO.token === u.id) { CHOREO.token = null;
+        CHOREO.turno = (CHOREO.cola.indexOf(u.id) + 1) % CHOREO.cola.length; } }
+    return;
+  }
+  u.cediendo = false;
+  u.bloq = 0; u.th = nth; u.x = nx; u.z = nz;
+}
+
+function boManual(u, dt) {
+  const acc = -boJY * FK.ACC;
+  u.v += acc * dt; u.v *= Math.pow(0.55, dt);
+  u.v = Math.max(-FK.VMAX * 0.62, Math.min(FK.VMAX, u.v));
+  if (Math.abs(acc) < .01 && Math.abs(u.v) < .04) u.v = 0;
+  u.steer += (-boJX * FK.MAXS - u.steer) * Math.min(1, dt * 6);
+  const nth = u.th - (u.v / FK.WB) * Math.tan(u.steer) * dt;
+  const nx = u.x + Math.sin(nth) * -u.v * dt, nz = u.z + Math.cos(nth) * -u.v * dt;
+  const A = { cx: nx, cz: nz, hx: 0.6, hz: 1.7, c: Math.cos(-nth), s: Math.sin(-nth) };
+  if (OBST.some(O => obbHit(A, O))) { u.v = -u.v * 0.25; return; }
+  u.x = nx; u.z = nz; u.th = nth;
+}
+
+function boSync(u) {
+  u.mesh.position.set(u.x, 0, u.z);
+  u.mesh.rotation.y = u.th;
+  u.mesh.userData.carro.position.y = u.lift;
+  u.mesh.userData.carro.rotation.x = THREE.MathUtils.degToRad(u.tilt);
+}
+
+function repartirTurno() {
+  if (CHOREO.token) return;
+  const n = CHOREO.cola.length;
+  for (let k = 0; k < n; k++) {
+    const cand = FLEET.find(q => q.id === CHOREO.cola[(CHOREO.turno + k) % n]);
+    if (cand && cand.pide) {
+      CHOREO.token = cand.id; CHOREO.turno = (CHOREO.turno + k) % n;
+      cand.espera = false;
+      CHOREO.log = cand.id + ' entra al transversal';
+      return;
+    }
+  }
+}
+
+function boStep(dt) {
+  repartirTurno();                       // reparte con las peticiones del ciclo anterior
+  FLEET.forEach(u => { u.pide = false; });
+  FLEET.forEach((u, i) => {
+    if (boMode === 'MANUAL' && i === boSel) boManual(u, dt); else boAuto(u, dt);
+    boSync(u);
+  });
+}
+
+/* ---- render de la cámara a bordo ---- */
+let boCam = null, boCamR = null, boCabR = null;
+function boInitCam() {
+  if (boCam) return;
+  boCam = new THREE.PerspectiveCamera(68, 16 / 9, 0.1, 400);
+  boCamR = new THREE.WebGLRenderer({ antialias: true });
+  boCamR.setPixelRatio(1);
+  document.getElementById('bo-camwrap').appendChild(boCamR.domElement);
+  boCabR = new THREE.WebGLRenderer({ antialias: true });
+  boCabR.setPixelRatio(1);
+  document.getElementById('bo-cab').appendChild(boCabR.domElement);
+}
+function boPlaceCam(u) {
+  // va sobre el techo de protección, por encima del mástil, como en el kit real
+  const fx = -Math.sin(u.th), fz = -Math.cos(u.th);
+  boCam.position.set(u.x - fx * 0.20, 1.46, u.z - fz * 0.20);
+  boCam.lookAt(u.x + fx * 15, 1.12, u.z + fz * 15);
+}
+
+/* ---- minimapa 2D estilo espectador ---- */
+const boMapC = document.getElementById('bo-map');
+const bg2 = boMapC.getContext('2d');
+function boDrawMap() {
+  const w = boMapC.clientWidth, h = boMapC.clientHeight;
+  if (!w || !h) return;
+  if (boMapC.width !== w || boMapC.height !== h) { boMapC.width = w; boMapC.height = h; }
+  const u = FLEET[boSel];
+  bg2.fillStyle = '#0b0c0e'; bg2.fillRect(0, 0, w, h);
+  let k, ox, oz;
+  if (boFollow) { k = boZoom; ox = u.x; oz = u.z; }
+  else {
+    k = Math.min(w / (SPAN_X + 8), h / (SPAN_Z + 8));
+    ox = 0; oz = 0;
+  }
+  const X = x => w / 2 + (x - ox) * k, Z = z => h / 2 + (z - oz) * k;
+
+  bg2.strokeStyle = '#39414d'; bg2.lineWidth = 1.4;
+  bg2.beginPath();
+  for (const wl of DATA.walls) {
+    bg2.moveTo(X(tx(wl[0])), Z(tz(wl[1]))); bg2.lineTo(X(tx(wl[2])), Z(tz(wl[3])));
+  }
+  bg2.stroke();
+
+  for (const r of DATA.racks) {
+    const x0 = X(tx(r.x0)), x1 = X(tx(r.x1)), zc = Z(tz(r.y)), d = r.cd * k;
+    bg2.fillStyle = r.levels >= 5 ? 'rgba(74,144,217,.34)' : 'rgba(125,91,166,.34)';
+    bg2.fillRect(x0, zc - d / 2, x1 - x0, d);
+    bg2.strokeStyle = 'rgba(120,160,220,.5)'; bg2.lineWidth = 1;
+    bg2.strokeRect(x0, zc - d / 2, x1 - x0, d);
+  }
+  bg2.fillStyle = 'rgba(245,197,24,.85)';
+  for (const c of DATA.columns) bg2.fillRect(X(tx(c.x)) - 2, Z(tz(c.y)) - 2, 4, 4);
+
+  // pasillos de la propuesta (donde de verdad opera la flota)
+  for (const p of PROP_PAS) {
+    bg2.fillStyle = 'rgba(63,185,80,.10)';
+    bg2.fillRect(X(tx(p.x0)), Z(p.z) - p.gap * k / 2, (tx(p.x1) - tx(p.x0)) * k, p.gap * k);
+  }
+  // racks de la propuesta
+  for (const r of PROP_ROWS) {
+    const x0 = X(tx(r.x0)), x1 = X(tx(r.x1)), zc = Z(tz(r.y)), d = Math.max(2, r.cd * k);
+    bg2.fillStyle = 'rgba(63,185,80,.40)';
+    bg2.fillRect(x0, zc - d / 2, x1 - x0, d);
+    bg2.strokeStyle = 'rgba(120,240,160,.75)'; bg2.lineWidth = 1;
+    bg2.strokeRect(x0, zc - d / 2, x1 - x0, d);
+  }
+  // zonas de descarga y carga
+  for (const [z, col, txt] of [[ZONA.descarga, '#f85149', 'DESCARGA'], [ZONA.carga, '#39d98a', 'CARGA']]) {
+    bg2.strokeStyle = col; bg2.lineWidth = 2;
+    bg2.strokeRect(X(z.x) - 2.2 * k, Z(z.z) - 2.6 * k, 4.4 * k, 5.2 * k);
+    bg2.fillStyle = col; bg2.globalAlpha = .12;
+    bg2.fillRect(X(z.x) - 2.2 * k, Z(z.z) - 2.6 * k, 4.4 * k, 5.2 * k);
+    bg2.globalAlpha = 1;
+    bg2.font = 'bold 9px ui-monospace,monospace'; bg2.textAlign = 'center';
+    bg2.fillText(txt, X(z.x), Z(z.z) - 2.6 * k - 5);
+  }
+  // maxicubos en el piso
+  for (const c of FLOOR_CUBES) {
+    bg2.fillStyle = c.code === 'CARGA' ? '#39d98a' : '#ffd166';
+    bg2.fillRect(X(c.x) - Math.max(1.5, 0.6 * k), Z(c.z) - Math.max(1.5, 0.5 * k),
+                 Math.max(3, 1.2 * k), Math.max(3, 1.0 * k));
+  }
+
+  // guion de la unidad seleccionada, con el paso actual marcado
+  if (u.guion && u.guion.length) {
+    bg2.strokeStyle = u.hex; bg2.globalAlpha = .55; bg2.lineWidth = 2; bg2.setLineDash([5, 4]);
+    bg2.beginPath();
+    bg2.moveTo(X(u.x), Z(u.z));
+    for (let i = u.paso; i < u.guion.length; i++) bg2.lineTo(X(u.guion[i].x), Z(u.guion[i].z));
+    bg2.stroke(); bg2.setLineDash([]); bg2.globalAlpha = 1;
+    const pa = u.guion[u.paso];
+    if (pa) {
+      bg2.strokeStyle = u.hex; bg2.lineWidth = 2;
+      bg2.beginPath(); bg2.arc(X(pa.x), Z(pa.z), Math.max(4, 0.9 * k), 0, 7); bg2.stroke();
+    }
+  }
+  // ubicación objetivo dentro del rack
+  if (u.mision && u.mision.slot) {
+    const sl = u.mision.slot;
+    bg2.strokeStyle = '#fff'; bg2.lineWidth = 2;
+    bg2.strokeRect(X(sl.x) - Math.max(3, .6 * k), Z(sl.z) - Math.max(3, .5 * k),
+                   Math.max(6, 1.2 * k), Math.max(6, 1.0 * k));
+  }
+
+  FLEET.forEach((f, i) => {
+    const px = X(f.x), pz = Z(f.z), sel = i === boSel;
+    const L = 3.36 * k, W = 1.147 * k;
+    bg2.save(); bg2.translate(px, pz); bg2.rotate(-f.th);
+    if (sel) {
+      bg2.fillStyle = f.hex; bg2.globalAlpha = .16;
+      bg2.beginPath(); bg2.moveTo(0, 0);
+      bg2.arc(0, 0, 9 * k, -Math.PI / 2 - 0.62, -Math.PI / 2 + 0.62); bg2.fill();
+      bg2.globalAlpha = 1;
+    }
+    bg2.fillStyle = f.hex; bg2.strokeStyle = sel ? '#fff' : 'rgba(0,0,0,.6)';
+    bg2.lineWidth = sel ? 2 : 1;
+    bg2.fillRect(-W / 2, -L / 2, W, L); bg2.strokeRect(-W / 2, -L / 2, W, L);
+    bg2.fillStyle = '#0b0c0e'; bg2.fillRect(-W / 2, -L / 2, W, Math.max(2, L * 0.16));
+    bg2.restore();
+    bg2.fillStyle = sel ? '#fff' : 'rgba(255,255,255,.55)';
+    bg2.font = (sel ? 'bold ' : '') + '10px ui-monospace,monospace';
+    bg2.textAlign = 'center';
+    bg2.fillText(f.id, px, pz - Math.max(11, L / 2 + 6));
+  });
+
+  bg2.strokeStyle = 'rgba(245,197,24,.6)'; bg2.lineWidth = 1;
+  bg2.strokeRect(.5, .5, w - 1, h - 1);
+}
+
+/* ---- panel de FSM ---- */
+let boVarSel = null;
+function boDrawFSM() {
+  const u = FLEET[boSel];
+  const row = document.getElementById('bo-fsmrow');
+  row.innerHTML = u.fsm.map((n, i) => {
+    const cls = i === u.st ? 'cur' : (i < u.st ? 'done' : '');
+    const box = `<div class="bo-fb ${cls}" style="background:${n.c}" data-i="${i}">
+        <span class="bn">${n.s}</span><span class="bs">${n.sub}</span></div>`;
+    const arr = i < u.fsm.length - 1
+      ? `<div class="bo-arr"><svg viewBox="0 0 28 20">
+           <line x1="2" y1="10" x2="21" y2="10" stroke="#4b5563" stroke-width="2"/>
+           <polygon points="21,6 28,10 21,14" fill="#4b5563"/></svg>
+         <span>${n.ev}</span></div>` : '';
+    return box + arr;
+  }).join('');
+  row.querySelectorAll('.bo-fb').forEach(el =>
+    el.onclick = () => { boVarSel = +el.dataset.i; boDrawVars(); });
+  document.getElementById('bo-task').textContent = u.tarea;
+  boDrawVars();
+}
+function boDrawVars() {
+  const u = FLEET[boSel];
+  const i = Math.min(boVarSel === null ? u.st : boVarSel, u.fsm.length - 1);
+  document.getElementById('bo-varsT').textContent =
+    `${u.id} · ${u.fsm[i].s}:${u.fsm[i].sub}` + (i === u.st ? '  ← estado actual' : '');
+  document.getElementById('bo-varsR').innerHTML = u.vars
+    .map(([k, f]) => `<span class="bo-var">${k} <b>${f(u)}</b></span>`).join('') +
+    `<span class="bo-var">v <b>${u.v.toFixed(2)} m/s</b></span>` +
+    `<span class="bo-var">uñas <b>${u.lift.toFixed(2)} m</b></span>` +
+    `<span class="bo-var">carga <b>${u.load ? 'sí' : 'no'}</b></span>` +
+    `<span class="bo-var">pasillo <b>${u.pasillo || '—'}</b></span>`;
+}
+
+/* ---- barra de unidades ---- */
+function boDrawUnits() {
+  document.getElementById('bo-units').innerHTML = FLEET.map((u, i) =>
+    `<button class="bo-unit ${i === boSel ? 'on' : ''}" data-i="${i}" style="${i === boSel ? '' : 'color:' + u.hex}">
+      <span class="u-dot"></span>${u.id}<span style="opacity:.7;font-weight:400">${u.rol}</span></button>`).join('');
+  document.querySelectorAll('.bo-unit').forEach(b =>
+    b.onclick = () => boSelect(+b.dataset.i));
+}
+function boSelect(i) {
+  boSel = i; boVarSel = null;
+  const u = FLEET[i];
+  boDrawUnits(); boDrawFSM();
+  document.getElementById('bo-camid').textContent = u.id + ' · cam frontal';
+  document.getElementById('bo-ctrlid').textContent = u.id;
+  document.getElementById('bo-fork').value = u.lift;
+  document.getElementById('bo-tilt').value = u.tilt;
+  document.getElementById('bo-spread').value = u.spread;
+}
+
+/* ---- joystick ---- */
+function boBindJoy(el, nub) {
+  let id = null;
+  const ev = e => {
+    const r = el.getBoundingClientRect();
+    let dx = (e.clientX - r.left - r.width / 2) / (r.width / 2);
+    let dy = (e.clientY - r.top - r.height / 2) / (r.height / 2);
+    const m = Math.hypot(dx, dy); if (m > 1) { dx /= m; dy /= m; }
+    boJX = Math.abs(dx) < .08 ? 0 : dx;
+    boJY = Math.abs(dy) < .08 ? 0 : dy;
+    nub.style.transform = `translate(${dx * 48}%,${dy * 48}%)`;
+  };
+  el.addEventListener('pointerdown', e => {
+    if (boMode !== 'MANUAL') { boSetMode('MANUAL'); }
+    id = e.pointerId; el.setPointerCapture(e.pointerId); ev(e);
+  });
+  el.addEventListener('pointermove', e => { if (id === e.pointerId) ev(e); });
+  const up = e => { if (id === e.pointerId) { id = null; boJX = boJY = 0; nub.style.transform = ''; } };
+  el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+}
+boBindJoy(document.getElementById('bo-joy'), document.getElementById('bo-nub'));
+boBindJoy(document.getElementById('bo-cabjoy'), document.getElementById('bo-cabnub'));
+
+function boSetMode(m) {
+  boMode = m;
+  for (const [id, on] of [['bo-mMan', m === 'MANUAL'], ['bo-cabMan', m === 'MANUAL'],
+                          ['bo-mFlow', m === 'FLOW'], ['bo-cabFlow', m === 'FLOW']]) {
+    const el = document.getElementById(id); if (el) el.classList.toggle('on', on);
+  }
+  document.getElementById('bo-joy').classList.toggle('flow', m !== 'MANUAL');
+  document.getElementById('bo-cabjoy').classList.toggle('flow', m !== 'MANUAL');
+}
+
+/* ---- presets de altura ---- */
+const BO_PRESETS = [['Base', 0.12], ['Nivel 1', 0.20], ['Nivel 2', 1.65], ['Nivel 3', 3.10],
+                    ['Nivel 4', 4.55], ['Tránsito', 0.35]];
+document.getElementById('bo-presets').innerHTML = BO_PRESETS
+  .map(([n, v]) => `<button class="bo-btn" data-v="${v}" style="padding:6px;font-size:10px">${n}</button>`).join('');
+document.getElementById('bo-cabfork').innerHTML = BO_PRESETS
+  .map(([n, v]) => `<button data-v="${v}">${n}</button>`).join('');
+document.querySelectorAll('#bo-presets button,#bo-cabfork button').forEach(b =>
+  b.onclick = () => { FLEET[boSel].lift = +b.dataset.v; document.getElementById('bo-fork').value = +b.dataset.v; });
+
+/* ---- controles varios ---- */
+const bind2 = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
+bind2('bo-mMan', () => boSetMode('MANUAL'));
+bind2('bo-mFlow', () => boSetMode('FLOW'));
+bind2('bo-cabMan', () => boSetMode('MANUAL'));
+bind2('bo-cabFlow', () => boSetMode('FLOW'));
+bind2('bo-start', () => { FLEET[boSel].run = true; boSetMode('FLOW'); });
+bind2('bo-stop', () => { FLEET[boSel].run = false; FLEET[boSel].v = 0; });
+bind2('bo-prev', () => { const u = FLEET[boSel]; u.st = (u.st - 1 + u.fsm.length) % u.fsm.length; boDrawFSM(); });
+bind2('bo-next', () => { const u = FLEET[boSel]; u.st = (u.st + 1) % u.fsm.length; boDrawFSM(); });
+bind2('bo-toggleload', () => {
+  const u = FLEET[boSel]; u.load = !u.load; u.mesh.userData.cargo.visible = u.load;
+});
+bind2('bo-zin', () => { boZoom = Math.min(22, boZoom * 1.35); });
+bind2('bo-zout', () => { boZoom = Math.max(2, boZoom / 1.35); });
+bind2('bo-fFollow', () => { boFollow = true; boFollowUI(); });
+bind2('bo-fAll', () => { boFollow = false; boFollowUI(); });
+function boFollowUI() {
+  document.getElementById('bo-fFollow').classList.toggle('on', boFollow);
+  document.getElementById('bo-fAll').classList.toggle('on', !boFollow);
+}
+for (const [id, key] of [['bo-fork', 'lift'], ['bo-tilt', 'tilt'], ['bo-spread', 'spread']]) {
+  document.getElementById(id).addEventListener('input', e => {
+    FLEET[boSel][key] = +e.target.value;
+    document.getElementById(id + 'v').textContent =
+      key === 'tilt' ? (+e.target.value).toFixed(1) + '°' : (+e.target.value).toFixed(2) + ' m';
+  });
+}
+bind2('bo-cabbtn', () => boSetCab(true));
+bind2('bo-cabx', () => boSetCab(false));
+bind2('bo-exit', () => boOpen(false));
+
+function boSetCab(on) {
+  boCab = on;
+  document.getElementById('bo-cab').classList.toggle('show', on);
+}
+function boOpen(on) {
+  boActive = on;
+  document.getElementById('botoni').classList.toggle('show', on);
+  document.getElementById('bo-btn').classList.toggle('on', on);
+  if (!on) boSetCab(false);
+  G.lbl.visible = !on && document.getElementById('c_lbl').checked;
+  if (on) { boInitCam(); boDrawUnits(); boSelect(boSel); boFollowUI(); boSetMode('FLOW'); }
+}
+
+boRutas();   // coloca la flota en fila y arma el guion inicial
+
+/* ---- lazo de la interfaz ---- */
+let boT = 0, boFsmT = 0;
+function boLoop(dt) {
+  if (!boActive) return;
+  boStep(dt);
+  const u = FLEET[boSel];
+  boPlaceCam(u);
+  // el resaltador sigue el objetivo de la unidad seleccionada
+  if (u.mision && u.mision.slot) {
+    const sl = u.mision.slot;
+    const meta = (u.modo === 'ingreso') ? !u.load : u.load;   // ¿ya va hacia el rack?
+    if (u.modo === 'ingreso' ? u.load : !u.load)
+      pintarHi(u.modo === 'ingreso' ? 0x3fb950 : 0x58a6ff, sl.x, sl.y, sl.z);
+    else if (u.mision.cubo)
+      pintarHi(0xf5c518, u.mision.cubo.x, u.mision.cubo.y, u.mision.cubo.z);
+    else pintarHi(0x58a6ff, sl.x, sl.y, sl.z);
+  } else ocultarHi();
+
+  const wrap = document.getElementById('bo-camwrap');
+  if (!boCab && wrap.clientWidth) {
+    boCamR.setSize(wrap.clientWidth, wrap.clientHeight, false);
+    boCam.aspect = wrap.clientWidth / wrap.clientHeight; boCam.updateProjectionMatrix();
+    boCamR.render(scene, boCam);
+  }
+  if (boCab) {
+    boCabR.setSize(innerWidth, innerHeight, false);
+    boCam.aspect = innerWidth / innerHeight; boCam.updateProjectionMatrix();
+    boCabR.render(scene, boCam);
+  }
+
+  const ahora = performance.now();
+  if (ahora - boT > 70) { boT = ahora; boDrawMap(); }
+  if (ahora - boFsmT > 300) {
+    boFsmT = ahora;
+    boDrawFSM();
+    const est = u.fsm[u.st];
+    const obj = u.mision && u.mision.slot ? u.mision.slot.code : '—';
+    const acc = u.modo === 'ingreso'
+      ? (u.load ? '▼ estibar en ' + obj : '▲ tomar de descarga')
+      : (u.load ? '▼ dejar en zona de carga' : '▲ sacar ' + obj);
+    const hud = `<b>${u.id} · ${u.rol}</b><br>${est.s}:${est.sub} · ${(u.v * 3.6).toFixed(1)} km/h` +
+      `<br><span style="color:${u.hex}">${acc}</span>` +
+      `<br>uñas ${u.lift.toFixed(2)} m · ciclos ${u.hechos || 0}` +
+      (u.load && u.lift > 0.55 && u.lift < 2.6
+        ? `<br><span style="color:#f85149;font-weight:700">⚠ CARGA TAPA LA VISTA · bajá las uñas o andá en reversa</span>` : '') +
+      (u.evento ? `<br><span style="opacity:.75">${u.evento}</span>` : '');
+    document.getElementById('bo-camhud').innerHTML = hud;
+    document.getElementById('bo-cabhud').innerHTML = hud;
+    document.getElementById('bo-cabstate').textContent = `${u.id} · ${est.s}:${est.sub}`;
+    document.getElementById('bo-pose').textContent =
+      `x ${u.x.toFixed(1)}  z ${u.z.toFixed(1)}  θ ${(u.th * 180 / Math.PI).toFixed(0)}°`;
+    document.getElementById('bo-twist').innerHTML =
+      `linear.x <b>${(-boJY * 0.2).toFixed(2)}</b>` +
+      `<br>angular.z <b>${(-boJX * 1.5).toFixed(2)}</b>` +
+      `<br>modo <b>${boMode}</b>`;
+    document.getElementById('bo-tel').innerHTML =
+      `objetivo <b>${u.mision && u.mision.slot ? u.mision.slot.code : '—'}</b>` +
+      `<br>carga <b>${u.load ? 'maxicubo' : 'vacío'}</b>` +
+      `<br>ciclos <b>${u.hechos || 0}</b>` +
+      `<br>misión <b>${u.run ? 'activa' : 'detenida'}</b>` +
+      `<br>paso <b>${u.guion ? (u.paso + 1) + '/' + u.guion.length : '—'}</b>` +
+      `<br>${CHOREO.token === u.id ? 'tiene el transversal' : (u.espera ? 'cede el paso' : 'en su fila')}`;
+    document.getElementById('bo-fleetstat').textContent =
+      (CHOREO.token ? 'turno: ' + CHOREO.token : 'turno libre') + ' · ' + CHOREO.log;
+    const d = new Date();
+    document.getElementById('bo-clock').textContent =
+      `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+  }
+}
+</script>
