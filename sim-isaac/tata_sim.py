@@ -16,6 +16,8 @@ ap.add_argument('--nivel', default='produccion',
                 choices=['scrappy', 'industrial', 'produccion', 'maximo'])
 ap.add_argument('--ruido', default='real', choices=['ideal', 'real', 'alto'])
 ap.add_argument('--headless', action='store_true')
+ap.add_argument('--sin-sensores', dest='sin_sensores', action='store_true',
+                help='carga solo bodega + montacargas; no importa ni monta sensores')
 ap.add_argument('--usd', default=os.path.join(os.path.dirname(__file__), 'PropuestaIT_RETHINK.usda'))
 A = ap.parse_args()
 
@@ -27,8 +29,7 @@ import numpy as np
 from isaacsim.core.api import World
 from isaacsim.core.utils.stage import add_reference_to_stage
 from isaacsim.core.utils.prims import create_prim
-from isaacsim.sensors.experimental.rtx import Lidar
-from isaacsim.sensors.camera import Camera
+from isaacsim.core.utils.viewports import set_camera_view
 import omni.usd
 from pxr import Gf, UsdGeom, UsdPhysics
 
@@ -123,45 +124,64 @@ stage = omni.usd.get_context().get_stage()
 # El montacargas: por ahora un cuerpo rígido con las cotas reales del Baoli KBE 20.
 # La articulación (dirección trasera + mástil) se arma en la fase 2 — ver abajo.
 FK = dict(L=2.29, W=1.147, WB=1.50, FLEN=1.07, ALTO=2.177, LIFT=3.0)
-SPAWN = (58.0, 8.0, 0.0)    # boca del pasillo norte de la nave este
 
+# Pasillo norte de la nave este. Medido sobre la geometria del USD, no sobre los
+# centros de slot: la fila 1 termina en y=5.21 y la fila 0 empieza en y=10.75,
+# o sea 5.54 m libres (coincide con la ficha) y eje en y=7.98.
+# Las bahias corren de x=45.6 a x=64.8, asi que x=58 es MITAD de pasillo.
+SPAWN = (58.0, 7.98, 0.0)
+
+# El cuerpo rigido va en el Xform padre y la colision en la geometria hija.
+# Asi los sensores, que cuelgan de /World/Montacargas, se mueven CON el chasis.
+# (Antes el RigidBodyAPI estaba en el Cube y los sensores eran sus hermanos:
+#  la fisica movia el cubo y dejaba los sensores flotando en el aire.)
 chasis = create_prim("/World/Montacargas", "Xform",
                      position=Gf.Vec3d(*SPAWN), orientation=None)
 cuerpo = create_prim("/World/Montacargas/Chasis", "Cube",
                      attributes={"size": 1.0},
                      scale=Gf.Vec3d(FK['L'], FK['W'], FK['ALTO']),
                      position=Gf.Vec3d(0, 0, FK['ALTO'] / 2))
-UsdPhysics.RigidBodyAPI.Apply(stage.GetPrimAtPath("/World/Montacargas/Chasis"))
+UsdPhysics.RigidBodyAPI.Apply(stage.GetPrimAtPath("/World/Montacargas"))
 UsdPhysics.CollisionAPI.Apply(stage.GetPrimAtPath("/World/Montacargas/Chasis"))
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3 · MONTAJE DE SENSORES
 # ─────────────────────────────────────────────────────────────────────────────
-montados, omitidos = {}, []
+montados, omitidos, camaras = {}, [], []
 
-for nombre, s in SENSORES.items():
-    if not activo(s):
-        omitidos.append(nombre)
-        continue
-    ruta = f"/World/Montacargas/{nombre}"
+if A.sin_sensores:
+    omitidos = list(SENSORES)
+else:
+    # Import diferido a proposito: si el namespace de sensores cambia entre
+    # versiones de Isaac, --sin-sensores tiene que seguir arrancando igual.
+    from isaacsim.sensors.experimental.rtx import Lidar
+    from isaacsim.sensors.camera import Camera
 
-    if s['tipo'] == 'lidar':
-        montados[nombre] = Lidar.create(
-            path=ruta,
-            config=por_nivel(s['config'], 'Example_Rotary'),
-            tick_rate=float(por_nivel(s['hz'], 10)),
-            translations=[list(s['montaje'])],
-        )
-    else:
-        w, h = por_nivel(s['res'], (1280, 720))
-        cam = Camera(prim_path=ruta, resolution=(w, h),
-                     position=np.array(s['montaje']), frequency=20)
-        cam.initialize()
-        cam.set_focal_length(24.0 / max(1e-3, (s['fov'] / 60.0)))
-        montados[nombre] = cam
+    for nombre, s in SENSORES.items():
+        if not activo(s):
+            omitidos.append(nombre)
+            continue
+        ruta = f"/World/Montacargas/{nombre}"
+
+        if s['tipo'] == 'lidar':
+            montados[nombre] = Lidar.create(
+                path=ruta,
+                config=por_nivel(s['config'], 'Example_Rotary'),
+                tick_rate=float(por_nivel(s['hz'], 10)),
+                translations=[list(s['montaje'])],
+            )
+        else:
+            w, h = por_nivel(s['res'], (1280, 720))
+            cam = Camera(prim_path=ruta, resolution=(w, h),
+                         position=np.array(s['montaje']), frequency=20)
+            # OJO: initialize() NO va aca. La camara no tiene backend de render
+            # hasta que el World se resetea; llamarlo antes revienta el arranque.
+            montados[nombre] = cam
+            camaras.append((cam, s))
 
 print(f"\n{'='*66}")
-print(f"  TaTa · banco de pruebas — nivel '{A.nivel}' · ruido '{A.ruido}'")
+_modo = 'SIN SENSORES (solo bodega + montacargas)' if A.sin_sensores else f"nivel '{A.nivel}' · ruido '{A.ruido}'"
+print(f"  TaTa · banco de pruebas — {_modo}")
 print(f"{'='*66}")
 print(f"  montados ({len(montados)}): {', '.join(montados) or '—'}")
 print(f"  omitidos ({len(omitidos)}): {', '.join(omitidos) or '—'}")
@@ -189,6 +209,17 @@ print(f"{'='*66}\n")
 #   - publicar /scan, /points, /camera/* y cerrar el lazo con Nav2
 
 world.reset()
+
+# Recien ahora las camaras tienen backend valido.
+for cam, s in camaras:
+    cam.initialize()
+    cam.set_focal_length(24.0 / max(1e-3, (s['fov'] / 60.0)))
+
+# Encuadre inicial: mirando el montacargas desde la boca del pasillo.
+if not A.headless:
+    set_camera_view(eye=[SPAWN[0] - 14.0, SPAWN[1] - 5.0, 6.0],
+                    target=[SPAWN[0], SPAWN[1], 1.0])
+
 paso = 0
 try:
     while sim_app.is_running():

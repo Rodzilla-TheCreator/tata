@@ -39,13 +39,16 @@ prims, insta = [], []
 def cubo(name, cx, cy, cz, sx, sy, sz, colision=True, color=(.55,.58,.62)):
     px, py, pz = P(cx, cy, cz)
     # el tamaño se remapea igual que la posición: (sx, sz, sy)
+    # UsdPhysics crea el collider a partir del Gprim, no del Xform que lo contiene:
+    # si la API se aplica al Xform, PhysX no genera nada y todo se vuelve atravesable.
+    _api = ' (prepend apiSchemas = ["PhysicsCollisionAPI"])' if colision else ''
     prims.append(f'''
-    def Xform "{name}" (prepend apiSchemas = ["PhysicsCollisionAPI"])
+    def Xform "{name}"
     {{
         double3 xformOp:translate = ({px}, {py}, {pz})
         double3 xformOp:scale = ({round(sx,4)}, {round(sz,4)}, {round(sy,4)})
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
-        def Cube "geo" {{
+        def Cube "geo"{_api} {{
             double size = 1
             float3[] extent = [(-0.5,-0.5,-0.5), (0.5,0.5,0.5)]
             color3f[] primvars:displayColor = [({color[0]}, {color[1]}, {color[2]})]
@@ -90,10 +93,10 @@ insta.append(f'''
         int[] protoIndices = [{', '.join('0' for _ in pos)}]
         rel prototypes = </World/Almacen/Maxicubos/Proto/Cubo>
         def Scope "Proto" {{
-            def Xform "Cubo" (prepend apiSchemas = ["PhysicsCollisionAPI"]) {{
+            def Xform "Cubo" {{
                 double3 xformOp:scale = ({LOAD_W}, {LOAD_D}, {CUBE_H})
                 uniform token[] xformOpOrder = ["xformOp:scale"]
-                def Cube "geo" {{
+                def Cube "geo" (prepend apiSchemas = ["PhysicsCollisionAPI"]) {{
                     double size = 1
                     float3[] extent = [(-0.5,-0.5,-0.5), (0.5,0.5,0.5)]
                     color3f[] primvars:displayColor = [(0.78, 0.80, 0.83)]
