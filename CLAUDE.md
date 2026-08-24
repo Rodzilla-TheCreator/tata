@@ -16,7 +16,8 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/07-estado-y-siguientes-pasos.md` | Qué falta, en orden, con puertas de decisión |
 | `docs/08-setup-git-agente.md` | **Cómo dejar la máquina lista para empujar y cómo trabajar con git** |
 | `docs/09-briefing-secuencia.md` | La simulación de secuencia: qué es y qué falta |
-| `docs/10-intervencion-electrica.md` | **Los tres planes de intervención: freno, tracción, dirección** |
+| `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección |
+| `docs/11-plan-de-diagnostico.md` | **La visita de medición. Va ANTES del doc 10** |
 
 ## Lo mínimo para no meter la pata
 

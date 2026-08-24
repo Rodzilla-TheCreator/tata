@@ -1,8 +1,12 @@
 # Intervención eléctrica del EDR18N2 — tres planes
 
 Objetivo: teleoperar el equipo con un control de videojuego. **RT** acelera, **LT** frena,
-la dirección va en el stick. Nivel Ingenio: demostración teleoperada con un dedo humano
-sobre un paro físico. **Nunca se le llama "freno automático" a nada de esto.**
+**B/O** alterna el sentido y la dirección va en el stick. Nivel Ingenio: demostración
+teleoperada con un dedo humano sobre un paro físico. **Nunca se le llama "freno automático" a nada de esto.**
+
+**Antes de aplicar cualquiera de estos planes hay que hacer la visita de diagnóstico:
+[`11-plan-de-diagnostico.md`](11-plan-de-diagnostico.md).** Los tres tienen bifurcaciones
+que solo se cierran midiendo en el equipo.
 
 Los tres planes comparten la misma topología. Vale la pena entenderla una vez.
 
@@ -101,17 +105,22 @@ la cabeza de control. En el video se ve al operador con la mano ahí, sin pisar 
 La señal que buscás sale del mando, y es **bidireccional con neutro al centro**: típicamente
 0.5 V full reversa, 2.5 V neutro, 4.5 V full adelante.
 
-### El problema del mapeo
+### El mapeo
 
-RT solo te da 0 a 1. Necesitás adelante y atrás. Tres opciones:
+| Control | Función |
+|---|---|
+| **RT** | acelerador, proporcional |
+| **LT** | freno, proporcional |
+| **B** (Xbox) / **O** (PS) | alterna sentido: adelante ↔ atrás |
+| Hongo físico | paro, fuera del control |
 
-| Mapeo | Cómo | Cuándo |
-|---|---|---|
-| RT adelante · LT reversa | intuitivo de manejar | **pero perdés el freno en LT** |
-| RT magnitud · bumper dirección | LT queda libre para freno | **recomendado** |
-| Stick izquierdo eje Y | bidireccional natural | menos preciso con el pulgar |
+El sentido es un **estado**, no un eje. Se alterna con un botón y se muestra en pantalla;
+los dos gatillos siempre dosifican magnitud. Eso deja los dos ejes analógicos para lo que
+de verdad necesita resolución, y evita el modo de falla de mapear reversa a un gatillo que
+el pulgar puede rozar.
 
-Con el freno en LT, la única que cierra es la segunda: **RT dosifica, LB/RB elige sentido.**
+Regla de firmware: **el cambio de sentido solo se acepta con RT y LT en cero y el equipo
+detenido.** Nunca invertir en movimiento.
 
 ### El circuito
 
