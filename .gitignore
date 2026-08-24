@@ -4,3 +4,6 @@ __pycache__/
 .DS_Store
 capturas/
 *.log
+node_modules/
+TaTa_Secuencia.html
+sec/giro.json

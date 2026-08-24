@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TaTa · Secuencia de línea</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#0a0c10;color:#c9d1d9;
+  font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;-webkit-font-smoothing:antialiased}
+#app{position:fixed;inset:0;display:grid;grid-template-columns:308px 1fr 308px;grid-template-rows:52px 1fr}
+#hud{grid-column:1/4;display:flex;align-items:center;gap:26px;padding:0 18px;
+  background:#0d1117;border-bottom:1px solid #1c2128;z-index:5;font-size:11px;letter-spacing:.08em}
+#hud .k{color:#4d5560;margin-right:6px}
+#hud .v{color:#c9d1d9;font-weight:700}
+#hud .ttl{color:#e3b341;font-weight:700;letter-spacing:.18em}
+#stage{position:relative;background:#0a0c10;overflow:hidden}
+#stage canvas{display:block}
+.side{background:#0d1117;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.side.l{border-right:1px solid #1c2128}
+.side.r{border-left:1px solid #1c2128}
+.shead{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #1c2128;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6e7681}
+.dot{width:9px;height:9px;border-radius:2px;flex:none}
+.camwrap{position:relative;background:#05070a;border-bottom:1px solid #1c2128}
+.camwrap canvas{display:block;width:100%;height:auto}
+.camtag{position:absolute;left:8px;top:7px;font-size:10px;letter-spacing:.1em;color:#7d8590;
+  background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px}
+.camret{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;
+  border:1px solid rgba(255,255,255,.16);border-radius:2px;pointer-events:none}
+.camret:before,.camret:after{content:'';position:absolute;background:rgba(255,255,255,.26)}
+.camret:before{left:50%;top:-8px;bottom:-8px;width:1px}
+.camret:after{top:50%;left:-8px;right:-8px;height:1px}
+.rackwrap{border-bottom:1px solid #1c2128;padding:8px 10px 10px}
+.rackwrap canvas{display:block;width:100%;height:auto}
+.rlbl{display:flex;justify-content:space-between;font-size:10px;color:#6e7681;
+  letter-spacing:.08em;margin-bottom:6px}
+.log{flex:1;min-height:0;overflow-y:auto;padding:6px 10px 14px;font-size:11px;line-height:1.6}
+.log div{padding:1px 0;color:#7d8590;word-break:break-word}
+.log b{color:#c9d1d9;font-weight:600}
+.log .t{color:#4d5560;margin-right:6px}
+.log .hi{color:#e3b341}
+.log .ok{color:#3fb950}
+.log .wr{color:#e5484d}
+/* ---------- paneles flotantes ---------- */
+.pan{position:absolute;bottom:12px;z-index:6;background:rgba(9,12,17,.93);
+  border:1px solid #21262d;border-radius:10px;padding:10px 12px 12px;backdrop-filter:blur(6px)}
+.pan h4{font-size:10px;letter-spacing:.16em;color:#6e7681;font-weight:600;margin-bottom:9px}
+#pEnt{left:12px;width:300px}
+#pPed{right:12px}
+.row{display:flex;align-items:center;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:3px;min-height:36px;align-content:flex-start;margin-bottom:8px}
+.chip{width:13px;height:13px;border-radius:3px;opacity:.9}
+.chip.q{opacity:.35}
+.more{font-size:10px;color:#4d5560;align-self:center;margin-left:2px}
+.wheel{width:84px;height:34px;position:relative;overflow:hidden;border-radius:7px;
+  background:#010409;border:1px solid #1c2128;cursor:ew-resize;touch-action:none;user-select:none;flex:none}
+.wheel .trk{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;
+  transition:transform .22s cubic-bezier(.2,.9,.25,1)}
+.wheel .trk span{width:28px;flex:none;text-align:center;font-size:15px;font-weight:700;
+  opacity:.16;transition:opacity .22s,transform .22s;font-variant-numeric:tabular-nums}
+.wheel .trk span.on{opacity:1;transform:scale(1.3)}
+.wheel .trk span.nr{opacity:.38}
+.wheel:before,.wheel:after{content:'';position:absolute;top:0;bottom:0;width:24px;z-index:2;pointer-events:none}
+.wheel:before{left:0;background:linear-gradient(90deg,#010409,rgba(1,4,9,0))}
+.wheel:after{right:0;background:linear-gradient(270deg,#010409,rgba(1,4,9,0))}
+.wheel .gate{position:absolute;left:50%;top:4px;bottom:4px;width:30px;margin-left:-15px;
+  border-radius:5px;z-index:1;pointer-events:none}
+.lock .wheel{cursor:default;filter:saturate(.3) brightness(.6)}
+.btn{height:34px;padding:0 16px;border:0;border-radius:7px;cursor:pointer;flex:none;
+  font:700 11px/1 ui-monospace,monospace;letter-spacing:.16em;color:#04120a;background:#3fb950;
+  transition:background .18s,color .18s}
+.btn.run{background:#e0a72e;color:#1a1204}
+.btn.off{background:#21262d;color:#6e7681;cursor:default}
+.chk{display:flex;align-items:center;gap:6px;font-size:10px;color:#6e7681;margin-top:9px;cursor:pointer}
+.chk input{accent-color:#1f6feb}
+#geo{position:absolute;left:12px;top:12px;z-index:4;font-size:10px;line-height:1.75;
+  color:#6e7681;background:rgba(9,12,17,.72);border:1px solid #1c2128;border-radius:8px;padding:9px 12px}
+#geo b{color:#c9d1d9}
+#geo .g{color:#3fb950}
+#geo .w{color:#e3b341}
+#cam{position:absolute;right:12px;top:12px;z-index:4;display:flex;gap:6px}
+#cam button{background:#161b22;border:1px solid #21262d;color:#8b949e;border-radius:6px;
+  padding:6px 11px;font:11px/1 ui-monospace,monospace;cursor:pointer}
+#cam button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
+#tip{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:7;
+  background:rgba(1,4,9,.9);border:1px solid #21262d;border-radius:7px;padding:7px 14px;
+  font-size:11px;color:#c9d1d9;opacity:0;transition:opacity .3s;pointer-events:none;max-width:70%}
+#tip.on{opacity:1}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:#21262d;border-radius:4px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hud">
+    <span class="ttl">TaTa · LÍNEA</span>
+    <span><span class="k">reloj</span><span class="v" id="hClk">00:00</span></span>
+    <span><span class="k">en almacén</span><span class="v" id="hStock">0</span></span>
+    <span><span class="k">mal ubicados</span><span class="v" id="hBad">0</span></span>
+    <span><span class="k">trasbordo</span><span class="v" id="hHand">0/0</span></span>
+    <span><span class="k">entregados</span><span class="v" id="hOut">0</span></span>
+    <span><span class="k">movimientos</span><span class="v" id="hMov">0</span></span>
+    <span><span class="k">A</span><span class="v" id="hA">—</span></span>
+    <span><span class="k">B</span><span class="v" id="hB">—</span></span>
+  </div>
+
+  <div class="side l">
+    <div class="shead"><span class="dot" style="background:#e5484d"></span>
+      <span class="dot" style="background:#e3b341"></span><span>TaTa&nbsp;A · uñas</span></div>
+    <div class="camwrap"><canvas id="camA"></canvas><div class="camtag">CAM-UÑAS A</div><div class="camret"></div></div>
+    <div class="rackwrap">
+      <div class="rlbl"><span id="rlA">—</span><span id="rrA">—</span></div>
+      <canvas id="rkA"></canvas>
+    </div>
+    <div class="log" id="logA"></div>
+  </div>
+
+  <div id="stage">
+    <div id="geo"></div>
+    <div id="cam">
+      <button data-v="orbit" class="on">órbita</button>
+      <button data-v="A">TaTa A</button>
+      <button data-v="B">TaTa B</button>
+      <button data-v="hand">trasbordo</button>
+      <button data-v="top">planta</button>
+    </div>
+    <div id="tip"></div>
+
+    <div class="pan" id="pEnt">
+      <h4>ENTRADA · MONTACARGAS HUMANO</h4>
+      <div class="chips" id="entChips"></div>
+      <div class="row">
+        <span id="entWheel" style="display:flex"></span>
+        <button class="btn" id="bEnt">INTRODUCIR</button>
+        <span class="more" id="entInfo"></span>
+      </div>
+      <label class="chk"><input type="checkbox" id="chkMid">
+        el humano también alcanza el fondo de amarillo/verde</label>
+    </div>
+
+    <div class="pan" id="pPed">
+      <h4>PEDIDOS</h4>
+      <div class="row" id="pedWheels"></div>
+      <div class="row" style="margin-top:9px">
+        <button class="btn" id="bPed">PEDIR</button>
+        <span class="more" id="pedInfo"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="side r">
+    <div class="shead"><span class="dot" style="background:#3fb950"></span>
+      <span class="dot" style="background:#4f9dfb"></span><span>TaTa&nbsp;B · uñas</span></div>
+    <div class="camwrap"><canvas id="camB"></canvas><div class="camtag">CAM-UÑAS B</div><div class="camret"></div></div>
+    <div class="rackwrap">
+      <div class="rlbl"><span id="rlB">—</span><span id="rrB">—</span></div>
+      <canvas id="rkB"></canvas>
+    </div>
+    <div class="log" id="logB"></div>
+  </div>
+</div>
+
+<script>__THREE__</script>
+<script>
+/* ==========================================================================
+   TaTa · secuencia de LÍNEA
+   Disposición (eje Z):
+     rojo │ PASILLO A │ amarillo ‖ verde │ PASILLO B │ azul
+   amarillo y verde van pegados de culo.
+   El pasillo abre a la izquierda (principio) y muere contra la pared a la
+   derecha (final). El montacargas humano NO entra: deja los cubos al final
+   del rack rojo y recoge lo que sale al principio del pasillo.
+   Todo lo que va a verde/azul tiene que pasar por el trasbordo del fondo.
+   ========================================================================== */
+
+/* ---------- geometría ---------- */
+const BAY = 1.30, NCOL = 12, NLVL = 5;
+const RACKD = 1.10, AISLE = 3.00, HALF = AISLE / 2;
+const LVL = [0.15, 1.60, 3.05, 4.50, 5.95];
+const CUBE = { w: 1.20, h: 1.00, d: 1.20 };
+const COLX = i => 0.65 + i * BAY;
+const XEND = NCOL * BAY;                 // 15.60 — donde terminan los racks
+const WALL_GAP = 4.20;                   // fondo libre entre el rack y la pared
+const XWALL = XEND + WALL_GAP;
+const PDX = -1.50;                       // P&D de salida, al principio del pasillo
+
+const T = {
+  LTOT: 2.91, LCH: 1.70, W: 1.054, WB: 1.562, XPIV: 1.91,
+  FLEN: 1.21, REACH: 0.61, SSHIFT: 0.12,
+  VMAX: 1.50, VMAN: 0.35, ACC: 0.55, LIFTV: 0.42,
+};
+const COLORS = { rojo: '#e5484d', amarillo: '#e3b341', verde: '#3fb950', azul: '#4f9dfb' };
+const CKEYS = Object.keys(COLORS);
+const AISLES = [
+  { id: 'A', z: 0.00, racks: { '-1': 'rojo', '+1': 'amarillo' } },
+  { id: 'B', z: 5.20, racks: { '-1': 'verde', '+1': 'azul' } },
+];
+const ZRACK = (a, side) => a.z + side * (HALF + RACKD / 2);
+const ZHAND = 2.60;                      // plano donde amarillo y verde se tocan
+
+/* ---------- cinemática ---------- */
+function step(p, ds, d) {
+  const dth = -(ds / T.WB) * Math.tan(d);
+  const th2 = p.th + dth * 0.5;
+  return { x: p.x + ds * Math.cos(th2), z: p.z + ds * Math.sin(th2), th: p.th + dth };
+}
+function corners(p) {
+  const c = Math.cos(p.th), s = Math.sin(p.th), hw = T.W / 2;
+  const pt = (a, l) => [p.x + a * c - l * s, p.z + a * s + l * c];
+  return {
+    ch: [pt(-T.XPIV, hw), pt(-T.XPIV, -hw), pt(-(T.XPIV - T.LCH), hw), pt(-(T.XPIV - T.LCH), -hw)],
+    fk: [pt(T.LTOT - T.XPIV, 0.30), pt(T.LTOT - T.XPIV, -0.30)],
+  };
+}
+/* carril + ángulo de dirección que meten el giro de 90° en 3.00 m */
+function planTurn(side) {
+  let best = null;
+  for (let lane = 0.0; lane <= 0.95; lane += 0.025) {
+    for (let deg = 88; deg >= 46; deg -= 1) {
+      const d = deg * Math.PI / 180;
+      let p = { x: 0, z: side * lane, th: 0 }, path = [{ ...p }];
+      let chMin = 9, chMax = -9, fkMin = 9, fkMax = -9, n = 0;
+      const ds = 0.015;
+      while (Math.abs(p.th) < Math.PI / 2 && n++ < 3000) {
+        p = step(p, ds, -side * d); path.push({ ...p });
+        const c = corners(p);
+        for (const q of c.ch) { chMin = Math.min(chMin, q[1]); chMax = Math.max(chMax, q[1]); }
+        for (const q of c.fk) { fkMin = Math.min(fkMin, q[1]); fkMax = Math.max(fkMax, q[1]); }
+      }
+      if (n >= 3000) continue;
+      p.th = side * Math.PI / 2; path[path.length - 1] = { ...p };
+      const chV = Math.max(-HALF - chMin, chMax - HALF);
+      const fkV = Math.max(-(HALF + 0.60) - fkMin, fkMax - (HALF + 0.60));
+      const holg = Math.min(HALF - chMax, chMin + HALF);
+      const score = (chV > -0.02 ? 1e3 + chV * 1e3 : 0) + (fkV > 0 ? 1e2 + fkV * 1e2 : 0)
+                  - holg * 10 + Math.abs(lane) * 0.4;
+      if (!best || score < best.score)
+        best = { score, lane, deg, path, holg, chMin, chMax,
+                 fkMax: side > 0 ? fkMax : -fkMin, feasible: chV <= -0.02, end: { ...p } };
+    }
+  }
+  return best;
+}
+const TURN = { '-1': planTurn(-1), '+1': planTurn(+1) };
+
+/* cuánto sobresale el equipo en X respecto del pivote durante el giro */
+let EXF = 0;
+['-1', '+1'].forEach(k => TURN[k].path.forEach(q => {
+  const c = corners(q);
+  [...c.ch, ...c.fk].forEach(pt => EXF = Math.max(EXF, pt[0] - TURN[k].end.x));
+}));
+
+/* --- la geometría decide cuántas posiciones de fondo caben --- */
+const HANDX = [];
+for (let c = NCOL; ; c++) {
+  const x = COLX(c);
+  if (x + EXF + 0.25 > XWALL) break;
+  HANDX.push(x);
+}
+if (!HANDX.length) HANDX.push(COLX(NCOL));   // el fondo siempre da para una
+const NH = HANDX.length;
+
+/* profundidad de estacionamiento: puntas + pantógrafo = cara lejana del cubo */
+const zin = dz => Math.abs(dz) + CUBE.d / 2 - (T.LTOT - T.XPIV) - T.REACH;
+
+/* ==========================================================================
+   ESCENA
+   ========================================================================== */
+const stage = document.getElementById('stage');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0c10);
+scene.fog = new THREE.Fog(0x0a0c10, 36, 82);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+stage.appendChild(renderer.domElement);
+const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 400);
+scene.add(new THREE.HemisphereLight(0xa8c0dd, 0x12161c, 1.15));
+const sun = new THREE.DirectionalLight(0xffffff, 0.85); sun.position.set(14, 26, -10); scene.add(sun);
+const sun2 = new THREE.DirectionalLight(0x88aaff, 0.38); sun2.position.set(-16, 12, 20); scene.add(sun2);
+
+const CX = XEND / 2 + 1, CZ = 2.6;
+{
+  const f = new THREE.Mesh(new THREE.PlaneGeometry(62, 44),
+    new THREE.MeshStandardMaterial({ color: 0x11161d, roughness: .96 }));
+  f.rotation.x = -Math.PI / 2; f.position.set(CX, 0, CZ); scene.add(f);
+  const grid = new THREE.GridHelper(62, 62, 0x1b222c, 0x151b23);
+  grid.position.set(CX, 0.004, CZ); scene.add(grid);
+  // pared del fondo
+  const w = new THREE.Mesh(new THREE.BoxGeometry(0.25, 7.4, 20),
+    new THREE.MeshStandardMaterial({ color: 0x1a2029, roughness: .95 }));
+  w.position.set(XWALL + 0.12, 3.7, 2.6); scene.add(w);
+}
+
+const RACKS = {};
+function buildRack(a, side, color) {
+  const zc = ZRACK(a, side);
+  const G = new THREE.Group(); scene.add(G);
+  const col = new THREE.Color(COLORS[color]);
+  const steel = new THREE.MeshStandardMaterial({ color: col.clone().multiplyScalar(0.42),
+    roughness: .55, metalness: .35 });
+  const up = new THREE.BoxGeometry(0.10, LVL[NLVL - 1] + 1.25, RACKD);
+  for (let i = 0; i <= NCOL; i++) {
+    const m = new THREE.Mesh(up, steel);
+    m.position.set(i * BAY, (LVL[NLVL - 1] + 1.25) / 2, zc); G.add(m);
+  }
+  const bm = new THREE.BoxGeometry(XEND, 0.11, 0.08);
+  LVL.forEach(h => [-1, 1].forEach(s => {
+    const m = new THREE.Mesh(bm, steel);
+    m.position.set(XEND / 2, h, zc + s * (RACKD / 2 - 0.09)); G.add(m);
+  }));
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(XEND, 0.06, 0.03),
+    new THREE.MeshBasicMaterial({ color: col }));
+  stripe.position.set(XEND / 2, LVL[NLVL - 1] + 1.18, zc - side * (RACKD / 2)); G.add(stripe);
+  const slots = [];
+  for (let c = 0; c < NCOL; c++) { slots[c] = []; for (let l = 0; l < NLVL; l++) slots[c][l] = null; }
+  RACKS[color] = { aisle: a, side, z: zc, color, slots };
+}
+AISLES.forEach(a => { buildRack(a, -1, a.racks['-1']); buildRack(a, +1, a.racks['+1']); });
+const OWNER = {};   // color -> montacargas dueño
+AISLES.forEach(a => { OWNER[a.racks['-1']] = a.id; OWNER[a.racks['+1']] = a.id; });
+
+/* marcas de piso */
+function pad(x, z, col, w, d) {
+  const g = new THREE.PlaneGeometry(w || 1.45, d || 1.45);
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .14 }));
+  m.rotation.x = -Math.PI / 2; m.position.set(x, 0.006, z); scene.add(m);
+  const e = new THREE.LineSegments(new THREE.EdgesGeometry(g),
+    new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: .55 }));
+  e.rotation.x = -Math.PI / 2; e.position.set(x, 0.009, z); scene.add(e);
+}
+function floorLine(pts, col, op) {
+  const g = new THREE.BufferGeometry().setFromPoints(pts.map(p => new THREE.Vector3(p[0], 0.012, p[1])));
+  const l = new THREE.Line(g, new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op }));
+  scene.add(l); return l;
+}
+AISLES.forEach(a => [-1, 1].forEach(s => {
+  const k = s > 0 ? '+1' : '-1';
+  floorLine([[PDX - 0.9, a.z + s * TURN[k].lane], [XWALL - 0.4, a.z + s * TURN[k].lane]], 0x2d3b4d, .85);
+}));
+// P&D de salida (principio del pasillo)
+const ZOUT = { A: ZRACK(AISLES[0], -1), B: ZRACK(AISLES[1], +1) };
+pad(PDX, ZOUT.A, 0xe3b341); pad(PDX, ZOUT.B, 0xe3b341);
+// entrada del humano: al final del rack rojo
+HANDX.forEach(x => pad(x, ZRACK(AISLES[0], -1), 0x58a6ff, 1.3, 1.3));
+// trasbordo: al final, alineado con amarillo/verde
+HANDX.forEach(x => pad(x, ZHAND, 0xa371f7, 1.3, 2.3));
+
+/* trazas de giro */
+const TURNLINE = {};
+AISLES.forEach(a => [-1, 1].forEach(s => {
+  const k = s > 0 ? '+1' : '-1', P = TURN[k];
+  const xs = [];
+  for (let c = 0; c < NCOL; c++) xs.push([c, COLX(c)]);
+  HANDX.forEach((x, i) => xs.push([NCOL + i, x]));
+  xs.forEach(([c, x]) => {
+    const sh = x - P.end.x;
+    const pts = P.path.filter((_, i) => i % 6 === 0).map(p => [p.x + sh, a.z + p.z]);
+    TURNLINE[a.id + k + c] = floorLine(pts, 0x30363d, .3);
+  });
+}));
+
+/* cubos */
+const cubeGeo = new THREE.BoxGeometry(CUBE.w, CUBE.h, CUBE.d);
+const edgeGeo = new THREE.EdgesGeometry(cubeGeo);
+let cubeSeq = 0;
+function makeCube(color) {
+  const c = new THREE.Color(COLORS[color]);
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(cubeGeo, new THREE.MeshStandardMaterial({
+    color: c.clone().multiplyScalar(0.80), roughness: .85 })));
+  g.add(new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: c })));
+  const top = new THREE.Mesh(new THREE.PlaneGeometry(CUBE.w * .82, CUBE.d * .82),
+    new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .30 }));
+  top.rotation.x = -Math.PI / 2; top.position.y = CUBE.h / 2 + .002; g.add(top);
+  scene.add(g);
+  return { id: ++cubeSeq, color, mesh: g, t: 0 };
+}
+
+/* ==========================================================================
+   MONTACARGAS
+   ========================================================================== */
+function buildTruck() {
+  const G = new THREE.Group(); scene.add(G);
+  const dark = new THREE.MeshStandardMaterial({ color: 0x2b3038, roughness: .62, metalness: .35 });
+  const acc = new THREE.MeshStandardMaterial({ color: 0x1f6feb, roughness: .45, metalness: .3 });
+  const steel = new THREE.MeshStandardMaterial({ color: 0x8b949e, roughness: .4, metalness: .7 });
+  const ch = new THREE.Mesh(new THREE.BoxGeometry(T.LCH, 1.05, T.W), dark);
+  ch.position.set(T.LCH / 2, 0.60, 0); G.add(ch);
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.12, T.W - 0.10), acc);
+  cab.position.set(0.42, 1.68, 0); G.add(cab);
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.06, T.W), steel);
+  roof.position.set(0.46, 2.28, 0); G.add(roof);
+  [-1, 1].forEach(s => {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(T.LTOT - T.LCH + 0.15, 0.22, 0.20), dark);
+    leg.position.set(T.LCH + (T.LTOT - T.LCH) / 2 - 0.05, 0.13, s * 0.42); G.add(leg);
+    const w = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.10, 16), steel);
+    w.rotation.x = Math.PI / 2; w.position.set(T.XPIV, 0.13, s * 0.42); G.add(w);
+  });
+  const dw = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.20, 0.14, 18), steel);
+  dw.rotation.x = Math.PI / 2; dw.position.set(T.XPIV - T.WB, 0.20, 0); G.add(dw);
+  const mast = new THREE.Group(); mast.position.set(T.LCH, 0, 0); G.add(mast);
+  [-1, 1].forEach(s => {
+    const r = new THREE.Mesh(new THREE.BoxGeometry(0.09, 3.10, 0.10), steel);
+    r.position.set(0.05, 1.55, s * 0.36); mast.add(r);
+  });
+  const carr = new THREE.Group(); mast.add(carr);
+  const reach = new THREE.Group(); carr.add(reach);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.95, T.W - 0.16), dark);
+  back.position.set(0.05, 0.48, 0); reach.add(back);
+  const shiftG = new THREE.Group(); reach.add(shiftG);
+  [-1, 1].forEach(s => {
+    const f = new THREE.Mesh(new THREE.BoxGeometry(T.FLEN, 0.06, 0.14), steel);
+    f.position.set(0.10 + T.FLEN / 2, 0.03, s * 0.30); shiftG.add(f);
+  });
+  const fcam = new THREE.PerspectiveCamera(62, 1.6, 0.05, 120);
+  fcam.position.set(0.10 + T.FLEN + 0.05, 0.11, 0);
+  fcam.rotation.order = 'YXZ'; fcam.rotation.y = -Math.PI / 2; fcam.rotation.x = -0.03;
+  shiftG.add(fcam);
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8),
+    new THREE.MeshBasicMaterial({ color: 0x3fb950 }));
+  led.position.set(0.10 + T.FLEN + 0.05, 0.24, 0); shiftG.add(led);
+  const lamp = new THREE.PointLight(0xdfe9ff, 0.9, 9, 1.6);
+  lamp.position.set(0.10 + T.FLEN + 0.10, 0.34, 0); shiftG.add(lamp);
+  const bal = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.10, 12),
+    new THREE.MeshBasicMaterial({ color: 0xe3b341 })); bal.position.set(0.46, 2.38, 0); G.add(bal);
+  return { G, mast, carr, reach, shiftG, fcam, bal, led };
+}
+
+class Truck {
+  constructor(a, id) {
+    this.a = a; this.id = id; this.v = buildTruck();
+    const cv = document.createElement('canvas'); cv.width = cv.height = 128;
+    const g = cv.getContext('2d');
+    g.fillStyle = '#e3b341'; g.beginPath(); g.arc(64, 64, 58, 0, 7); g.fill();
+    g.fillStyle = '#0a0c10'; g.font = 'bold 78px ui-monospace,monospace';
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(id, 64, 70);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: new THREE.CanvasTexture(cv), depthTest: false, transparent: true }));
+    sp.scale.set(0.85, 0.85, 0.85); sp.position.set(0.5, 3.1, 0); this.v.G.add(sp);
+    this.p = { x: 2.0, z: a.z + TURN['+1'].lane, th: 0 };
+    this.lift = LVL[0]; this.reach = 0; this.shift = 0;
+    this.state = 'LIBRE'; this.task = null; this.plan = []; this.act = null;
+    this.load = null; this.moves = 0; this.tgt = null; this.lastRack = a.racks['-1'];
+    this.log = []; this.waitT = 0;
+  }
+  mine() { return [this.a.racks['-1'], this.a.racks['+1']]; }
+  say(html, cls) {
+    this.log.push(`<div><span class="t">${fmt(CLK)}</span>${cls ? `<span class="${cls}">` : ''}${html}${cls ? '</span>' : ''}</div>`);
+    if (this.log.length > 300) this.log.shift();
+    const el = document.getElementById('log' + this.id);
+    el.innerHTML = this.log.join(''); el.scrollTop = el.scrollHeight;
+  }
+}
+
+/* ==========================================================================
+   PRIMITIVAS
+   ========================================================================== */
+const aDrive = x => ({ k: 'drive', x });
+const aLane = z => ({ k: 'lane', z });
+const aTurn = (side, c, x, dir) => ({ k: 'turn', side, c, x, dir });
+const aCreep = z => ({ k: 'creep', z });
+const aLift = h => ({ k: 'lift', h });
+const aReach = r => ({ k: 'reach', r });
+const aFn = f => ({ k: 'fn', f });
+
+function runAct(T_, dt) {
+  const A = T_.act, a = T_.a;
+  switch (A.k) {
+    case 'drive': {
+      const d = A.x - T_.p.x, ad = Math.abs(d);
+      if (ad < 0.012) { T_.p.x = A.x; return true; }
+      const vm = Math.min(T.VMAX, Math.sqrt(2 * T.ACC * ad) + 0.05);
+      T_.p.x += Math.sign(d) * Math.min(vm * dt, ad); return false;
+    }
+    case 'lane': {
+      const d = A.z - T_.p.z, ad = Math.abs(d);
+      if (ad < 0.008) { T_.p.z = A.z; T_.p.th = 0; return true; }
+      T_.p.z += d * Math.min(1, dt * 1.6); T_.p.th = Math.atan2(d * 1.2, 1) * 0.32; return false;
+    }
+    case 'turn': {
+      const key = A.side > 0 ? '+1' : '-1', P = TURN[key];
+      if (A.t === undefined) {
+        A.t = A.dir > 0 ? 0 : 1; A.sh = A.x - P.end.x;
+        const L = TURNLINE[a.id + key + A.c];
+        if (L) { L.material.color.setHex(0x58a6ff); L.material.opacity = .95; A.L = L; }
+      }
+      A.t = Math.max(0, Math.min(1, A.t + A.dir * dt / 3.4));
+      const q = P.path[Math.min(P.path.length - 1, Math.round(A.t * (P.path.length - 1)))];
+      T_.p.x = q.x + A.sh; T_.p.z = a.z + q.z; T_.p.th = q.th;
+      if ((A.dir > 0 && A.t >= 1) || (A.dir < 0 && A.t <= 0)) {
+        if (A.L) { A.L.material.color.setHex(0x30363d); A.L.material.opacity = .3; }
+        return true;
+      }
+      return false;
+    }
+    case 'creep': {
+      const zt = a.z + A.z, d = zt - T_.p.z, ad = Math.abs(d);
+      if (ad < 0.006) { T_.p.z = zt; return true; }
+      T_.p.z += Math.sign(d) * Math.min(T.VMAN * dt, ad); return false;
+    }
+    case 'lift': {
+      const d = A.h - T_.lift, ad = Math.abs(d);
+      if (ad < 0.004) { T_.lift = A.h; return true; }
+      T_.lift += Math.sign(d) * Math.min(T.LIFTV * dt, ad); return false;
+    }
+    case 'reach': {
+      const d = A.r - T_.reach, ad = Math.abs(d);
+      if (ad < 0.004) { T_.reach = A.r; return true; }
+      T_.reach += Math.sign(d) * Math.min(0.34 * dt, ad); return false;
+    }
+    case 'fn': A.f(); return true;
+  }
+  return true;
+}
+
+function attach(T_, cube) {
+  T_.v.shiftG.add(cube.mesh);
+  cube.mesh.position.set(0.10 + CUBE.d / 2, 0.06 + CUBE.h / 2, 0);
+  cube.mesh.rotation.set(0, 0, 0); T_.load = cube;
+}
+function drop(T_, cube, x, y, z) {
+  scene.add(cube.mesh); cube.mesh.position.set(x, y, z);
+  cube.mesh.rotation.set(0, 0, 0); T_.load = null;
+}
+
+/* ==========================================================================
+   DIRECCIONES
+   ========================================================================== */
+/* tgt: {kind:'rack',color,c,l} | {kind:'hand',i} | {kind:'in',i} | {kind:'out'} */
+function resolve(T_, tgt) {
+  const a = T_.a;
+  let zc, xp, h, cidx;
+  if (tgt.kind === 'rack') {
+    const R = RACKS[tgt.color]; zc = R.z; xp = COLX(tgt.c); h = LVL[tgt.l] + 0.06; cidx = tgt.c;
+  } else if (tgt.kind === 'hand') {
+    zc = ZHAND; xp = HANDX[tgt.i]; h = 0.06; cidx = NCOL + tgt.i;
+  } else if (tgt.kind === 'in') {
+    zc = ZRACK(AISLES[0], -1); xp = HANDX[tgt.i]; h = 0.06; cidx = NCOL + tgt.i;
+  } else {
+    zc = ZOUT[T_.id]; xp = PDX; h = 0.06; cidx = -1;
+  }
+  const dz = zc - a.z, side = dz < 0 ? -1 : 1;
+  return { side, xp, zc, h, cidx, zin: zin(dz) * side, key: side > 0 ? '+1' : '-1' };
+}
+function label(tgt) {
+  if (tgt.kind === 'rack') return `${tgt.color} C${String(tgt.c + 1).padStart(2, '0')} N${tgt.l + 1}`;
+  if (tgt.kind === 'hand') return `TRASBORDO T${tgt.i + 1}`;
+  if (tgt.kind === 'in') return `ENTRADA E${tgt.i + 1}`;
+  return 'P&D salida';
+}
+
+function seqPick(T_, tgt) {
+  const r = resolve(T_, tgt), P = TURN[r.key];
+  const entry = P.path[0].x + (r.xp - P.end.x);
+  return [
+    aFn(() => { T_.tgt = tgt.kind === 'rack' ? { ...tgt, mode: 'out' } : null; }),
+    aLane(T_.a.z + r.side * P.lane), aDrive(entry), aLift(LVL[0]),
+    aTurn(r.side, r.cidx, r.xp, 1),
+    aLift(Math.max(0.06, r.h - 0.05)),
+    aFn(() => T_.say(`alineado · ArUco ${label(tgt)} · sideshift ±${(T.SSHIFT * 100).toFixed(0)} cm`)),
+    aCreep(r.zin), aReach(T.REACH), aLift(r.h + 0.12),
+    aReach(0), aCreep(r.side * P.end.z), aTurn(r.side, r.cidx, r.xp, -1),
+    aLift(LVL[0] + 0.30),
+  ];
+}
+function seqPlace(T_, tgt) {
+  const r = resolve(T_, tgt), P = TURN[r.key];
+  const entry = P.path[0].x + (r.xp - P.end.x);
+  return [
+    aFn(() => { T_.tgt = tgt.kind === 'rack' ? { ...tgt, mode: 'in' } : null; }),
+    aLane(T_.a.z + r.side * P.lane), aDrive(entry), aLift(LVL[0] + 0.30),
+    aTurn(r.side, r.cidx, r.xp, 1),
+    aLift(r.h + 0.12),
+    aCreep(r.zin), aReach(T.REACH), aLift(Math.max(0.06, r.h - 0.04)),
+    aReach(0), aCreep(r.side * P.end.z), aTurn(r.side, r.cidx, r.xp, -1),
+    aLift(LVL[0]),
+  ];
+}
+
+/* ==========================================================================
+   MUNDO
+   ========================================================================== */
+const W = {
+  hand: [], inp: [], pend: [], orders: [],
+  out: 0, mov: 0, feeding: false, ordering: false,
+  feedLeft: 0, orderQ: [],
+};
+for (let i = 0; i < NH; i++) { W.hand[i] = null; W.inp[i] = null; }
+
+let SEED = 20260824;
+const rnd = () => (SEED = (SEED * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+const pickR = arr => arr[Math.floor(rnd() * arr.length)];
+
+function freeSlot(color) {
+  const R = RACKS[color];
+  for (let l = 0; l < NLVL; l++) for (let c = 0; c < NCOL; c++)
+    if (!R.slots[c][l]) return { kind: 'rack', color, c, l };
+  return null;
+}
+function freeHand() { for (let i = 0; i < NH; i++) if (!W.hand[i]) return i; return -1; }
+
+/* ---------- selección de tarea ---------- */
+function nextTask(T_) {
+  const mine = T_.mine();
+
+  // 1. desatorar el trasbordo: algo mío esperando en el fondo
+  for (let i = 0; i < NH; i++) {
+    const cb = W.hand[i];
+    if (cb && !cb.res && mine.includes(cb.color)) {
+      const dst = freeSlot(cb.color); if (!dst) continue;
+      cb.res = T_.id; RACKS[dst.color].slots[dst.c][dst.l] = { ghost: true, t: 1e9 };
+      return { tipo: 'TRASBORDO', cube: cb, src: { kind: 'hand', i }, dst };
+    }
+  }
+  // 2. pedidos: sirvo si el cubo está en alguno de mis dos racks
+  for (const o of W.orders) {
+    if (o.res) continue;
+    let best = null;
+    mine.forEach(col => {
+      const R = RACKS[col];
+      for (let c = 0; c < NCOL; c++) for (let l = 0; l < NLVL; l++) {
+        const s = R.slots[c][l];
+        if (s && !s.ghost && !s.res && s.color === o.color && (!best || s.t < best.s.t))
+          best = { col, c, l, s };
+      }
+    });
+    if (best) {
+      o.res = T_.id; best.s.res = T_.id;
+      return { tipo: 'PEDIDO', cube: best.s, order: o,
+               src: { kind: 'rack', color: best.col, c: best.c, l: best.l }, dst: { kind: 'out' } };
+    }
+  }
+  // 3. entrada del humano (sólo la ve A: está al final del rack rojo)
+  if (T_.id === 'A') {
+    for (let i = 0; i < NH; i++) {
+      const cb = W.inp[i];
+      if (!cb || cb.res) continue;
+      if (mine.includes(cb.color)) {
+        const dst = freeSlot(cb.color); if (!dst) continue;
+        cb.res = T_.id; RACKS[dst.color].slots[dst.c][dst.l] = { ghost: true, t: 1e9 };
+        return { tipo: 'ENTRADA', cube: cb, src: { kind: 'in', i }, dst };
+      }
+      const h = freeHand();
+      if (h < 0) { T_.blocked = 'trasbordo lleno'; continue; }
+      cb.res = T_.id; W.hand[h] = { hold: T_.id };
+      return { tipo: 'PASE', cube: cb, src: { kind: 'in', i }, dst: { kind: 'hand', i: h } };
+    }
+  }
+  // 4. ordenar la casa: cubo mal ubicado en uno de mis racks
+  for (const col of mine) {
+    const R = RACKS[col];
+    for (let l = 0; l < NLVL; l++) for (let c = 0; c < NCOL; c++) {
+      const s = R.slots[c][l];
+      if (!s || s.ghost || s.res || s.color === col) continue;
+      const src = { kind: 'rack', color: col, c, l };
+      if (mine.includes(s.color)) {
+        const dst = freeSlot(s.color); if (!dst) continue;
+        s.res = T_.id; RACKS[dst.color].slots[dst.c][dst.l] = { ghost: true, t: 1e9 };
+        return { tipo: 'REUBICAR', cube: s, src, dst };
+      }
+      const h = freeHand(); if (h < 0) continue;
+      s.res = T_.id; W.hand[h] = { hold: T_.id };
+      return { tipo: 'PASE', cube: s, src, dst: { kind: 'hand', i: h } };
+    }
+  }
+  return null;
+}
+
+function clearSrc(t) {
+  if (t.src.kind === 'rack') RACKS[t.src.color].slots[t.src.c][t.src.l] = null;
+  else if (t.src.kind === 'hand') W.hand[t.src.i] = null;
+  else if (t.src.kind === 'in') W.inp[t.src.i] = null;
+}
+function commitDst(T_, t) {
+  const cb = t.cube;
+  if (t.dst.kind === 'rack') {
+    const R = RACKS[t.dst.color], sp = slotXYZ(t.dst);
+    drop(T_, cb, sp.x, sp.y, sp.z);
+    R.slots[t.dst.c][t.dst.l] = cb; cb.t = CLK; delete cb.res;
+    T_.say(`depositado en <b>${label(t.dst)}</b>`, cb.color === t.dst.color ? 'ok' : 'wr');
+  } else if (t.dst.kind === 'hand') {
+    drop(T_, cb, HANDX[t.dst.i], CUBE.h / 2, ZHAND);
+    W.hand[t.dst.i] = cb; cb.t = CLK; delete cb.res;
+    T_.say(`dejado en <b>${label(t.dst)}</b> para TaTa ${T_.id === 'A' ? 'B' : 'A'}`, 'hi');
+  } else {
+    drop(T_, cb, PDX, CUBE.h / 2, ZOUT[T_.id]);
+    W.out++; delete cb.res;
+    T_.say(`entregado al <b>principio del pasillo</b> · el humano lo recoge`, 'ok');
+    setTimeout(() => scene.remove(cb.mesh), 5000);
+  }
+}
+function slotXYZ(t) {
+  const R = RACKS[t.color];
+  return { x: COLX(t.c), y: LVL[t.l] + CUBE.h / 2 + 0.06, z: R.z };
+}
+
+function assign(T_) {
+  T_.blocked = null;
+  const t = nextTask(T_);
+  if (!t) { T_.state = 'LIBRE'; return; }
+  T_.task = t; T_.state = t.tipo;
+  T_.say(`<b>${t.tipo}</b> · cubo #${t.cube.id} <span style="color:${COLORS[t.cube.color]}">${t.cube.color}</span> · ${label(t.src)} → ${label(t.dst)}`);
+  T_.plan = seqPick(T_, t.src)
+    .concat([aFn(() => { clearSrc(t); attach(T_, t.cube); T_.moves++; W.mov++; layoutPend(); })])
+    .concat(seqPlace(T_, t.dst))
+    .concat([aFn(() => { commitDst(T_, t); T_.moves++; W.mov++;
+      if (t.order) W.orders.splice(W.orders.indexOf(t.order), 1);
+      T_.tgt = null; T_.task = null; T_.state = 'LIBRE'; })]);
+}
+
+/* ==========================================================================
+   MONTACARGAS HUMANO (no se simula el vehículo, sólo sus depósitos)
+   ========================================================================== */
+function humanFeed() {
+  if (!W.pend.length) return;
+  const cb = W.pend[0];
+  const usaMedio = document.getElementById('chkMid').checked
+    && OWNER[cb.color] === 'B';
+  if (usaMedio) {
+    const h = freeHand(); if (h < 0) return;
+    W.pend.shift(); W.hand[h] = cb;
+    drop({ v: {} }, cb, HANDX[h], CUBE.h / 2, ZHAND); cb.t = CLK;
+    trucks[1].say(`el humano alcanzó el fondo · cubo #${cb.id} en <b>TRASBORDO T${h + 1}</b>`, 'hi');
+  } else {
+    let i = -1; for (let k = 0; k < NH; k++) if (!W.inp[k]) { i = k; break; }
+    if (i < 0) return;
+    W.pend.shift(); W.inp[i] = cb;
+    drop({ v: {} }, cb, HANDX[i], CUBE.h / 2, ZRACK(AISLES[0], -1)); cb.t = CLK;
+    trucks[0].say(`el humano dejó cubo #${cb.id} <span style="color:${COLORS[cb.color]}">${cb.color}</span> en <b>ENTRADA E${i + 1}</b>`);
+  }
+  layoutPend();
+}
+function layoutPend() {
+  // los que aún no entran se apilan afuera, antes de la pared
+  W.pend.forEach((cb, k) => {
+    cb.mesh.position.set(XWALL - 0.9, CUBE.h / 2 + 0.02, ZRACK(AISLES[0], -1) - 1.5 - k * 0.14);
+    cb.mesh.visible = k < 6;
+  });
+  drawChips();
+}
+
+/* ==========================================================================
+   BUCLE
+   ========================================================================== */
+let CLK = 0, TURBO = /turbo/.test(location.hash) ? 8 : 1;
+const fmt = t => String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(Math.floor(t % 60)).padStart(2, '0');
+const trucks = AISLES.map((a, i) => new Truck(a, i ? 'B' : 'A'));
+
+function tickTruck(T_, dt) {
+  if (!T_.act) {
+    if (!T_.plan.length) {
+      assign(T_);
+      if (!T_.plan.length) { T_.waitT += dt; return; }
+    }
+    T_.act = T_.plan.shift();
+  }
+  if (runAct(T_, dt)) T_.act = null;
+}
+function paintTruck(T_) {
+  const v = T_.v, c = Math.cos(T_.p.th), s = Math.sin(T_.p.th);
+  v.G.position.set(T_.p.x - T.XPIV * c, 0, T_.p.z - T.XPIV * s);
+  v.G.rotation.y = -T_.p.th;
+  v.carr.position.y = T_.lift; v.reach.position.x = T_.reach;
+  v.bal.material.color.setHex(T_.state === 'LIBRE' ? 0x30363d : 0xe3b341);
+  v.led.material.color.setHex(T_.load ? 0xe5484d : 0x3fb950);
+}
+
+let feedT = 0, ordT = 0;
+function tickWorld(dt) {
+  if (W.feeding && W.feedLeft > 0) {
+    feedT += dt;
+    if (feedT > 7) { feedT = 0; W.feedLeft--; W.pend.push(makeCube(pickR(CKEYS))); layoutPend();
+      if (!W.feedLeft) stopFeed(); }
+  }
+  humanFeedT = (humanFeedT || 0) + dt;
+  if (humanFeedT > 2.5) { humanFeedT = 0; humanFeed(); }
+  if (W.ordering && W.orderQ.length) {
+    ordT += dt;
+    if (ordT > 6) {
+      ordT = 0; const col = W.orderQ.shift();
+      W.orders.push({ color: col, t: CLK });
+      showTip(`Pedido: 1 × ${col}`);
+      if (!W.orderQ.length) stopOrder();
+    }
+  }
+}
+let humanFeedT = 0;
+
+/* ==========================================================================
+   CÁMARAS
+   ========================================================================== */
+const CAMV = { mode: 'orbit', yaw: -0.92, phi: 0.80, r: 24, tx: CX, tz: CZ };
+function updateCam() {
+  if (CAMV.mode === 'orbit') {
+    camera.position.set(CAMV.tx + CAMV.r * Math.cos(CAMV.yaw) * Math.sin(CAMV.phi),
+      CAMV.r * Math.cos(CAMV.phi) + 2, CAMV.tz + CAMV.r * Math.sin(CAMV.yaw) * Math.sin(CAMV.phi));
+    camera.lookAt(CAMV.tx, 2.2, CAMV.tz);
+  } else if (CAMV.mode === 'top') {
+    camera.position.set(CX, 32, CZ + 0.01); camera.lookAt(CX, 0, CZ);
+  } else if (CAMV.mode === 'hand') {
+    camera.position.set(HANDX[0] - 2.0, 11.5, ZHAND - 5.0);
+    camera.lookAt(HANDX[NH - 1] + 0.4, 0.5, ZHAND);
+  } else {
+    const t = trucks.find(x => x.id === CAMV.mode);
+    const c = Math.cos(t.p.th), s = Math.sin(t.p.th);
+    const bx = t.p.x - 13 * c, bz = t.p.z - 13 * s;
+    if (!CAMV.sm) CAMV.sm = { x: bx, z: bz };
+    CAMV.sm.x += (bx - CAMV.sm.x) * 0.09; CAMV.sm.z += (bz - CAMV.sm.z) * 0.09;
+    camera.position.set(CAMV.sm.x, 6.0, CAMV.sm.z);
+    camera.lookAt(t.p.x + 2.5 * c, 1.8, t.p.z + 2.5 * s);
+  }
+}
+const camR = {};
+['A', 'B'].forEach(id => {
+  const r = new THREE.WebGLRenderer({ canvas: document.getElementById('cam' + id), antialias: true });
+  r.setPixelRatio(1); r.setSize(292, 176, false); camR[id] = r;
+});
+
+/* ==========================================================================
+   WIDGET DE RACK
+   ========================================================================== */
+const VISC = 5, rkPan = { A: 0, B: 0 };
+function drawRack(id) {
+  const cv = document.getElementById('rk' + id);
+  const Wd = cv.clientWidth || 288, H = 132;
+  if (cv.width !== Wd * 2) { cv.width = Wd * 2; cv.height = H * 2; cv.style.height = H + 'px'; }
+  const g = cv.getContext('2d'); g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, Wd, H);
+  const T_ = trucks.find(t => t.id === id), tgt = T_.tgt;
+  if (tgt) T_.lastRack = tgt.color;
+  const color = tgt ? tgt.color : T_.lastRack;
+  const R = RACKS[color], want = tgt ? tgt.c : rkPan[id];
+  rkPan[id] += (want - rkPan[id]) * 0.10;
+  const cw = Wd / VISC, chh = (H - 16) / NLVL, off = rkPan[id] - (VISC - 1) / 2;
+  g.font = '9px ui-monospace,monospace'; g.textAlign = 'center';
+  for (let c = -3; c < NCOL + 3; c++) {
+    const x = (c - off) * cw;
+    if (x < -cw || x > Wd) continue;
+    for (let l = 0; l < NLVL; l++) {
+      const y = 2 + (NLVL - 1 - l) * chh;
+      if (c < 0 || c >= NCOL) {
+        g.strokeStyle = '#12171d'; g.strokeRect(x + 2.5, y + 1.5, cw - 5, chh - 4); continue;
+      }
+      const s = R.slots[c][l], isT = tgt && tgt.c === c && tgt.l === l;
+      g.fillStyle = '#0b0f14'; g.fillRect(x + 2, y + 1, cw - 4, chh - 3);
+      g.strokeStyle = '#1c2128'; g.lineWidth = 1; g.strokeRect(x + 2.5, y + 1.5, cw - 5, chh - 4);
+      if (s && !s.ghost) {
+        g.fillStyle = COLORS[s.color]; g.globalAlpha = isT ? 1 : .55;
+        g.fillRect(x + 5, y + 3, cw - 10, chh - 7); g.globalAlpha = 1;
+        if (s.color !== color) {           // mal ubicado: marco punteado blanco
+          g.strokeStyle = '#c9d1d9'; g.setLineDash([2, 2]); g.globalAlpha = .8;
+          g.strokeRect(x + 5.5, y + 3.5, cw - 11, chh - 8);
+          g.setLineDash([]); g.globalAlpha = 1;
+        }
+      } else if (s && s.ghost) {
+        g.strokeStyle = COLORS[color]; g.setLineDash([3, 3]);
+        g.strokeRect(x + 5.5, y + 3.5, cw - 11, chh - 8); g.setLineDash([]);
+      }
+      if (isT) {
+        g.strokeStyle = tgt.mode === 'in' ? '#58a6ff' : '#e3b341'; g.lineWidth = 2;
+        g.globalAlpha = 0.55 + 0.45 * Math.sin(CLK * 5);
+        g.strokeRect(x + 3, y + 2, cw - 6, chh - 5); g.globalAlpha = 1;
+      }
+    }
+    if (c >= 0 && c < NCOL) {
+      g.fillStyle = Math.round(rkPan[id]) === c ? '#c9d1d9' : '#3d444d';
+      g.fillText('C' + String(c + 1).padStart(2, '0'), x + cw / 2, H - 3);
+    }
+  }
+  document.getElementById('rl' + id).textContent = 'RACK ' + color.toUpperCase();
+  document.getElementById('rr' + id).textContent = tgt
+    ? (tgt.mode === 'in' ? 'ESTIBA ' : 'RETIRO ') + 'C' + String(tgt.c + 1).padStart(2, '0') + ' N' + (tgt.l + 1)
+    : T_.state;
+}
+
+/* ==========================================================================
+   PANELES
+   ========================================================================== */
+function mkWheel(host, color, val) {
+  const w = document.createElement('div'); w.className = 'wheel';
+  const gate = document.createElement('div'); gate.className = 'gate';
+  gate.style.boxShadow = 'inset 0 0 0 1px ' + (color || '#8b949e') + '55'; w.appendChild(gate);
+  const trk = document.createElement('div'); trk.className = 'trk';
+  for (let i = 0; i <= 9; i++) {
+    const s = document.createElement('span'); s.textContent = i;
+    s.style.color = color || '#c9d1d9'; trk.appendChild(s);
+  }
+  w.appendChild(trk); host.appendChild(w);
+  const o = { el: w, trk, val: val || 0, locked: false };
+  const set = v => {
+    o.val = Math.max(0, Math.min(9, v));
+    trk.style.transform = `translateX(${(w.clientWidth || 84) / 2 - 14 - o.val * 28}px)`;
+    [...trk.children].forEach((s, i) => s.className = i === o.val ? 'on' : (Math.abs(i - o.val) === 1 ? 'nr' : ''));
+  };
+  o.set = set;
+  let drag = null;
+  w.addEventListener('pointerdown', e => {
+    if (o.locked) return; drag = { x: e.clientX, v: o.val }; w.setPointerCapture(e.pointerId);
+  });
+  w.addEventListener('pointermove', e => {
+    if (!drag || o.locked) return; set(drag.v + Math.round((drag.x - e.clientX) / 22));
+  });
+  w.addEventListener('pointerup', e => {
+    if (drag && !o.locked && Math.abs(e.clientX - drag.x) < 4) {
+      const r = w.getBoundingClientRect();
+      set(o.val + (e.clientX - r.left > r.width / 2 ? 1 : -1));
+    }
+    drag = null;
+  });
+  set(o.val); return o;
+}
+const wEnt = mkWheel(document.getElementById('entWheel'), null, 0);
+const PED = {};
+CKEYS.forEach(c => PED[c] = mkWheel(document.getElementById('pedWheels'), COLORS[c], 0));
+
+function drawChips() {
+  const host = document.getElementById('entChips'); host.innerHTML = '';
+  const shown = [];
+  W.inp.forEach(cb => { if (cb) shown.push([cb.color, '']); });
+  W.hand.forEach(cb => { if (cb && cb.color) shown.push([cb.color, '']); });
+  W.pend.forEach(cb => shown.push([cb.color, 'q']));
+  shown.slice(0, 24).forEach(([c, k]) => {
+    const d = document.createElement('div'); d.className = 'chip ' + k;
+    d.style.background = COLORS[c]; host.appendChild(d);
+  });
+  if (shown.length > 24) {
+    const m = document.createElement('span'); m.className = 'more';
+    m.textContent = '+' + (shown.length - 24); host.appendChild(m);
+  }
+  document.getElementById('entInfo').textContent =
+    `${W.pend.length} en cola · ${W.feedLeft} por soltar`;
+}
+
+const bEnt = document.getElementById('bEnt'), bPed = document.getElementById('bPed');
+function stopFeed() { W.feeding = false; bEnt.textContent = 'INTRODUCIR'; bEnt.classList.remove('run');
+  wEnt.locked = false; document.getElementById('pEnt').classList.remove('lock'); }
+bEnt.onclick = () => {
+  if (W.feeding) { stopFeed(); return; }
+  if (!W.feedLeft) {
+    if (!wEnt.val) { showTip('Poné cuántos cubos va a introducir el humano'); return; }
+    W.feedLeft = wEnt.val;
+  }
+  W.feeding = true; bEnt.textContent = 'PAUSA'; bEnt.classList.add('run');
+  wEnt.locked = true; document.getElementById('pEnt').classList.add('lock');
+  drawChips();
+};
+function stopOrder() { W.ordering = false; bPed.textContent = 'PEDIR'; bPed.classList.remove('run');
+  CKEYS.forEach(c => PED[c].locked = false); document.getElementById('pPed').classList.remove('lock'); }
+bPed.onclick = () => {
+  if (W.ordering) { stopOrder(); return; }
+  if (!W.orderQ.length) {
+    CKEYS.forEach(c => { for (let i = 0; i < PED[c].val; i++) W.orderQ.push(c); });
+    if (!W.orderQ.length) { showTip('Poné cuántos cubos querés que salgan, por color'); return; }
+    for (let i = W.orderQ.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1));
+      [W.orderQ[i], W.orderQ[j]] = [W.orderQ[j], W.orderQ[i]]; }
+  }
+  W.ordering = true; bPed.textContent = 'PAUSA'; bPed.classList.add('run');
+  CKEYS.forEach(c => PED[c].locked = true); document.getElementById('pPed').classList.add('lock');
+};
+
+function showTip(t) {
+  const e = document.getElementById('tip'); e.innerHTML = t; e.classList.add('on');
+  clearTimeout(showTip._t); showTip._t = setTimeout(() => e.classList.remove('on'), 3800);
+}
+
+/* ==========================================================================
+   SIEMBRA: el almacén arranca desordenado
+   ========================================================================== */
+function seedWarehouse(porRack) {
+  CKEYS.forEach(col => {
+    const R = RACKS[col];
+    const ajenos = CKEYS.filter(c => c !== col);
+    let puestos = 0, intentos = 0;
+    while (puestos < porRack && intentos++ < 400) {
+      const c = Math.floor(rnd() * NCOL), l = Math.floor(rnd() * 3);   // niveles bajos
+      if (R.slots[c][l]) continue;
+      const cb = makeCube(pickR(ajenos));
+      const sp = slotXYZ({ color: col, c, l });
+      cb.mesh.position.set(sp.x, sp.y, sp.z); cb.t = -1000 + puestos;
+      R.slots[c][l] = cb; puestos++;
+    }
+  });
+}
+seedWarehouse(4);
+
+/* ==========================================================================
+   HUD / GEO / RESIZE
+   ========================================================================== */
+function geoPanel() {
+  const P = TURN['+1'], Q = TURN['-1'];
+  document.getElementById('geo').innerHTML =
+    `<b>EDR18N2</b> 2.91 m · pasillo <b>3.00 m</b> · giro 90° carril <b>${P.lane.toFixed(2)} m</b>, dirección <b>${P.deg}°</b><br>` +
+    `holgura del chasis <span class="g">${(Math.min(P.holg, Q.holg) * 100).toFixed(0)} cm/lado</span> · ` +
+    `el equipo se extiende <b>${EXF.toFixed(2)} m</b> delante del pivote al girar<br>` +
+    `fondo libre <b>${WALL_GAP.toFixed(2)} m</b> hasta la pared → caben ` +
+    `<span class="w">${NH}</span> posiciones de entrada y <span class="w">${NH}</span> de trasbordo<br>` +
+    `amarillo y verde pegados de culo en z = <b>${ZHAND.toFixed(2)} m</b> · el trasbordo va sobre ese plano`;
+}
+function countBad() {
+  let bad = 0, stock = 0;
+  CKEYS.forEach(col => { const R = RACKS[col];
+    for (let c = 0; c < NCOL; c++) for (let l = 0; l < NLVL; l++) {
+      const s = R.slots[c][l]; if (!s || s.ghost) continue;
+      stock++; if (s.color !== col) bad++;
+    } });
+  return [stock, bad];
+}
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  ['A', 'B'].forEach(id => {
+    const cv = document.getElementById('cam' + id);
+    const ww = cv.parentElement.clientWidth, hh = Math.round(ww * 0.60);
+    camR[id].setSize(ww, hh, false); cv.style.width = ww + 'px'; cv.style.height = hh + 'px';
+    const t = trucks.find(t => t.id === id);
+    if (t) { t.v.fcam.aspect = ww / hh; t.v.fcam.updateProjectionMatrix(); }
+  });
+}
+addEventListener('resize', resize);
+
+let md = null;
+stage.addEventListener('pointerdown', e => {
+  if (e.target.closest('.pan') || e.target.closest('#cam')) return;
+  md = { x: e.clientX, y: e.clientY, ...CAMV };
+});
+addEventListener('pointerup', () => md = null);
+addEventListener('pointermove', e => {
+  if (!md || CAMV.mode !== 'orbit') return;
+  CAMV.yaw = md.yaw + (e.clientX - md.x) * 0.006;
+  CAMV.phi = Math.max(0.18, Math.min(1.45, md.phi - (e.clientY - md.y) * 0.005));
+});
+stage.addEventListener('wheel', e => {
+  e.preventDefault(); CAMV.r = Math.max(8, Math.min(64, CAMV.r * (1 + Math.sign(e.deltaY) * 0.09)));
+}, { passive: false });
+document.querySelectorAll('#cam button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#cam button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); CAMV.mode = b.dataset.v; CAMV.sm = null;
+});
+addEventListener('keydown', e => {
+  if (e.key === 'f' || e.key === 'F') { TURBO = TURBO === 1 ? 4 : 1; showTip(TURBO > 1 ? 'x4' : 'x1'); }
+});
+
+let last = performance.now();
+function loop(now) {
+  requestAnimationFrame(loop);
+  const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now;
+  for (let i = 0; i < TURBO; i++) {
+    CLK += dt; trucks.forEach(t => tickTruck(t, dt)); tickWorld(dt);
+  }
+  trucks.forEach(paintTruck);
+  updateCam(); renderer.render(scene, camera);
+  trucks.forEach(t => { t.v.fcam.updateMatrixWorld(); camR[t.id].render(scene, t.v.fcam); });
+  drawRack('A'); drawRack('B');
+  const [stock, bad] = countBad();
+  document.getElementById('hClk').textContent = fmt(CLK);
+  document.getElementById('hStock').textContent = stock;
+  document.getElementById('hBad').textContent = bad;
+  document.getElementById('hHand').textContent = W.hand.filter(x => x && x.color).length + '/' + NH;
+  document.getElementById('hOut').textContent = W.out;
+  document.getElementById('hMov').textContent = W.mov;
+  document.getElementById('hA').textContent = trucks[0].blocked || trucks[0].state;
+  document.getElementById('hB').textContent = trucks[1].blocked || trucks[1].state;
+}
+
+geoPanel(); resize(); drawChips();
+requestAnimationFrame(loop);
+setTimeout(() => showTip('El almacén arranca desordenado · INTRODUCIR abajo a la izquierda, PEDIR abajo a la derecha · F = x4'), 900);
+</script>
+</body>
+</html>

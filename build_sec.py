@@ -1,0 +1,5 @@
+tpl = open('sec/sec_tpl.html').read()
+three = open('node_modules/three/build/three.min.js').read()
+out = tpl.replace('__THREE__', three)
+open('TaTa_Secuencia.html','w').write(out)
+print('bytes', len(out))
