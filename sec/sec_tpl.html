@@ -175,19 +175,46 @@ html,body{height:100%;overflow:hidden;background:#0a0c10;color:#c9d1d9;
    ========================================================================== */
 
 /* ---------- geometría ---------- */
-const BAY = 1.30, NCOL = 12, NLVL = 5;
-const RACKD = 1.10, AISLE = 3.00, HALF = AISLE / 2;
-const LVL = [0.15, 1.60, 3.05, 4.50, 5.95];
-const CUBE = { w: 1.20, h: 1.00, d: 1.20 };
+/* Medidas de campo, RETHINK 24-ago-2026. Todo lo de aca abajo esta medido
+   salvo donde diga DEDUCIDO. No cambiar sin volver a medir. */
+
+// La bahia mide 2.35 m y entran DOS cubos con 35 cm sobrantes: 2 x 1.00.
+// O sea el cubo presenta su cara de 1.00 al pasillo y entra 1.20 al rack.
+// BAY es el paso por POSICION de cubo, no por bahia estructural.
+const BAY = 1.175, NCOL = 12, NLVL = 6;
+const BAY_ESTR = 2.35;                   // bahia real entre parales: 2 posiciones
+const RACKD = 1.20, AISLE = 3.00, HALF = AISLE / 2;
+
+// Alturas de la CARA DE APOYO de cada posicion, medidas desde el piso.
+// N1 lleva dos cubos apilados; de N2 en adelante uno por nivel, paso 1.38.
+// Plataforma de 0.115 de grosor -> 1.265 de luz libre por nivel.
+const LVL = [0.00, 1.16, 2.545, 3.925, 5.305, 6.685];
+
+// DEDUCIDO: la altura sale del propio dato de 2.43 de luz en N1 con dos
+// apilados. Con 1.20 quedarian 3 cm de juego y nadie estiba eso; con 1.16
+// quedan 11 cm. Es el IBC de 1000 L estandar.
+const CUBE = { w: 1.00, h: 1.16, d: 1.20 };
+
+// Hueco de uña del IBC y geometria de la uña.
+const HUECO = { w: 0.32, h: 0.08 };      // dos huecos por cara
+const UNA   = { w: 0.13, h: 0.036 };     // alto en el talon; la punta es menor
+const H_ENTRADA = (HUECO.h - UNA.h) / 2; // 0.022 — centro de la ventana vertical
+const H_AGARRE  = 0.06;                  // lo que sube el operador para cargar
 const COLX = i => 0.65 + i * BAY;
 const XEND = NCOL * BAY;                 // 15.60 — donde terminan los racks
-const WALL_GAP = 4.20;                   // fondo libre entre el rack y la pared
+const WALL_GAP = 3.26;                   // MEDIDO: fin del rack a la pared
 const XWALL = XEND + WALL_GAP;
 const PDX = -1.50;                       // P&D de salida, al principio del pasillo
 
 const T = {
-  LTOT: 2.91, LCH: 1.70, W: 1.054, WB: 1.562, XPIV: 1.91,
-  FLEN: 1.21, REACH: 0.61, SSHIFT: 0.12,
+  // LTOT y LCH quedan como los midio maje (punto mas largo de cada punta).
+  // W pasa de 1.054 a 1.315: 1.054 era el cuerpo, 1.315 es el punto mas ancho
+  // real, que son las patas portantes.
+  // XPIV baja de 1.91 a 1.50: con 1.91 el culo solo ya excede el radio de giro
+  // de ficha (Wa = 1.797), o sea que era geometricamente imposible. 1.50 da
+  // delta max 78 grados, coherente con ficha y con el 76 del visor web.
+  LTOT: 2.91, LCH: 1.70, W: 1.315, WB: 1.562, XPIV: 1.50, WA: 1.797,
+  FLEN: 1.20, REACH: 0.61, SSHIFT: 0.12,
   VMAX: 1.50, VMAN: 0.35, ACC: 0.55, LIFTV: 0.42,
 };
 const COLORS = { rojo: '#e5484d', amarillo: '#e3b341', verde: '#3fb950', azul: '#4f9dfb' };
