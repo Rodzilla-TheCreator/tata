@@ -14,55 +14,263 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/05-producto-y-negocio.md` | Escala de madurez, costos, retorno |
 | `docs/06-simuladores.md` | Los dos simuladores y cómo se usan |
 | `docs/07-estado-y-siguientes-pasos.md` | Qué falta, en orden, con puertas de decisión |
-| `docs/08-setup-git-agente.md` | **Cómo dejar la máquina lista para empujar y cómo trabajar con git** |
+| `docs/08-setup-git-agente.md` | Cómo dejar la máquina lista para empujar y cómo trabajar con git |
 | `docs/09-briefing-secuencia.md` | La simulación de secuencia: qué es y qué falta |
 | `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección |
 | `docs/11-plan-de-diagnostico.md` | **La visita de medición. Va ANTES del doc 10** |
 
+> **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
+> del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
+> abajo manda sobre ellos. Todavía no se reescribieron uno por uno.
+
+---
+
 ## Lo mínimo para no meter la pata
 
 **Máquina objetivo:** Mitsubishi **EDR18N2**, reach truck pantográfico de operador parado.
-2.91 m de largo con uñas de 1.21 m, ancho 1.054, radio de giro 1.797, pantógrafo 0.61,
-desplazador ±0.12, inclinación 4°/3°. Velocidad de trabajo **7.9 km/h**, no los 12 de catálogo.
+Entre ejes 1.562, radio de giro 1.797, pantógrafo 0.61, desplazador ±0.12.
+Velocidad de trabajo **7.9 km/h**, no los 12 de catálogo. Sobre de velocidad: **1.5 m/s**.
 
-**El pasillo mide 3.00 m.** Los 2.91 m son con el pantógrafo **recogido**; extendido son 3.52 m.
-Recogido el barrido es **2.80 m** y el Ast **3.00 m** — ojo, el Ast ya incluye los 20 cm de
-holgura de norma, así que **cabe con margen normal, no con margen cero**. Extendido el barrido
-sube a 3.41 m y no existe ese pasillo. De ahí la regla: *girar recogido, extender sólo ya
-alineado.*
+**El pasillo mide 3.00 m** y no cambia. Es dato de campo, no de plano.
 
-**La tolerancia no está en el pasillo, está en la bahía.** En el pasillo sobran 90 cm por lado;
-la bahía deja **4.5 cm**. El desplazador cubre eso 2.7 veces. **Requisito de nav: ±4.5 cm.**
+**La unidad de carga es un IBC de 1000 L**, jaula galvanizada sobre base de tarima:
+**1200 × 1000 × 1160 mm**. En el rack presenta su cara de **1.00 m al pasillo** y entra
+**1.20 m al fondo** — lo fija la bahía de 2.35 m, donde entran dos con 35 cm sobrantes.
 
-**Marcadores primero, LiDAR de apoyo.** Un AprilTag en papel laminado da posición absoluta sin
-deriva. Al LiDAR le queda ver lo que no debería estar ahí, y sostener la operación cuando el
-marcador falla.
+**Marcadores primero, LiDAR de apoyo.** Un AprilTag en papel laminado da posición absoluta
+sin deriva. Al LiDAR le queda ver lo que no debería estar ahí.
 
-**La seguridad va aparte por norma**, no por recorte. ISO 3691-4 exige que la capa certificada
-esté aislada de la navegación. Se puede desarrollar todo sin escáneres y montarlos después sin
-tocar la matemática. Lo único que sí hay que fijar desde hoy es el sobre de velocidad: **1.5 m/s**.
+**La seguridad va aparte por norma**, no por recorte. ISO 3691-4 exige que la capa
+certificada esté aislada de la navegación.
 
-**Nunca llamar "freno automático" a nada en hardware de nivel Ingenio.** Es asistencia de frenado
-en modo demostración, teleoperado con un dedo sobre un paro físico.
+**Nunca llamar "freno automático" a nada en hardware de nivel Ingenio.** Es asistencia de
+frenado en modo demostración, teleoperado con un dedo sobre un paro físico.
 
-**Piezas y ingeniería son cosas distintas.** Emular las señales cuesta $198 de piezas; lo caro es
-descubrir qué señal es cada cable, y eso es NRE — una vez para todo el modelo, no por unidad.
+**Piezas y ingeniería son cosas distintas.** El NRE es descubrir qué señal es cada cable, y
+eso se paga una vez para todo el modelo, no por unidad.
 
-## Los cinco niveles
+---
 
-`Ingenio` → `Piloto` → `Serie` → `Flota` → `Homologado`.
-No son cinco calidades: son cinco preguntas distintas. **Piloto ($8,458 en piezas) es el que se
-recomienda.** Nunca usar la palabra "scrappy" en material que vaya a leer la dirección.
+## Corregido en campo — 24-ago-2026
+
+Todo esto contradice lo que estaba escrito antes. **Manda esta sección.**
+
+### Geometría del equipo
+
+| Cota | Decía | Es | Cómo se supo |
+|---|---|---|---|
+| `XPIV` culo → eje de ruedas de carga | 1.91 | **1.50** | con 1.91 la esquina trasera queda más lejos del centro de giro que el propio radio de ficha (1.797). Imposible |
+| Ancho | 1.054 | **1.315** en el punto más ancho | medido. Los 1.054 eran el capó |
+| Silueta | rectángulo | **forma de L** | el 1.315 son las **patas portantes**, cortas y adelante. El capó atrás mide ~1.065 |
+| `FLEN` uña útil | 1.21 | **1.20** | punta a torre |
+
+`XPIV = 1.50` da δmax **78°**, coherente con la ficha y con el 76° que ya usaba el visor web
+por dos caminos independientes. **Sigue siendo derivado, no medido.**
+
+### El giro
+
+**La carga nunca es la restricción.** El IBC mide 1.00 de ancho y el equipo 1.315: retraído
+queda *dentro* de la silueta. En todas las corridas el punto que traba fue el chasis, jamás
+el cubo. **Girar cargado es igual que girar vacío**, tal como se observó en campo.
+
+Eso deja sin efecto todo lo que se había planteado de sideshift activo durante el arco y de
+maniobra multipunto por culpa de la carga. Eran problemas inventados por un modelo malo.
+
+**El planificador correcto es Hybrid A\***, no un barrido de arcos. El equipo es no holónomo
+con radio mínimo; los caminos óptimos son curvas de Reeds-Shepp. Un PuzzleBot de eje
+diferencial gira en el sitio y por eso planificar ahí es trivial — acá no. Está en
+`analisis/planificador_giro.py`.
+
+Resultado con la silueta corregida, girando desde el **carril del rack opuesto**:
+
+| Desde el rack opuesto | Completa 90° | Cambios de sentido |
+|---|---|---|
+| 75 cm — la línea que usa el operador | sí | **1** |
+| 90 a 150 cm | sí | 0 |
+
+La maniobra de dos tiempos que hace el operador sale sola del planificador, sin programarla.
+La línea recomendada es **85 cm**: sigue en un movimiento y deja 20 cm de holgura en vez de
+los 10 justos.
+
+### El rack
+
+De las medidas de maje: luz de 2.43 m en N1 con dos cubos apilados, plataforma del 2° a
+2.545, plataforma del 3° a 1.495 del techo de N1.
+
+```
+grosor de plataforma      0.115 m
+paso entre plataformas    1.380 m   (del 2° en adelante)
+luz libre por nivel       1.265 m
+altura del cubo           1.160 m   ← DEDUCIDA, no medida
+```
+
+La altura del cubo sale del propio dato: con 1.20 quedarían 3 cm de juego en N1 y nadie
+estiba así; con 1.16 quedan 11. Es el IBC estándar.
+
+**Alturas de uña**, medidas al fondo de la uña. Hueco del IBC 0.32 × 0.08, uña 0.036 en el
+talón → ventana vertical de 0.044, centro en **0.022**. Agarre a **+0.06**, que es lo que
+sube el operador.
+
+| Posición | Base | Entrada | Agarre |
+|---|---|---|---|
+| N1-A al piso | 0.000 | 0.022 | 0.082 |
+| N1-B sobre cubo | 1.160 | 1.182 | 1.242 |
+| N2 | 2.545 | 2.567 | 2.627 |
+| N3 | 3.925 | 3.947 | 4.007 |
+| N4 | 5.305 | 5.327 | 5.387 |
+| N5 | 6.685 | 6.707 | 6.767 |
+
+**Elevación necesaria hasta N5: 6.77 m.** Ese es el `h3` que se le pide a Fabrizio.
+
+### Los pasillos que dábamos por perdidos
+
+Los dos pasillos que usa la secuencia separan filas por **4.10 y 4.20 m entre centros**, o
+sea **3.00 y 3.10 m libres** con racks de 1.10 de fondo. El análisis viejo los descartó
+porque comparaba contra el `Ast` de 3.82 del Baoli contrabalanceado — máquina que ya no es
+la nuestra. Con el reach truck que el cliente ya opera, entran.
+
+Su topología calza exacto con la simulación de secuencia sin que nadie la forzara:
+
+```
+-817.1 │ pasillo 3.10 │ -812.9 ‖ -811.5 │ pasillo 3.00 │ -807.4
+ rojo  │      A       │ amarillo‖verde  │      B       │  azul
+```
+
+### Localización
+
+**Lo que restringe el eje del pasillo es la pared del fondo, no los montantes del rack.**
+Con las tapas a la vista el relieve casi no importa: de 15 cm a 0 cm el sigma longitudinal
+apenas va de 0.14 a 0.18 cm. Sin tapas y con relieve bajo, la matriz de información se
+vuelve **singular**.
+
+`analisis/analisis_degeneracion.py` mete paredes a 4.5 m de cada extremo incluso en el caso
+"abierto", y por eso **no reproduce la tabla que quedó escrita en `docs/03`**.
+
+**El precipicio está entre 15 y 12 m de alcance efectivo.** Arriba de 15 m no pasa nada con
+ningún relieve. Consecuencia para el BOM: **un blanco retrorreflectivo en cada cabecera de
+pasillo vale más que marcadores repartidos a lo largo**, porque replica la restricción que
+ya funciona. Son ~20 blancos, no 100.
+
+### Eléctrica
+
+- El **EDR es EPS** (steer-by-wire): la dirección se puede interceptar eléctricamente.
+  Los contrabalanceados de renta son **hidráulicos** y ahí no hay nada que interceptar.
+- **El EDR no tiene pedal de acelerador.** Hay pedal de **hombre-presente** que habilita
+  pero no dosifica; la velocidad sale de un **mando de mano**.
+- El freno de servicio es **regenerativo por el controlador**. La capa que sí frena siempre
+  es cortar el hombre-presente con un relé y dejar caer el freno electromagnético de resorte.
+- Los controladores esperan **doble señal Hall redundante**. Inyectar una sola dispara falla
+  y bloquea la marcha. De ahí que el DAC sea de cuatro canales.
+- Mapeo del control: **RT y LT dosifican, B/O alterna sentido**, y el cambio de sentido solo
+  se acepta con ambos gatillos en cero y el equipo detenido.
+
+### Isaac Sim
+
+| Decía | Es |
+|---|---|
+| ~30 GB | zip de **10.6 GB** |
+| driver 535+ | **595.97** en Windows |
+| RTX con 8 GB VRAM mínimo | **RTX 4080 · 16 GB VRAM · 32 GB RAM** |
+
+La máquina de maje tiene 8 GB — la mitad del mínimo. **Correr headless y un LiDAR por
+corrida, nunca varios simultáneos.** Se va a instalar en **Linux**; la descarga en Windows
+se abortó y se borró.
+
+Bug corregido en `sim-isaac/`: las 513 `PhysicsCollisionAPI` estaban aplicadas al `Xform` y
+no al Gprim. UsdPhysics construye el collider a partir de la geometría, así que **piso, muros
+y racks eran atravesables**. No afectaba al LiDAR RTX, que traza geometría de render.
+
+---
+
+## Qué se construyó en esta sesión
+
+| Qué | Dónde |
+|---|---|
+| Repositorio público con Pages | `github.com/Rodzilla-TheCreator/tata` |
+| Índice de visuales | `index.html` → `rodzilla-thecreator.github.io/tata/` |
+| **Visor del sector A** con FSM, control Obed y consola de flota | `sim-web/actual_tpl.html` → `build_actual.py` |
+| Datos del sector A filtrados | `datos/sectorA.json` |
+| Planificador de giro Hybrid A\* | `analisis/planificador_giro.py` |
+| Medidas de campo en la secuencia | `sec/sec_tpl.html` |
+| Tres planes de intervención + plan de diagnóstico | `docs/10`, `docs/11` |
+| Arreglos de Isaac Sim | `sim-isaac/` |
+
+**Control Obed:** el timón acumula y **se queda donde se deja**, como el volante real —
+2.6 vueltas de tope a tope. El ángulo útil se recorta hasta 45% con la velocidad; el sobre
+de 1.5 m/s dejó de ser texto y es código.
+
+**Consola de flota:** rediseñada sobre Botoni. El mapa domina, la FSM es un **anillo** (el
+ciclo es un lazo, no una tira con scroll), la cámara bajó a miniatura, y se agregó tiempo:
+ciclos, ciclo medio, tiempo en estado, % bloqueada y ocupación del cuello de botella de A.
+La barra del cuello queda gris hasta tener 25 s de muestra — 100% a los tres segundos no es
+un cuello, es no haber medido.
+
+---
+
+## Lo que falta, en orden
+
+### 1 · Las tres medidas de la silueta ← bloquea todo lo demás
+
+`XPIV` sigue **derivado del radio de ficha, no medido**, y la silueta es hipótesis. Cada vez
+que cambia una suposición, la ventana de carriles se mueve entera. Con flexómetro:
+
+1. Culo → centro de las ruedas de carga
+2. Ancho del capó trasero en su punto más ancho
+3. Dónde está el punto de 1.315 medido desde el culo, cuánto dura, y el radio de la esquina
+
+Y una de operación que vale igual: **tiza en el piso donde el operador para de verdad, cinco
+veces.** Esa dispersión es literalmente el requisito de precisión que el kit debe superar.
+
+### 2 · La visita de diagnóstico
+
+`docs/11`, doce preguntas. No se corta ni un cable. La herramienta que decide si sirve son
+las **puntas de retro-sondeo**. La pregunta que todos olvidan es **cómo se borran los códigos
+de falla** — sin eso el equipo queda bloqueado y se acaba el día.
+
+### 3 · Estados de bloqueo y deadlock en la FSM
+
+Hoy `LIBRE` hace de comodín. Faltan `ESPERA_TRASBORDO`, `ESPERA_HUECO`, `ESPERA_PEDIDO` como
+estados de verdad, y un **protocolo de reserva** con una prueba que intente romperlo: si A y
+B reservan la última posición de trasbordo a la vez, hoy nada lo impide.
+
+### 4 · Estados de falla y reanudación
+
+Qué pasa si el ArUco no se ve, si el hueco estaba ocupado, si entra un paro a mitad de una
+extensión. Hay pasos que **no se pueden reanudar a la mitad** — pantógrafo extendido en
+altura. En el fierro esto es la mitad del código y hoy no existe.
+
+### 5 · Isaac Sim en Linux
+
+Los arreglos ya están en el repo. Clonar y arrancar con `--sin-sensores`. Primera vez compila
+shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
+
+### 6 · Deuda menor, anotada para que no se pierda
+
+- `sim-web/build.py` tiene **el mismo bug de encoding** que se corrigió en `build_sec.py`:
+  abre sin declarar utf-8 y revienta en Windows. No se tocó porque no se pidió.
+- `sim-isaac/tata_sim.py` usa `--nivel scrappy|industrial|produccion|maximo`. El CLI
+  **contradice la regla de este archivo** de no usar "scrappy".
+- `docs/01` a `docs/07` no se reescribieron tras la medición de campo.
+- El build `TaTa_Secuencia.html` **se versiona** porque lo sirve Pages: hay que reconstruir
+  y commitear tras tocar `sec/sec_tpl.html`, o Pages muestra lo viejo.
+- La canaleta de drenaje con rejilla que cruza el pasillo (foto IMG_0208) no está en ningún
+  modelo. Para un humano es un bache; para navegación autónoma es un salto de rueda y una
+  discontinuidad de odometría.
+
+---
 
 ## Cómo trabajar aquí
 
-- Responder en **español**, directo y conciso. Máximo **400 palabras** de prosa salvo que se pida
-  más; tablas, código y listas de archivos no cuentan.
+- Responder en **español**, directo y conciso. Máximo **400 palabras** de prosa salvo que se
+  pida más; tablas, código y listas de archivos no cuentan.
 - No adular ni rellenar. Si algo está mal, decirlo de frente.
 - **Verificar antes de afirmar.** Casi todo lo de `docs/` tiene su cálculo en `analisis/`.
   Si vas a contradecir un número, corré el script primero.
-- Cuando un cálculo contradiga algo escrito antes, **corregirlo explícitamente**. Ya pasó dos
-  veces en este proyecto y las dos veces mejoró el resultado.
+- Cuando un cálculo contradiga algo escrito antes, **corregirlo explícitamente**.
+- **Y cuando la realidad contradiga al cálculo, gana la realidad.** Pasó tres veces en esta
+  sesión: el modelo decía que el giro con carga no existía y la máquina lo hace todos los
+  días. Las tres veces el error estaba en el modelo, y encontrarlo mejoró el resultado.
+  Antes de declarar algo imposible, preguntar si alguien ya lo está haciendo.
 
 ## Equipo
 
@@ -76,10 +284,16 @@ recomienda.** Nunca usar la palabra "scrappy" en material que vaya a leer la dir
 ## Reconstruir los entregables
 
 ```bash
-python3 sim-web/build.py             # simulador completo
+python build_sec.py                  # simulación de secuencia
+python build_actual.py               # visor del sector A
+python3 sim-web/build.py             # simulador completo  (ojo: falla en Windows)
 python3 sim-web/build_operador.py    # vista de operador
 python3 datos/extract3d.py           # re-extraer geometría del DXF (necesita el .dxf)
 python3 sim-isaac/export_usd.py      # regenerar la escena USD
 node presentaciones/deck_o2.js       # deck de Omar
 node presentaciones/deck_r.js        # deck de RETHINK
 ```
+
+`build_sec.py` y `build_actual.py` necesitan `node_modules/three/build/three.min.js`, que no
+se versiona. Si no está, se extrae del `sim-web/dist/Almacen_RETHINK_3D.html` ya construido,
+que lo trae inyectado — así se garantiza la misma revisión (r13x) que usa el resto.
