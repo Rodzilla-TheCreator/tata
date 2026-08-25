@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaTa · visuales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#E4E9ED;--surf:#F6F8F9;--surf2:#DCE3E8;--ink:#111B23;--mut:#5A6C79;
+  --line:#B9C6CF;--amber:#B4720C;--load:#136F69}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;--mut:#7D91A2;
+  --line:#2A3945;--amber:#F0A93B;--load:#3BB5AC}}
+:root[data-theme="dark"]{--bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;
+  --mut:#7D91A2;--line:#2A3945;--amber:#F0A93B;--load:#3BB5AC}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:56px 22px 80px;display:flex;flex-direction:column;gap:38px}
+h1{font-weight:900;font-size:clamp(30px,5vw,44px);margin:0;letter-spacing:-.02em;line-height:1.05}
+.eyebrow{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut)}
+p{margin:0;max-width:62ch;color:var(--mut)}
+h2{font-weight:700;font-size:15px;margin:0 0 2px;letter-spacing:-.01em}
+.grid{display:grid;gap:12px}
+a.card{display:flex;flex-direction:column;gap:5px;padding:16px 18px;text-decoration:none;
+  background:var(--surf);border:1px solid var(--line);border-radius:3px;color:var(--ink);
+  transition:.15s}
+a.card:hover{border-color:var(--amber);transform:translateY(-1px)}
+a.card:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+a.card span{font-size:14px;color:var(--mut)}
+.tag{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--load);align-self:flex-start;margin-bottom:2px}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
+code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Montasa &middot; Tecnolog&iacute;a Avanzada de Transporte Aut&oacute;nomo</div>
+    <h1>TaTa &middot; visuales</h1>
+  </header>
+
+  <section class="grid">
+    <span class="eyebrow">Simuladores</span>
+
+    <a class="card" href="TaTa_Secuencia.html">
+      <span class="tag">En desarrollo</span>
+      <h2>Secuencia de l&iacute;nea</h2>
+      <span>Dos TaTa moviendo maxicubos entre racks, con trasbordo al fondo.
+      Medidas de campo de agosto 2026: bah&iacute;a 2.35 con dos cubos, seis niveles,
+      pasillo 3.00 m.</span>
+    </a>
+
+    <a class="card" href="sim-web/dist/Almacen_RETHINK_3D.html">
+      <h2>Almac&eacute;n RETHINK 3D</h2>
+      <span>Reconstrucci&oacute;n completa del DWG. 2,138 ubicaciones, 29 filas,
+      1,142 segmentos de muro. Montacargas manejable con cinem&aacute;tica de
+      tracci&oacute;n trasera y colisiones.</span>
+    </a>
+
+    <a class="card" href="sim-web/dist/Manejo_Montacargas.html">
+      <h2>Manejo de montacargas</h2>
+      <span>Versi&oacute;n limpia para operadores. Sin par&aacute;metros ni capas
+      editables.</span>
+    </a>
+  </section>
+
+  <section class="grid">
+    <span class="eyebrow">Figuras</span>
+
+    <a class="card" href="analisis/figuras/degeneracion_pasillo.png">
+      <h2>Degeneraci&oacute;n del pasillo</h2>
+      <span>Relieve del rack contra incertidumbre de pose. Ojo: la restricci&oacute;n
+      longitudinal la da la pared del fondo, no los montantes.</span>
+    </a>
+
+    <a class="card" href="analisis/figuras/geometria_giro_edr.png">
+      <h2>Geometr&iacute;a del giro</h2>
+      <span>El EDR18N2 en el pasillo de 3.00 m.</span>
+    </a>
+
+    <a class="card" href="analisis/figuras/retorno_5anios.png">
+      <h2>Retorno a 5 a&ntilde;os</h2>
+      <span>Del caso de negocio.</span>
+    </a>
+  </section>
+
+  <section class="grid">
+    <span class="eyebrow">Documentos</span>
+
+    <a class="card" href="presentaciones/TaTa_Presentacion_RETHINK.pdf">
+      <h2>Presentaci&oacute;n RETHINK</h2>
+      <span>Para el cliente.</span>
+    </a>
+
+    <a class="card" href="presentaciones/TaTa_Caso_Negocio_Omar.pdf">
+      <h2>Caso de negocio</h2>
+      <span>Las cinco gradas del kit y la comparaci&oacute;n de costos.</span>
+    </a>
+  </section>
+
+  <footer>
+    El c&oacute;digo, los datos y los documentos t&eacute;cnicos est&aacute;n en
+    <a href="https://github.com/Rodzilla-TheCreator/tata" style="color:var(--amber)">el repositorio</a>.
+    La secuencia se reconstruye con <code>python build_sec.py</code>.
+  </footer>
+</div>
+</body>
+</html>
