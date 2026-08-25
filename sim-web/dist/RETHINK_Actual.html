@@ -5,29 +5,69 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>TaTa · RETHINK actual</title>
 <style>
+:root{--bg:#0b1016;--pan:#111a22;--pan2:#18232d;--line:#24333f;--ink:#e6edf3;--mut:#7d91a2;
+  --amb:#f0a93b;--ok:#3bb5ac;--bad:#e4644a;--mono:ui-monospace,"SFMono-Regular",Menlo,monospace}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;background:#0b1016;color:#e6edf3;
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
   font:14px/1.5 ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 #cv{position:fixed;inset:0;display:block}
-.panel{position:fixed;background:rgba(13,19,26,.93);border:1px solid #2a3945;
-  border-radius:6px;padding:12px 14px;backdrop-filter:blur(8px)}
-#hud{top:14px;left:14px;max-width:290px}
-#ctl{top:14px;right:14px;width:214px;max-height:calc(100% - 28px);overflow:auto}
+.panel{position:fixed;background:rgba(13,19,26,.94);border:1px solid var(--line);
+  border-radius:6px;padding:11px 13px;backdrop-filter:blur(8px)}
+#hud{top:14px;left:14px;width:270px}
+#ctl{top:14px;right:14px;width:206px;max-height:calc(100% - 28px);overflow:auto}
 h1{font-size:15px;margin:0 0 3px;font-weight:700;letter-spacing:-.01em}
-.sub{font:600 10px/1.4 ui-monospace,monospace;letter-spacing:.11em;text-transform:uppercase;color:#7d91a2}
-.kv{display:flex;justify-content:space-between;gap:12px;font:400 12.5px/1.7 ui-monospace,monospace}
+.sub{font:600 10px/1.4 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--mut);margin:0 0 4px}
+.kv{display:flex;justify-content:space-between;gap:12px;font:400 12.5px/1.65 var(--mono)}
 .kv b{font-weight:600;font-variant-numeric:tabular-nums}
-hr{border:0;border-top:1px solid #2a3945;margin:10px 0}
-button{width:100%;text-align:left;background:#1b2732;border:1px solid #2a3945;color:#e6edf3;
-  border-radius:4px;padding:7px 10px;margin:3px 0;cursor:pointer;font:inherit;font-size:12.5px}
-button:hover{border-color:#f0a93b}
-button.on{background:#f0a93b;color:#0b1016;border-color:#f0a93b;font-weight:700}
-button:focus-visible{outline:2px solid #f0a93b;outline-offset:1px}
-.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px}
-#help{position:fixed;bottom:14px;left:14px;color:#7d91a2;font-size:12px}
-kbd{background:#1b2732;border:1px solid #2a3945;border-bottom-width:2px;border-radius:3px;
-  padding:1px 5px;font:600 11px ui-monospace,monospace;color:#e6edf3}
-.warn{color:#e4644a}.ok{color:#3bb5ac}.mid{color:#f0a93b}
+hr{border:0;border-top:1px solid var(--line);margin:9px 0}
+button{width:100%;text-align:left;background:var(--pan2);border:1px solid var(--line);color:var(--ink);
+  border-radius:4px;padding:6px 9px;margin:3px 0;cursor:pointer;font:inherit;font-size:12.5px}
+button:hover{border-color:var(--amb)}
+button.on{background:var(--amb);color:#0b1016;border-color:var(--amb);font-weight:700}
+button:focus-visible{outline:2px solid var(--amb);outline-offset:1px}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:-1px}
+#help{position:fixed;bottom:12px;left:14px;color:var(--mut);font-size:11.5px}
+kbd{background:var(--pan2);border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;
+  padding:1px 5px;font:600 11px var(--mono);color:var(--ink)}
+.warn{color:var(--bad)}.ok{color:var(--ok)}.mid{color:var(--amb)}
+#timon{display:flex;align-items:center;gap:10px;margin-top:6px}
+
+/* ── consola de flota ─────────────────────────────────────────────────── */
+#fc{position:fixed;inset:0;z-index:400;display:none;background:#0a0e13;
+  grid-template-columns:1.15fr 340px;grid-template-rows:38px 1fr;gap:1px}
+#fc.show{display:grid}
+#fc-top{grid-column:1/-1;display:flex;align-items:center;gap:9px;padding:0 12px;background:var(--pan)}
+#fc-brand{font:700 12px var(--mono);letter-spacing:.13em}
+#fc-brand small{color:var(--amb);font-weight:700}
+.chip{font:600 10.5px var(--mono);padding:3px 8px;border-radius:99px;background:var(--pan2);
+  color:var(--mut);border:1px solid var(--line)}
+.chip.al{color:var(--bad);border-color:var(--bad)}
+#fc-tabs{display:flex;gap:1px;margin-left:6px}
+#fc-tabs button{width:auto;margin:0;border-radius:0;padding:4px 11px;font:700 11px var(--mono)}
+#fc-tabs button:first-child{border-radius:5px 0 0 5px}
+#fc-tabs button:last-child{border-radius:0 5px 5px 0}
+#fc-close{width:auto;margin:0 0 0 auto;padding:4px 11px;font:600 11px var(--mono)}
+#fc-map{position:relative;background:#080c10;overflow:hidden}
+#fc-map canvas{position:absolute;inset:0;width:100%;height:100%}
+#fc-side{background:var(--pan);overflow-y:auto;display:flex;flex-direction:column}
+.blk{border-bottom:1px solid var(--line);padding:11px 13px}
+.blk .sub{margin-bottom:7px}
+#fc-ring{display:block;margin:0 auto}
+#fc-est{text-align:center;font:700 14px var(--mono);margin-top:-6px}
+#fc-est small{display:block;font:400 11px/1.5 ui-sans-serif,system-ui;color:var(--mut);
+  font-weight:400;letter-spacing:0;margin-top:2px}
+.met{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.met div{background:var(--pan2);border:1px solid var(--line);border-radius:4px;padding:7px 9px}
+.met span{display:block;font:600 9px var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--mut)}
+.met b{display:block;font:600 16px/1.25 var(--mono);font-variant-numeric:tabular-nums;margin-top:1px}
+#fc-cam{width:100%;aspect-ratio:16/10;background:#05080b;border:1px solid var(--line);
+  border-radius:4px;overflow:hidden;position:relative;cursor:pointer}
+#fc-cam canvas{width:100%;height:100%;display:block}
+#fc-cam .lbl{position:absolute;left:7px;top:6px;font:600 9px var(--mono);letter-spacing:.1em;color:var(--mut)}
+.bar{height:6px;background:var(--pan2);border-radius:2px;overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.log{font:400 11px/1.7 var(--mono);color:var(--mut);max-height:132px;overflow-y:auto}
+.log b{color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
@@ -38,30 +78,87 @@ kbd{background:#1b2732;border:1px solid #2a3945;border-bottom-width:2px;border-r
   <h1 id="h_tit">Vista general</h1>
   <hr>
   <div class="kv"><span>Unidad</span><b id="h_uni">&mdash;</b></div>
+  <div class="kv"><span>Estado</span><b id="h_est">&mdash;</b></div>
   <div class="kv"><span>Velocidad</span><b id="h_vel">0.00 m/s</b></div>
-  <div class="kv"><span>Direcci&oacute;n</span><b id="h_dir">0&deg;</b></div>
+  <div class="kv"><span>U&ntilde;as</span><b id="h_una">0.02 m</b></div>
   <div class="kv"><span>Holgura m&iacute;n.</span><b id="h_hol">&mdash;</b></div>
   <div class="kv"><span>Golpes</span><b id="h_hit">0</b></div>
+  <div id="timon">
+    <svg width="52" height="52" viewBox="-50 -50 100 100" style="flex:0 0 auto">
+      <circle r="42" fill="none" stroke="#24333f" stroke-width="7"></circle>
+      <g id="tim-g">
+        <circle r="42" fill="none" stroke="#f0a93b" stroke-width="7"
+          stroke-dasharray="18 246" stroke-linecap="round" transform="rotate(-90)"></circle>
+        <line x1="0" y1="0" x2="0" y2="-34" stroke="#f0a93b" stroke-width="5" stroke-linecap="round"></line>
+      </g>
+      <circle r="6" fill="#18232d" stroke="#24333f" stroke-width="2"></circle>
+    </svg>
+    <div style="font:400 11.5px/1.5 var(--mono);color:var(--mut)">
+      Tim&oacute;n <b id="d_tim" style="color:var(--amb)">0&deg;</b><br>
+      Rueda <b id="d_rue" style="color:var(--ink)">0&deg;</b><br>
+      Sentido <b id="d_dir" style="color:var(--ok)">ADELANTE</b>
+    </div>
+  </div>
 </div>
 
 <div class="panel" id="ctl">
-  <div class="sub">Unidad</div>
-  <div id="c_uni"></div>
+  <div class="sub">Unidad</div><div id="c_uni"></div>
   <hr>
-  <div class="sub">Ir a pasillo</div>
-  <div id="c_pas"></div>
+  <div class="sub">Modo</div><div id="c_mod"></div>
   <hr>
-  <div class="sub">Vista</div>
-  <div id="c_vis"></div>
+  <div class="sub">Ir a pasillo</div><div id="c_pas"></div>
   <hr>
-  <div class="sub">Capas</div>
-  <div id="c_cap"></div>
+  <div class="sub">Vista</div><div id="c_vis"></div>
+  <hr>
+  <div class="sub">Capas</div><div id="c_cap"></div>
+  <hr>
+  <button id="c_fc" style="background:var(--ok);color:#06110f;border-color:var(--ok);font-weight:700">
+    Consola de flota</button>
 </div>
 
 <div id="help">
-  <kbd>W</kbd><kbd>S</kbd> avanzar &middot; <kbd>A</kbd><kbd>D</kbd> dirigir &middot;
-  <kbd>Q</kbd><kbd>E</kbd> mástil &middot; <kbd>Espacio</kbd> freno &middot;
-  <kbd>Tab</kbd> cambiar unidad &middot; arrastrar para orbitar
+  <kbd>W</kbd> acelerar &middot; <kbd>S</kbd> frenar &middot; <kbd>A</kbd><kbd>D</kbd> tim&oacute;n &middot;
+  <kbd>B</kbd> sentido &middot; <kbd>R</kbd><kbd>F</kbd> pant&oacute;grafo &middot;
+  <kbd>↑</kbd><kbd>↓</kbd> u&ntilde;as &middot; <kbd>Tab</kbd> unidad
+</div>
+
+<!-- ── consola de flota ─────────────────────────────────────────────── -->
+<div id="fc">
+  <div id="fc-top">
+    <span id="fc-brand">TaTa <small>FLOTA</small></span>
+    <div id="fc-tabs"></div>
+    <span class="chip" id="fc-t">00:00</span>
+    <span class="chip" id="fc-thr">&mdash;</span>
+    <span class="chip" id="fc-blk">&mdash;</span>
+    <button id="fc-close">Salir</button>
+  </div>
+  <div id="fc-map"><canvas id="fc-mapcv"></canvas></div>
+  <div id="fc-side">
+    <div class="blk">
+      <div class="sub">Ciclo de tarea</div>
+      <svg id="fc-ring" width="290" height="250" viewBox="-20 0 290 250"></svg>
+      <div id="fc-est">&mdash;<small>&nbsp;</small></div>
+    </div>
+    <div class="blk">
+      <div class="sub">Rendimiento</div>
+      <div class="met">
+        <div><span>Ciclos</span><b id="m_cic">0</b></div>
+        <div><span>Ciclo medio</span><b id="m_med">&mdash;</b></div>
+        <div><span>En estado</span><b id="m_est">0.0 s</b></div>
+        <div><span>Bloqueada</span><b id="m_blq">0 %</b></div>
+      </div>
+      <div class="sub" style="margin:11px 0 3px">Ocupaci&oacute;n del cuello (A)</div>
+      <div class="bar"><i id="m_bar" style="width:0%"></i></div>
+    </div>
+    <div class="blk">
+      <div class="sub">C&aacute;mara de u&ntilde;as</div>
+      <div id="fc-cam"><canvas id="fc-camcv"></canvas><span class="lbl" id="fc-camid">&mdash;</span></div>
+    </div>
+    <div class="blk" style="flex:1">
+      <div class="sub">Bit&aacute;cora</div>
+      <div class="log" id="fc-log"></div>
+    </div>
+  </div>
 </div>
 
 <script>/**
@@ -73,316 +170,445 @@ kbd{background:#1b2732;border:1px solid #2a3945;border-bottom-width:2px;border-r
 </script>
 <script>
 const D = {"bounds":{"x0":706.0,"x1":775.0,"y0":-821.07,"y1":-784.96},"racks":[{"x0":746.45,"x1":766.36,"y":-788.96,"bays":16,"cw":1.0,"cd":1.2,"levels":4,"sec":"A","color":null},{"x0":737.46,"x1":742.37,"y":-791.96,"bays":4,"cw":1.0,"cd":1.2,"levels":4,"sec":"A","color":null},{"x0":746.45,"x1":766.36,"y":-793.13,"bays":16,"cw":1.0,"cd":1.2,"levels":4,"sec":"A","color":null},{"x0":727.46,"x1":742.37,"y":-796.13,"bays":12,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":null},{"x0":746.4,"x1":766.31,"y":-797.29,"bays":16,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":null},{"x0":727.46,"x1":742.37,"y":-797.44,"bays":12,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":null},{"x0":746.4,"x1":766.31,"y":-798.61,"bays":16,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":null},{"x0":719.0,"x1":736.41,"y":-807.39,"bays":14,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"azul"},{"x0":739.0,"x1":753.91,"y":-807.39,"bays":12,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"azul"},{"x0":718.93,"x1":736.34,"y":-811.55,"bays":14,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"verde"},{"x0":739.0,"x1":753.91,"y":-811.55,"bays":12,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"verde"},{"x0":718.93,"x1":736.34,"y":-812.87,"bays":14,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"amarillo"},{"x0":739.0,"x1":753.91,"y":-812.87,"bays":12,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"amarillo"},{"x0":719.0,"x1":736.41,"y":-817.07,"bays":14,"cw":1.0,"cd":1.2,"levels":4,"sec":"A","color":"rojo"},{"x0":739.0,"x1":753.91,"y":-817.07,"bays":12,"cw":1.0,"cd":1.2,"levels":5,"sec":"A","color":"rojo"}],"walls":[[751.79,-773.96,751.79,-779.96],[757.79,-773.96,757.79,-779.96],[754.79,-773.96,754.79,-779.96],[760.79,-773.96,760.79,-779.96],[763.79,-773.96,763.79,-779.96],[769.79,-773.96,769.79,-779.96],[766.79,-773.96,766.79,-779.96],[775.79,-773.96,775.79,-779.96],[772.79,-773.96,772.79,-779.96],[776.97,-822.61,776.97,-824.06],[776.87,-822.51,776.87,-824.06],[774.93,-824.06,775.85,-824.06],[773.87,-824.21,775.4,-824.21],[773.87,-824.06,774.83,-824.06],[775.95,-822.61,775.95,-824.06],[775.85,-822.51,775.85,-824.06],[774.93,-822.61,774.93,-824.06],[774.83,-822.51,774.83,-824.06],[775.95,-824.06,776.87,-824.06],[773.94,-809.21,773.94,-822.51],[773.79,-809.36,773.79,-830.21],[773.79,-809.37,773.79,-820.02],[721.79,-773.96,721.79,-779.96],[724.79,-773.96,724.79,-779.96],[730.79,-773.96,730.79,-779.96],[727.79,-773.96,727.79,-779.96],[736.79,-773.96,736.79,-779.96],[733.79,-773.96,733.79,-779.96],[742.79,-773.96,742.79,-779.96],[739.79,-773.96,739.79,-779.96],[745.79,-773.96,745.79,-779.96],[748.79,-773.96,748.79,-779.96],[773.79,-824.06,773.79,-830.04],[776.97,-822.61,776.97,-824.06],[776.87,-822.51,776.87,-824.06],[774.93,-824.06,775.85,-824.06],[773.87,-824.21,775.4,-824.21],[773.87,-824.06,774.83,-824.06],[775.95,-822.61,775.95,-824.06],[775.85,-822.51,775.85,-824.06],[774.93,-822.61,774.93,-824.06],[774.83,-822.51,774.83,-824.06],[775.95,-824.06,776.87,-824.06],[773.94,-809.21,773.94,-822.51],[773.79,-809.36,773.79,-830.21],[773.79,-809.37,773.79,-820.02],[773.01,-809.21,774.07,-809.21],[773.01,-809.36,774.07,-809.36],[773.87,-829.81,773.87,-825.81],[773.87,-825.66,773.87,-824.22],[773.72,-829.96,773.72,-824.07],[773.79,-829.96,773.79,-824.07],[773.87,-829.81,773.87,-825.81],[773.87,-825.66,773.87,-824.22],[773.72,-829.96,773.72,-824.07],[776.97,-822.61,776.97,-824.06],[776.87,-822.51,776.87,-824.06],[774.93,-824.06,775.85,-824.06],[773.87,-824.06,774.83,-824.06],[775.95,-822.61,775.95,-824.06],[775.85,-822.51,775.85,-824.06],[774.93,-822.61,774.93,-824.06],[774.83,-822.51,774.83,-824.06],[775.95,-824.06,776.87,-824.06],[773.94,-809.21,773.94,-822.51],[773.79,-809.36,773.79,-830.21],[773.79,-809.37,773.79,-820.02],[769.19,-793.37,774.02,-793.37],[769.19,-793.22,774.02,-793.22],[773.94,-809.21,773.94,-813.24],[773.79,-809.36,773.79,-813.3],[773.79,-809.37,773.79,-813.3],[770.83,-809.21,770.83,-818.21],[773.04,-809.21,773.04,-818.21],[773.92,-787.89,773.92,-803.9],[773.82,-787.89,773.82,-804.0],[773.91,-793.37,773.91,-787.96],[773.81,-793.37,773.81,-787.96],[767.01,-793.22,767.01,-787.96],[766.91,-793.37,766.91,-787.96],[758.11,-809.21,759.11,-809.21],[761.31,-809.21,763.31,-809.21],[766.6,-809.22,767.89,-809.22],[770.09,-809.21,770.83,-809.21],[773.04,-809.21,774.07,-809.21],[766.6,-809.37,767.89,-809.37],[770.09,-809.36,770.83,-809.36],[773.04,-809.36,774.07,-809.36],[776.69,-820.02,773.86,-820.02],[776.69,-819.87,773.87,-819.87],[773.87,-829.81,773.87,-825.81],[773.87,-825.66,773.87,-824.22],[773.72,-829.96,773.72,-824.07],[773.79,-829.96,773.79,-824.07],[773.87,-829.81,773.87,-825.81],[773.87,-825.66,773.87,-824.22],[773.72,-829.96,773.72,-824.07],[756.96,-809.21,756.96,-810.37],[756.96,-813.37,756.96,-820.09],[757.11,-809.21,757.11,-810.37],[757.11,-813.37,757.11,-820.09],[738.57,-787.89,740.42,-787.89],[715.71,-787.89,726.57,-787.89],[710.51,-790.94,713.77,-790.94],[714.77,-790.94,716.86,-790.94],[710.51,-790.84,713.77,-790.84],[714.77,-790.84,716.86,-790.84],[715.86,-788.04,726.57,-788.04],[731.72,-788.04,733.0,-788.04],[731.72,-787.89,733.0,-787.89],[715.71,-809.36,715.71,-810.76],[715.71,-812.36,715.71,-814.45],[715.86,-809.36,715.86,-810.76],[715.86,-812.36,715.86,-814.45],[715.18,-814.26,715.18,-816.52],[715.71,-814.45,715.71,-816.96],[715.86,-814.45,715.86,-816.96],[713.51,-817.25,713.51,-814.29],[715.53,-814.59,715.18,-814.26],[713.51,-814.29,713.09,-814.59],[713.09,-814.59,715.53,-814.59],[715.71,-816.72,714.21,-816.72],[715.71,-808.19,715.71,-809.41],[714.21,-815.27,714.21,-818.76],[712.71,-818.27,712.71,-813.77],[712.71,-815.27,715.71,-815.27],[712.96,-818.76,715.96,-818.76],[715.71,-787.89,715.71,-806.59],[715.86,-788.04,715.86,-806.59],[715.86,-808.19,715.86,-809.41],[738.32,-788.04,743.53,-788.04],[744.33,-788.04,744.97,-788.04],[745.97,-788.04,766.96,-788.04],[740.57,-787.89,743.53,-787.89],[744.33,-787.89,744.97,-787.89],[745.97,-787.89,767.11,-787.89],[712.29,-800.12,712.29,-813.69],[712.21,-800.04,712.21,-813.77],[712.36,-800.2,712.36,-813.61],[715.71,-800.12,712.29,-800.12],[715.71,-800.2,712.36,-800.2],[715.71,-800.04,712.21,-800.04],[715.71,-813.69,712.29,-813.69],[715.71,-813.77,712.21,-813.77],[715.71,-813.61,712.36,-813.61],[715.86,-818.51,715.86,-820.09],[715.71,-818.51,715.71,-820.09],[763.31,-809.37,761.31,-809.37],[759.11,-809.37,758.11,-809.37],[762.61,-809.37,758.11,-809.37],[756.96,-816.47,756.96,-820.09],[757.11,-816.47,757.11,-820.09],[714.21,-816.47,714.21,-818.76],[712.71,-818.76,712.71,-816.47],[712.71,-818.76,715.71,-818.76],[715.86,-818.51,715.86,-820.09],[715.71,-818.51,715.71,-820.09],[744.97,-787.89,745.97,-787.89],[744.97,-788.04,745.97,-788.04],[726.36,-789.44,717.26,-789.44],[717.26,-789.44,726.36,-789.44],[726.36,-789.44,726.36,-794.64],[726.36,-794.64,717.26,-794.64],[717.26,-794.64,717.26,-789.44],[717.21,-789.39,726.41,-789.39],[726.41,-789.39,726.41,-794.69],[726.41,-794.69,717.21,-794.69],[717.21,-794.69,717.21,-789.39],[716.86,-789.04,726.76,-789.04],[726.76,-789.04,726.76,-795.04],[726.76,-795.04,716.86,-795.04],[716.86,-795.04,716.86,-789.04],[716.91,-789.09,726.71,-789.09],[726.71,-789.09,726.71,-794.99],[726.71,-794.99,716.91,-794.99],[716.91,-794.99,716.91,-789.09],[756.96,-816.47,756.96,-829.89],[757.11,-816.47,757.11,-829.89],[746.57,-836.88,747.88,-836.88],[748.14,-839.41,748.14,-835.06],[748.05,-834.93,746.41,-834.94],[746.32,-835.06,746.32,-839.4],[748.05,-835.08,746.4,-835.08],[745.81,-834.18,745.81,-839.21],[742.81,-834.18,742.81,-839.18],[749.11,-840.13,749.11,-834.18],[722.96,-836.88,724.27,-836.88],[724.53,-839.41,724.52,-835.06],[724.44,-834.93,722.79,-834.94],[722.7,-835.06,722.7,-839.4],[724.44,-835.08,722.79,-835.08],[724.81,-834.18,724.81,-839.21],[725.44,-836.88,726.75,-836.88],[727.01,-839.41,727.01,-835.06],[726.92,-834.93,725.27,-834.94],[725.19,-835.06,725.19,-839.4],[726.92,-835.08,725.27,-835.08],[727.81,-834.18,727.81,-839.21],[730.81,-834.18,730.81,-839.18],[721.81,-834.18,721.81,-840.18],[714.46,-816.47,714.46,-818.76],[712.96,-818.76,712.96,-816.47],[712.96,-818.76,715.96,-818.76],[733.42,-828.39,733.42,-820.24],[752.25,-829.89,750.84,-829.89],[722.09,-829.89,720.77,-829.89],[715.71,-818.1,715.71,-820.09],[715.71,-820.09,717.72,-820.09],[717.72,-820.09,715.71,-820.09],[715.71,-820.09,715.71,-829.89],[715.71,-829.89,717.01,-829.89],[727.41,-828.39,727.4,-825.52],[727.4,-825.52,732.69,-825.52],[727.56,-828.24,727.56,-825.67],[727.56,-825.67,729.57,-825.66],[729.56,-828.39,729.57,-825.52],[729.41,-828.24,729.41,-825.67],[721.78,-830.04,720.77,-830.04],[715.99,-830.04,716.96,-830.04],[717.01,-830.04,715.71,-830.04],[727.56,-827.61,727.56,-825.72],[731.57,-825.62,731.57,-828.38],[731.57,-828.38,732.74,-828.38],[729.56,-828.38,728.42,-828.38],[732.74,-828.31,731.57,-828.31],[732.74,-828.29,731.67,-828.29],[729.56,-828.24,728.42,-828.24],[717.72,-820.24,715.86,-820.24],[715.86,-820.24,715.86,-829.89],[739.47,-820.24,735.52,-820.24],[735.52,-820.24,719.82,-820.24],[719.82,-820.09,736.77,-820.09],[736.77,-820.09,719.82,-820.09],[723.79,-823.84,721.68,-823.84],[721.68,-823.84,721.68,-820.24],[721.83,-823.84,721.83,-820.24],[751.1,-830.04,752.3,-830.04],[735.52,-820.09,739.52,-820.09],[756.89,-820.09,745.7,-820.09],[745.7,-820.09,741.02,-820.09],[715.86,-818.15,715.86,-820.09],[721.68,-829.89,721.68,-825.52],[721.78,-825.52,721.78,-829.89],[718.82,-823.69,719.82,-823.69],[719.82,-823.84,718.82,-823.84],[718.82,-823.84,718.82,-820.24],[718.72,-823.84,718.72,-820.24],[739.49,-828.29,739.49,-820.29],[739.44,-828.29,739.44,-820.29],[739.39,-828.29,739.36,-820.29],[754.46,-827.2,754.46,-824.15],[754.46,-824.15,756.96,-824.15],[756.96,-825.4,754.46,-825.4],[756.96,-825.7,755.76,-825.7],[755.66,-825.7,754.46,-825.7],[756.96,-826.0,755.76,-826.0],[755.66,-826.0,754.46,-826.0],[756.96,-826.3,755.76,-826.3],[755.66,-826.3,754.46,-826.3],[756.96,-826.6,755.76,-826.6],[755.76,-826.6,756.96,-826.6],[756.96,-826.6,755.76,-826.6],[755.66,-826.6,754.46,-826.6],[754.46,-826.6,755.66,-826.6],[755.66,-826.6,754.46,-826.6],[756.96,-826.9,755.76,-826.9],[755.66,-826.9,754.46,-826.9],[756.96,-827.2,755.76,-827.2],[755.66,-827.2,754.46,-827.2],[756.96,-827.5,755.76,-827.5],[755.66,-827.5,754.46,-827.5],[756.96,-827.8,755.76,-827.8],[755.66,-827.8,754.46,-827.8],[756.96,-828.1,754.46,-828.1],[754.46,-828.06,754.46,-829.89],[754.31,-824.0,756.96,-824.0],[754.31,-828.01,754.31,-829.89],[733.53,-820.24,733.52,-828.38],[718.82,-823.79,719.82,-823.79],[755.93,-822.24,756.96,-822.24],[756.96,-822.29,755.93,-822.29],[755.93,-822.19,756.96,-822.19],[755.89,-821.34,756.03,-822.16],[755.98,-822.17,755.84,-821.35],[756.07,-821.31,755.74,-820.95],[755.74,-820.95,756.02,-820.28],[755.98,-820.26,755.68,-820.96],[755.68,-820.96,756.03,-821.35],[734.61,-832.63,735.51,-832.63],[739.36,-832.38,738.66,-832.89],[733.65,-832.38,734.35,-832.89],[740.26,-829.74,739.54,-829.74],[739.54,-829.79,740.26,-829.78],[740.26,-829.78,739.54,-829.06],[739.54,-829.06,740.26,-828.33],[740.26,-828.33,739.54,-828.34],[739.54,-828.38,740.26,-828.38],[733.52,-832.38,733.52,-830.34],[739.39,-832.38,739.39,-830.43],[733.38,-832.38,733.38,-830.34],[739.54,-832.38,739.54,-830.43],[734.61,-832.73,735.51,-832.73],[737.31,-832.63,738.36,-832.63],[737.31,-832.73,738.36,-832.73],[739.3,-826.94,739.3,-827.82],[739.35,-827.82,739.35,-826.93],[739.35,-826.93,738.47,-827.82],[757.15,-829.89,755.75,-829.89],[756.89,-830.04,755.7,-830.04],[725.6,-820.24,725.6,-823.69],[725.6,-823.69,724.57,-823.69],[724.57,-823.84,725.75,-823.84],[725.75,-823.84,725.75,-820.24],[723.67,-823.69,721.83,-823.69],[724.57,-822.54,723.79,-822.54],[724.73,-822.39,723.79,-822.39],[723.79,-822.39,723.79,-820.24],[722.85,-821.89,722.85,-820.33],[722.7,-821.89,722.7,-820.24],[723.64,-822.79,723.64,-820.24],[723.79,-821.67,724.66,-821.67],[724.66,-820.96,724.66,-820.24],[724.68,-821.69,723.79,-821.69],[724.68,-820.96,724.68,-820.24],[731.67,-828.38,731.67,-825.62],[731.67,-826.95,733.38,-826.95],[731.67,-826.9,733.38,-826.9],[731.67,-827.0,733.38,-827.0],[732.69,-825.61,729.57,-825.62],[726.63,-823.74,725.75,-822.86],[725.75,-822.86,725.75,-823.74],[725.8,-823.74,725.8,-822.86],[730.44,-828.29,729.56,-827.41],[729.56,-827.41,729.56,-828.29],[729.61,-828.29,729.61,-827.41],[732.91,-827.9,733.33,-828.32],[733.37,-828.29,732.95,-827.86],[732.95,-827.86,732.77,-828.29],[725.69,-829.01,724.8,-829.89],[724.8,-829.89,725.69,-829.89],[725.69,-829.83,724.81,-829.83],[727.51,-824.59,728.39,-825.47],[728.39,-825.47,727.51,-824.59],[723.73,-823.84,723.73,-824.54],[723.58,-824.55,723.58,-823.84],[723.58,-823.84,723.58,-824.55],[723.6,-824.6,722.72,-825.47],[722.72,-825.47,723.6,-825.48],[723.6,-825.43,722.72,-825.43],[732.32,-828.98,731.43,-829.86],[731.43,-829.86,732.32,-829.86],[732.32,-829.81,731.44,-829.81],[746.46,-837.88,746.46,-837.02],[746.35,-836.74,746.35,-837.88],[746.35,-838.44,746.35,-837.98],[748.11,-838.44,748.11,-837.98],[748.0,-837.88,748.0,-837.02],[748.1,-836.74,748.1,-837.88],[722.85,-837.88,722.85,-837.02],[722.75,-836.74,722.75,-837.88],[722.73,-838.44,722.73,-837.98],[724.5,-838.44,724.5,-837.98],[724.38,-837.88,724.38,-837.02],[724.49,-836.74,724.49,-837.88],[725.33,-837.88,725.33,-837.02],[725.22,-836.74,725.22,-837.88],[725.21,-838.44,725.21,-837.98],[726.98,-838.44,726.98,-837.98],[726.87,-837.88,726.87,-837.02],[726.97,-836.74,726.97,-837.88],[756.89,-820.24,750.45,-820.24],[750.24,-820.24,745.7,-820.24],[745.7,-820.24,742.9,-820.24],[742.69,-820.24,741.02,-820.24],[739.19,-835.57,734.04,-835.57],[734.04,-835.37,739.19,-835.37],[734.61,-832.89,734.61,-832.38],[734.35,-832.38,734.35,-832.89],[733.65,-832.89,733.65,-832.38],[733.33,-832.38,733.33,-832.89],[739.62,-832.89,739.62,-832.38],[739.36,-832.38,739.36,-832.89],[738.66,-832.89,738.66,-832.38],[738.4,-832.38,738.4,-832.89],[754.31,-824.0,754.31,-827.18],[756.94,-822.09,756.94,-821.29],[756.94,-821.29,756.14,-821.29],[756.14,-821.29,756.14,-822.09],[756.14,-822.09,756.94,-822.09],[756.93,-821.18,756.93,-820.38],[756.93,-820.38,756.13,-820.38],[756.13,-820.38,756.13,-821.18],[756.13,-821.18,756.93,-821.18],[728.39,-825.47,727.51,-825.47],[727.51,-825.42,728.38,-825.42],[715.86,-810.81,716.37,-811.36],[715.83,-810.84,716.34,-811.39],[715.86,-812.31,716.37,-811.76],[715.83,-812.27,716.34,-811.73],[715.86,-806.64,716.37,-807.19],[715.83,-806.68,716.34,-807.23],[715.86,-808.14,716.37,-807.59],[715.83,-808.11,716.34,-807.56],[762.61,-814.37,758.11,-814.37],[722.62,-784.39,719.62,-784.39],[719.62,-784.39,719.62,-787.39],[719.62,-787.39,722.62,-787.39],[725.92,-783.89,725.92,-786.19],[725.92,-786.19,723.62,-786.19],[731.72,-788.04,734.09,-788.04],[738.32,-785.44,744.53,-785.44],[738.32,-788.04,739.0,-788.04],[738.42,-785.59,740.42,-785.59],[738.42,-787.89,739.0,-787.89],[739.08,-785.64,738.6,-785.64],[739.7,-787.89,740.42,-787.89],[739.7,-788.04,743.52,-788.04],[740.38,-787.68,740.38,-787.2],[740.57,-785.59,742.57,-785.59],[740.57,-787.89,743.52,-787.89],[740.59,-787.58,740.59,-787.1],[742.66,-785.59,744.38,-785.59],[743.79,-785.59,743.3,-785.59],[766.91,-787.96,766.91,-793.37],[767.01,-793.22,767.01,-787.96],[774.02,-793.22,769.19,-793.22],[769.19,-793.37,774.02,-793.37],[773.92,-793.22,773.92,-794.95],[773.82,-794.95,773.82,-793.22],[773.92,-798.71,773.92,-796.96],[773.82,-796.96,773.82,-798.71],[773.92,-803.9,773.92,-799.71],[773.82,-799.71,773.82,-804.0],[773.99,-829.65,773.99,-828.52],[773.95,-828.52,773.95,-829.65],[773.99,-828.38,773.99,-827.25],[773.95,-827.25,773.95,-828.38],[776.57,-829.79,775.44,-829.79],[775.44,-829.83,776.57,-829.83],[775.31,-829.79,774.18,-829.79],[774.18,-829.83,775.31,-829.83],[773.74,-831.27,773.74,-832.32]],"columns":[{"x":715.79,"y":-803.95},{"x":736.54,"y":-803.96},{"x":757.04,"y":-803.95},{"x":773.87,"y":-803.94},{"x":773.87,"y":-809.28},{"x":773.87,"y":-814.61},{"x":773.87,"y":-819.94},{"x":770.45,"y":-793.29},{"x":770.45,"y":-798.62},{"x":775.03,"y":-766.06},{"x":769.69,"y":-766.06},{"x":775.03,"y":-764.93}],"zones":[{"x":714.27,"y":-812.55,"t":"COMEDOR","h":0.27},{"x":747.97,"y":-822.76,"t":"LABORATORIO TEXTIL","h":0.19},{"x":735.3,"y":-834.01,"t":"ACCESO PRINCIPAL","h":0.16},{"x":735.63,"y":-826.7,"t":"SHOWROOM","h":0.19},{"x":714.27,"y":-805.04,"t":"BODEGA","h":0.27},{"x":768.45,"y":-790.64,"t":"BOBEGA CLIMATIZADA","h":0.27},{"x":776.28,"y":-799.14,"t":"COMEDOR","h":0.27}],"pasillos":[{"y":-815.0,"libre":3.1,"de":-817.1,"a":-812.9},{"y":-809.45,"libre":3.0,"de":-811.5,"a":-807.4},{"y":-803.0,"libre":7.7,"de":-807.4,"a":-798.6}],"LVL":[0.0,1.16,2.545,3.925,5.305,6.685],"CUBE":{"w":1.0,"h":1.16,"d":1.2}};
-
-/* ── marco: el DWG viene en metros, lo centro en el sector ─────────────── */
 const CX = (D.bounds.x0 + D.bounds.x1) / 2, CY = (D.bounds.y0 + D.bounds.y1) / 2;
 const tx = x => x - CX, tz = y => -(y - CY);
-
 const COL = { rojo:0xe5484d, amarillo:0xe3b341, verde:0x3fb950, azul:0x4f9dfb };
-const LVL = D.LVL, CUBE = D.CUBE;
+const HEX = { rojo:'#e5484d', amarillo:'#e3b341', verde:'#3fb950', azul:'#4f9dfb' };
+const LVL = D.LVL, CUBE = D.CUBE, NIV = LVL.length;
 
-/* ── cotas del EDR18N2. Ver analisis/planificador_giro.py ───────────────── */
-const T = {
-  XPIV: 1.50,      // culo -> eje de ruedas de carga (DERIVADO del Wa de ficha)
-  LCH : 1.70,      // culo -> cara del mastil
-  WB  : 1.562,     // entre ejes (ficha)
-  WMAX: 1.315,     // punto mas ancho: patas portantes
-  WCPO: 1.065,     // capo trasero, 25 cm mas angosto
-  FLEN: 1.20,      // largo util de uña
-  DMAX: 78 * Math.PI / 180,
-  VMAX: 1.50, VMAN: 0.35, ACC: 0.9, LIFT: 6.7,
-};
+/* Cotas del EDR18N2 — ver analisis/planificador_giro.py.
+   XPIV sigue DERIVADO del radio de ficha, no medido. */
+const T = { XPIV:1.50, LCH:1.70, WB:1.562, WMAX:1.315, WCPO:1.065, FLEN:1.20,
+            DMAX:78*Math.PI/180, REACH:0.61,
+            VMAX:1.50, VMAN:0.35, ACC:0.9, LIFTV:0.55, LIFT:6.7,
+            H_ENT:0.022, H_AGR:0.082 };
 
-/* ── escena ─────────────────────────────────────────────────────────────── */
+/* ── escena ──────────────────────────────────────────────────────────── */
 const cv = document.getElementById('cv');
 const R = new THREE.WebGLRenderer({ canvas: cv, antialias: true });
 R.setPixelRatio(Math.min(devicePixelRatio, 2));
 const SC = new THREE.Scene();
 SC.background = new THREE.Color(0x0b1016);
-SC.fog = new THREE.Fog(0x0b1016, 44, 108);
-const CAM = new THREE.PerspectiveCamera(52, 1, 0.1, 400);
+SC.fog = new THREE.Fog(0x0b1016, 46, 112);
+const CAM = new THREE.PerspectiveCamera(52, 1, .1, 400);
+const CAMU = new THREE.PerspectiveCamera(64, 1.6, .05, 120);   // camara de uñas
+SC.add(new THREE.HemisphereLight(0xbcd4e8, 0x20262e, .9));
+const sun = new THREE.DirectionalLight(0xffffff, .5); sun.position.set(24,40,16); SC.add(sun);
 
-SC.add(new THREE.HemisphereLight(0xbcd4e8, 0x20262e, 0.85));
-const sun = new THREE.DirectionalLight(0xffffff, 0.55);
-sun.position.set(24, 40, 16); SC.add(sun);
-
-const G = { racks: new THREE.Group(), muros: new THREE.Group(),
-            cubos: new THREE.Group(), cols: new THREE.Group() };
+const G = { racks:new THREE.Group(), muros:new THREE.Group(),
+            cubos:new THREE.Group(), cols:new THREE.Group() };
 Object.values(G).forEach(g => SC.add(g));
+const OBB = [];
+const push = (cx,cz,hx,hz) => OBB.push({cx,cz,hx,hz});
 
-const OBB = [];   // colisionadores: {cx,cz,hx,hz}
-const push = (cx, cz, hx, hz) => OBB.push({ cx, cz, hx, hz });
+const ext = { x:D.bounds.x1-D.bounds.x0, z:D.bounds.y1-D.bounds.y0 };
+const piso = new THREE.Mesh(new THREE.PlaneGeometry(ext.x+8, ext.z+8),
+  new THREE.MeshStandardMaterial({color:0x252d36, roughness:.97}));
+piso.rotation.x = -Math.PI/2; SC.add(piso);
 
-/* piso */
-const ext = { x: D.bounds.x1 - D.bounds.x0, z: D.bounds.y1 - D.bounds.y0 };
-const piso = new THREE.Mesh(
-  new THREE.PlaneGeometry(ext.x + 8, ext.z + 8),
-  new THREE.MeshStandardMaterial({ color: 0x252d36, roughness: .97 }));
-piso.rotation.x = -Math.PI / 2; SC.add(piso);
-
-/* muros */
-{
-  const m = new THREE.MeshStandardMaterial({ color: 0x46525e, roughness: .93 });
+{ const m = new THREE.MeshStandardMaterial({color:0x46525e, roughness:.93});
   D.walls.forEach(w => {
-    const ax = tx(w[0]), az = tz(w[1]), bx = tx(w[2]), bz = tz(w[3]);
-    const dx = bx - ax, dz = bz - az, L = Math.hypot(dx, dz);
-    if (L < 0.05) return;
-    const g = new THREE.Mesh(new THREE.BoxGeometry(L, 3.2, 0.16), m);
-    g.position.set((ax + bx) / 2, 1.6, (az + bz) / 2);
-    g.rotation.y = -Math.atan2(dz, dx);
-    G.muros.add(g);
-    push((ax + bx) / 2, (az + bz) / 2, Math.max(L / 2, .08), .08);
-  });
+    const ax=tx(w[0]),az=tz(w[1]),bx=tx(w[2]),bz=tz(w[3]);
+    const dx=bx-ax,dz=bz-az,L=Math.hypot(dx,dz); if(L<.05) return;
+    const g=new THREE.Mesh(new THREE.BoxGeometry(L,3.2,.16),m);
+    g.position.set((ax+bx)/2,1.6,(az+bz)/2); g.rotation.y=-Math.atan2(dz,dx);
+    G.muros.add(g); push((ax+bx)/2,(az+bz)/2,Math.max(L/2,.08),.08); }); }
+
+{ const m = new THREE.MeshStandardMaterial({color:0x5b6873, roughness:.9});
+  (D.columns||[]).forEach(c => {
+    const g=new THREE.Mesh(new THREE.BoxGeometry(.42,7.2,.42),m);
+    g.position.set(tx(c.x),3.6,tz(c.y)); G.cols.add(g);
+    push(tx(c.x),tz(c.y),.21,.21); }); }
+
+/* racks: cada posicion de cubo es un slot direccionable */
+const SLOTS = [];
+{ const mPost=new THREE.MeshStandardMaterial({color:0x3d5570,roughness:.8,metalness:.3});
+  const mViga=new THREE.MeshStandardMaterial({color:0xc4601f,roughness:.75});
+  D.racks.forEach((r,ri) => {
+    const zc=tz(r.y), alto=LVL[NIV-1]+1.0;
+    const nb=Math.max(1,Math.round((r.x1-r.x0)/CUBE.d));
+    for(let i=0;i<=nb;i++){ const p=new THREE.Mesh(new THREE.BoxGeometry(.09,alto,r.cd),mPost);
+      p.position.set(tx(r.x0+i*CUBE.d),alto/2,zc); G.racks.add(p); }
+    LVL.forEach((h,li)=>{ if(!li) return; [-1,1].forEach(s=>{
+      const v=new THREE.Mesh(new THREE.BoxGeometry(r.x1-r.x0,.10,.06),mViga);
+      v.position.set(tx((r.x0+r.x1)/2),h,zc+s*(r.cd/2-.05)); G.racks.add(v); }); });
+    push(tx((r.x0+r.x1)/2),zc,(r.x1-r.x0)/2,r.cd/2);
+    if(!r.color) return;                       // solo las 4 filas de color son operables
+    for(let i=0;i<nb;i++) LVL.forEach((h,li)=>
+      SLOTS.push({ rack:ri, color:r.color, x:tx(r.x0+(i+.5)*CUBE.d), z:zc, y:h,
+                   niv:li, cubo:null, mesh:null })); }); }
+
+/* poblar ~62% de los slots */
+const gCubo = new THREE.BoxGeometry(CUBE.d, CUBE.h, CUBE.w);
+const matCubo = {}; Object.keys(COL).forEach(k =>
+  matCubo[k] = new THREE.MeshStandardMaterial({color:COL[k], roughness:.68}));
+function ponerCubo(s, color){
+  const m = new THREE.Mesh(gCubo, matCubo[color]);
+  m.position.set(s.x, s.y + CUBE.h/2, s.z); G.cubos.add(m);
+  s.cubo = color; s.mesh = m;
+}
+SLOTS.forEach(s => { if (Math.random() < .62) ponerCubo(s, s.color); });
+
+/* ── el equipo ───────────────────────────────────────────────────────── */
+function silueta(){ const a0=-T.XPIV,a1=-(T.XPIV-T.LCH),hb=T.WCPO/2,hp=T.WMAX/2;
+  return [[a0,hb],[a1,hb],[a1,hp],[a1+.9,hp],[a1+.9,-hp],[a1,-hp],[a1,-hb],[a0,-hb]]; }
+function armar(color){
+  const g=new THREE.Group();
+  const mC=new THREE.MeshStandardMaterial({color,roughness:.55,metalness:.15});
+  const mN=new THREE.MeshStandardMaterial({color:0x1d242c,roughness:.8});
+  const mU=new THREE.MeshStandardMaterial({color:0x9aa5ae,roughness:.5,metalness:.5});
+  const capo=new THREE.Mesh(new THREE.BoxGeometry(T.LCH-.5,1.42,T.WCPO),mC);
+  capo.position.set(-T.XPIV+(T.LCH-.5)/2,.71,0); g.add(capo);
+  [-1,1].forEach(s=>{ const p=new THREE.Mesh(new THREE.BoxGeometry(1.35,.17,.18),mN);
+    p.position.set(-(T.XPIV-T.LCH)+.5,.085,s*(T.WMAX/2-.09)); g.add(p); });
+  const mast=new THREE.Mesh(new THREE.BoxGeometry(.16,2.6,.9),mN);
+  mast.position.set(-(T.XPIV-T.LCH),1.3,0); g.add(mast);
+  const carro=new THREE.Group(); g.add(carro);
+  [-1,1].forEach(s=>{ const u=new THREE.Mesh(new THREE.BoxGeometry(T.FLEN,.036,.13),mU);
+    u.position.set(T.FLEN/2,.018,s*.30); carro.add(u); });
+  const port=new THREE.Group(); carro.add(port);                 // aqui viaja el cubo
+  const techo=new THREE.Mesh(new THREE.BoxGeometry(1.5,.07,T.WCPO),mN);
+  techo.position.set(-T.XPIV+.8,2.24,0); g.add(techo);
+  g.userData={carro,port,sil:silueta()}; SC.add(g); return g;
 }
 
-/* columnas */
-{
-  const m = new THREE.MeshStandardMaterial({ color: 0x5b6873, roughness: .9 });
-  (D.columns || []).forEach(c => {
-    const g = new THREE.Mesh(new THREE.BoxGeometry(.42, 7.2, .42), m);
-    g.position.set(tx(c.x), 3.6, tz(c.y)); G.cols.add(g);
-    push(tx(c.x), tz(c.y), .21, .21);
-  });
-}
-
-/* racks + maxicubos */
-const NIV = LVL.length;
-{
-  const mPost = new THREE.MeshStandardMaterial({ color: 0x3d5570, roughness: .8, metalness: .3 });
-  const mViga = new THREE.MeshStandardMaterial({ color: 0xc4601f, roughness: .75 });
-  const gCubo = new THREE.BoxGeometry(CUBE.d, CUBE.h, CUBE.w);   // d va en X del rack
-  D.racks.forEach(r => {
-    const zc = tz(r.y), alto = LVL[NIV - 1] + 1.0;
-    const nb = Math.max(1, Math.round((r.x1 - r.x0) / CUBE.d));
-    // parales
-    for (let i = 0; i <= nb; i++) {
-      const p = new THREE.Mesh(new THREE.BoxGeometry(.09, alto, r.cd), mPost);
-      p.position.set(tx(r.x0 + i * CUBE.d), alto / 2, zc); G.racks.add(p);
-    }
-    // vigas por nivel
-    LVL.forEach((h, li) => {
-      if (li === 0) return;
-      [-1, 1].forEach(s => {
-        const v = new THREE.Mesh(new THREE.BoxGeometry(r.x1 - r.x0, .10, .06), mViga);
-        v.position.set(tx((r.x0 + r.x1) / 2), h, zc + s * (r.cd / 2 - .05));
-        G.racks.add(v);
-      });
-    });
-    push(tx((r.x0 + r.x1) / 2), zc, (r.x1 - r.x0) / 2, r.cd / 2);
-
-    // maxicubos: color si la fila esta marcada, gris si no
-    const c = r.color ? COL[r.color] : 0x8a949e;
-    const mc = new THREE.MeshStandardMaterial({ color: c, roughness: .68,
-      transparent: !r.color, opacity: r.color ? 1 : .55 });
-    for (let i = 0; i < nb; i++)
-      LVL.forEach(h => {
-        if (Math.random() > .82) return;                 // huecos, como en la vida
-        const b = new THREE.Mesh(gCubo, mc);
-        b.position.set(tx(r.x0 + (i + .5) * CUBE.d), h + CUBE.h / 2, zc);
-        G.cubos.add(b);
-      });
-  });
-}
-
-/* ── silueta del equipo, en planta ──────────────────────────────────────── */
-function silueta() {
-  const a0 = -T.XPIV, a1 = -(T.XPIV - T.LCH), hb = T.WCPO / 2, hp = T.WMAX / 2;
-  return [[a0, hb], [a1, hb], [a1, hp], [a1 + .9, hp], [a1 + .9, -hp],
-          [a1, -hp], [a1, -hb], [a0, -hb]];
-}
-
-function armarEquipo(color) {
-  const g = new THREE.Group();
-  const mCap = new THREE.MeshStandardMaterial({ color, roughness: .55, metalness: .15 });
-  const mNeg = new THREE.MeshStandardMaterial({ color: 0x1d242c, roughness: .8 });
-  const mUna = new THREE.MeshStandardMaterial({ color: 0x9aa5ae, roughness: .5, metalness: .5 });
-
-  const capo = new THREE.Mesh(new THREE.BoxGeometry(T.LCH - .5, 1.42, T.WCPO), mCap);
-  capo.position.set(-T.XPIV + (T.LCH - .5) / 2, .71, 0); g.add(capo);
-
-  // patas portantes: el punto mas ancho, adelante y bajo
-  [-1, 1].forEach(s => {
-    const p = new THREE.Mesh(new THREE.BoxGeometry(1.35, .17, .18), mNeg);
-    p.position.set(-(T.XPIV - T.LCH) + .5, .085, s * (T.WMAX / 2 - .09)); g.add(p);
-  });
-
-  const mast = new THREE.Mesh(new THREE.BoxGeometry(.16, 2.6, .9), mNeg);
-  mast.position.set(-(T.XPIV - T.LCH), 1.3, 0); g.add(mast);
-
-  const carro = new THREE.Group(); g.add(carro);
-  [-1, 1].forEach(s => {
-    const u = new THREE.Mesh(new THREE.BoxGeometry(T.FLEN, .036, .13), mUna);
-    u.position.set(-(T.XPIV - T.LCH) + T.FLEN / 2, .018, s * .30); carro.add(u);
-  });
-  const techo = new THREE.Mesh(new THREE.BoxGeometry(1.5, .07, T.WCPO), mNeg);
-  techo.position.set(-T.XPIV + .8, 2.24, 0); g.add(techo);
-
-  g.userData = { carro, sil: silueta() };
-  SC.add(g); return g;
-}
-
-/* ── unidades ───────────────────────────────────────────────────────────── */
 const PAS = D.pasillos;
-function crearUnidad(nom, color, ip) {
-  const p = PAS[Math.min(ip, PAS.length - 1)];
-  return { nom, color, mesh: armarEquipo(color),
-           x: tx((D.bounds.x0 + D.bounds.x1) / 2), z: tz(p.y), th: 0,
-           v: 0, steer: 0, lift: LVL[0], hits: 0, hol: 9 };
+const CENTROX = tx((D.bounds.x0+D.bounds.x1)/2);
+function crear(nom,color,ip,mios){
+  const p = PAS[Math.min(ip,PAS.length-1)];
+  return { nom, color, hex:'#'+color.toString(16).padStart(6,'0'), mios,
+    mesh:armar(color), x:CENTROX, z:tz(p.y), th:0, v:0, timon:0, steer:0, dir:1,
+    lift:T.H_ENT, reach:0, carga:null, hits:0, hol:9,
+    auto:true, est:'LIBRE', tEst:0, tCiclo:0, ciclos:0, sumCiclo:0, tBloq:0, tTot:0,
+    tarea:null, org:null, dst:null, ip };
 }
-const U = [crearUnidad('TaTa A', 0x3bb5ac, 0), crearUnidad('TaTa B', 0xf0a93b, 1)];
+const U = [ crear('TaTa A', 0x3bb5ac, 0, ['rojo','amarillo']),
+            crear('TaTa B', 0xf0a93b, 1, ['verde','azul']) ];
 let act = 0;
+const LOG = [];
+function log(u,txt){ LOG.unshift({t:reloj, u, txt}); if(LOG.length>60) LOG.pop(); }
 
-/* ── cinematica: direccion trasera, referencia en el eje de carga ───────── */
-const IN = { f: 0, s: 0, brake: false, lift: 0 };
-addEventListener('keydown', e => {
-  const k = e.key.toLowerCase();
-  if (k === 'w' || k === 'arrowup') IN.f = 1;
-  if (k === 's' || k === 'arrowdown') IN.f = -1;
-  if (k === 'a' || k === 'arrowleft') IN.s = 1;
-  if (k === 'd' || k === 'arrowright') IN.s = -1;
-  if (k === 'q') IN.lift = 1;
-  if (k === 'e') IN.lift = -1;
-  if (k === ' ') { IN.brake = true; e.preventDefault(); }
-  if (k === 'tab') { act = (act + 1) % U.length; pintar(); e.preventDefault(); }
-});
-addEventListener('keyup', e => {
-  const k = e.key.toLowerCase();
-  if (['w', 's', 'arrowup', 'arrowdown'].includes(k)) IN.f = 0;
-  if (['a', 'd', 'arrowleft', 'arrowright'].includes(k)) IN.s = 0;
-  if (k === 'q' || k === 'e') IN.lift = 0;
-  if (k === ' ') IN.brake = false;
-});
+/* ── maquina de estados ──────────────────────────────────────────────── */
+const PASOS = ['CARRIL','RECTA','GIRO','ELEVA','APROXIMA','EXTIENDE','TOMA',
+               'RETRAE','RETROCEDE','DESGIRA','TRANSITO'];
+const libres = u => SLOTS.filter(s => u.mios.includes(s.color) && !s.cubo);
+const llenos = u => SLOTS.filter(s => u.mios.includes(s.color) && s.cubo);
 
-function puntosMundo(u) {
-  const c = Math.cos(u.th), s = Math.sin(u.th);
-  return u.mesh.userData.sil.map(([a, l]) => [u.x + a * c - l * s, u.z + a * s + l * c]);
+function elegirTarea(u){
+  const con = llenos(u), sin = libres(u);
+  if (u.carga) {                                   // lo que cargo va a un hueco mio
+    const d = sin[Math.floor(Math.random()*sin.length)];
+    if (!d) return null;
+    u.tarea='DEJAR'; u.dst=d; return u.tarea;
+  }
+  if (!con.length) return null;
+  const o = con[Math.floor(Math.random()*con.length)];
+  u.tarea='RECOGER'; u.org=o; return u.tarea;
 }
-function choca(pts) {
-  for (const o of OBB)
-    for (const [px, pz] of pts)
-      if (Math.abs(px - o.cx) < o.hx && Math.abs(pz - o.cz) < o.hz) return true;
-  return false;
-}
-function holgura(pts) {
-  let m = 9;
-  for (const o of OBB)
-    for (const [px, pz] of pts) {
-      const dx = Math.abs(px - o.cx) - o.hx, dz = Math.abs(pz - o.cz) - o.hz;
-      if (dx < 0 && dz < 0) return 0;
-      m = Math.min(m, Math.max(dx, dz));
-    }
-  return m;
-}
+function objetivo(u){ return u.tarea==='DEJAR' ? u.dst : u.org; }
 
-function mover(u, dt) {
-  const objetivo = IN.s * T.DMAX;
-  u.steer += (objetivo - u.steer) * Math.min(1, dt * 4.5);
-  if (IN.brake) u.v *= Math.pow(0.015, dt);
-  u.v += IN.f * T.ACC * dt;
-  u.v *= Math.pow(0.5, dt);
-  const lim = Math.abs(u.steer) > T.DMAX * .45 ? T.VMAN : T.VMAX;
-  u.v = Math.max(-lim * .7, Math.min(lim, u.v));
-  if (!IN.f && Math.abs(u.v) < .03) u.v = 0;
+/* duracion de cada paso, en segundos. GIRO sale del planificador:
+   dos tramos desde el carril de 75 cm, uno solo desde 90 en adelante. */
+const DUR = { CARRIL:1.1, RECTA:2.4, GIRO:3.1, ELEVA:0, APROXIMA:1.0,
+              EXTIENDE:1.4, TOMA:1.2, RETRAE:1.4, RETROCEDE:1.0, DESGIRA:2.6, TRANSITO:2.2 };
 
-  const ds = u.v * dt;
-  const dth = -(ds / T.WB) * Math.tan(u.steer);
-  const th2 = u.th + dth * .5;
-  const nx = u.x + ds * Math.cos(th2), nz = u.z + ds * Math.sin(th2);
-  const guard = { ...u, x: nx, z: nz, th: u.th + dth };
-  const pts = puntosMundo(guard);
-  if (choca(pts)) { u.v = -u.v * .2; u.hits++; }
-  else { u.x = nx; u.z = nz; u.th += dth; u.hol = holgura(pts); }
-
-  u.lift = Math.max(LVL[0], Math.min(T.LIFT, u.lift + IN.lift * 1.5 * dt));
-  u.mesh.position.set(u.x, 0, u.z);
-  u.mesh.rotation.y = -u.th;
-  u.mesh.userData.carro.position.y = u.lift;
-}
-
-/* ── camara ─────────────────────────────────────────────────────────────── */
-let modo = 'orbita', rad = 34, yaw = -0.7, pit = 0.95;
-const foco = new THREE.Vector3();
-let drag = null;
-cv.addEventListener('pointerdown', e => drag = { x: e.clientX, y: e.clientY });
-addEventListener('pointerup', () => drag = null);
-addEventListener('pointermove', e => {
-  if (!drag) return;
-  yaw -= (e.clientX - drag.x) * .005;
-  pit = Math.max(.16, Math.min(1.45, pit - (e.clientY - drag.y) * .005));
-  drag = { x: e.clientX, y: e.clientY };
-});
-cv.addEventListener('wheel', e => {
-  rad = Math.max(6, Math.min(90, rad * (1 + Math.sign(e.deltaY) * .12)));
-  e.preventDefault();
-}, { passive: false });
-
-function camara() {
-  const u = U[act];
-  if (modo === 'seguir') foco.lerp(new THREE.Vector3(u.x, 1.2, u.z), .12);
-  else if (modo === 'orbita') foco.lerp(new THREE.Vector3(0, 1, 0), .06);
-  if (modo === 'cabina') {
-    const c = Math.cos(u.th), s = Math.sin(u.th);
-    CAM.position.set(u.x - .6 * c, 2.05, u.z - .6 * s);
-    CAM.lookAt(u.x + 6 * c, 1.5, u.z + 6 * s);
+function pasoAuto(u, dt){
+  u.tEst += dt; u.tTot += dt;
+  const s = objetivo(u);
+  if (u.est==='LIBRE'){
+    u.tBloq += dt;
+    if (elegirTarea(u)){ u.est='CARRIL'; u.tEst=0; u.tCiclo=0;
+      log(u, u.tarea==='RECOGER' ? 'toma en nivel '+(u.org.niv+1) : 'deja en nivel '+(u.dst.niv+1)); }
     return;
   }
-  CAM.position.set(foco.x + rad * Math.sin(pit) * Math.cos(yaw), foco.y + rad * Math.cos(pit),
-                   foco.z + rad * Math.sin(pit) * Math.sin(yaw));
-  CAM.lookAt(foco);
+  u.tCiclo += dt;
+  const i = PASOS.indexOf(u.est);
+  const dur = u.est==='ELEVA' ? Math.abs(u.lift-(s.y+T.H_ENT))/T.LIFTV + .2 : DUR[u.est];
+
+  // movimiento continuo por paso
+  if (u.est==='CARRIL' || u.est==='RECTA' || u.est==='TRANSITO'){
+    const zc = tz(PAS[u.ip].y), k = Math.min(1, u.tEst/dur);
+    u.z += (zc - u.z) * Math.min(1, dt*3);
+    if (u.est!=='CARRIL'){ const dx = s.x - u.x; u.x += Math.sign(dx)*Math.min(Math.abs(dx), T.VMAX*dt); }
+    u.v = u.est==='CARRIL' ? 0 : T.VMAX*.8;
+  } else if (u.est==='GIRO' || u.est==='DESGIRA'){
+    const k = Math.min(1, u.tEst/dur), meta = u.est==='GIRO' ? Math.sign(s.z-u.z)*Math.PI/2 : 0;
+    u.th += (meta - u.th) * Math.min(1, dt*2.2); u.v = T.VMAN;
+  } else if (u.est==='ELEVA'){
+    const meta = s.y + T.H_ENT;
+    u.lift += Math.sign(meta-u.lift)*Math.min(Math.abs(meta-u.lift), T.LIFTV*dt); u.v = 0;
+  } else if (u.est==='EXTIENDE' || u.est==='APROXIMA'){
+    u.reach = Math.min(T.REACH, u.reach + T.REACH/DUR.EXTIENDE*dt); u.v = 0;
+  } else if (u.est==='RETRAE'){
+    u.reach = Math.max(0, u.reach - T.REACH/DUR.RETRAE*dt); u.v = 0;
+  } else if (u.est==='TOMA'){
+    u.lift = (u.tarea==='RECOGER') ? s.y + T.H_AGR : s.y + T.H_ENT; u.v = 0;
+  } else u.v = 0;
+
+  if (u.tEst >= dur){
+    if (u.est==='TOMA'){
+      if (u.tarea==='RECOGER'){ u.carga = s.cubo; s.cubo=null;
+        if(s.mesh){ G.cubos.remove(s.mesh); s.mesh=null; } }
+      else { ponerCubo(s, u.carga); u.carga=null; }
+    }
+    if (i === PASOS.length-1){
+      u.est='LIBRE'; u.ciclos++; u.sumCiclo += u.tCiclo;
+      log(u, 'ciclo '+u.ciclos+' en '+u.tCiclo.toFixed(1)+' s');
+      u.tarea=null; u.org=null; u.dst=null;
+    } else u.est = PASOS[i+1];
+    u.tEst = 0;
+  }
+  // dibujar carga
+  const port = u.mesh.userData.port;
+  if (u.carga && !port.children.length){
+    const m=new THREE.Mesh(gCubo, matCubo[u.carga]);
+    m.position.set(CUBE.d/2, CUBE.h/2, 0); port.add(m);
+  } else if (!u.carga && port.children.length) port.remove(port.children[0]);
 }
 
-/* ── UI ─────────────────────────────────────────────────────────────────── */
-function boton(cont, txt, on, fn) {
-  const b = document.createElement('button');
-  b.innerHTML = txt; if (on) b.className = 'on';
-  b.onclick = fn; cont.appendChild(b); return b;
+/* ── control manual, esquema Obed ────────────────────────────────────── */
+const IN = { thr:0, tim:0, brake:0, lift:0, reach:0 };
+addEventListener('keydown', e => { const k=e.code;
+  if(k==='KeyW') IN.thr=1;
+  if(k==='KeyS'||k==='Space'){ IN.brake=1; if(k==='Space') e.preventDefault(); }
+  if(k==='KeyA') IN.tim=1;  if(k==='KeyD') IN.tim=-1;
+  if(k==='ArrowUp') IN.lift=1; if(k==='ArrowDown') IN.lift=-1;
+  if(k==='KeyR') IN.reach=1;  if(k==='KeyF') IN.reach=-1;
+  if(k==='KeyB'){ const u=U[act]; if(Math.abs(u.v)<.05){ u.dir*=-1; pintar(); } }
+  if(k==='Tab'){ act=(act+1)%U.length; pintar(); e.preventDefault(); }
+});
+addEventListener('keyup', e => { const k=e.code;
+  if(k==='KeyW') IN.thr=0;
+  if(k==='KeyS'||k==='Space') IN.brake=0;
+  if(k==='KeyA'||k==='KeyD') IN.tim=0;
+  if(k==='ArrowUp'||k==='ArrowDown') IN.lift=0;
+  if(k==='KeyR'||k==='KeyF') IN.reach=0;
+});
+function pads(){ return navigator.getGamepads ? navigator.getGamepads() : []; }
+let bAnt = false;
+function leerPad(u){
+  let gp=null; for(const g of pads()) if(g&&g.connected){gp=g;break;} if(!gp) return;
+  const b=i=>gp.buttons[i]?(gp.buttons[i].value||(gp.buttons[i].pressed?1:0)):0;
+  const rt=b(7), lt=b(6), bB=gp.buttons[1]&&gp.buttons[1].pressed;
+  if(rt>.03) IN.thr=rt;
+  if(lt>.03) IN.brake=Math.max(IN.brake,lt);
+  const axx=gp.axes[0]||0; if(Math.abs(axx)>.12) IN.tim=-axx;
+  if(bB && !bAnt && Math.abs(u.v)<.05){ u.dir*=-1; pintar(); }
+  bAnt = bB;
 }
-function pintar() {
-  const cu = document.getElementById('c_uni'); cu.innerHTML = '';
-  U.forEach((u, i) => boton(cu,
-    `<span class="sw" style="background:#${u.color.toString(16).padStart(6,'0')}"></span>${u.nom}`,
-    i === act, () => { act = i; pintar(); }));
-  const cp = document.getElementById('c_pas'); cp.innerHTML = '';
-  PAS.forEach((p, i) => boton(cp, `Pasillo ${i + 1} &middot; ${p.libre.toFixed(2)} m`, false, () => {
-    const u = U[act]; u.x = tx((D.bounds.x0 + D.bounds.x1) / 2); u.z = tz(p.y);
-    u.th = 0; u.v = 0; u.steer = 0;
-  }));
-  const cv2 = document.getElementById('c_vis'); cv2.innerHTML = '';
-  [['orbita', 'General'], ['seguir', 'Seguir unidad'], ['cabina', 'Cabina']].forEach(([k, n]) =>
-    boton(cv2, n, modo === k, () => { modo = k; pintar(); }));
-  const cc = document.getElementById('c_cap'); cc.innerHTML = '';
-  [['cubos', 'Maxicubos'], ['racks', 'Racks'], ['muros', 'Muros'], ['cols', 'Columnas']]
-    .forEach(([k, n]) => boton(cc, n, G[k].visible, () => { G[k].visible = !G[k].visible; pintar(); }));
-  document.getElementById('h_tit').textContent =
-    modo === 'orbita' ? 'Vista general' : U[act].nom;
-}
-pintar();
+function puntos(u){ const c=Math.cos(u.th),s=Math.sin(u.th);
+  return u.mesh.userData.sil.map(([a,l])=>[u.x+a*c-l*s, u.z+a*s+l*c]); }
+function choca(p){ for(const o of OBB) for(const[px,pz] of p)
+  if(Math.abs(px-o.cx)<o.hx && Math.abs(pz-o.cz)<o.hz) return true; return false; }
+function holgura(p){ let m=9; for(const o of OBB) for(const[px,pz] of p){
+  const dx=Math.abs(px-o.cx)-o.hx, dz=Math.abs(pz-o.cz)-o.hz;
+  if(dx<0&&dz<0) return 0; m=Math.min(m,Math.max(dx,dz)); } return m; }
 
-/* ── bucle ──────────────────────────────────────────────────────────────── */
-let t0 = performance.now();
-function loop(t) {
-  const dt = Math.min(.05, (t - t0) / 1000); t0 = t;
-  mover(U[act], dt);
-  U.forEach((u, i) => { if (i !== act) { u.v *= .9; u.mesh.position.set(u.x, 0, u.z);
-                                          u.mesh.rotation.y = -u.th; } });
+const VUELTAS = 2.6;                       // vueltas de tope a tope del timon
+function manual(u, dt){
+  leerPad(u);
+  // EL TIMON SE QUEDA DONDE LO DEJAS. Es la diferencia con un stick.
+  u.timon = Math.max(-1, Math.min(1, u.timon + IN.tim * dt / VUELTAS * 2));
+  // a mas velocidad, menos angulo util: es el sobre de seguridad
+  const tope = T.DMAX * (1 - .45 * Math.min(1, Math.abs(u.v)/T.VMAX));
+  u.steer += (u.timon*tope - u.steer) * Math.min(1, dt*7);
+
+  if(IN.brake) u.v *= Math.pow(.012, dt);
+  u.v += IN.thr * u.dir * T.ACC * dt;
+  u.v *= Math.pow(.5, dt);
+  const lim = Math.abs(u.steer) > T.DMAX*.45 ? T.VMAN : T.VMAX;
+  u.v = Math.max(-lim, Math.min(lim, u.v));
+  if(!IN.thr && Math.abs(u.v)<.03) u.v=0;
+
+  const ds=u.v*dt, dth=-(ds/T.WB)*Math.tan(u.steer), th2=u.th+dth*.5;
+  const nx=u.x+ds*Math.cos(th2), nz=u.z+ds*Math.sin(th2);
+  const pt=puntos({...u,x:nx,z:nz,th:u.th+dth});
+  if(choca(pt)){ u.v=-u.v*.2; u.hits++; log(u,'golpe'); }
+  else { u.x=nx; u.z=nz; u.th+=dth; u.hol=holgura(pt); }
+
+  u.lift = Math.max(T.H_ENT, Math.min(T.LIFT, u.lift + IN.lift*T.LIFTV*dt));
+  u.reach = Math.max(0, Math.min(T.REACH, u.reach + IN.reach*.45*dt));
+  u.est = IN.thr||IN.brake ? 'MANUAL' : 'PARADA';
+}
+
+function sincronizar(u){
+  u.mesh.position.set(u.x,0,u.z); u.mesh.rotation.y=-u.th;
+  const c=u.mesh.userData.carro;
+  c.position.set(-(T.XPIV-T.LCH)+u.reach, u.lift, 0);
+}
+
+/* ── camara ──────────────────────────────────────────────────────────── */
+let modo='orbita', rad=34, yaw=-.7, pit=.95, drag=null;
+const foco=new THREE.Vector3();
+cv.addEventListener('pointerdown',e=>drag={x:e.clientX,y:e.clientY});
+addEventListener('pointerup',()=>drag=null);
+addEventListener('pointermove',e=>{ if(!drag)return;
+  yaw-=(e.clientX-drag.x)*.005; pit=Math.max(.16,Math.min(1.45,pit-(e.clientY-drag.y)*.005));
+  drag={x:e.clientX,y:e.clientY}; });
+cv.addEventListener('wheel',e=>{ rad=Math.max(6,Math.min(90,rad*(1+Math.sign(e.deltaY)*.12)));
+  e.preventDefault(); },{passive:false});
+function camara(){ const u=U[act];
+  if(modo==='cabina'){ const c=Math.cos(u.th),s=Math.sin(u.th);
+    CAM.position.set(u.x-.6*c,2.05,u.z-.6*s); CAM.lookAt(u.x+6*c,1.5,u.z+6*s); return; }
+  foco.lerp(modo==='seguir'? new THREE.Vector3(u.x,1.2,u.z) : new THREE.Vector3(0,1,0), .1);
+  CAM.position.set(foco.x+rad*Math.sin(pit)*Math.cos(yaw), foco.y+rad*Math.cos(pit),
+                   foco.z+rad*Math.sin(pit)*Math.sin(yaw));
+  CAM.lookAt(foco); }
+function camUnas(u){ const c=Math.cos(u.th),s=Math.sin(u.th);
+  const ax=-(T.XPIV-T.LCH)+u.reach;
+  CAMU.position.set(u.x+ax*c, u.lift+.42, u.z+ax*s);
+  CAMU.lookAt(u.x+(ax+3)*c, u.lift+.15, u.z+(ax+3)*s); }
+
+/* ── UI lateral ──────────────────────────────────────────────────────── */
+function bt(c,t,on,fn){ const b=document.createElement('button');
+  b.innerHTML=t; if(on)b.className='on'; b.onclick=fn; c.appendChild(b); return b; }
+function pintar(){
+  const cu=document.getElementById('c_uni'); cu.innerHTML='';
+  U.forEach((u,i)=>bt(cu,`<span class="sw" style="background:${u.hex}"></span>${u.nom}`,
+    i===act,()=>{act=i;pintar();}));
+  const cm=document.getElementById('c_mod'); cm.innerHTML='';
+  bt(cm,'Autom&aacute;tico',U[act].auto,()=>{U[act].auto=true;U[act].est='LIBRE';U[act].tEst=0;pintar();});
+  bt(cm,'Manual (Obed)',!U[act].auto,()=>{U[act].auto=false;U[act].est='PARADA';pintar();});
+  const cp=document.getElementById('c_pas'); cp.innerHTML='';
+  PAS.forEach((p,i)=>bt(cp,`Pasillo ${i+1} &middot; ${p.libre.toFixed(2)} m`,U[act].ip===i,()=>{
+    const u=U[act]; u.ip=i; u.x=CENTROX; u.z=tz(p.y); u.th=0; u.v=0; u.timon=0; pintar(); }));
+  const cvw=document.getElementById('c_vis'); cvw.innerHTML='';
+  [['orbita','General'],['seguir','Seguir unidad'],['cabina','Cabina']].forEach(([k,n])=>
+    bt(cvw,n,modo===k,()=>{modo=k;pintar();}));
+  const cc=document.getElementById('c_cap'); cc.innerHTML='';
+  [['cubos','Maxicubos'],['racks','Racks'],['muros','Muros'],['cols','Columnas']].forEach(([k,n])=>
+    bt(cc,n,G[k].visible,()=>{G[k].visible=!G[k].visible;pintar();}));
+  document.getElementById('h_tit').textContent = modo==='orbita'?'Vista general':U[act].nom;
+  document.getElementById('d_dir').textContent = U[act].dir>0?'ADELANTE':'REVERSA';
+  document.getElementById('d_dir').style.color = U[act].dir>0?'var(--ok)':'var(--amb)';
+}
+
+/* ── consola de flota ────────────────────────────────────────────────── */
+const FC = document.getElementById('fc');
+document.getElementById('c_fc').onclick=()=>{FC.classList.add('show'); medir();};
+document.getElementById('fc-close').onclick=()=>{FC.classList.remove('show'); medir();};
+const mapcv=document.getElementById('fc-mapcv'), mg=mapcv.getContext('2d');
+const camcv=document.getElementById('fc-camcv');
+const RC=new THREE.WebGLRenderer({canvas:camcv,antialias:true}); RC.setPixelRatio(1);
+let fcSel=0;
+function pintarTabs(){ const c=document.getElementById('fc-tabs'); c.innerHTML='';
+  U.forEach((u,i)=>bt(c,`<span class="sw" style="background:${u.hex}"></span>${u.nom}`,
+    i===fcSel,()=>{fcSel=i;pintarTabs();})); }
+pintarTabs();
+
+/* la FSM es un LAZO: se dibuja como anillo, no como tira que se sale de pantalla */
+function ring(){
+  const u=U[fcSel], svg=document.getElementById('fc-ring');
+  const cxp=125,cyp=125,rr=80, n=PASOS.length;
+  let h='<circle cx="125" cy="125" r="80" fill="none" stroke="#24333f" stroke-width="1.5"/>';
+  const iAct=PASOS.indexOf(u.est);
+  PASOS.forEach((p,i)=>{
+    const a=-Math.PI/2 + i/n*Math.PI*2, x=cxp+rr*Math.cos(a), y=cyp+rr*Math.sin(a);
+    const on=i===iAct, hecho=iAct>i;
+    h+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${on?11:7}"
+        fill="${on?'#f0a93b':(hecho?'#3bb5ac':'#18232d')}" stroke="#24333f" stroke-width="1.5"/>`;
+    const lx=cxp+(rr+24)*Math.cos(a), ly=cyp+(rr+24)*Math.sin(a);
+    h+=`<text x="${lx.toFixed(1)}" y="${(ly+3).toFixed(1)}" text-anchor="middle"
+        font-family="ui-monospace,monospace" font-size="8.5" font-weight="${on?700:400}"
+        fill="${on?'#f0a93b':'#7d91a2'}">${p}</text>`;
+  });
+  const pc = u.ciclos ? (u.sumCiclo/u.ciclos) : 0;
+  h+=`<text x="125" y="118" text-anchor="middle" font-family="ui-monospace,monospace"
+      font-size="26" font-weight="600" fill="#e6edf3">${u.ciclos}</text>`;
+  h+=`<text x="125" y="134" text-anchor="middle" font-family="ui-monospace,monospace"
+      font-size="9" fill="#7d91a2">CICLOS</text>`;
+  svg.innerHTML=h;
+  document.getElementById('fc-est').innerHTML = u.est +
+    `<small>${u.tarea? (u.tarea==='RECOGER'?'recogiendo':'depositando') : 'sin tarea asignada'}</small>`;
+  document.getElementById('m_cic').textContent=u.ciclos;
+  document.getElementById('m_med').textContent=pc? pc.toFixed(1)+' s':'—';
+  document.getElementById('m_est').textContent=u.tEst.toFixed(1)+' s';
+  const pb = u.tTot? (u.tBloq/u.tTot*100):0;
+  document.getElementById('m_blq').textContent=pb.toFixed(0)+' %';
+  // sin muestra suficiente la barra no opina: 100% de ocupacion a los 3 segundos
+  // no significa cuello de botella, significa que todavia no midio nada.
+  const A=U[0], hayMuestra = A.tTot>25;
+  const oc = 100-(A.tTot? A.tBloq/A.tTot*100:0);
+  const bar=document.getElementById('m_bar');
+  bar.style.width = hayMuestra ? oc.toFixed(0)+'%' : '100%';
+  bar.style.background = !hayMuestra ? 'var(--line)'
+    : (oc>88?'var(--bad)':(oc>70?'var(--amb)':'var(--ok)'));
+  document.getElementById('fc-camid').textContent=u.nom+' · cam uñas';
+  const blq=U.filter(x=>x.est==='LIBRE').length;
+  const cb=document.getElementById('fc-blk');
+  cb.textContent = blq? blq+' esperando' : 'flota activa';
+  cb.className = 'chip'+(blq?' al':'');
+  const tot=U.reduce((a,x)=>a+x.ciclos,0);
+  document.getElementById('fc-thr').textContent =
+    reloj>5? (tot/(reloj/60)).toFixed(1)+' ciclos/min' : '—';
+  document.getElementById('fc-log').innerHTML =
+    LOG.slice(0,14).map(l=>`<b style="color:${l.u.hex}">${l.u.nom}</b> ${l.txt}`).join('<br>');
+}
+function mapa(){
+  const w=mapcv.width,h=mapcv.height; mg.fillStyle='#080c10'; mg.fillRect(0,0,w,h);
+  const pad=26, sx=(w-pad*2)/ext.x, sz=(h-pad*2)/ext.z, k=Math.min(sx,sz);
+  const px=x=>w/2+x*k, pz=z=>h/2+z*k;
+  mg.strokeStyle='#1b2732'; mg.lineWidth=1;
+  D.walls.forEach(wl=>{ mg.beginPath(); mg.moveTo(px(tx(wl[0])),pz(tz(wl[1])));
+    mg.lineTo(px(tx(wl[2])),pz(tz(wl[3]))); mg.stroke(); });
+  D.racks.forEach(r=>{ const x0=px(tx(r.x0)),x1=px(tx(r.x1)),zc=pz(tz(r.y)),hd=r.cd/2*k;
+    mg.fillStyle=r.color?HEX[r.color]+'33':'#1b273255';
+    mg.strokeStyle=r.color?HEX[r.color]:'#2a3945'; mg.lineWidth=r.color?1.6:1;
+    mg.fillRect(x0,zc-hd,x1-x0,hd*2); mg.strokeRect(x0,zc-hd,x1-x0,hd*2); });
+  SLOTS.forEach(s=>{ if(!s.cubo||s.niv) return;
+    mg.fillStyle=HEX[s.color]; mg.fillRect(px(s.x)-1.6,pz(s.z)-1.6,3.2,3.2); });
+  U.forEach((u,i)=>{ const c=Math.cos(u.th),s=Math.sin(u.th);
+    mg.save(); mg.translate(px(u.x),pz(u.z)); mg.rotate(Math.atan2(s,c));
+    mg.fillStyle=u.hex; mg.globalAlpha=i===fcSel?1:.6;
+    mg.fillRect(-T.XPIV*k,-T.WMAX/2*k,(T.XPIV+T.FLEN)*k,T.WMAX*k);
+    mg.globalAlpha=1; mg.fillStyle='#0a0e13';
+    mg.fillRect((T.LCH-T.XPIV)*k,-.14*k,T.FLEN*k,.28*k); mg.restore();
+    mg.fillStyle=u.hex; mg.font='600 10px ui-monospace,monospace';
+    mg.fillText(u.nom,px(u.x)-16,pz(u.z)-13*1); });
+  mg.fillStyle='#7d91a2'; mg.font='600 10px ui-monospace,monospace';
+  mg.fillText('SECTOR A · '+D.racks.length+' filas · '+PAS.length+' pasillos',12,17);
+}
+
+/* ── bucle ───────────────────────────────────────────────────────────── */
+let t0=performance.now(), reloj=0, tRing=0;
+function loop(t){
+  const dt=Math.min(.05,(t-t0)/1000); t0=t; reloj+=dt;
+  U.forEach((u,i)=>{ if(u.auto) pasoAuto(u,dt); else if(i===act) manual(u,dt);
+                     sincronizar(u); });
   camara();
-  const u = U[act];
-  document.getElementById('h_uni').textContent = u.nom;
-  document.getElementById('h_vel').textContent = Math.abs(u.v).toFixed(2) + ' m/s';
-  document.getElementById('h_dir').textContent = (u.steer * 180 / Math.PI).toFixed(0) + '°';
-  const hh = document.getElementById('h_hol');
-  hh.textContent = u.hol > 8 ? '—' : (u.hol * 100).toFixed(0) + ' cm';
-  hh.className = u.hol < .1 ? 'warn' : (u.hol < .3 ? 'mid' : 'ok');
-  document.getElementById('h_hit').textContent = u.hits;
-  R.render(SC, CAM);
+  const u=U[act];
+  document.getElementById('h_uni').textContent=u.nom;
+  document.getElementById('h_est').textContent=u.est;
+  document.getElementById('h_vel').textContent=Math.abs(u.v).toFixed(2)+' m/s';
+  document.getElementById('h_una').textContent=u.lift.toFixed(3)+' m';
+  const hh=document.getElementById('h_hol');
+  hh.textContent=u.hol>8?'—':(u.hol*100).toFixed(0)+' cm';
+  hh.className=u.hol<.1?'warn':(u.hol<.3?'mid':'ok');
+  document.getElementById('h_hit').textContent=u.hits;
+  document.getElementById('tim-g').setAttribute('transform',
+    'rotate('+(u.timon*VUELTAS*180).toFixed(1)+')');
+  document.getElementById('d_tim').textContent=(u.timon*VUELTAS*360).toFixed(0)+'°';
+  document.getElementById('d_rue').textContent=(u.steer*180/Math.PI).toFixed(0)+'°';
+  R.render(SC,CAM);
+  if(FC.classList.contains('show')){
+    mapa(); camUnas(U[fcSel]); RC.render(SC,CAMU);
+    tRing+=dt; if(tRing>.1){ tRing=0; ring(); }
+    document.getElementById('fc-t').textContent =
+      String(Math.floor(reloj/60)).padStart(2,'0')+':'+String(Math.floor(reloj%60)).padStart(2,'0');
+  }
   requestAnimationFrame(loop);
 }
-function medir() {
-  R.setSize(innerWidth, innerHeight, false);
-  CAM.aspect = innerWidth / innerHeight; CAM.updateProjectionMatrix();
+function medir(){
+  R.setSize(innerWidth,innerHeight,false);
+  CAM.aspect=innerWidth/innerHeight; CAM.updateProjectionMatrix();
+  const mw=document.getElementById('fc-map');
+  if(mw.clientWidth){ mapcv.width=mw.clientWidth; mapcv.height=mw.clientHeight; }
+  const cw=document.getElementById('fc-cam');
+  if(cw.clientWidth){ RC.setSize(cw.clientWidth,cw.clientHeight,false);
+    CAMU.aspect=cw.clientWidth/cw.clientHeight; CAMU.updateProjectionMatrix(); }
 }
-addEventListener('resize', medir); medir();
-requestAnimationFrame(loop);
+addEventListener('resize',medir);
+pintar(); medir(); requestAnimationFrame(loop);
 </script>
 </body>
 </html>
