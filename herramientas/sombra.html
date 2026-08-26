@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sombra del EDR18N2 · TaTa</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Sin internet las fuentes no cargan y cae a la pila de respaldo. Es a proposito:
+   esta pagina tiene que abrir desde file:// en una bodega sin señal. */
+:root{
+  --sans:Chivo,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,"Courier New",monospace;
+  --bg:#E4E9ED; --surf:#F6F8F9; --surf2:#DBE2E7; --ink:#111B23; --mut:#5A6C79;
+  --line:#B7C4CE; --izq:#0E6E9B; --der:#B4720C; --ok:#136F69; --bad:#B33C24; --grid:#C9D4DC;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A; --surf:#141D26; --surf2:#1C2831; --ink:#DCE6EE; --mut:#7D91A2;
+  --line:#2A3945; --izq:#4FB6E6; --der:#F0A93B; --ok:#3BB5AC; --bad:#E4644A; --grid:#1D2A34;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D131A; --surf:#141D26; --surf2:#1C2831; --ink:#DCE6EE; --mut:#7D91A2;
+  --line:#2A3945; --izq:#4FB6E6; --der:#F0A93B; --ok:#3BB5AC; --bad:#E4644A; --grid:#1D2A34;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--sans);
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:940px;margin:0 auto;padding:20px 14px 60px;display:flex;flex-direction:column;gap:18px}
+h1{font-weight:900;font-size:clamp(23px,5vw,33px);line-height:1.05;margin:0;letter-spacing:-.02em}
+h2{font-weight:700;font-size:16px;margin:0}
+.eyebrow{font:600 10.5px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+p{margin:0;color:var(--mut);font-size:14.5px;max-width:62ch}
+code{font:400 13px/1 var(--mono);background:var(--surf2);padding:2px 5px;border-radius:2px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:4px;padding:14px;
+  display:flex;flex-direction:column;gap:12px}
+label{font:600 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mut);display:block;margin-bottom:5px}
+input,select{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+  border-radius:3px;padding:12px 11px;font:600 19px/1 var(--mono);font-variant-numeric:tabular-nums}
+select{font-size:15px}
+input:focus,select:focus{outline:2px solid var(--ok);outline-offset:1px;border-color:var(--ok)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.side{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.side button{font:700 15px/1 var(--sans);padding:15px 8px;border-radius:3px;cursor:pointer;
+  border:2px solid var(--line);background:var(--bg);color:var(--mut)}
+.side button[aria-pressed="true"]{color:#fff}
+.side button.i[aria-pressed="true"]{background:var(--izq);border-color:var(--izq)}
+.side button.d[aria-pressed="true"]{background:var(--der);border-color:var(--der)}
+.big{font:700 17px/1 var(--sans);padding:16px;border-radius:3px;cursor:pointer;border:none;
+  background:var(--ok);color:#fff;width:100%}
+.big:active{transform:translateY(1px)}
+.ghost{background:transparent;color:var(--mut);border:1px solid var(--line);
+  font:600 12px/1 var(--mono);padding:9px 12px;border-radius:3px;cursor:pointer}
+.ghost:hover{color:var(--ink);border-color:var(--mut)}
+.ghost.warn:hover{color:var(--bad);border-color:var(--bad)}
+canvas{display:block;width:100%;height:auto;background:var(--surf);
+  border:1px solid var(--line);border-radius:4px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:4px;max-height:280px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);
+  text-align:left;padding:9px 11px;background:var(--surf2);position:sticky;top:0;white-space:nowrap}
+td{padding:9px 11px;border-top:1px solid var(--line);background:var(--surf);white-space:nowrap;
+  font:400 13.5px/1 var(--mono);font-variant-numeric:tabular-nums}
+td.x{cursor:pointer;color:var(--mut);width:1%}
+td.x:hover{color:var(--bad)}
+.pill{font:600 10px/1 var(--mono);padding:3px 7px;border-radius:2px;color:#fff}
+.met{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:9px}
+.met div{background:var(--surf2);border:1px solid var(--line);border-radius:3px;padding:10px}
+.met span{font:600 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mut);display:block;margin-bottom:4px}
+.met b{font:600 21px/1 var(--mono);font-variant-numeric:tabular-nums}
+pre{background:var(--surf2);border:1px solid var(--line);border-radius:3px;padding:12px;margin:0;
+  overflow:auto;font:400 12px/1.5 var(--mono);max-height:240px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hint{font:400 12.5px/1.5 var(--sans);color:var(--mut)}
+.est{font:600 11px/1 var(--mono);color:var(--ok)}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:8px">
+  <div class="eyebrow">TaTa &middot; pasos 2 a 5 de docs/12</div>
+  <h1>Sombra del EDR18N2</h1>
+  <p>Cada medida es la perpendicular del flexómetro tirado en el piso al punto más saliente
+  del cuerpo a esa estación. <strong>Funciona sin internet</strong> y guarda solo en este
+  aparato. Bajá el <code>.json</code> antes de desinstalar nada.</p>
+</header>
+
+<div class="card">
+  <div class="row" style="justify-content:space-between">
+    <h2>Corrida</h2>
+    <span class="est" id="estado">guardado</span>
+  </div>
+  <select id="corrida"></select>
+  <div class="row">
+    <button class="ghost" id="nueva">+ Nueva corrida</button>
+    <button class="ghost" id="ren">Renombrar</button>
+    <button class="ghost" id="dup">Duplicar</button>
+    <button class="ghost warn" id="del">Borrar corrida</button>
+  </div>
+  <div class="hint">Cada corrida es independiente. Hacé una por intento: si la primera sale
+  mal, arrancás otra y no perdés la anterior. Comparalas después.</div>
+</div>
+
+<div class="card">
+  <div class="side">
+    <button class="i" id="bI" aria-pressed="true">&#9664; IZQUIERDA</button>
+    <button class="d" id="bD" aria-pressed="false">DERECHA &#9654;</button>
+  </div>
+  <div class="grid">
+    <div><label>Estación (cm)</label><input id="est" type="number" inputmode="decimal" step="5" value="0"></div>
+    <div><label>Medida (cm)</label><input id="med" type="number" inputmode="decimal" step="0.5" placeholder="&mdash;"></div>
+  </div>
+  <div>
+    <label>Qué es a esa altura</label>
+    <select id="que">
+      <option>capó</option><option>pata portante</option><option>rueda de carga</option>
+      <option>rueda motriz</option><option>mástil</option><option>uña</option>
+      <option>respaldo de carga</option><option>otro</option>
+    </select>
+  </div>
+  <button class="big" id="add">Agregar y avanzar 20 cm</button>
+  <div class="hint">La estación avanza sola. Para una intermedia, escribí el número a mano
+  &mdash; donde el ancho salta conviene cada 5 cm. Volver a medir la misma estación y lado
+  <strong>reemplaza</strong> el valor anterior.</div>
+</div>
+
+<div class="card">
+  <div class="eyebrow">Vista en planta</div>
+  <canvas id="cv" width="1400" height="620"></canvas>
+  <div class="met">
+    <div><span>Ancho máximo</span><b id="mAncho">&mdash;</b></div>
+    <div><span>Dónde</span><b id="mDonde">&mdash;</b></div>
+    <div><span>Largo medido</span><b id="mLargo">&mdash;</b></div>
+    <div><span>Puntos</span><b id="mN">0</b></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row" style="justify-content:space-between">
+    <h2>Medidas escalares</h2><span class="hint">pasos 4 y 5</span>
+  </div>
+  <div class="grid">
+    <div><label>XPIV izq (cm)</label><input id="xpi" type="number" inputmode="decimal" placeholder="150"></div>
+    <div><label>XPIV der (cm)</label><input id="xpd" type="number" inputmode="decimal" placeholder="150"></div>
+    <div><label>Entre ejes (cm)</label><input id="wb" type="number" inputmode="decimal" placeholder="156.2"></div>
+    <div><label>Ancho capó (cm)</label><input id="cap" type="number" inputmode="decimal" placeholder="106.5"></div>
+    <div><label>Radio esquina (cm)</label><input id="req" type="number" inputmode="decimal" placeholder="12"></div>
+    <div><label>Dispersión operador (cm)</label><input id="disp" type="number" inputmode="decimal" placeholder="&mdash;"></div>
+  </div>
+  <div><label>Notas de la corrida</label><input id="nota" type="text" style="font-size:15px" placeholder="lo que haya que recordar"></div>
+</div>
+
+<div class="card">
+  <div class="row" style="justify-content:space-between">
+    <h2>Guardar y llevar</h2>
+    <div class="row">
+      <button class="ghost" id="dlj">Bajar .json</button>
+      <button class="ghost" id="imp">Cargar .json</button>
+      <button class="ghost" id="cpy">Copiar Python</button>
+    </div>
+  </div>
+  <input type="file" id="file" accept=".json,application/json" style="display:none">
+  <div class="hint"><strong>El <code>.json</code> es el respaldo y lleva TODAS las corridas.</strong>
+  Se guarda en <code>datos/sombra/</code> del repo y se commitea. El Python es para pegarlo
+  en <code>analisis/</code>.</div>
+  <pre id="out">&mdash;</pre>
+</div>
+
+<div class="card">
+  <div class="eyebrow">Lo tomado en esta corrida</div>
+  <div class="tw"><table>
+    <thead><tr><th></th><th>Est.</th><th>Lado</th><th>Medida</th><th>Qué</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table></div>
+</div>
+
+<footer>La medida es al <strong>punto del cuerpo bajado al piso con escuadra vertical</strong>,
+no a ojo: a ojo se pierden 3 o 4 cm y ese es el margen que se está peleando.
+Anotar siempre qué es &mdash; sin eso los números no se pueden interpretar después.</footer>
+</div>
+
+<script>
+var $ = function(id){ return document.getElementById(id); };
+var LS = 'tata_sombra_v2';
+var DB = { runs:{}, actual:null };
+var lado = 'I';
+
+function uid(){ return 'c' + Math.random().toString(36).slice(2,8); }
+function hoy(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function nuevaCorrida(nom){
+  var id=uid();
+  DB.runs[id]={ id:id, nombre:nom||('Corrida '+(Object.keys(DB.runs).length+1)),
+                fecha:hoy(), pts:[], esc:{}, nota:'' };
+  DB.actual=id; return id;
+}
+function R(){ return DB.runs[DB.actual]; }
+
+try{
+  var raw=localStorage.getItem(LS);
+  if(raw){ var o=JSON.parse(raw); if(o&&o.runs) DB=o; }
+}catch(e){}
+if(!DB.actual || !DB.runs[DB.actual]) {
+  var ks=Object.keys(DB.runs);
+  if(ks.length) DB.actual=ks[0]; else nuevaCorrida('Primera corrida');
+}
+
+var tGuardo=null;
+function save(){
+  try{ localStorage.setItem(LS, JSON.stringify(DB));
+       $('estado').textContent='guardado'; }
+  catch(e){ $('estado').textContent='NO SE PUDO GUARDAR'; $('estado').style.color='var(--bad)'; }
+  clearTimeout(tGuardo);
+  $('estado').textContent='guardando…';
+  tGuardo=setTimeout(function(){ $('estado').textContent='guardado '+new Date().toLocaleTimeString(); },250);
+}
+
+var ESCK=['xpi','xpd','wb','cap','req','disp'];
+ESCK.forEach(function(k){
+  $(k).addEventListener('input', function(){ R().esc[k]=$(k).value; save(); pintar(); });
+});
+$('nota').addEventListener('input', function(){ R().nota=$('nota').value; save(); });
+
+function cargarCorrida(){
+  var r=R();
+  ESCK.forEach(function(k){ $(k).value = (r.esc[k]!=null? r.esc[k] : ''); });
+  $('nota').value = r.nota||'';
+  var mx = r.pts.length? Math.max.apply(null, r.pts.map(function(p){return p.e;})) : -20;
+  $('est').value = mx+20; $('med').value='';
+  pintarSelect(); pintar();
+}
+function pintarSelect(){
+  $('corrida').innerHTML = Object.keys(DB.runs).map(function(id){
+    var r=DB.runs[id];
+    return '<option value="'+id+'"'+(id===DB.actual?' selected':'')+'>'+
+           r.nombre+' · '+r.fecha+' · '+r.pts.length+' pts</option>'; }).join('');
+}
+$('corrida').onchange=function(e){ DB.actual=e.target.value; save(); cargarCorrida(); };
+$('nueva').onclick=function(){
+  var n=prompt('Nombre de la corrida nueva:', 'Corrida '+(Object.keys(DB.runs).length+1));
+  if(n===null) return; nuevaCorrida(n.trim()||undefined); save(); cargarCorrida(); };
+$('ren').onclick=function(){
+  var n=prompt('Nuevo nombre:', R().nombre); if(n===null) return;
+  R().nombre=n.trim()||R().nombre; save(); pintarSelect(); };
+$('dup').onclick=function(){
+  var v=JSON.parse(JSON.stringify(R())); v.id=uid(); v.nombre=R().nombre+' (copia)'; v.fecha=hoy();
+  DB.runs[v.id]=v; DB.actual=v.id; save(); cargarCorrida(); };
+$('del').onclick=function(){
+  if(Object.keys(DB.runs).length<2){ alert('Es la única corrida. Creá otra antes de borrarla.'); return; }
+  if(!confirm('¿Borrar «'+R().nombre+'» con sus '+R().pts.length+' puntos?')) return;
+  delete DB.runs[DB.actual]; DB.actual=Object.keys(DB.runs)[0]; save(); cargarCorrida(); };
+
+function setLado(l){ lado=l;
+  $('bI').setAttribute('aria-pressed', l==='I'); $('bD').setAttribute('aria-pressed', l==='D'); }
+$('bI').onclick=function(){ setLado('I'); }; $('bD').onclick=function(){ setLado('D'); };
+
+$('add').onclick=function(){
+  var e=parseFloat($('est').value), m=parseFloat($('med').value);
+  if(isNaN(e)||isNaN(m)){ $('med').focus(); return; }
+  var r=R();
+  r.pts=r.pts.filter(function(p){ return !(p.e===e && p.l===lado); });
+  r.pts.push({e:e, l:lado, m:m, q:$('que').value});
+  r.pts.sort(function(a,b){ return a.e-b.e || (a.l<b.l?-1:1); });
+  $('est').value=e+20; $('med').value='';
+  save(); pintar(); $('med').focus();
+};
+$('med').addEventListener('keydown', function(e){ if(e.key==='Enter') $('add').click(); });
+
+function json(){
+  return JSON.stringify({ generado:hoy(), equipo:'Mitsubishi EDR18N2',
+    unidades:'cm, estacion 0 = punto mas trasero', runs:DB.runs }, null, 1);
+}
+function py(){
+  var r=R();
+  var f=function(l){ var a=r.pts.filter(function(p){return p.l===l;});
+    return a.length? a.map(function(p){ return '    ('+(p.e/100).toFixed(3)+', '+(p.m/100).toFixed(3)+'),'; }).join('\n')
+                   : '    # sin datos'; };
+  var g=function(k){ var v=parseFloat(r.esc[k]); return isNaN(v)? 'None' : (v/100).toFixed(3); };
+  return '# Sombra del EDR18N2 medida en campo — '+r.nombre+' · '+r.fecha+'\n'+
+    (r.nota? '# '+r.nota+'\n' : '')+
+    '# (estacion, desplazamiento) en METROS. Estacion 0 = punto mas trasero.\n'+
+    'SOMBRA_IZQ = [\n'+f('I')+'\n]\n'+
+    'SOMBRA_DER = [\n'+f('D')+'\n]\n\n'+
+    'XPIV_IZQ   = '+g('xpi')+'\n'+
+    'XPIV_DER   = '+g('xpd')+'\n'+
+    'WB         = '+g('wb')+'\n'+
+    'ANCHO_CAPO = '+g('cap')+'\n'+
+    'R_ESQUINA  = '+g('req')+'\n\n'+
+    '# Dispersion del operador sobre 5 estibas: el requisito de precision del kit\n'+
+    'DISPERSION = '+g('disp')+'\n';
+}
+function bajar(txt, nombre, tipo){
+  var b=new Blob([txt],{type:tipo||'text/plain;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=nombre;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 3000);
+}
+$('dlj').onclick=function(){ bajar(json(), 'sombra_'+hoy()+'.json', 'application/json'); };
+$('cpy').onclick=function(){
+  var t=py();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){ $('cpy').textContent='Copiado'; },
+      function(){ $('cpy').textContent='Seleccioná abajo'; });
+  } else $('cpy').textContent='Seleccioná abajo';
+  setTimeout(function(){ $('cpy').textContent='Copiar Python'; }, 1600);
+};
+$('imp').onclick=function(){ $('file').click(); };
+$('file').onchange=function(e){
+  var f=e.target.files[0]; if(!f) return;
+  var fr=new FileReader();
+  fr.onload=function(){
+    try{
+      var o=JSON.parse(fr.result);
+      if(!o.runs) throw new Error('sin corridas');
+      var n=0;
+      Object.keys(o.runs).forEach(function(id){
+        var v=o.runs[id];
+        if(DB.runs[id]) { v=JSON.parse(JSON.stringify(v)); v.id=uid(); v.nombre=v.nombre+' (importada)'; id=v.id; }
+        DB.runs[id]=v; n++;
+      });
+      save(); cargarCorrida();
+      alert('Importadas '+n+' corrida(s). No se borró nada de lo que ya había.');
+    }catch(err){ alert('No se pudo leer ese archivo: '+err.message); }
+  };
+  fr.readAsText(f); e.target.value='';
+};
+
+var cv=$('cv'), g=cv.getContext('2d');
+var CS=function(){ return getComputedStyle(document.documentElement); };
+function pintar(){
+  var r=R(), D=r.pts;
+  var c=CS(), ink=c.getPropertyValue('--ink').trim(), mut=c.getPropertyValue('--mut').trim(),
+    ci=c.getPropertyValue('--izq').trim(), cd=c.getPropertyValue('--der').trim(),
+    gr=c.getPropertyValue('--grid').trim(), sf=c.getPropertyValue('--surf').trim();
+  g.fillStyle=sf; g.fillRect(0,0,cv.width,cv.height);
+
+  var maxE=Math.max.apply(null,[300].concat(D.map(function(p){return p.e;})))+40;
+  var maxM=Math.max.apply(null,[90].concat(D.map(function(p){return p.m;})))+20;
+  var PX=70, PY=40, W=cv.width-PX*2, H=cv.height-PY*2, mid=PY+H/2;
+  var X=function(e){ return PX+e/maxE*W; };
+  var Y=function(m,l){ return mid+(l==='I'? -m:m)/maxM*(H/2); };
+
+  g.strokeStyle=gr; g.lineWidth=1; g.font='600 15px '+c.getPropertyValue('--mono');
+  for(var e=0;e<=maxE;e+=50){
+    g.beginPath(); g.moveTo(X(e),PY); g.lineTo(X(e),PY+H); g.stroke();
+    if(e%100===0){ g.fillStyle=mut; g.textAlign='center'; g.fillText(e, X(e), PY+H+26); } }
+
+  g.strokeStyle=ink; g.lineWidth=2.5; g.setLineDash([12,7]);
+  g.beginPath(); g.moveTo(PX,mid); g.lineTo(PX+W,mid); g.stroke(); g.setLineDash([]);
+  g.fillStyle=mut; g.textAlign='left'; g.font='600 14px '+c.getPropertyValue('--mono');
+  g.fillText('FLEXÓMETRO · estación en cm', PX, mid-11);
+
+  [['I',ci],['D',cd]].forEach(function(par){
+    var l=par[0], col=par[1];
+    var P=D.filter(function(p){return p.l===l;}).sort(function(a,b){return a.e-b.e;});
+    if(!P.length) return;
+    g.strokeStyle=col; g.lineWidth=3; g.beginPath();
+    P.forEach(function(p,i){ i? g.lineTo(X(p.e),Y(p.m,l)) : g.moveTo(X(p.e),Y(p.m,l)); });
+    g.stroke(); g.fillStyle=col;
+    P.forEach(function(p){ g.beginPath(); g.arc(X(p.e),Y(p.m,l),6.5,0,7); g.fill(); });
+    g.font='600 13px '+c.getPropertyValue('--mono'); g.textAlign='center';
+    P.forEach(function(p){ g.fillText(p.m.toFixed(0), X(p.e), Y(p.m,l)+(l==='I'?-14:22)); });
+  });
+
+  var anchos={};
+  D.forEach(function(p){ anchos[p.e]=anchos[p.e]||{}; anchos[p.e][p.l]=p.m; });
+  var best=0, bestE=null;
+  Object.keys(anchos).forEach(function(e){ var o=anchos[e];
+    if(o.I!=null&&o.D!=null){ var w=o.I+o.D; if(w>best){ best=w; bestE=+e; } } });
+  $('mAncho').textContent = best? best.toFixed(1)+' cm' : '—';
+  $('mDonde').textContent = bestE!=null? 'est. '+bestE : '—';
+  $('mLargo').textContent = D.length? Math.max.apply(null,D.map(function(p){return p.e;}))+' cm' : '—';
+  $('mN').textContent = D.length;
+
+  $('tb').innerHTML = D.map(function(p,i){
+    return '<tr><td class="x" data-i="'+i+'">✕</td><td>'+p.e+'</td>'+
+      '<td><span class="pill" style="background:'+(p.l==='I'?ci:cd)+'">'+(p.l==='I'?'IZQ':'DER')+'</span></td>'+
+      '<td>'+p.m.toFixed(1)+'</td><td>'+p.q+'</td></tr>'; }).join('')
+    || '<tr><td colspan="5" style="color:var(--mut)">Sin medidas en esta corrida</td></tr>';
+  Array.prototype.forEach.call($('tb').querySelectorAll('td.x'), function(td){
+    td.onclick=function(){ R().pts.splice(+td.dataset.i,1); save(); pintar(); }; });
+
+  $('out').textContent = py();
+  pintarSelect();
+}
+
+cargarCorrida();
+window.addEventListener('beforeunload', save);
+if(matchMedia) matchMedia('(prefers-color-scheme:dark)').addEventListener('change', pintar);
+</script>
+</body>
+</html>
