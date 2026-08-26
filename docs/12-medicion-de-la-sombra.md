@@ -122,17 +122,73 @@ Radio de la esquina trasera, a ojo         ______ cm    ← modelo usa 12
 
 **Este es el que más vale y es el único que necesita el equipo encendido.**
 
-Pedile al operador que estibe un cubo en la misma posición **cinco veces seguidas**, a su
-ritmo normal, sin avisarle que estás midiendo precisión.
+### La contradicción, y cómo se resuelve
 
-Cada vez, cuando quede detenido para extender el pantógrafo, marcá con tiza dónde queda el
-punto más trasero.
+Marcar con tiza obliga a parar al operador cada vez. Grabar quiere el proceso fluido. **Las
+dos cosas no se pueden hacer a la vez y no hay que intentarlo.**
+
+Se separan, y el truco es que **el dibujo de tiza de los pasos 1 a 4 ya dejó una referencia
+de escala medida en el piso.** Con eso, la posición se saca del video después — sin parar a
+nadie.
 
 ```
-Intento    1 ____   2 ____   3 ____   4 ____   5 ____   (cm desde una referencia fija)
+FASE ESTÁTICA (pasos 1-4)          FASE FLUIDA (paso 5)
+equipo parado, sin operador        operador trabajando normal
+tiza, flexómetro, sin apuro   ───► cámaras grabando, cero interrupciones
+                                   se mide DESPUÉS, sobre los cuadros
+      deja la escala en el piso ────────────┘
+```
+
+### Antes de grabar: la regla de escala
+
+Con tiza, marcá sobre el piso del pasillo una **línea de estaciones cada 50 cm**, al menos
+4 m, dentro del campo de la cámara frontal. Numeralas. Esa regla es la que convierte pixeles
+en centímetros después.
+
+Sin la regla en cuadro, el video es bonito y no mide nada.
+
+### Las dos cámaras
+
+```
+        ┌─ rack ────────────────────────────────┐
+        │                                        │
+  [CAM 1]      ←── pasillo ──→        ▓▓▓▓▓      │   CAM 1: de frente al pasillo,
+  trípode                            equipo      │   fija, ve la regla de tiza
+  al fondo     ····50···100···150···  │          │   y la maniobra entera
+        │      (regla de tiza)     [CAM 2]       │
+        │                          en el techo,  │   CAM 2: en el techo de
+        └───────────────────────── mirando abajo ┘   protección, mirando las
+                                                     manos del operador
+```
+
+**CAM 1** fija, en el piso al fondo del pasillo, con la regla de tiza en cuadro. De ahí sale
+la posición de parada de cada intento.
+
+**CAM 2** amarrada al techo de protección mirando hacia abajo, a las manos. Esa es la que
+vale más de lo que parece: **da la consigna del operador sincronizada con el movimiento.**
+Es verdad de terreno para el mapeo de teleop — cuánto mueve el mando y qué hace el equipo.
+
+Arrancá las dos con una palmada en cuadro. Ese golpe sincroniza los dos videos después.
+
+### La corrida
+
+Pedile al operador **cinco estibas seguidas en la misma posición**, a su ritmo, sin
+interrumpirlo y **sin decirle que se está midiendo precisión**. Si lo sabe, se esmera, y lo
+que se mide deja de ser su operación normal.
+
+### Después, en el cuarto
+
+Sobre los cuadros de CAM 1, con la regla de tiza como escala, sacá dónde quedó detenido cada
+intento:
+
+```
+Intento    1 ____   2 ____   3 ____   4 ____   5 ____   (cm sobre la regla)
 
 Dispersión (mayor menos menor): ______ cm
 ```
+
+**Respaldo:** si el video sale mal, se repite con tiza y parando al operador. Feo, pero da el
+número. Por eso la fase estática va primero — si algo falla, ya tenés la silueta.
 
 **Esa dispersión es el requisito de precisión del kit**, medido en vez de supuesto. Es el
 número que convierte "el kit tiene que ser preciso" en una cifra que se puede superar o no.
@@ -155,5 +211,9 @@ es el argumento entero en una línea.
 Las dos columnas de desplazamientos son la silueta. Entran directo al planificador en vez
 de la forma de L supuesta, se vuelve a correr `analisis/planificador_giro.py`, y sale la
 ventana de carriles real. Si los 85 cm recomendados se mueven, se mueven con datos.
+
+Y esa misma silueta es la que entra a la **escena de choque en 3D**: hoy el visor usa una
+forma de L supuesta, así que sus colisiones son decorativas. Con el perfil medido, decir
+«acá raspa» pasa a ser una afirmación con respaldo.
 
 **No hace falta volver al sitio para eso.**

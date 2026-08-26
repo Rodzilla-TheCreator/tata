@@ -19,6 +19,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección |
 | `docs/11-plan-de-diagnostico.md` | **La visita de medición. Va ANTES del doc 10** |
 | `docs/12-medicion-de-la-sombra.md` | **Una hora con flexómetro y papel. Cierra el bloqueo 1** |
+| `docs/13-timeline-antes-de-la-semana.md` | **Todo lo que va antes, por dependencia. El bloque 0 corre desde hoy** |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
