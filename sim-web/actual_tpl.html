@@ -339,24 +339,29 @@ function objetivo(u){ return u.tarea==='DEJAR' ? u.dst : u.org; }
 const DUR = { CARRIL:1.1, RECTA:2.4, GIRO:3.1, ELEVA:0, APROXIMA:1.0,
               EXTIENDE:1.4, TOMA:1.2, RETRAE:1.4, RETROCEDE:1.0, DESGIRA:2.6, TRANSITO:2.2 };
 
-/* Elige la trayectoria segun el carril real: la distancia de la unidad a la
-   cara del rack OPUESTO al objetivo, que es desde donde el planificador
-   plantea el giro. Espeja si el objetivo cae hacia -z. */
+/* Carril de ataque recomendado: 85 cm de la cara del rack OPUESTO. Sigue
+   saliendo en un movimiento y deja 20 cm de holgura en vez de los 10 justos. */
+const CARRIL_CM = 85;
+
+/* La maniobra arranca en el CARRIL DE ATAQUE, no en el eje del pasillo.
+   Es todo el punto: el operador se pega al rack opuesto para tener campo.
+   Anclarla en el eje la corre 65 cm hacia el rack y el equipo termina
+   metido adentro.
+
+   Arranque: z = carril de ataque, rumbo alineado con el pasillo, y la x
+   corrida hacia atras lo que la maniobra avanza, para que el FINAL caiga
+   alineado con el espacio objetivo. RECTA maneja hasta ahi. */
 function armarGiro(u, s){
   const pas = PAS[u.ip], c = tz(pas.y), half = (pas.libre||3.0)/2;
   const dir = Math.sign(s.z - c) || 1;
-  const caraOp = c - dir*half;
-  const cm = Math.round(Math.abs(u.z - caraOp)*100);
-  u.gtr = trayecPara(cm);
-  u.gmir = dir;
-  u.gx0 = u.x; u.gz0 = u.z; u.gth0 = u.th;
-  if (u.est==='DESGIRA'){            // termina donde empieza la trayectoria
-    const p = u.gtr.pts[u.gtr.pts.length-1], c0=Math.cos(u.th-dir*p[2]), s0=Math.sin(u.th-dir*p[2]);
-    u.gth0 = u.th - dir*p[2];
-    u.gx0 = u.x - (p[0]*c0 - dir*p[1]*s0);
-    u.gz0 = u.z - (p[0]*s0 + dir*p[1]*c0);
-  }
-  u.gcm = cm;
+  const p   = trayecPara(CARRIL_CM).pts.slice(-1)[0];
+  u.gdir  = dir;
+  u.gtr   = trayecPara(CARRIL_CM);
+  u.gmir  = dir;
+  u.gzCar = c - dir*half + dir*(CARRIL_CM/100);
+  u.gth0  = 0;                       // el pasillo corre en +x
+  u.gz0   = u.gzCar;
+  u.gx0   = s.x - p[0];              // asi el final queda sobre s.x
 }
 
 function pasoAuto(u, dt){
@@ -378,9 +383,15 @@ function pasoAuto(u, dt){
 
   // movimiento continuo por paso
   if (u.est==='CARRIL' || u.est==='RECTA' || u.est==='TRANSITO'){
-    const zc = tz(PAS[u.ip].y), k = Math.min(1, u.tEst/dur);
+    if ((u.est==='CARRIL' || u.est==='RECTA') && !u.gtr) armarGiro(u, s);
+    // CARRIL se corre al carril de ataque; RECTA maneja hasta el arranque
+    // exacto que pide la maniobra; TRANSITO vuelve al eje del pasillo.
+    const zc = u.est==='TRANSITO' ? tz(PAS[u.ip].y)
+             : u.gzCar;            // CARRIL y RECTA van al carril de ataque
     u.z += (zc - u.z) * Math.min(1, dt*3);
-    if (u.est!=='CARRIL'){ const dx = s.x - u.x; u.x += Math.sign(dx)*Math.min(Math.abs(dx), T.VMAX*dt); }
+    if (u.est!=='CARRIL'){
+      const mx = u.est==='RECTA' ? u.gx0 : s.x;
+      const dx = mx - u.x; u.x += Math.sign(dx)*Math.min(Math.abs(dx), T.VMAX*dt); }
     u.v = u.est==='CARRIL' ? 0 : T.VMAX*.8;
   } else if (u.est==='GIRO' || u.est==='DESGIRA'){
     if (!u.gtr) armarGiro(u, s);
@@ -419,7 +430,9 @@ function pasoAuto(u, dt){
       log(u, 'ciclo '+u.ciclos+' en '+u.tCiclo.toFixed(1)+' s');
       u.tarea=null; u.org=null; u.dst=null;
     } else u.est = PASOS[i+1];
-    if (u.est!=='GIRO' && u.est!=='DESGIRA') u.gtr = null;
+    // se suelta recien al cerrar el ciclo: entre GIRO y DESGIRA nada mueve x,z,
+    // asi que DESGIRA reusa el mismo anclaje y vuelve por donde vino.
+    if (u.est==='LIBRE' || u.est==='TRANSITO') u.gtr = null;
     u.tEst = 0;
   }
   // dibujar carga
