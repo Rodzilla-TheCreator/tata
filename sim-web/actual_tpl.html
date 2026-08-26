@@ -243,6 +243,29 @@ function ponerCubo(s, color){
 }
 SLOTS.forEach(s => { if (Math.random() < .62) ponerCubo(s, s.color); });
 
+/* marcas de piso: el contorno de cada espacio, con el color de su fila.
+   Sale de los mismos SLOTS, asi que si la geometria cambia, las lineas
+   tambien. Solo el nivel 0, que es el que se apoya en el piso. */
+{ const seg = {}, y = 0.012;
+  SLOTS.filter(s => !s.niv).forEach(s => {
+    const r = D.racks[s.rack], hx = CUBE.d/2, hz = r.cd/2;
+    const q = [[-hx,-hz],[hx,-hz],[hx,hz],[-hx,hz]];
+    (seg[s.color] ||= []);
+    for (let i=0;i<4;i++){ const a=q[i], b=q[(i+1)%4];
+      seg[s.color].push(s.x+a[0], y, s.z+a[1], s.x+b[0], y, s.z+b[1]); }
+    // marca central corta, para ver la orientacion del espacio de un vistazo
+    seg[s.color].push(s.x, y, s.z-hz*0.25, s.x, y, s.z+hz*0.25);
+  });
+  G.piso = new THREE.Group(); SC.add(G.piso);
+  Object.entries(seg).forEach(([col, v]) => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+    G.piso.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({
+      color: COL[col], transparent:true, opacity:.55 })));
+  });
+}
+
+
 /* ── el equipo ───────────────────────────────────────────────────────── */
 function silueta(){ const a0=-T.XPIV,a1=-(T.XPIV-T.LCH),hb=T.WCPO/2,hp=T.WMAX/2;
   return [[a0,hb],[a1,hb],[a1,hp],[a1+.9,hp],[a1+.9,-hp],[a1,-hp],[a1,-hb],[a0,-hb]]; }
@@ -267,6 +290,16 @@ function armar(color){
 }
 
 const PAS = D.pasillos;
+
+/* Trayectorias reales del planificador Hybrid A*, generadas por
+   analisis/exportar_giro.py. Cada una arranca en (0,0,0) y termina girada
+   +90 grados; el visor las pega donde este la unidad y las espeja si el
+   rack objetivo cae del otro lado. Reemplazan la interpolacion de rumbo,
+   que dejaba x,z congelados y hacia girar al equipo sobre su propio eje. */
+const GIRO = __GIRO__;
+const GIRO_CAR = GIRO.carriles.slice().sort((a,b)=>a.carril-b.carril);
+const trayecPara = cm => GIRO_CAR.reduce((m,c)=>
+  Math.abs(c.carril-cm) < Math.abs(m.carril-cm) ? c : m, GIRO_CAR[0]);
 const CENTROX = tx((D.bounds.x0+D.bounds.x1)/2);
 function crear(nom,color,ip,mios){
   const p = PAS[Math.min(ip,PAS.length-1)];
@@ -306,6 +339,26 @@ function objetivo(u){ return u.tarea==='DEJAR' ? u.dst : u.org; }
 const DUR = { CARRIL:1.1, RECTA:2.4, GIRO:3.1, ELEVA:0, APROXIMA:1.0,
               EXTIENDE:1.4, TOMA:1.2, RETRAE:1.4, RETROCEDE:1.0, DESGIRA:2.6, TRANSITO:2.2 };
 
+/* Elige la trayectoria segun el carril real: la distancia de la unidad a la
+   cara del rack OPUESTO al objetivo, que es desde donde el planificador
+   plantea el giro. Espeja si el objetivo cae hacia -z. */
+function armarGiro(u, s){
+  const pas = PAS[u.ip], c = tz(pas.y), half = (pas.libre||3.0)/2;
+  const dir = Math.sign(s.z - c) || 1;
+  const caraOp = c - dir*half;
+  const cm = Math.round(Math.abs(u.z - caraOp)*100);
+  u.gtr = trayecPara(cm);
+  u.gmir = dir;
+  u.gx0 = u.x; u.gz0 = u.z; u.gth0 = u.th;
+  if (u.est==='DESGIRA'){            // termina donde empieza la trayectoria
+    const p = u.gtr.pts[u.gtr.pts.length-1], c0=Math.cos(u.th-dir*p[2]), s0=Math.sin(u.th-dir*p[2]);
+    u.gth0 = u.th - dir*p[2];
+    u.gx0 = u.x - (p[0]*c0 - dir*p[1]*s0);
+    u.gz0 = u.z - (p[0]*s0 + dir*p[1]*c0);
+  }
+  u.gcm = cm;
+}
+
 function pasoAuto(u, dt){
   u.tEst += dt; u.tTot += dt;
   const s = objetivo(u);
@@ -317,7 +370,11 @@ function pasoAuto(u, dt){
   }
   u.tCiclo += dt;
   const i = PASOS.indexOf(u.est);
-  const dur = u.est==='ELEVA' ? Math.abs(u.lift-(s.y+T.H_ENT))/T.LIFTV + .2 : DUR[u.est];
+  let dur = u.est==='ELEVA' ? Math.abs(u.lift-(s.y+T.H_ENT))/T.LIFTV + .2 : DUR[u.est];
+  if (u.est==='GIRO' || u.est==='DESGIRA'){
+    if (!u.gtr) armarGiro(u, s);
+    dur = u.gtr.largo / T.VMAN;      // sale del arco, ya no es un 3.1 inventado
+  }
 
   // movimiento continuo por paso
   if (u.est==='CARRIL' || u.est==='RECTA' || u.est==='TRANSITO'){
@@ -326,8 +383,20 @@ function pasoAuto(u, dt){
     if (u.est!=='CARRIL'){ const dx = s.x - u.x; u.x += Math.sign(dx)*Math.min(Math.abs(dx), T.VMAX*dt); }
     u.v = u.est==='CARRIL' ? 0 : T.VMAX*.8;
   } else if (u.est==='GIRO' || u.est==='DESGIRA'){
-    const k = Math.min(1, u.tEst/dur), meta = u.est==='GIRO' ? Math.sign(s.z-u.z)*Math.PI/2 : 0;
-    u.th += (meta - u.th) * Math.min(1, dt*2.2); u.v = T.VMAN;
+    if (!u.gtr) armarGiro(u, s);
+    const k = Math.min(1, u.tEst/dur);
+    // DESGIRA es la misma maniobra al reves
+    const f = u.est==='GIRO' ? k : 1-k;
+    const pt = u.gtr.pts, j = Math.min(pt.length-1, Math.max(0, f*(pt.length-1)));
+    const j0 = Math.floor(j), j1 = Math.min(pt.length-1, j0+1), a = j-j0;
+    const ix = pt[j0][0] + (pt[j1][0]-pt[j0][0])*a;
+    const iz = pt[j0][1] + (pt[j1][1]-pt[j0][1])*a;
+    const ith= pt[j0][2] + (pt[j1][2]-pt[j0][2])*a;
+    const c0 = Math.cos(u.gth0), s0 = Math.sin(u.gth0), m = u.gmir;
+    u.x  = u.gx0 + ix*c0 - m*iz*s0;
+    u.z  = u.gz0 + ix*s0 + m*iz*c0;
+    u.th = u.gth0 + m*ith;
+    u.v  = T.VMAN * (u.gtr.sentidos[Math.round(j)] || 1);
   } else if (u.est==='ELEVA'){
     const meta = s.y + T.H_ENT;
     u.lift += Math.sign(meta-u.lift)*Math.min(Math.abs(meta-u.lift), T.LIFTV*dt); u.v = 0;
@@ -350,6 +419,7 @@ function pasoAuto(u, dt){
       log(u, 'ciclo '+u.ciclos+' en '+u.tCiclo.toFixed(1)+' s');
       u.tarea=null; u.org=null; u.dst=null;
     } else u.est = PASOS[i+1];
+    if (u.est!=='GIRO' && u.est!=='DESGIRA') u.gtr = null;
     u.tEst = 0;
   }
   // dibujar carga
@@ -433,18 +503,45 @@ function sincronizar(u){
 
 /* ── camara ──────────────────────────────────────────────────────────── */
 let modo='orbita', rad=34, yaw=-.7, pit=.95, drag=null;
-const foco=new THREE.Vector3();
-cv.addEventListener('pointerdown',e=>drag={x:e.clientX,y:e.clientY});
-addEventListener('pointerup',()=>drag=null);
-addEventListener('pointermove',e=>{ if(!drag)return;
-  yaw-=(e.clientX-drag.x)*.005; pit=Math.max(.16,Math.min(1.45,pit-(e.clientY-drag.y)*.005));
-  drag={x:e.clientX,y:e.clientY}; });
-cv.addEventListener('wheel',e=>{ rad=Math.max(6,Math.min(90,rad*(1+Math.sign(e.deltaY)*.12)));
-  e.preventDefault(); },{passive:false});
+const foco=new THREE.Vector3(0,1,0);
+const pan =new THREE.Vector3(0,1,0);          // a donde mira la orbita; el usuario lo mueve
+const PAN0=new THREE.Vector3(0,1,0);
+
+cv.addEventListener('contextmenu', e=>e.preventDefault());
+cv.addEventListener('pointerdown', e=>{
+  // boton derecho, medio, o shift/ctrl con el izquierdo = desplazar
+  const desplazar = e.button===2 || e.button===1 || e.shiftKey || e.ctrlKey;
+  drag={x:e.clientX, y:e.clientY, pan:desplazar};
+  cv.setPointerCapture(e.pointerId); });
+addEventListener('pointerup', e=>{ drag=null;
+  try{ cv.releasePointerCapture(e.pointerId); }catch(_){} });
+addEventListener('pointermove', e=>{ if(!drag) return;
+  const dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+  if (drag.pan){
+    // el desplazamiento escala con la distancia: se siente igual cerca y lejos
+    const k = rad*0.0016;
+    const rx=-Math.sin(yaw), rz= Math.cos(yaw);   // derecha en el plano del piso
+    const fx=-Math.cos(yaw), fz=-Math.sin(yaw);   // alejandose de la camara
+    pan.x -= (dx*rx + dy*fx)*k;
+    pan.z -= (dx*rz + dy*fz)*k;
+    if (modo==='seguir') modo='orbita';           // mover a mano suelta el seguimiento
+  } else {
+    yaw -= dx*.005;
+    pit  = Math.max(.16, Math.min(1.45, pit - dy*.005));
+  }
+  drag={x:e.clientX, y:e.clientY, pan:drag.pan}; });
+
+cv.addEventListener('wheel', e=>{
+  // proporcional al gesto: el trackpad deja de sentirse a saltos
+  const d = Math.max(-4, Math.min(4, e.deltaY/100));
+  rad = Math.max(4, Math.min(140, rad*Math.exp(d*0.18)));
+  e.preventDefault(); }, {passive:false});
+
+cv.addEventListener('dblclick', ()=>{ pan.copy(PAN0); rad=34; yaw=-.7; pit=.95; });
 function camara(){ const u=U[act];
   if(modo==='cabina'){ const c=Math.cos(u.th),s=Math.sin(u.th);
     CAM.position.set(u.x-.6*c,2.05,u.z-.6*s); CAM.lookAt(u.x+6*c,1.5,u.z+6*s); return; }
-  foco.lerp(modo==='seguir'? new THREE.Vector3(u.x,1.2,u.z) : new THREE.Vector3(0,1,0), .1);
+  foco.lerp(modo==='seguir' ? new THREE.Vector3(u.x,1.2,u.z) : pan, .1);
   CAM.position.set(foco.x+rad*Math.sin(pit)*Math.cos(yaw), foco.y+rad*Math.cos(pit),
                    foco.z+rad*Math.sin(pit)*Math.sin(yaw));
   CAM.lookAt(foco); }
