@@ -201,8 +201,14 @@ y racks eran atravesables**. No afectaba al LiDAR RTX, que traza geometría de r
 2.6 vueltas de tope a tope. El ángulo útil se recorta hasta 45% con la velocidad; el sobre
 de 1.5 m/s dejó de ser texto y es código.
 
-**Consola de flota:** rediseñada sobre Botoni. El mapa domina, la FSM es un **anillo** (el
-ciclo es un lazo, no una tira con scroll), la cámara bajó a miniatura, y se agregó tiempo:
+**Botoni** es el proyecto de graduación de maje, Marcelo y Pato: cuatro meses sobre un
+PuzzleBot. Lo único que cruzó a TaTa es la **consola de visualización**, traída a propósito
+porque es a prueba de tontos — un botón verde grande que dice START, uno rojo que dice STOP,
+y así. Esa parte se queda. Nada más de Botoni entra por defecto; ver la regla de abajo.
+
+**Consola de flota:** rediseñada sobre la consola de Botoni. El mapa domina, la FSM es un
+**anillo** (el ciclo es un lazo, no una tira con scroll), la cámara bajó a miniatura, y se
+agregó tiempo:
 ciclos, ciclo medio, tiempo en estado, % bloqueada y ocupación del cuello de botella de A.
 La barra del cuello queda gris hasta tener 25 s de muestra — 100% a los tres segundos no es
 un cuello, es no haber medido.
@@ -273,15 +279,41 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
   sesión: el modelo decía que el giro con carga no existía y la máquina lo hace todos los
   días. Las tres veces el error estaba en el modelo, y encontrarlo mejoró el resultado.
   Antes de declarar algo imposible, preguntar si alguien ya lo está haciendo.
+- **Botoni es mapa, no repuesto.** Sus decisiones se tomaron para un PuzzleBot de eje
+  diferencial que gira en el sitio; esta máquina es no holónoma con radio mínimo. Copiar una
+  decisión de allá es heredar una restricción que acá no aplica. Las huellas sirven para
+  saber la dirección, no para pisarlas encima. Antes de traer algo de Botoni, decir **qué
+  problema resolvía allá** y si ese problema existe acá. El caso ya pagado está más arriba,
+  en el planificador: en Botoni girar en el sitio hacía trivial la planificación, y acá esa
+  suposición no existe.
+- **Este proyecto no arranca resuelto.** Tratar a Botoni como una solución que solo hay que
+  comprar y adaptar convierte la adaptación en el trabajo más caro del proyecto, y encima
+  invisible en el presupuesto. Es el supuesto que infla o desinfla el nivel Piloto de
+  `docs/05`.
 
-## Equipo
+## Quién es quién
 
-- **maje** — lidera, construye todo, habla con operadores y mecánicos
-- **Pato** — meses de LiDAR y SLAM en el proyecto de graduación. Su stack tuneado se trae al
-  simulador antes de tocar nada; lo valioso es su parametrización
+**El equipo TaTa es maje, y nadie más — por ahora.** Todo lo que sigue son personas reales
+con relaciones reales al proyecto, pero **ninguna de ellas está en el equipo**. Escribir o
+hablar como si lo estuvieran infla el proyecto y compromete tiempo ajeno que nadie prometió.
+
+- **maje** — el equipo. Lidera, construye todo, habla con operadores y mecánicos
+
+**Consultables — no son equipo, no tienen tareas asignadas acá:**
+
+- **Pato** — meses de LiDAR y SLAM en Botoni. **No es parte del equipo TaTa.** Lo valioso
+  no son sus parámetros sino **por qué llegó a ellos**: qué probó, qué descartó y contra
+  qué. Se le llama y se le pregunta. No se importa su stack
+- **Marcelo** — localización y alineación en Botoni. Su matemática es adaptable y señala
+  dónde están los problemas y dónde las soluciones. Igual que Pato: consultable, no copiable
+
+**Montasa:**
+
+- **Omar** — dirige Montasa. **Todavía no es parte del proyecto.** Se le va a pedir
+  aprobación en algún punto cercano, y ese es el momento en que entra, no antes. Perfil
+  financiero, poco contexto técnico
 - **Christian** — captura y medición en campo
 - **Fabrizio** — mediador y cara comercial
-- **Omar** — dirige Montasa, aprueba presupuesto. Perfil financiero, poco contexto técnico
 
 ## Reconstruir los entregables
 
