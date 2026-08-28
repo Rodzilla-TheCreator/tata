@@ -105,6 +105,51 @@ El mismo kit en EE.UU., con operador a $55,000/año, se paga en **0.3 años**. A
 más. **El retorno de verdad no es el salario:** es exactitud de inventario, daño a rack y producto,
 y poder operar turnos que hoy no se cubren por falta de gente.
 
+## El escáner de seguridad y el salto comercial
+
+*Anotado el 27-ago-2026, de la conversación con maje.*
+
+**El valor del escáner certificado es poder decir «lo hacemos con equipo oficial».** No es una
+capacidad técnica que falte: es la credencial. Y eso es exactamente lo que le importa a Omar,
+que vende certificaciones y respaldo de marca.
+
+El plan comercial que se sigue:
+
+1. Se construye el **Piloto** y se entrega funcionando.
+2. Se le agrega encima el escáner industrial de seguridad.
+3. Ese agregado es lo que marca el salto de nivel y justifica el salto de precio.
+4. **La certificación en sí llega hasta arriba de la escala**, no con el sensor.
+
+### La parte que hay que decir bien
+
+El escáner es **necesario pero no suficiente**. La certificación pide validación de seguridad
+funcional, análisis de riesgos, arquitectura de categoría y auditoría de tercero — el sensor es
+una pieza de eso, no el trámite completo. `docs/04` ya lo explica.
+
+Entonces al cliente se le vende, literalmente, **el sensor y su función**: hay un escáner
+certificado, aislado de la navegación, que detiene el equipo por su cuenta. Eso es cierto y es
+vendible.
+
+Lo que **no** se dice es que el equipo esté certificado, ni homologado, ni que cumpla ISO 3691-4
+como sistema. Decirlo sería falso mientras no exista la auditoría, y el día que alguien lo
+verifique el costo no es comercial. Es la misma disciplina que la regla de no llamarle "freno
+automático" a la asistencia de frenado en Ingenio.
+
+### El número de RETHINK
+
+Dos TaTa Piloto por **$20,000**.
+
+| | |
+|---|---|
+| Piezas, dos unidades | $16,916 |
+| Sobre piezas | **$3,084** |
+| Ingeniería cobrada | $0 |
+
+Ese margen del 15% sobre piezas es lo que queda, y **toda la ingeniería se está regalando**.
+Puede ser la decisión correcta —es el cliente de referencia, y el que produce el caso que se le
+enseña al siguiente— pero conviene que esté escrito antes y no descubierto después. El precio
+del segundo cliente no tiene por qué parecerse a este.
+
 ## La filosofía
 
 > "No lo necesitan. Menos hardware, más software."

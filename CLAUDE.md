@@ -9,7 +9,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 |---|---|
 | `docs/01-hallazgos-rethink.md` | Lo que encontramos en el almacén del cliente |
 | `docs/02-maquina-y-geometria.md` | El EDR18N2 y si cabe el giro en 3 m |
-| `docs/03-lidar-y-localizacion.md` | Por qué los marcadores van primero y el LiDAR de apoyo |
+| `docs/03-lidar-y-localizacion.md` | **Localizan las cámaras con ArUco. El LiDAR no navega** |
 | `docs/04-seguridad-y-normativa.md` | Por qué la capa de seguridad va aparte |
 | `docs/05-producto-y-negocio.md` | Escala de madurez, costos, retorno |
 | `docs/06-simuladores.md` | Los dos simuladores y cómo se usan |
@@ -39,8 +39,12 @@ Velocidad de trabajo **7.9 km/h**, no los 12 de catálogo. Sobre de velocidad: *
 **1200 × 1000 × 1160 mm**. En el rack presenta su cara de **1.00 m al pasillo** y entra
 **1.20 m al fondo** — lo fija la bahía de 2.35 m, donde entran dos con 35 cm sobrantes.
 
-**Marcadores primero, LiDAR de apoyo.** Un AprilTag en papel laminado da posición absoluta
-sin deriva. Al LiDAR le queda ver lo que no debería estar ahí.
+**Se dice ArUco.** No "marcadores", no "etiquetas", no "AprilTag". Es el término del proyecto
+y viene de Botoni, donde el equipo definió cuáles y dónde iban.
+
+**El LiDAR no navega.** Localizan **dos cámaras USB con ArUco** más la odometría. Al LiDAR le
+queda un solo trabajo — ver lo que no debería estar ahí — y no es redundancia: el mapa acierta
+con los racks y se equivoca todos los días con lo que hay en el pasillo. Detalle en `docs/03`.
 
 **La seguridad va aparte por norma**, no por recorte. ISO 3691-4 exige que la capa
 certificada esté aislada de la navegación.
@@ -149,9 +153,13 @@ vuelve **singular**.
 "abierto", y por eso **no reproduce la tabla que quedó escrita en `docs/03`**.
 
 **El precipicio está entre 15 y 12 m de alcance efectivo.** Arriba de 15 m no pasa nada con
-ningún relieve. Consecuencia para el BOM: **un blanco retrorreflectivo en cada cabecera de
-pasillo vale más que marcadores repartidos a lo largo**, porque replica la restricción que
-ya funciona. Son ~20 blancos, no 100.
+ningún relieve.
+
+> **Superado el 27-ago-2026.** Todo este análisis contestaba «si el LiDAR localizara, qué haría
+> falta». Se decidió que **el LiDAR no localiza**, así que la pregunta salió del alcance. Con
+> ella se va también la recomendación de blancos retrorreflectivos: son otro canal de sensado,
+> no un sustituto del ArUco, y se tapan igual de fácil. Se archiva, no se borra — vuelve a la
+> mesa sólo si la oclusión de ArUco resulta frecuente en campo. Ver `docs/03`.
 
 ### Eléctrica
 
