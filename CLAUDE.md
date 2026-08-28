@@ -287,6 +287,12 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
   sesión: el modelo decía que el giro con carga no existía y la máquina lo hace todos los
   días. Las tres veces el error estaba en el modelo, y encontrarlo mejoró el resultado.
   Antes de declarar algo imposible, preguntar si alguien ya lo está haciendo.
+- **No se borra el camino.** Cuando una conclusión reemplaza a otra, la vieja **se conserva**
+  junto con qué la tumbó — como hace la sección «Corregido en campo» de este archivo. Nunca
+  reescribir un documento dejando sólo la versión buena: si después aparece un error, hay que
+  poder volver al punto donde se tomó el desvío y decidir si se retoma con correcciones o se
+  cambia por otro. Lo vigente arriba, el historial abajo, y una tabla de *decía / es / qué lo
+  tumbó* en medio. `docs/03` es el modelo.
 - **Botoni es mapa, no repuesto.** Sus decisiones se tomaron para un PuzzleBot de eje
   diferencial que gira en el sitio; esta máquina es no holónoma con radio mínimo. Copiar una
   decisión de allá es heredar una restricción que acá no aplica. Las huellas sirven para

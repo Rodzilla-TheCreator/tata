@@ -159,6 +159,27 @@ robot. Salieron adelante con una Jetson de $250 sobre un PuzzleBot, en un almac�
 posiciones, con pick and place en todas, recogiendo del piso y de racks a distintas alturas,
 reconstruyendo su ruta para no chocar.
 
+### Pero era una restricción de aula, no doctrina
+
+*Anotado el 27-ago-2026.*
+
+Esa frase era **pedagógica**. El profesor la imponía para obligar a resolver con ingenio lo
+que parecía pedir hardware, y funcionó: el equipo de maje fue uno de dos que lo lograron, con
+tres personas donde los demás tenían cinco, sobre un kit usado de $250.
+
+**TaTa no es una clase.** No hay nota, no hay que demostrarle nada a nadie, y hay presupuesto.
+Si hacen falta dos cámaras se ponen dos, y la justificación es la geometría del giro — no que
+alcance el dinero.
+
+Lo que sí sobrevive de la lección, con otra razón: **cada pieza tiene que ganarse el puesto, y
+la moneda no son dólares.** Una segunda cámara USB cuesta lo que cuesta un almuerzo; lo que
+cuesta de verdad es superficie de integración — otra cosa que calibrar, montar, alimentar,
+cablear, diagnosticar y que se puede romper a las dos de la mañana en una bodega de químicos.
+
+Dos cámaras se ganan el puesto porque en el giro de 90° intercambian papeles y nunca queda el
+equipo a ciegas. Cinco no se lo ganarían. Ese es el criterio, y no tiene nada que ver con la
+austeridad.
+
 Tres patas del argumento:
 
 - **El hardware pone el techo; el software decide cuánto de ese techo alcanzás.** Los proyectos de
