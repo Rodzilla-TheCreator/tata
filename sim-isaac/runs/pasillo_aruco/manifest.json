@@ -1,0 +1,212 @@
+[
+  {
+    "x": 0.83,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x00.83.png"
+  },
+  {
+    "x": 0.83,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x00.83.png"
+  },
+  {
+    "x": 1.35,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x01.35.png"
+  },
+  {
+    "x": 1.35,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x01.35.png"
+  },
+  {
+    "x": 1.87,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x01.87.png"
+  },
+  {
+    "x": 1.87,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x01.87.png"
+  },
+  {
+    "x": 2.4,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x02.40.png"
+  },
+  {
+    "x": 2.4,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x02.40.png"
+  },
+  {
+    "x": 2.92,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x02.92.png"
+  },
+  {
+    "x": 2.92,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x02.92.png"
+  },
+  {
+    "x": 3.45,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x03.45.png"
+  },
+  {
+    "x": 3.45,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x03.45.png"
+  },
+  {
+    "x": 3.97,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x03.97.png"
+  },
+  {
+    "x": 3.97,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x03.97.png"
+  },
+  {
+    "x": 4.47,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x04.47.png"
+  },
+  {
+    "x": 4.47,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x04.47.png"
+  },
+  {
+    "x": 4.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x04.98.png"
+  },
+  {
+    "x": 4.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x04.98.png"
+  },
+  {
+    "x": 5.48,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x05.48.png"
+  },
+  {
+    "x": 5.48,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x05.48.png"
+  },
+  {
+    "x": 5.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x05.98.png"
+  },
+  {
+    "x": 5.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x05.98.png"
+  },
+  {
+    "x": 6.48,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x06.48.png"
+  },
+  {
+    "x": 6.48,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x06.48.png"
+  },
+  {
+    "x": 6.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x06.98.png"
+  },
+  {
+    "x": 6.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x06.98.png"
+  },
+  {
+    "x": 7.48,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x07.48.png"
+  },
+  {
+    "x": 7.48,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x07.48.png"
+  },
+  {
+    "x": 7.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x07.98.png"
+  },
+  {
+    "x": 7.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x07.98.png"
+  },
+  {
+    "x": 8.48,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x08.48.png"
+  },
+  {
+    "x": 8.48,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x08.48.png"
+  },
+  {
+    "x": 8.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x08.98.png"
+  },
+  {
+    "x": 8.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x08.98.png"
+  },
+  {
+    "x": 9.48,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x09.48.png"
+  },
+  {
+    "x": 9.48,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x09.48.png"
+  },
+  {
+    "x": 9.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x09.98.png"
+  },
+  {
+    "x": 9.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x09.98.png"
+  },
+  {
+    "x": 10.48,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x10.48.png"
+  },
+  {
+    "x": 10.48,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x10.48.png"
+  },
+  {
+    "x": 10.98,
+    "camara": "cam_frontal",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_frontal_x10.98.png"
+  },
+  {
+    "x": 10.98,
+    "camara": "cam_lateral",
+    "archivo": "/home/rodz/tata/sim-isaac/runs/pasillo_aruco/cam_lateral_x10.98.png"
+  }
+]

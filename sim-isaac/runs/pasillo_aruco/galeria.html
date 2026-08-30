@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaTa · pasillo ArUco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#E4E9ED;--surf:#F6F8F9;--surf2:#DCE3E8;--ink:#111B23;--mut:#5A6C79;
+  --line:#B9C6CF;--amber:#B4720C;--load:#136F69;--bad:#B4402A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;--mut:#7D91A2;
+  --line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--bad:#E8735A}}
+:root[data-theme="dark"]{--bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;
+  --mut:#7D91A2;--line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--bad:#E8735A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:56px 22px 80px;display:flex;flex-direction:column;gap:38px}
+h1{font-weight:900;font-size:clamp(28px,4.5vw,40px);margin:0;letter-spacing:-.02em;line-height:1.05}
+.eyebrow{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut)}
+p{margin:0;max-width:70ch;color:var(--mut)}
+p strong{color:var(--ink)}
+a{color:var(--amber)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.meta div{background:var(--surf);padding:12px 14px}
+.meta .k{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mut);margin-bottom:5px}
+.meta .v{font:600 15px/1 "IBM Plex Mono",monospace}
+section{display:flex;flex-direction:column;gap:10px}
+.head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h2{font-weight:700;font-size:19px;margin:0;letter-spacing:-.01em}
+.spec{font:400 12px/1 "IBM Plex Mono",monospace;color:var(--mut)}
+.chip{font:600 10px/1 "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.06em;
+  padding:4px 9px;border-radius:99px;border:1px solid currentColor}
+.chip.bad{color:var(--bad)}
+.chip.ok{color:var(--load)}
+.strip{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 14px;margin:0 -2px}
+figure{flex:0 0 auto;width:280px;margin:0;background:var(--surf);border:1px solid var(--line);
+  border-radius:4px;overflow:hidden}
+figure img{display:block;width:100%;height:175px;object-fit:cover;background:#000}
+figcaption{display:flex;justify-content:space-between;padding:8px 11px;
+  font:600 12px/1 "IBM Plex Mono",monospace}
+figcaption .pos{color:var(--ink)}
+figcaption .note{color:var(--load)}
+.debug{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;
+  background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--bad);
+  border-radius:4px;padding:20px}
+.debug img{width:100%;border-radius:3px;border:1px solid var(--line);background:#000}
+.debug h3{font-size:16px;margin:0 0 8px}
+.debug p{font-size:14px}
+code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
+@media(max-width:600px){.debug{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">sim-isaac / runs / pasillo_aruco</div>
+    <h1>Pasillo ArUco &middot; capturas</h1>
+    <p style="margin-top:10px">Recorrido cinem&aacute;tico de 11.70&nbsp;m por el pasillo de
+    3.00&nbsp;m, dos c&aacute;maras montadas en el chasis, marcas ArUco DICT_4X4_50 en
+    cabeceras y filas. 42 capturas totales en <code>manifest.json</code>; esta p&aacute;gina
+    muestra una muestra representativa de cada c&aacute;mara m&aacute;s el diagn&oacute;stico
+    aislado.</p>
+  </header>
+
+  <div class="meta">
+    <div><div class="k">Pasillo</div><div class="v">11.70 &times; 3.00 m</div></div>
+    <div><div class="k">Espaciado marca</div><div class="v">2.60 m</div></div>
+    <div><div class="k">cam_frontal FOV</div><div class="v">72.0&deg; &times; 45.0&deg;</div></div>
+    <div><div class="k">cam_lateral FOV</div><div class="v">90.0&deg; &times; 56.2&deg;</div></div>
+  </div>
+
+  <section>
+    <div class="head">
+      <h2>cam_frontal</h2>
+      <span class="spec">montaje (0.20, 0.00, 1.52) &middot; mira +X</span>
+      <span class="chip bad">revisar encuadre</span>
+    </div>
+    <p>Composici&oacute;n casi id&eacute;ntica en todo el recorrido: un bloque oscuro domina la
+    mitad derecha y un brillo sobreexpuesto queda a la izquierda. No se ve el pasillo
+    abri&eacute;ndose ni las marcas de cabecera. <strong>No est&aacute; congelada</strong> &mdash;
+    el diff de p&iacute;xeles cambia frame a frame &mdash; pero el encuadre sugiere que mira muy
+    cerca de un rack en vez de por el centro del pasillo.</p>
+    <div class="strip">
+      <figure><img src="cam_frontal_x00.83.png" loading="lazy" alt="cam_frontal en x=0.83 m"><figcaption><span class="pos">x = 0.83 m</span></figcaption></figure>
+      <figure><img src="cam_frontal_x03.45.png" loading="lazy" alt="cam_frontal en x=3.45 m"><figcaption><span class="pos">x = 3.45 m</span></figcaption></figure>
+      <figure><img src="cam_frontal_x06.98.png" loading="lazy" alt="cam_frontal en x=6.98 m"><figcaption><span class="pos">x = 6.98 m</span></figcaption></figure>
+      <figure><img src="cam_frontal_x10.98.png" loading="lazy" alt="cam_frontal en x=10.98 m"><figcaption><span class="pos">x = 10.98 m</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>cam_lateral</h2>
+      <span class="spec">montaje (0.20, 0.45, 1.10) &middot; mira +Y</span>
+      <span class="chip ok">marcas visibles</span>
+    </div>
+    <p>Ve la pared del rack de frente. A media distancia aparecen marcas ArUco sobre la pared
+    &mdash; esto explica los "rejected candidates" que report&oacute; el detector: las ve, pero
+    peque&ntilde;as y oblicuas para decodificar. <strong>Ojo:</strong> midiendo la posici&oacute;n
+    real del blob de mayor contraste en <code>cam_lateral_x06.98.png</code>, cae al 90% de la
+    altura del frame; la geometr&iacute;a (c&aacute;mara a 1.10 m, marca a 0.90 m, ~1.0 m de
+    distancia) predice ~68%. Esa diferencia de ~20 puntos no cuadra y no la voy a explicar a
+    ciegas &mdash; hay que verlo en vivo, no seguir debatiendo sobre un PNG.</p>
+    <div class="strip">
+      <figure><img src="cam_lateral_x00.83.png" loading="lazy" alt="cam_lateral en x=0.83 m"><figcaption><span class="pos">x = 0.83 m</span><span class="note">sin marca</span></figcaption></figure>
+      <figure><img src="cam_lateral_x03.45.png" loading="lazy" alt="cam_lateral en x=3.45 m"><figcaption><span class="pos">x = 3.45 m</span><span class="note">sin marca</span></figcaption></figure>
+      <figure><img src="cam_lateral_x06.98.png" loading="lazy" alt="cam_lateral en x=6.98 m"><figcaption><span class="pos">x = 6.98 m</span><span class="note">marca grande, abajo</span></figcaption></figure>
+      <figure><img src="cam_lateral_x09.98.png" loading="lazy" alt="cam_lateral en x=9.98 m"><figcaption><span class="pos">x = 9.98 m</span><span class="note">saliendo de cuadro</span></figcaption></figure>
+      <figure><img src="cam_lateral_x10.98.png" loading="lazy" alt="cam_lateral en x=10.98 m"><figcaption><span class="pos">x = 10.98 m</span><span class="note">pared lisa</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="debug">
+    <img src="../debug_una_marca.png" alt="debug_una_marca.png, en blanco">
+    <div>
+      <h3>debug_una_marca.png <span class="chip bad" style="margin-left:6px">sin resolver</span></h3>
+      <p>Prueba aislada de una sola marca a 1&nbsp;m de la c&aacute;mara, mismos fixes de luz y
+      apertura que el pasillo completo. Sigue renderizando en blanco uniforme &mdash; ni la
+      marca ni el cubo de control de <code>debug_una_marca.py</code> aparecen. No bloquea el
+      entregable principal, pero queda como misterio abierto.</p>
+    </div>
+  </section>
+
+  <footer>
+    Generado con <code>pasillo_aruco.py --largo 12 --capturas</code>, log completo en
+    <code>captura5.log</code>. Volver al <a href="../../../index.html">&iacute;ndice de
+    visuales</a>.
+  </footer>
+</div>
+</body>
+</html>
