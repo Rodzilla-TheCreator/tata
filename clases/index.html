@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaTa · clases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#E4E9ED;--surf:#F6F8F9;--surf2:#DCE3E8;--ink:#111B23;--mut:#5A6C79;
+  --line:#B9C6CF;--amber:#B4720C;--load:#136F69}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;--mut:#7D91A2;
+  --line:#2A3945;--amber:#F0A93B;--load:#3BB5AC}}
+:root[data-theme="dark"]{--bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;
+  --mut:#7D91A2;--line:#2A3945;--amber:#F0A93B;--load:#3BB5AC}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:56px 22px 80px;display:flex;flex-direction:column;gap:34px}
+h1{font-weight:900;font-size:clamp(30px,5vw,44px);margin:0;letter-spacing:-.02em;line-height:1.05}
+.eyebrow{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut)}
+p{margin:0;max-width:64ch;color:var(--mut)}
+h2{font-weight:700;font-size:16px;margin:0 0 3px;letter-spacing:-.01em}
+.grid{display:grid;gap:12px}
+.card,a.card{display:flex;flex-direction:column;gap:6px;padding:17px 19px;text-decoration:none;
+  background:var(--surf);border:1px solid var(--line);border-radius:3px;color:var(--ink)}
+a.card{transition:.15s}
+a.card:hover{border-color:var(--amber);transform:translateY(-1px)}
+.card.off{opacity:.55}
+.card span,.card p{font-size:14px;color:var(--mut);max-width:none}
+.n{font:900 13px/1 "IBM Plex Mono",monospace;color:var(--amber)}
+.tag{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--load);align-self:flex-start}
+.tag.no{color:var(--mut)}
+.head{display:flex;align-items:baseline;gap:10px}
+ol,ul{margin:6px 0 0;padding-left:20px;color:var(--mut);font-size:14.5px}
+li{margin:5px 0}
+code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+.box{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--amber);
+  border-radius:3px;padding:16px 19px}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
+a{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Montasa &middot; TaTa</div>
+  <h1>Clases</h1>
+</header>
+
+<p>Seis tareas en secuencia. Cada una profundiza en un &aacute;rea y produce algo que el proyecto
+necesita. No son ejercicios de juguete: las tareas 1, 2 y 5 son sobre c&oacute;digo que ya corre en
+este repositorio, y la 4 produce el n&uacute;cleo de localizaci&oacute;n que hoy no existe.</p>
+
+<div class="box">
+  <h2>Por qué la odometría va primero</h2>
+  <p style="color:var(--ink)">Botoni era de eje <b>diferencial</b>: dos encoders y listo. El EDR es
+  de <b>bicicleta</b> &mdash; una rueda que empuja y dirige a la vez. Es otra matem&aacute;tica, no
+  un repaso.</p>
+  <p style="margin-top:9px;color:var(--ink)">Y esa misma funci&oacute;n la usan <b>las dos cosas que
+  siguen</b>: el Kalman la necesita para predecir, el Hybrid A* para generar primitivas. Se aprende
+  una vez y paga dos veces.</p>
+</div>
+
+<div class="grid">
+
+  <a class="card" href="odometria.html">
+    <span class="tag">Lista &middot; interactiva</span>
+    <div class="head"><span class="n">01</span><h2>El modelo de movimiento del EDR</h2></div>
+    <p>Diferencial contra bicicleta, animado. De d&oacute;nde sale <code>dθ = (ds/WB)·tan(δ)</code>,
+    qu&eacute; es cada variable, y por qu&eacute; el CIR lo cambia todo.</p>
+    <p style="margin-top:6px"><b style="color:var(--amber)">Entrega:</b> un script que integre una
+    secuencia de <code>(ds, δ)</code> y dibuje la trayectoria con la silueta.</p>
+  </a>
+
+  <div class="card">
+    <span class="tag">Enunciada</span>
+    <div class="head"><span class="n">02</span><h2>Odometría y su deriva</h2></div>
+    <p>Qu&eacute; se mide de verdad en un reach truck, y de d&oacute;nde viene el error. Produce un
+    n&uacute;mero que el proyecto necesita y no tiene: <b>cu&aacute;nto se puede caminar entre
+    ArUcos</b>.</p>
+    <ol>
+      <li>El diferencial mide dos ruedas. La bicicleta mide <b>una rueda y un &aacute;ngulo</b>.
+        ¿Qu&eacute; sensor da cada cosa en el EDR? Es pregunta para el diagn&oacute;stico y para
+        el Chino.</li>
+      <li>Met&eacute;le ruido gaussiano a <code>ds</code> y a <code>δ</code> por separado.
+        <b>¿Cu&aacute;l de los dos duele m&aacute;s?</b> La respuesta no es obvia y decide
+        d&oacute;nde poner el esfuerzo.</li>
+      <li>El error de &aacute;ngulo <b>se integra</b>: un sesgo constante en δ no produce un error
+        constante en posici&oacute;n, produce uno que crece. Demostralo con el simulador.</li>
+      <li>Fuentes reales de deriva ac&aacute;: arrastre de las ruedas de carga en el arco, aceite en
+        el piso, la rejilla de drenaje (<code>fotos/IMG_0208</code>), y 1.58 t que deforman la llanta
+        distinto seg&uacute;n vaya cargado o vac&iacute;o.</li>
+      <li><b>El cierre:</b> con esa deriva, ¿a qu&eacute; distancia m&aacute;xima puede estar el
+        siguiente ArUco antes de que el error pase la tolerancia de la bah&iacute;a?</li>
+    </ol>
+    <p style="margin-top:8px"><b style="color:var(--amber)">Entrega:</b> una curva de error contra
+    distancia recorrida, y de ah&iacute; la separaci&oacute;n m&aacute;xima entre ArUcos. Eso cierra
+    un pendiente abierto de <code>docs/03</code>.</p>
+  </div>
+
+  <div class="card off">
+    <span class="tag no">Sin construir</span>
+    <div class="head"><span class="n">03</span><h2>Kalman desde el escalar</h2></div>
+    <p>Fusi&oacute;n 1-D a mano antes de tocar matrices. Qu&eacute; significa linealizar y por
+    qu&eacute; hace falta. Termina anotando el <code>poseKalman.py</code> de Marcelo.</p>
+  </div>
+
+  <div class="card off">
+    <span class="tag no">Sin construir</span>
+    <div class="head"><span class="n">04</span><h2>EKF con ArUcos</h2></div>
+    <p>Modelo de medici&oacute;n, jacobianos, asociaci&oacute;n de datos. Produce el n&uacute;cleo de
+    localizaci&oacute;n del proyecto.</p>
+  </div>
+
+  <div class="card off">
+    <span class="tag no">Sin construir</span>
+    <div class="head"><span class="n">05</span><h2>Hybrid A*</h2></div>
+    <p>Por qu&eacute; se discretiza (x, y, θ), qu&eacute; son las primitivas, y si la
+    heur&iacute;stica de <code>planificador_giro.py</code> es admisible o no.</p>
+  </div>
+
+  <div class="card off">
+    <span class="tag no">Sin construir</span>
+    <div class="head"><span class="n">06</span><h2>Cerrar el lazo</h2></div>
+    <p>Planificar, seguir y localizar, todo junto en Gazebo.</p>
+  </div>
+
+</div>
+
+<div class="box">
+  <h2>Material</h2>
+  <p style="color:var(--ink)">Para odometr&iacute;a y Kalman, <b>Cyrill Stachniss</b> (Bonn). Es la
+  matem&aacute;tica trabajada en pizarra, no divulgaci&oacute;n.</p>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=8VJ-A9OlhAE">Robot Localization — An Overview</a> — empezar acá</li>
+    <li><a href="https://www.youtube.com/watch?v=X30sEgIws0g">EKF-SLAM</a> — el bloque de EKF es el caso de TaTa</li>
+    <li><a href="https://www.ipb.uni-bonn.de/online-training-robotics/index.html">Online Training: Mobile Robotics</a> — el curso completo, gratis</li>
+    <li><a href="http://ais.informatik.uni-freiburg.de/teaching/ss11/robotics/slides/09d-ekf-localization.pdf">EKF Localization (slides, Freiburg)</a> — para seguir en paralelo</li>
+  </ul>
+  <p style="margin-top:12px;color:var(--ink)">Para Hybrid A*:</p>
+  <ul>
+    <li><a href="https://medium.com/@junbs95/gentle-introduction-to-hybrid-a-star-9ce93c0d7869">Gentle introduction to Hybrid A*</a></li>
+    <li><a href="https://github.com/rapyuta-robotics/hybrid_astar">hybrid_astar del KTH</a> — implementación de referencia</li>
+    <li><a href="https://www.mathworks.com/help/nav/ref/plannerhybridastar.html">plannerHybridAStar (MathWorks)</a> — los parámetros con nombre</li>
+  </ul>
+  <p style="margin-top:12px">Hybrid A* lo publicaron <b>Dmitri Dolgov y Sebastian Thrun</b> en
+  Stanford para el DARPA Challenge. Dolgov hoy es co-CEO de Waymo. Es el mismo planificador con el
+  que un carro aut&oacute;nomo se estaciona.</p>
+</div>
+
+<footer>
+  Volver al <a href="../index.html">&iacute;ndice</a> &middot;
+  el c&oacute;digo vive en <code>analisis/</code>
+</footer>
+
+</div>
+</body>
+</html>

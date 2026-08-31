@@ -308,7 +308,7 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
 
 ## Quién es quién
 
-**El equipo TaTa es maje, y nadie más — por ahora.** Todo lo que sigue son personas reales
+**El equipo TaTa es maje, más el Chino en lo mecánico y eléctrico.** Todo lo que sigue son personas reales
 con relaciones reales al proyecto, pero **ninguna de ellas está en el equipo**. Escribir o
 hablar como si lo estuvieran infla el proyecto y compromete tiempo ajeno que nadie prometió.
 
@@ -321,6 +321,14 @@ hablar como si lo estuvieran infla el proyecto y compromete tiempo ajeno que nad
   qué. Se le llama y se le pregunta. No se importa su stack
 - **Marcelo** — localización y alineación en Botoni. Su matemática es adaptable y señala
   dónde están los problemas y dónde las soluciones. Igual que Pato: consultable, no copiable
+
+**Equipo de ingeniería — asignado a maje:**
+
+- **el Chino** — técnico, mecánico y sub-jefe de taller bajo Miguel, pero opera y comanda.
+  **Asignado a maje**: se le puede llamar en cualquier momento. Tiene un EDR en su taller, así
+  que sirve para ir a ver la máquina antes del diagnóstico. Traduce lo mecánico del montacargas
+  y apoya en lo eléctrico y electrónico. **Va a la visita de diagnóstico de `docs/11`.**
+  Es apodo, así se presenta él y así se le dice.
 
 **Montasa:**
 
