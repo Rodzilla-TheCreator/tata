@@ -21,6 +21,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/12-medicion-de-la-sombra.md` | **Una hora con flexómetro y papel. Cierra el bloqueo 1** |
 | `docs/13-timeline-antes-de-la-semana.md` | **Todo lo que va antes, por dependencia. El bloque 0 corre desde hoy** |
 | `docs/14-maquinas-y-entorno.md` | **i3, maquinon y superspeed: cómo están armadas y las trampas** |
+| `docs/15-viaje-al-taller.md` | **El plan del viaje, la placa de datos y todo lo del puerto de servicio** |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
