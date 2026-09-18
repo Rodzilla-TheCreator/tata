@@ -16,13 +16,14 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/07-estado-y-siguientes-pasos.md` | Qué falta, en orden, con puertas de decisión |
 | `docs/08-setup-git-agente.md` | Cómo dejar la máquina lista para empujar y cómo trabajar con git |
 | `docs/09-briefing-secuencia.md` | La simulación de secuencia: qué es y qué falta |
-| `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección |
+| `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección. **Y el watchdog de 200 ms** |
 | `docs/11-plan-de-diagnostico.md` | **La visita de medición. Va ANTES del doc 10** |
 | `docs/12-medicion-de-la-sombra.md` | **Una hora con flexómetro y papel. Cierra el bloqueo 1** |
 | `docs/13-timeline-antes-de-la-semana.md` | **Todo lo que va antes, por dependencia. El bloque 0 corre desde hoy** |
 | `docs/14-maquinas-y-entorno.md` | **i3, maquinon y superspeed: cómo están armadas y las trampas** |
 | `docs/15-viaje-al-taller.md` | **El plan del viaje, la placa de datos y todo lo del puerto de servicio** |
 | `docs/16-manual-de-servicio.md` | **El manual de servicio: el equipo es un Jungheinrich, el bus es CANopen, y existe el APM+** |
+| `docs/17-hito-teleop.md` | **El plan de acción del hito del teleop, por bloques. El bloque 1 se puede empezar hoy** |
 
 | Carpeta | Qué contiene |
 |---|---|
@@ -60,6 +61,11 @@ certificada esté aislada de la navegación.
 
 **Nunca llamar "freno automático" a nada en hardware de nivel Ingenio.** Es asistencia de
 frenado en modo demostración, teleoperado con un dedo sobre un paro físico.
+
+**El watchdog de 200 ms lo cuenta el ESP32, nunca la Jetson.** Linux no garantiza tiempo. Si
+pasan 200 ms sin latido, el ESP32 corta el hombre-presente y cae el freno de resorte. El rearme
+es **manual**. Y **no es la capa de seguridad certificada** — es supervisión de disponibilidad.
+Detalle en `docs/10`.
 
 **Piezas y ingeniería son cosas distintas.** El NRE es descubrir qué señal es cada cable, y
 eso se paga una vez para todo el modelo, no por unidad.

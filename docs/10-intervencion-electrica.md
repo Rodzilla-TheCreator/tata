@@ -48,6 +48,84 @@ mueven en sentido contrario, ahí está.
 
 ---
 
+## El watchdog de 200 ms — quién vigila a quién
+
+> **Esta sección se escribió el 18-sep-2026 para rescatar una decisión que se había tomado en
+> conversación y no estaba en ningún archivo.** Lo único que existía era una línea de costo en
+> `analisis/escala_edr.py`: «Custom con watchdog y doble bus, 1400». Los 200 ms, el latido y
+> quién frena no estaban escritos. Lo que sigue tiene **lo decidido** y, marcado aparte, **lo
+> que falta decidir**.
+
+### La regla
+
+**La Jetson le manda un latido al ESP32. Si pasan 200 ms sin latido, el ESP32 frena.**
+
+### Por qué el ESP32 y no la Jetson
+
+**Linux no garantiza tiempo.** El planificador del kernel, el recolector de basura de Python,
+un swap, una ráfaga de carga del procesamiento de cámaras — cualquiera de esos mete cientos de
+milisegundos sin avisar y sin que nada falle formalmente. Un sistema operativo de propósito
+general no es determinista, y no se lo puede volver determinista a fuerza de cuidado.
+
+Un microcontrolador sin sistema operativo corre el mismo lazo, siempre, en el mismo tiempo.
+**El que cuenta los 200 ms tiene que ser él.**
+
+Y la asimetría importa: el ESP32 **no confía** en la Jetson, la Jetson **sí depende** del
+ESP32. El lado tonto vigila al lado listo, porque el lado tonto es el que se puede auditar
+línea por línea.
+
+### Las tres capas, que no se confunden
+
+```
+1. HONGO FÍSICO       NC en serie con el hombre-presente.  Puramente eléctrico.
+                      Detiene aunque todo lo demás esté muerto o colgado.
+
+2. WATCHDOG ESP32     Cuenta 200 ms sin latido → corta el hombre-presente con relé
+                      → cae el freno electromagnético de resorte.
+                      Supervisión de disponibilidad.
+
+3. SOFTWARE JETSON    Percepción, localización, planificación, teleoperación.
+                      Puede fallar, colgarse o mentir. Por eso existen 1 y 2.
+```
+
+> **El watchdog NO es la capa de seguridad certificada.** `CLAUDE.md` y `docs/04` lo dicen:
+> **ISO 3691-4 exige que la capa certificada esté aislada de la navegación.** Un ESP32 con
+> firmware nuestro no es un dispositivo de seguridad funcional y no se puede presentar como
+> tal. Es **supervisión de disponibilidad** — vigila que el cerebro esté vivo, no que la
+> maniobra sea segura. Confundir las dos cosas mete al proyecto en un problema de
+> certificación que hoy no tiene.
+
+### Cómo frena
+
+Por la vía que `CLAUDE.md` ya identificó como **la que frena siempre**: cortar el
+hombre-presente con un relé y dejar caer el **freno electromagnético de resorte**. No se usa
+el freno regenerativo del controlador, porque ese depende de que el controlador esté sano — y
+si el watchdog saltó, sano es justo lo que no sabemos que esté.
+
+Es un freno **normalmente aplicado**: sin corriente, frena. Eso lo vuelve a prueba de que se
+caiga la alimentación, y es lo que se quiere.
+
+### Lo que falta decidir — marcado, para que no se pierda otra vez
+
+| Pregunta | Estado |
+|---|---|
+| **Período del latido** | Abierto. Los 200 ms son el vencimiento, no el período. Regla de pulgar: latido cada 50 ms deja margen para perder tres seguidos antes de frenar |
+| **Contenido del latido** | Abierto. ¿Basta un byte? ¿Lleva contador de secuencia para detectar mensajes viejos o repetidos? ¿Lleva CRC? Un latido sin contador no distingue «vivo» de «pegado» |
+| **Por dónde va el latido** | Abierto. USB serie es lo simple. CAN es lo robusto y ya va a haber bus. Decidir después del diagnóstico |
+| **Rearme** | **Decidido: manual.** Si vuelve el latido, el equipo **no reanuda solo**. Un sistema que se recupera solo de una falla que nadie diagnosticó vuelve a fallar con alguien adelante |
+| **Qué más vigila el ESP32** | Abierto. Candidatos: hongo, hombre-presente, y si el bus CAN sirve, plausibilidad de velocidad contra lo comandado |
+| **Frenar con carga en alto** | **Abierto, y es el más serio.** Soltar el freno de resorte a velocidad con el pantógrafo extendido en altura no es obviamente lo más seguro. Puede haber que rampar, o que el watchdog primero corte tracción y aplique el freno escalonado. **Requiere criterio mecánico — es pregunta para el Chino**, y se cruza con `docs/11` §4, los pasos que no se pueden reanudar a la mitad |
+
+### Qué cambia si el puerto de servicio resulta ser CAN
+
+**Nada de esto.** Sigue siendo el ESP32 el que cuenta y el que corta.
+
+Lo único que cambia es **de dónde saca la información**: en vez de leer Hall crudos
+interceptados, podría leer tramas CANopen del propio equipo. Eso lo abarata y lo hace menos
+invasivo, pero **no mueve el watchdog a la Jetson ni lo vuelve software**.
+
+---
+
 ## Plan 1 · Freno → LT
 
 ### Qué vas a encontrar
