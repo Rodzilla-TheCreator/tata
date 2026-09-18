@@ -22,10 +22,12 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/13-timeline-antes-de-la-semana.md` | **Todo lo que va antes, por dependencia. El bloque 0 corre desde hoy** |
 | `docs/14-maquinas-y-entorno.md` | **i3, maquinon y superspeed: cómo están armadas y las trampas** |
 | `docs/15-viaje-al-taller.md` | **El plan del viaje, la placa de datos y todo lo del puerto de servicio** |
+| `docs/16-manual-de-servicio.md` | **El manual de servicio: el equipo es un Jungheinrich, el bus es CANopen, y existe el APM+** |
 
 | Carpeta | Qué contiene |
 |---|---|
 | `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9 |
+| `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
@@ -414,6 +416,75 @@ Los dos controles pasaron. La cadena mide lo que dice medir.
 > prueba que el conector pasa datos.** Arreglar el veredicto o leerlo con esa advertencia.
 
 
+## El manual de servicio — 18-sep-2026
+
+Apareció el **manual de servicio Jungheinrich completo**, 259 páginas, traducido a máquina por
+Google. Está en `herramientas/`. **Todo el detalle en `docs/16`.** Lo que manda desde ya:
+
+**El EDR18N2 es un Jungheinrich ETR 335d/340/345 con placa de Mitsubishi.** La portada dice
+ESR20N2/ESR23N2/EDR18N2 y el cuerpo habla de ETR. Son la misma máquina. Por eso el chino tenía
+Judit: **es la herramienta nativa del equipo**, no una prestada de otra marca. Y por eso toda la
+documentación Jungheinrich de la familia ETR aplica.
+
+**El bus es CANopen a 250 kbaud.** Tabla «Sistemas de BUS utilizados», sin ambigüedad.
+
+**El «PC de servicio» es el nodo CAN 30.** Judit habla CANopen, no serie.
+
+**Existe el nodo 31, APM+, «Interfaz de automatización (PLC)».** El fabricante reservó un ID de
+nodo para que algo externo maneje el equipo por el bus. **Eso no estaba en ningún supuesto del
+proyecto** — todo `docs/10` se escribió asumiendo que la única entrada era cortar cables. No es
+una solución todavía: hay que confirmar si está implementado acá y si su protocolo se puede
+obtener. Pero la pregunta dejó de ser especulación y **tiene nombre**.
+
+**Los parámetros vienen con su índice del diccionario de objetos CANopen** (`0x2100`, `0x2414`,
+…), que es exactamente lo que un maestro CANopen necesita para leerlos y escribirlos por SDO.
+
+### Lo que desmiente
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| El control Obed: **2.6 vueltas** de volante tope a tope | parámetro `0x2414`, fábrica **5.5**, rango 4–8 | El simulador tiene el timón **más del doble de rápido** que el real. Verificar contando a mano |
+| Los 7.9 km/h de campo contradicen los 12 de catálogo | **no se contradicen.** 7.9 ≈ programa 1 (fábrica 9), 12.9 = programa 3 | `0x2108`/`0x2128` |
+| Cargado y vacío se mueven igual | **solo en geometría de giro.** La velocidad se recorta por **presión hidráulica** entre 44 y 116 bar | Parámetros de desarrollo |
+| «Es imposible que sea CAN» (por el −14.6 V) | **abierto otra vez** | El PC de servicio es nodo CANopen |
+
+### La tensión con el DE-9, y la medición que la resuelve
+
+El manual dice CANopen. La medición dijo −14.6 V, que CAN no da. **No se resuelve adivinando ni
+tirando una de las dos.** La hipótesis más barata: **el chasis no es el negativo de batería**, y
+todo lo medido con la punta negra a chasis está corrido.
+
+**Va antes que cualquier otra cosa en el equipo, y son cinco minutos:**
+
+```
+1.  negativo de batería  ↔  chasis        ¿mismo punto, o hay voltaje entre ellos?
+2.  pin 6  ↔  negativo de batería
+3.  pin 3  ↔  negativo de batería         ← el −14.6 V, bien referido
+4.  pin 2 y pin 7  ↔  negativo de batería ← CAN_L y CAN_H en reposo ≈ 2.5 V
+```
+
+Si 2 y 7 dan ~2.5 V contra el negativo de batería, **es CAN y se acabó la duda.**
+
+Y el **cable ethernet-a-DB9 del taller sube de categoría**: mapeaba a pines 2/6/7/9, que es
+**CiA-303 exacto**. Con el bus confirmado como CANopen, ahora parece justo lo que aparenta ser.
+
+**Si resulta CAN, el ESP32 solo no basta:** hace falta un transceptor (SN65HVD230 con TWAI, o
+MCP2515). Se pone en **modo listen-only**, que no manda ni los bits de reconocimiento. La regla
+no cambia: **solo se escucha**.
+
+### Lo que el manual no trae
+
+**Los esquemas eléctricos no están.** Solo su número de dibujo. **Pedir el `99515375`**
+(eléctrico) y el `99520170` (hidráulico) por Montasa. Sin el 99515375 no se sabe qué es cada
+pin del DE-9, y esa es la pregunta abierta más cara del proyecto.
+
+**Y `b1`, el ancho entre patas, tampoco:** es **opción de pedido**, de 838 a 1524 mm en pasos de
+media pulgada. Dos cosas se ganan igual: el **1.315 del repo es un valor válido de tabla**
+(51.75" = 1314.45 mm), y los valores son **discretos**, así que al medir basta con acercarse y
+ajustar al valor de tabla. El camino limpio es el **número de serie por MCF Parts Client**.
+
+---
+
 ## Qué se construyó — sesiones de agosto
 
 | Qué | Dónde |
@@ -465,9 +536,14 @@ Y en el planificador: **modelar las uñas en `silueta()`**, que hoy no existen.
 
 ### 2 · El puerto de servicio ← esto es lo urgente
 
-El plan completo está en `docs/15`. El instrumento ya está validado. Falta el viaje:
+El plan completo está en `docs/15`, actualizado por `docs/16`. Falta el viaje:
 
+- **Primero: las cuatro mediciones contra el negativo de batería.** Deciden si el puerto es CAN
+  y por lo tanto qué instrumento sirve. Cinco minutos, antes que nada más
 - Seguir **a dónde va el mazo del DE-9**. Es lo que decide si es el puerto o no
+- Preguntarle al chino por el **APM+**, por nombre. ¿Lo conoce? ¿Judit lo muestra? ¿Lo trae?
+- Contar a mano las **vueltas de volante tope a tope**. Corrige el 2.6 del control Obed
+- Sacar el **número de serie** de la placa, y pedir la configuración por MCF Parts Client
 - Las **tres pasadas de escucha** con `escucha_edr.ino`. Nunca se probó arriba de 14400 ni
   fuera de 8N1
 - Buscar físicamente **otro conector** con los paneles abiertos. Foto de cada uno
