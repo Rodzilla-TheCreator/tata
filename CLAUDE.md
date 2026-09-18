@@ -23,6 +23,11 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/14-maquinas-y-entorno.md` | **i3, maquinon y superspeed: cómo están armadas y las trampas** |
 | `docs/15-viaje-al-taller.md` | **El plan del viaje, la placa de datos y todo lo del puerto de servicio** |
 
+| Carpeta | Qué contiene |
+|---|---|
+| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9 |
+| `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
+
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
 > abajo manda sobre ellos. Todavía no se reescribieron uno por uno.
@@ -194,7 +199,222 @@ y racks eran atravesables**. No afectaba al LiDAR RTX, que traza geometría de r
 
 ---
 
-## Qué se construyó en esta sesión
+## Corregido y aprendido — 18-sep-2026 · el taller y el puerto
+
+Sesión larga. Dos frentes: se **midió la sombra** en un EDR parado en el taller de
+Montasa Las Palmas, y se abrió el **puerto de servicio DE-9**. Manda sobre lo anterior.
+
+### La sombra, medida — Las Palmas
+
+Se midió **un solo lado** y se asumió simetría. No se pudo mover el equipo ni marcar el
+piso. Estaciones tomadas desde el culo hacia la torre.
+
+| Cota | Decía (repo) | Se midió | Veredicto |
+|---|---|---|---|
+| `W_RESTO` ancho del capó | 1.065 | **1.065** | confirmado |
+| escalón capó → patas | 0.25 | **0.25** | confirmado |
+| `L_ANCHO` largo del tramo ancho | 0.20 | **0.48** | **desmentido**, más del doble |
+| `W_MAX` ancho pata a pata | 1.315 | *no se midió* | sigue siendo del repo, nunca verificado |
+
+**Lo que ancla toda la escala lateral es `W_MAX`, y sigue sin medirse.** Con un solo lado
+medido, la simetría da forma pero no da ancho. Esa medida es la número uno del próximo viaje.
+
+**Cota dura que salió de la ficha más el ancho:**
+
+```
+XPIV < sqrt(Wa² − (W/2)²) = sqrt(1.797² − 0.6575²) = 1.6724 m
+```
+
+Si `XPIV` fuera mayor, la esquina trasera quedaría más lejos del centro de giro que el propio
+radio de ficha. Imposible, igual que el 1.91 que se tumbó en agosto.
+
+**Y hay una contradicción viva, sin resolver:** la rueda de carga cayó en la estación 282; con
+`WB = 1.562` eso implica `XPIV = 1.862`, que viola la cota de arriba. Una de tres está mal:
+el `Wa = 1.797` de ficha, la identificación de esa rueda, o la alineación de la cinta.
+**No se resolvió. Es la pregunta que va con flexómetro al próximo viaje.**
+
+### El giro, con la silueta medida
+
+Se corrió `analisis/planificador_giro.py` con el `L_ANCHO = 0.48` medido, barriendo `XPIV`
+entre 1.30 y 1.60 para cubrir la incertidumbre:
+
+| | Resultado |
+|---|---|
+| Ventana de carriles para 90° | **75–150 cm, estable en todo el rango de `XPIV`** |
+
+**La forma domina al pivote.** Eso baja la urgencia del bloqueo 1 *para factibilidad* — el
+giro entra sea cual sea el `XPIV` dentro del rango. No la baja para **control fino**: el
+controlador sí necesita el número real.
+
+**El 180° en el pasillo:**
+
+| Caso | Ancho barrido | ¿Entra en 3.00 m? |
+|---|---|---|
+| Solo chasis, peor caso | 2.31 m | sí, 69 cm de sobra |
+| Chasis **+ uñas**, a 75°/105° | 3.14 m | **no, faltan 14 cm** |
+
+Lo que lo mata es el **largo**, no el ancho de las uñas. Conclusión: el 180° en pasillo **no
+es confiable, y tampoco hace falta** — el reach truck maneja igual en ambos sentidos.
+
+> **Defecto conocido, anotado y NO corregido:** `silueta()` en `planificador_giro.py`
+> **no modela las uñas**. Abarca ~2.02 m (culo a cara de torre) cuando el equipo real mide
+> 2.91 m con uñas. Por eso sus resultados de 90° y 180° son **solo chasis**. El 3.14 de
+> arriba se calculó aparte, por geometría directa, no con el planificador.
+
+---
+
+## El puerto de servicio DE-9
+
+El chino encontró un **DE-9 hembra en la tabla de fusibles** del EDR. Dice que por ahí
+controlaba el equipo con **Judit**: veía sensores y movía parámetros. Se le venció la licencia.
+Ese es el camino que se tomó.
+
+### Medido, con multímetro, en el equipo
+
+```
+Óhmetro, apagado, sin adaptador:
+  pin 2 ↔ pin 7   ABIERTO       → no es un bus CAN *terminado*
+
+Voltímetro DC, encendido, negra a chasis, sin adaptador:
+  1, 4, 5, 7, 9   0 V firme
+  6               +0.1 V   flotante
+  8               −0.1 V   flotante
+  2               −5 a −12 V     VARIABLE
+  3               −14.6 V estable, luego −5 a −9 V   VARIABLE
+```
+
+**Pines 2 y 3 vivos, a niveles RS-232, con actividad.** Un puerto muerto no transmite. Es la
+evidencia más fuerte que ha producido cualquier punto de entrada en esta investigación.
+
+**Por qué no es CAN:** por el **−14.6 V**, no por el 2↔7 abierto. Un stub de diagnóstico
+normalmente **no lleva terminador**, así que el 2↔7 abierto no descarta nada. CAN diferencial
+nunca llega a −14.6 V. *(Esto corrige un razonamiento previo de esta misma sesión.)*
+
+**Por qué el multímetro da valores variables:** un multímetro DC promedia. Una línea que está
+transmitiendo tiene su promedio corrido hacia cero desde el nivel de marca (−5 a −15 V).
+El −14.6 V estable es la línea **en reposo**; el −5/−9 V es la misma línea **hablando**.
+
+### Descartado, y por qué
+
+| Hipótesis | Qué la tumbó |
+|---|---|
+| Bus CAN terminado | −14.6 V en pin 3 |
+| Adaptador roto (CH340) | **loopback 37/37 perfecto** en banco. Está bueno |
+| VGA / video | 9 pines en 2 filas (5+4), no 15 en 3 |
+
+### La causa del silencio, y cómo se arregló
+
+El cable USB-serie es **DTE**. El puerto del equipo, si es de servicio, también es **DTE**.
+DTE↔DTE **directo no habla**: TX contra TX, RX contra RX. Hace falta un **null-modem**, que
+cruza 2↔3.
+
+Se compró. **Al null-modem le falta el pin 9 del lado macho — no importa**: el pin 9 es RI,
+no se usa en este enlace.
+
+### Lo que NUNCA se probó de verdad, en el equipo
+
+- Cualquier velocidad **arriba de 14400**
+- Cualquier encuadre que **no sea 8N1**
+
+El barrido de `escucha_edr.ino` cubre 9 velocidades × 6 encuadres = **54 combinaciones**,
+~3 min por pasada. Eso es lo que va al próximo viaje.
+
+### El cable de fábrica que apareció en el taller
+
+Un cable ethernet-a-DB9, 4 conductores, mapeo por continuidad:
+
+```
+amarillo → pin 6      café   → pin 9
+naranja  → pin 2      rojo   → pin 7
+```
+
+Eso es **exactamente el pinout CiA-303 de CAN sobre DE-9** (2=CAN_L, 6=GND, 7=CAN_H, 9=V+).
+**Su procedencia no está confirmada** — puede no ser de esta máquina. Es dato en tensión con
+lo medido, **no una conclusión**. Se conserva. Si mañana el DE-9 resulta ser CAN después de
+todo, este cable es la pista que lo anticipó.
+
+### El cable de solo-escucha — especificación correcta
+
+Para escuchar sin transmitir nunca:
+
+```
+equipo pin 3  →  adaptador pin 2      (su TX a nuestro RX)
+equipo pin 5  →  adaptador pin 5      (tierra de señal)
+adaptador pin 3   SIN CONECTAR        (nuestro TX al aire)
+```
+
+Una versión anterior decía "solo pines 2 y 5" — **está mal**, eso deja nuestro RX contra su RX.
+
+### Judit, y de dónde salen los manuales
+
+**Judit = JETI JUDIT**, herramienta de concesionario **Jungheinrich**, que entra por la
+**Incado Box** con cable de 9 pines. Parece contradicción con una máquina Mitsubishi, y no lo
+es: **MCFA distribuye Mitsubishi, Cat y Jungheinrich**. El chino tenía Judit legítimamente.
+*(Esto le dio la razón al chino contra una objeción mía. Ver la regla de abajo.)*
+
+| Manual | Qué es | Cómo se consigue |
+|---|---|---|
+| O&M ESR20N2 · ESR23N2 · **EDR18N2**, 01/2022 | operador | MCF Parts Client vía Montasa |
+| **WENBM8550-01** | taller: códigos de falla y parámetros | igual, y es el que de verdad sirve |
+
+**Pendientes los dos.** Ninguno se ha conseguido.
+
+### ¿Es el DE-9 el puerto correcto?
+
+**Sí, hasta donde se sabe.** Lo sostienen: actividad RS-232 real en 2 y 3; el testimonio del
+chino; Judit entrando por 9 pines; y su ubicación en la tabla de fusibles, colgado del bus de
+control y no de un periférico.
+
+**La única sombra:** el único conector de servicio Mitsubishi/Cat documentado públicamente es
+el **GSE**, un plug **cuadrado** bajo el portavasos — y eso en montacargas de combustión, no en
+reach trucks. Ningún documento público muestra un DE-9 en un ESR/EDR.
+
+**Lo que lo cierra, barato, con los paneles ya abiertos:** seguir **a dónde va el mazo del
+DE-9**. El arnés es **TE 1-965484-1** (AMP Timer, automotriz wire-to-device). Si llega al
+controlador de tracción, el DE-9 es el puerto de servicio y se acabó. Si llega solo al
+tablero, es un puerto de display y el bus bueno está más adentro. Candidatos de reserva, en
+orden: detrás del display; el puerto propio del controlador de tracción (ZAPI o Curtis, cada
+uno con su consola); el puerto del cargador.
+
+### Reglas del puerto — no negociables
+
+- **La primera visita solo se escucha. Nunca se transmite.**
+- **Jumper fuera antes de conectar al equipo.** Puentear pin 2 con pin 3 en el equipo es
+  cortocircuitar dos líneas manejadas por el controlador.
+- No se corta ni un cable. Es equipo de un cliente en un taller ajeno. **Nada irreversible.**
+
+---
+
+## El instrumento, validado antes de viajar
+
+Primer instrumento de todo este hilo que se verificó **antes** de usarlo en el equipo.
+
+**Cadena:** ESP32-WROOM → módulo **T132 (SP3232)** → null-modem → DB9. El SP3232 se alimenta a
+**3.3 V, nunca 5 V**: su swing RS-232 sigue al VCC. UART2 en **GPIO16 (RX) / GPIO17 (TX)** para
+dejar libre el USB.
+
+| Prueba | Resultado |
+|---|---|
+| `prueba_cadena.ino`, 6 casos (1200/9600/38400/115200 8N1, más 9600 8E1 y 7E1) | **6 de 6 eco perfecto** |
+| Control de falsación: se quita el puente | **SIN ECO en los 6** |
+
+Los dos controles pasaron. La cadena mide lo que dice medir.
+
+### Herramientas nuevas en el repo
+
+| Archivo | Qué hace |
+|---|---|
+| `herramientas/serie/prueba_cadena.ino` | valida la cadena ESP32+T132 contra sí misma, con auto-reintento RX/TX cruzados |
+| `herramientas/serie/escucha_edr.ino` | barrido pasivo 9 bauds × 6 encuadres. Tiene `MODO_FIJO` para clavar una combinación |
+| `herramientas/serie/probador.py` | banco tkinter azul retro para calificar un cable USB-serie: velocidad, paridad, loopback |
+
+> **Defecto conocido de `probador.py`:** el veredicto «ESTE SIRVE» solo exige velocidad y
+> paridad, y ninguna de esas dos toca los pines del DB9. Un cable puede aprobar y fallar
+> loopback completo — **pasó exactamente eso** con el CH340 de reemplazo. **Solo el loopback
+> prueba que el conector pasa datos.** Arreglar el veredicto o leerlo con esa advertencia.
+
+
+## Qué se construyó — sesiones de agosto
 
 | Qué | Dónde |
 |---|---|
@@ -227,23 +447,42 @@ un cuello, es no haber medido.
 
 ## Lo que falta, en orden
 
-### 1 · Las tres medidas de la silueta ← bloquea todo lo demás
+### 1 · Lo que falta de la silueta ← ya no bloquea la factibilidad
 
-`XPIV` sigue **derivado del radio de ficha, no medido**, y la silueta es hipótesis. Cada vez
-que cambia una suposición, la ventana de carriles se mueve entera. Con flexómetro:
+**Bajó de prioridad.** El barrido de `XPIV` entre 1.30 y 1.60 dejó la ventana de carriles
+quieta en 75–150 cm: el giro entra sea cual sea el valor. Sigue haciendo falta para **control
+fino**, no para saber si se puede.
 
-1. Culo → centro de las ruedas de carga
-2. Ancho del capó trasero en su punto más ancho
-3. Dónde está el punto de 1.315 medido desde el culo, cuánto dura, y el radio de la esquina
+Queda por medir, con flexómetro:
 
-Y una de operación que vale igual: **tiza en el piso donde el operador para de verdad, cinco
-veces.** Esa dispersión es literalmente el requisito de precisión que el kit debe superar.
+1. **`W_MAX`, ancho pata a pata.** Nunca se midió. Ancla toda la escala lateral
+2. **`XPIV`**, culo → centro de las ruedas de carga, **con plomada** para el culo. Y resolver
+   la contradicción: la rueda en la estación 282 implica 1.862, que viola la cota de 1.6724
+3. La dispersión de parada: **tiza en el piso donde el operador para de verdad, cinco veces.**
+   Esa dispersión es literalmente el requisito de precisión que el kit debe superar
 
-### 2 · La visita de diagnóstico
+Y en el planificador: **modelar las uñas en `silueta()`**, que hoy no existen.
+
+### 2 · El puerto de servicio ← esto es lo urgente
+
+El plan completo está en `docs/15`. El instrumento ya está validado. Falta el viaje:
+
+- Seguir **a dónde va el mazo del DE-9**. Es lo que decide si es el puerto o no
+- Las **tres pasadas de escucha** con `escucha_edr.ino`. Nunca se probó arriba de 14400 ni
+  fuera de 8N1
+- Buscar físicamente **otro conector** con los paneles abiertos. Foto de cada uno
+- Pines **5 y 6 a chasis**, que quedó pendiente
+- Conseguir **WENBM8550-01** por MCF Parts Client vía Montasa
+
+### 2b · La visita de diagnóstico al cliente
 
 `docs/11`, doce preguntas. No se corta ni un cable. La herramienta que decide si sirve son
 las **puntas de retro-sondeo**. La pregunta que todos olvidan es **cómo se borran los códigos
 de falla** — sin eso el equipo queda bloqueado y se acaba el día.
+
+> **Si el puerto habla, el `docs/10` se abarata entero.** La retroalimentación de velocidad,
+> ángulo de dirección y altura que hoy se planea sacar cortando cables de Hall podría salir
+> leída del bus, sin tocar un solo conductor.
 
 ### 3 · Estados de bloqueo y deadlock en la FSM
 
@@ -274,6 +513,12 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
 - La canaleta de drenaje con rejilla que cruza el pasillo (foto IMG_0208) no está en ningún
   modelo. Para un humano es un bache; para navegación autónoma es un salto de rueda y una
   discontinuidad de odometría.
+- `analisis/planificador_giro.py` → `silueta()` **no modela las uñas**. Sus números de 90° y
+  180° son solo chasis. Detallado arriba.
+- `herramientas/serie/probador.py` da «ESTE SIRVE» sin exigir loopback. Detallado arriba.
+- El menú de servicio del display (`Settings → Menu → lift / drive / steer`) se encontró pero
+  **no se documentó cómo se entra ni qué hay adentro**. Vale fotos si sobra tiempo; no es la
+  prioridad, el conector sí.
 
 ---
 
@@ -302,6 +547,20 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
   problema resolvía allá** y si ese problema existe acá. El caso ya pagado está más arriba,
   en el planificador: en Botoni girar en el sitio hacía trivial la planificación, y acá esa
   suposición no existe.
+- **Un dato nuevo no revienta el modelo.** Cuando algo no calza, lo primero es el bloqueo
+  obvio, no «todo lo que sabía ya no vale». Pasó con el cable ethernet-a-DB9: un mapeo raro
+  de procedencia no confirmada no borra un voltaje medido. Se guarda como **dato en tensión**
+  y se sigue con lo que sí se sabe. *Only a Sith deals in absolutes.*
+- **Verificar antes de contradecir a quien lo hizo con las manos.** Se objetó que Judit no
+  podía aplicar a un Mitsubishi. El chino tenía razón: MCFA distribuye las tres marcas. Quien
+  operó el equipo tiene evidencia que ningún catálogo tiene.
+- **Verificar antes de decir que algo no existe.** Antes de afirmar que un archivo no está en
+  el repo: `git fetch`. Se declaró inexistente un `docs/14` que sí estaba.
+- **Consultar el CLI y los docs antes de adivinar.** Cuatro adivinanzas seguidas sobre Remote
+  Control costaron más que `claude rc --help`.
+- **Validar el instrumento antes de viajar.** Toda medición trae su control de falsación: si
+  la prueba no puede fallar, no midió nada. El eco 6/6 solo vale porque quitar el puente dio
+  SIN ECO.
 - **Este proyecto no arranca resuelto.** Tratar a Botoni como una solución que solo hay que
   comprar y adaptar convierte la adaptación en el trabajo más caro del proyecto, y encima
   invisible en el presupuesto. Es el supuesto que infla o desinfla el nivel Piloto de
