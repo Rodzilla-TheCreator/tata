@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 880" width="1240" height="880" font-family="Helvetica,Arial,sans-serif">
+<rect width="1240" height="880" fill="#fbfbf8"/>
+<text x="40" y="46" font-size="24" font-weight="bold" fill="#111">Cadena de escucha CAN — la que se va a armar</text>
+<text x="40" y="70" font-size="14" fill="#555">TJA1050 + conversor de nivel + TWAI del ESP32. Solo escucha, 250 kbaud. Es la misma cadena del SN65HVD230 con el conversor agregado, porque el TJA1050 es de 5 V.</text>
+<line x1="40" y1="84" x2="1200" y2="84" stroke="#ccc"/>
+
+<!-- 1 equipo -->
+<text x="50" y="116" font-size="13" font-weight="bold" fill="#777">1 · EQUIPO</text>
+<rect x="50" y="128" width="212" height="250" rx="8" fill="#fff" stroke="#333" stroke-width="2"/>
+<text x="156" y="152" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">DE-9 hembra</text>
+<text x="156" y="169" font-size="11" text-anchor="middle" fill="#777">tabla de fusibles · vista de frente</text>
+<path d="M70 184 L242 184 L234 232 L78 232 Z" fill="#eef1f6" stroke="#333" stroke-width="1.5"/>
+<g font-size="11" text-anchor="middle" fill="#333">
+<circle cx="91" cy="198" r="6.5" fill="#fff" stroke="#888"/><text x="91" y="202">5</text>
+<circle cx="122" cy="198" r="6.5" fill="#fff" stroke="#888"/><text x="122" y="202">4</text>
+<circle cx="153" cy="198" r="6.5" fill="#fff" stroke="#888"/><text x="153" y="202">3</text>
+<circle cx="184" cy="198" r="6.5" fill="#ffd94a" stroke="#333" stroke-width="1.5"/><text x="184" y="202">2</text>
+<circle cx="215" cy="198" r="6.5" fill="#fff" stroke="#888"/><text x="215" y="202">1</text>
+<circle cx="106" cy="219" r="6.5" fill="#f4a3a3" stroke="#333" stroke-width="1.5"/><text x="106" y="223">9</text>
+<circle cx="137" cy="219" r="6.5" fill="#fff" stroke="#888"/><text x="137" y="223">8</text>
+<circle cx="168" cy="219" r="6.5" fill="#8fd18f" stroke="#333" stroke-width="1.5"/><text x="168" y="223">7</text>
+<circle cx="199" cy="219" r="6.5" fill="#bdbdbd" stroke="#333" stroke-width="1.5"/><text x="199" y="223">6</text>
+</g>
+<g font-size="12" fill="#222">
+<rect x="70" y="250" width="12" height="12" fill="#ffd94a" stroke="#333"/><text x="90" y="261">pin 2 — CAN_L</text>
+<rect x="70" y="270" width="12" height="12" fill="#8fd18f" stroke="#333"/><text x="90" y="281">pin 7 — CAN_H</text>
+<rect x="70" y="290" width="12" height="12" fill="#bdbdbd" stroke="#333"/><text x="90" y="301">pin 6 — GND</text>
+<rect x="70" y="310" width="12" height="12" fill="#f4a3a3" stroke="#333"/><text x="90" y="321" fill="#b00" font-weight="bold">pin 9 — NO CONECTAR</text>
+</g>
+<text x="156" y="348" font-size="11.5" text-anchor="middle" fill="#666">DB9 macho de bornera</text>
+<text x="156" y="364" font-size="11.5" text-anchor="middle" fill="#666">en medio · sin soldar</text>
+
+<!-- 2 TJA1050 -->
+<text x="318" y="116" font-size="13" font-weight="bold" fill="#777">2 · TRANSCEPTOR</text>
+<rect x="318" y="128" width="222" height="250" rx="8" fill="#fff" stroke="#333" stroke-width="2"/>
+<text x="429" y="152" font-size="15" font-weight="bold" text-anchor="middle" fill="#111">TJA1050</text>
+<rect x="336" y="162" width="186" height="30" rx="4" fill="#ffecec" stroke="#c33"/>
+<text x="429" y="182" font-size="13" font-weight="bold" text-anchor="middle" fill="#a00">VCC = 5 V</text>
+<rect x="336" y="204" width="186" height="96" rx="4" fill="#eaf3ea" stroke="#666"/>
+<g font-size="12.5" fill="#222">
+<text x="352" y="226">CANH  ← pin 7</text>
+<text x="352" y="248">CANL  ← pin 2</text>
+<text x="352" y="270">GND   ← pin 6</text>
+<text x="352" y="292" fill="#777">VCC · TX · RX  →  al conversor</text>
+</g>
+<rect x="336" y="312" width="186" height="52" rx="4" fill="#fff6e5" stroke="#e0a800"/>
+<text x="429" y="331" font-size="11.5" font-weight="bold" text-anchor="middle" fill="#8a6100">Medir CANH ↔ CANL antes de nada.</text>
+<text x="429" y="348" font-size="11.5" text-anchor="middle" fill="#8a6100">~120 Ω = trae terminación → quitarla</text>
+
+<!-- 3 conversor -->
+<text x="596" y="116" font-size="13" font-weight="bold" fill="#777">3 · CONVERSOR DE NIVEL</text>
+<rect x="596" y="128" width="222" height="250" rx="8" fill="#fff" stroke="#333" stroke-width="2"/>
+<text x="707" y="152" font-size="15" font-weight="bold" text-anchor="middle" fill="#111">8 bit bidireccional</text>
+<text x="707" y="169" font-size="11.5" text-anchor="middle" fill="#555">solo se usan 2 de los 8 canales</text>
+<rect x="614" y="182" width="186" height="60" rx="4" fill="#f3eef7" stroke="#666"/>
+<text x="632" y="204" font-size="12.5" font-weight="bold" fill="#333">HV  ← 5 V</text>
+<text x="632" y="226" font-size="12.5" font-weight="bold" fill="#333">LV  ← 3.3 V</text>
+<rect x="614" y="254" width="186" height="72" rx="4" fill="#eef2f8" stroke="#666"/>
+<g font-size="12.5" fill="#222">
+<text x="630" y="276">HV1 ← TX módulo   LV1 → ESP32</text>
+<text x="630" y="298">HV2 ← RX módulo   LV2 → ESP32</text>
+<text x="630" y="318" fill="#777">GND común a todo</text>
+</g>
+<text x="707" y="346" font-size="11.5" text-anchor="middle" fill="#a06a00" font-weight="bold">A 250 kbaud el bit dura 4 µs.</text>
+<text x="707" y="362" font-size="11.5" text-anchor="middle" fill="#666">Sobra de margen para el auto-direction.</text>
+
+<!-- 4 esp32 -->
+<text x="874" y="116" font-size="13" font-weight="bold" fill="#777">4 · CÓMPUTO</text>
+<rect x="874" y="128" width="200" height="250" rx="8" fill="#fff" stroke="#333" stroke-width="2"/>
+<text x="974" y="152" font-size="15" font-weight="bold" text-anchor="middle" fill="#111">ESP32</text>
+<text x="974" y="169" font-size="11.5" text-anchor="middle" fill="#555">controlador TWAI, nativo</text>
+<rect x="892" y="182" width="164" height="144" rx="4" fill="#f2eef7" stroke="#666"/>
+<g font-size="12.5" fill="#222">
+<text x="908" y="204">5V / VIN  → HV</text>
+<text x="908" y="224">3V3       → LV</text>
+<text x="908" y="244">GND</text>
+<text x="908" y="272" font-weight="bold">GPIO 21  TWAI TX</text>
+<text x="908" y="292" font-weight="bold">GPIO 22  TWAI RX</text>
+<text x="908" y="316" fill="#777">USB da los 5 V. No hace</text>
+</g>
+<text x="974" y="342" font-size="11.5" text-anchor="middle" fill="#777">falta fuente aparte</text>
+<text x="974" y="364" font-size="12" text-anchor="middle" fill="#111">USB de datos, corto</text>
+<rect x="1104" y="215" width="96" height="76" rx="8" fill="#fff" stroke="#333" stroke-width="2"/>
+<text x="1152" y="248" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">compu</text>
+<text x="1152" y="267" font-size="11" text-anchor="middle" fill="#888">o Jetson</text>
+
+<!-- conexiones -->
+<path d="M262 226 q13 -9 26 0 q13 9 26 0" fill="none" stroke="#ffb300" stroke-width="2.5"/>
+<path d="M262 226 q13 9 26 0 q13 -9 26 0" fill="none" stroke="#2e9e2e" stroke-width="2.5"/>
+<line x1="262" y1="268" x2="318" y2="268" stroke="#999" stroke-width="2.5"/>
+<text x="290" y="200" font-size="11" text-anchor="middle" fill="#a06a00" font-weight="bold">trenzado</text>
+<text x="290" y="300" font-size="10.5" text-anchor="middle" fill="#666">&lt; 30 cm</text>
+<g stroke-width="2.5">
+<line x1="540" y1="276" x2="596" y2="276" stroke="#37a"/>
+<line x1="540" y1="292" x2="596" y2="298" stroke="#3a7"/>
+</g>
+<g stroke-width="2.5">
+<line x1="818" y1="276" x2="874" y2="272" stroke="#37a"/>
+<line x1="818" y1="298" x2="874" y2="292" stroke="#3a7"/>
+</g>
+<line x1="1074" y1="252" x2="1104" y2="252" stroke="#333" stroke-width="3"/>
+
+<!-- direcciones -->
+<rect x="50" y="404" width="1150" height="104" rx="8" fill="#eef2f8" stroke="#37a" stroke-width="2"/>
+<text x="70" y="432" font-size="15" font-weight="bold" fill="#1a4a7a">La dirección de TX y RX, que es donde todos se equivocan</text>
+<g font-size="13" fill="#20303a" font-family="monospace">
+<text x="70" y="460">ESP32 GPIO 21  (TWAI TX)  ──▶  LV1 ──▶ HV1 ──▶  pin TX del módulo     el ESP32 habla, el transceptor escucha</text>
+<text x="70" y="484">ESP32 GPIO 22  (TWAI RX)  ◀──  LV2 ◀── HV2 ◀──  pin RX del módulo     el transceptor habla, el ESP32 escucha</text>
+</g>
+<text x="70" y="502" font-size="12" fill="#555" font-family="Helvetica">El pin «TX» del módulo es su ENTRADA. Se llama así porque es lo que el transceptor transmite al bus — no lo que le manda a vos.</text>
+
+<!-- verificaciones -->
+<rect x="50" y="528" width="1150" height="136" rx="8" fill="#fff6e5" stroke="#e0a800" stroke-width="2"/>
+<text x="70" y="556" font-size="15" font-weight="bold" fill="#8a6100">Antes de tocar el equipo — con óhmetro, en la mesa</text>
+<g font-size="13" fill="#3a3020">
+<text x="70" y="584">1 ·  <tspan font-weight="bold">Terminación.</tspan>  CANH ↔ CANL del TJA1050, desconectado de todo. ~120 Ω = la trae. Hay que quitarla: el bus del equipo ya está terminado en sus</text>
+<text x="90" y="602">extremos y un tercero le baja la impedancia de 60 a 40 Ω. En equipo de cliente eso no se hace.</text>
+<text x="70" y="626">2 ·  <tspan font-weight="bold">Continuidad del DB9 armado.</tspan>  Pin 2 → CANL, pin 7 → CANH, pin 6 → GND. Y confirmar que <tspan fill="#b00" font-weight="bold">el pin 9 no tiene nada conectado</tspan>.</text>
+<text x="70" y="650">3 ·  <tspan font-weight="bold">Self-test del TWAI.</tspan>  El ESP32 se manda tramas a sí mismo por el transceptor. Control de falsación: sin transceptor, sin eco.</text>
+</g>
+
+<!-- reglas -->
+<rect x="50" y="684" width="1150" height="104" rx="8" fill="#fdeaea" stroke="#c33" stroke-width="2"/>
+<text x="70" y="712" font-size="15" font-weight="bold" fill="#a00">Reglas que no se negocian</text>
+<g font-size="13" fill="#3a2020">
+<text x="70" y="738">·  <tspan font-weight="bold">Solo se escucha.</tspan>  TWAI_MODE_LISTEN_ONLY — no manda ni los bits de reconocimiento. Se activa en el código antes de conectar.</text>
+<text x="70" y="758">·  <tspan font-weight="bold">El pin 9 nunca se conecta.</tspan>  Es alimentación del equipo, y meterla al VCC del módulo lo quema si el bus es de 48 V.</text>
+<text x="70" y="778">·  No se corta ningún cable del montacargas. Es equipo de cliente. <tspan font-weight="bold">Nada irreversible.</tspan></text>
+</g>
+
+<text x="50" y="820" font-size="12" fill="#888">Bus del EDR18N2: CANopen 250 kbaud. PC de servicio = nodo 30, APM+ = nodo 31. Ver docs/16.</text>
+<text x="50" y="840" font-size="12" fill="#888">A bordo con la Jetson esto NO sirve tal cual: hace falta transceptor aislado (ISO1050) para no compartir tierra con el bus de 24–48 V. Ver docs/10.</text>
+<text x="50" y="860" font-size="12" fill="#888">El TJA1050 y el SN65HVD230 son el mismo componente funcional. La única diferencia es 5 V contra 3.3 V, y por eso acá hay conversor.</text>
+</svg>
