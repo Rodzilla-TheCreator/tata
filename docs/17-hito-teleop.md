@@ -176,14 +176,33 @@ Ahí está el nivel Ingenio de `docs/05` y ahí se le enseña a Omar.
 
 ---
 
+## Bloque 5 · El Aula — después del hito, no antes
+
+Con el teleop andando se construye el laboratorio: **El Aula**, en el taller Las Palmas de
+Montasa, con un **Pasillo 0** de estantes que ya están ahí.
+
+**Por qué después y no antes.** Hasta que no haya un equipo que obedezca un mando, un pasillo
+de mentira no prueba nada. El orden es: primero que responda, después dónde practicar.
+
+**Y qué compra:** un lugar donde equivocarse sale barato. Todo lo de `docs/17` §3 y §4 — los
+estados de bloqueo, el protocolo de reserva, los estados de falla y reanudación — hoy no se
+puede probar en ninguna parte. El Pasillo 0 es donde se rompen a propósito.
+
+> **Nota de planificación:** el equipo de El Aula está **fuera de operación**. Los bloques 1 y
+> 2 de arriba corren ahí sin problema. **Los bloques 3 y 4 necesitan un equipo que ande**, y
+> ese es otro trato con otro permiso.
+
+---
+
 ## El orden corto, para llevarlo en la cabeza
 
 ```
 0. Permiso · viaje al taller · diagnóstico · esquema eléctrico
 1. Mesa:  watchdog primero, después control, después cadena de paro
 2. Equipo quieto:  una señal, freno, sin mover ruedas
-3. Moviéndose vacío:  arrastre, y la prueba de paro apenas se mueva
+3. Moviéndose vacío:  arrastre, y la prueba de paro apenas se mueva   ← hace falta un equipo que ande
 4. Pasillo, grabado
+5. El Aula y el Pasillo 0, para romper cosas barato
 ```
 
 **El bloque 1 no depende de nadie y se puede empezar hoy.** Todo lo demás espera al 0.

@@ -68,6 +68,18 @@ pasan 200 ms sin latido, el ESP32 corta el hombre-presente y cae el freno de res
 es **manual**. Y **no es la capa de seguridad certificada** — es supervisión de disponibilidad.
 Detalle en `docs/10`.
 
+**Dónde se trabaja: el taller Las Palmas de Montasa, sobre un EDR18N2 que está fuera de
+operación.** Montasa no pierde dinero prestándolo — ya estaba en cero. Eso baja el costo de
+equivocarse, pero **no cambia las reglas cuando se toque el equipo del cliente.**
+
+**El Aula** es el laboratorio que se va a construir ahí — un pasillo con estantes, dentro del
+taller. El nombre honra al mismo maestro que le da nombre al proyecto. **Va después del hito
+del teleop**, no antes.
+
+**Pasillo 0** es el pasillo de adentro de El Aula, y es **variable de operación**: los sectores
+reales del cliente son A y B, y este es el que va antes. Nada entra al pasillo A sin haber
+pasado el Pasillo 0.
+
 **Piezas y ingeniería son cosas distintas.** El NRE es descubrir qué señal es cada cable, y
 eso se paga una vez para todo el modelo, no por unidad.
 
