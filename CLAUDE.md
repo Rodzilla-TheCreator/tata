@@ -28,7 +28,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | Carpeta | Qué contiene |
 |---|---|
 | `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9 |
-| `herramientas/can/` | **La cadena de escucha CAN.** `protoboard_can.svg` es el plano de armado, cable por cable. `armado_can.svg` tiene los módulos y la tabla; los `cadena_can_*.svg` son los diagramas de bloques |
+| `herramientas/can/` | **La cadena de escucha CAN.** `protoboard_can.svg` es el plano de armado, cable por cable. `prueba_can.ino` la valida contra sí misma. Los otros SVG son diagramas de bloques |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
 
