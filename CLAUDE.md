@@ -404,6 +404,53 @@ uno con su consola); el puerto del cargador.
   cortocircuitar dos líneas manejadas por el controlador.
 - No se corta ni un cable. Es equipo de un cliente en un taller ajeno. **Nada irreversible.**
 
+### RESUELTO — 25-sep-2026 · el cable apareció y el chino lo confirmó
+
+Apareció en una caja del taller un **cable DB9 macho → USB, chip FTDI**, capuchón delgado.
+Se le mandó foto al chino por WhatsApp y contestó: **«si ese es»**.
+
+**Es el cable que usaba con Judit. No había caja de por medio.** Su memoria era literal —
+«del montacargas directo al USB de la compu»— y yo construí encima una teoría entera de una
+Incado Box perdida que nunca existió. Las Incado ni siquiera tienen RJ45.
+
+### Lo que esto reconcilia
+
+Durante semanas hubo dos evidencias que se contradecían: el **−14.6 V** que dice serie, y el
+**nodo 30 «PC de servicio»** del manual, que dice CANopen. Con el cable confirmado, la lectura
+que las deja a las dos en pie:
+
+> **El DE-9 del equipo es un puerto SERIE.** Adentro hay una pasarela que traduce a CANopen.
+> Judit habla serie con esa pasarela; la pasarela aparece en el bus como el **nodo 30**.
+
+Con eso encajan todas las mediciones, sin descartar ninguna:
+
+| Medición | Antes era | Ahora |
+|---|---|---|
+| −14.6 V en pin 3 | «raro, contradice el manual» | **es RS-232 en reposo. Correcto** |
+| actividad en pines 2 y 3 | evidencia suelta | **es el par TX/RX del enlace serie** |
+| pin 2 ↔ 7 **abierto** | «difícil de explicar si es CAN» | **no es CAN. Por eso está abierto** |
+| nodo 30 = PC de servicio | «el puerto tiene que ser CAN» | **es cómo aparece la pasarela en el bus** |
+
+**Ninguna medición estaba mal. El modelo estaba mal.** Otra vez.
+
+### Qué cambia en la práctica
+
+- **El camino es SERIE, no CAN.** `escucha_edr.ino` con el FTDI es el instrumento
+- **No lleva null-modem.** El chino lo enchufaba directo y funcionaba. Se prueba así primero;
+  el null-modem solo si no sale nada
+- **Se levanta el techo de 14400.** El CH340 topaba ahí; un FT232 llega a 3 Mbaud. Las 54
+  combinaciones del barrido se pueden correr completas por primera vez
+- **El capuchón entra en la ranura** del DE-9, que está hundido entre fusibles. El DB9 de
+  bornera probablemente no
+- **La cadena CAN (ESP32 + TJA1050) no se tira.** Queda como segundo instrumento y para el
+  bus interno, si algún día se llega al APM+
+
+### El cable RJ45, cerrado
+
+**No era el de Judit.** Es un cable **CANopen genérico**: CiA-303 define pinout de CAN tanto
+sobre DE-9 como sobre RJ45, y este tiene las dos puntas del mismo estándar. Se vende de
+estante. Su presencia en el taller no prueba nada del montacargas. Se archiva.
+
 ---
 
 ## El instrumento, validado antes de viajar
