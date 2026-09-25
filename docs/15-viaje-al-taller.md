@@ -6,6 +6,11 @@ Dos objetivos en el mismo viaje, y **el primero va antes que el segundo aunque
 el segundo sea más entretenido**: dos medidas con flexómetro cierran el bloqueo
 número uno del proyecto, y el puerto de servicio se puede comer el día entero.
 
+> **Actualizado el 25-sep-2026.** Apareció el cable de Judit y el chino lo confirmó.
+> Cambia la herramienta, cambia el cableado y se levanta el techo de 14400. Ver
+> **«Actualización del 25-sep-2026»** más abajo: **manda sobre todo lo de este documento**,
+> incluida la sección «Lo que ya se sabe del puerto», que se conserva como historial.
+
 ---
 
 ## La máquina
@@ -40,17 +45,18 @@ Eso no es una capa de seguridad — no tratarlo como si lo fuera.
 
 ```
 □ Laptop cargada + cargador          □ Multímetro
-□ ESP32 en protoboard + cable USB    □ Flexómetro
-□ Módulo T132 (SP3232)               □ Plomada: cordón y una tuerca
-□ Null-modem DB9 macho-hembra        □ Masking tape + lapicero
-□ Jumpers                            □ Papel
+□ CABLE FTDI DB9→USB (el de Judit)   □ Flexómetro
+□ ESP32 + T132 (respaldo)            □ Plomada: cordón y una tuerca
+□ Null-modem (respaldo, NO se usa)   □ Masking tape + lapicero
+□ Cadena CAN armada (2º instrumento) □ Papel · Jumpers
 ```
 
 ### Antes de salir · 5 min
 
 ```
-□ Correr prueba_cadena.ino → 6 de 6
-□ Cargar escucha_edr.ino al ESP32
+□ Loopback del FTDI: jumper pin 2–3, probador.py
+  → leer la línea LOOPBACK, NO el veredicto «ESTE SIRVE»
+□ Cargar escucha_edr.ino al ESP32 (respaldo)
 □ QUITAR EL JUMPER del DB9 y guardarlo aparte
 ```
 
@@ -110,23 +116,20 @@ no conecta referencia y no se recibe nada aunque todo lo demás esté bien.
 
 ## B · Encendido — el puerto de servicio
 
-DE-9 hembra en la placa de fusibles. Herramienta: **ESP32 + T132**, validada
-en casa el 11-sep con 6 de 6 casos de eco perfecto, incluidos 8E1 y 7E1.
+DE-9 hembra en la placa de fusibles. Herramienta: **el cable FTDI directo**,
+sin null-modem, como lo conectaba el chino. El ESP32 + T132 queda de respaldo.
 
 ```
-□ Vuelta 1 · SIN null-modem  → se escucha el pin 2 del equipo
-□ Vuelta 2 · CON null-modem  → se escucha el pin 3
-□ Vuelta 3 · MODO_FIJO = true, navegando
-             Settings → Menu → Drive → diagnóstico
-             mientras el ESP32 escucha
+□ Vuelta 1 · FTDI directo, barrido completo
+□ Vuelta 2 · navegando Settings → Menu → Drive → diagnóstico
+             mientras se escucha
+□ Vuelta 3 · solo si 1 y 2 dan silencio: ESP32 + T132, con y sin null-modem
 ```
 
-Cada vuelta son ~3 min: 9 velocidades × 6 framings.
+Cada vuelta son ~3 min: 9 velocidades × 6 framings. **Con el FTDI el barrido puede
+subir arriba de 14400 por primera vez** — el tope era del CH340, no del equipo.
 
-**Si las vueltas 1 y 2 dan resultados idénticos**, el null-modem no cruza y es un
-gender changer disfrazado.
-
-La vuelta 3 es la que prueba la hipótesis viva más fuerte: que el puerto solo
+La vuelta 2 es la que prueba la hipótesis viva más fuerte: que el puerto solo
 hable mientras el display habla.
 
 ---
@@ -164,6 +167,9 @@ solo cable**.
 ## Lo que ya se sabe del puerto
 
 Para no repetir pruebas que ya se hicieron.
+
+> **Historial.** Escrito el 11-sep. La lectura de estos datos cambió el 25-sep —
+> ninguna medición se cayó, el modelo sí. Ver la actualización al final.
 
 ### Medido
 
@@ -252,3 +258,48 @@ VCC → ESP32 3V3      RX → ESP32 GPIO17
 
 **3.3 V, nunca 5 V** — la salida TTL del SP3232 sigue al VCC, y el GPIO del
 ESP32 no tolera 5.
+
+---
+
+## Actualización del 25-sep-2026 — apareció el cable y el chino lo confirmó
+
+Manda sobre todo lo de arriba.
+
+En una caja del taller apareció un **cable DB9 macho → USB, chip FTDI**, de capuchón
+delgado. Se le mandó foto al chino por WhatsApp y contestó: **«si ese es»**. Es el cable
+con el que operaba Judit, **sin caja de por medio**. Su memoria era literal.
+
+### La lectura que deja válidas todas las mediciones
+
+> **El DE-9 del equipo es un puerto SERIE.** Adentro hay una pasarela que traduce a
+> CANopen. Judit habla serie con esa pasarela; la pasarela aparece en el bus interno
+> como el **nodo 30**, el «PC de servicio» del manual.
+
+| Medición | Se leía como | Ahora |
+|---|---|---|
+| −14.6 V en pin 3 | «raro, contradice el manual» | **RS-232 en reposo. Correcto** |
+| actividad en 2 y 3 | evidencia suelta | **el par TX/RX del enlace serie** |
+| pin 2 ↔ 7 abierto | «difícil de explicar si es CAN» | **no es CAN. Por eso está abierto** |
+| nodo 30 = PC de servicio | «entonces el puerto tiene que ser CAN» | **es cómo se ve la pasarela desde el bus** |
+
+**Ninguna medición estaba mal. El modelo estaba mal.**
+
+### Qué cambia en el plan del viaje
+
+| Punto del plan | Decía | Es |
+|---|---|---|
+| Herramienta | ESP32 + T132 | **cable FTDI**; el ESP32 queda de respaldo |
+| Null-modem | obligatorio (DTE↔DTE) | **no se usa**: el chino conectaba directo |
+| Techo de velocidad | 14400, tope del CH340 | **FT232 llega a 3 Mbaud** — el barrido completo por fin es real |
+| Las 4 medidas contra negativo de batería | decidían si era CAN | **bajan de prioridad**, la pregunta ya se contestó por otro lado |
+| Cable ethernet-a-DB9 (CiA-303) | dato en tensión | **archivado**: es un cable CANopen genérico, no el de Judit |
+| Mecánica del conector | no se había visto | el DE-9 está **embutido** entre fusibles: solo entra un capuchón delgado. Por eso había un cable y no una caja |
+
+### Lo que no cambia
+
+- **Validar el FTDI antes de viajar**: jumper pin 2–3 y `probador.py`, leyendo la línea
+  **LOOPBACK**, no el veredicto. **Jumper fuera antes de acercarse al equipo.**
+- **Solo se escucha. No se transmite.**
+- La cadena CAN (ESP32 + TJA1050) **se termina igual**: sirve para el bus interno y para
+  el APM+ del nodo 31, que es otro frente.
+- Las medidas A1 a A3 con flexómetro siguen siendo lo más valioso del día.
