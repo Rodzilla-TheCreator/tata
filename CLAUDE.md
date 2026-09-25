@@ -435,7 +435,8 @@ Con eso encajan todas las mediciones, sin descartar ninguna:
 
 ### Qué cambia en la práctica
 
-- **El camino es SERIE, no CAN.** `escucha_edr.ino` con el FTDI es el instrumento
+- **El camino es SERIE, no CAN.** El instrumento es **`escucha_edr.py`** en la laptop: el
+  cable va directo al USB y el ESP32 sale del camino. El sketch queda de respaldo
 - **No lleva null-modem.** El chino lo enchufaba directo y funcionaba. Se prueba así primero;
   el null-modem solo si no sale nada
 - **Se levanta el techo de 14400.** El CH340 topaba ahí; un FT232 llega a 3 Mbaud. Las 54
@@ -475,6 +476,7 @@ Los dos controles pasaron. La cadena mide lo que dice medir.
 | `herramientas/serie/prueba_cadena.ino` | valida la cadena ESP32+T132 contra sí misma, con auto-reintento RX/TX cruzados |
 | `herramientas/serie/escucha_edr.ino` | barrido pasivo 9 bauds × 6 encuadres. Tiene `MODO_FIJO` para clavar una combinación |
 | `herramientas/serie/probador.py` | banco tkinter azul retro para calificar un cable USB-serie: velocidad, paridad, loopback |
+| `herramientas/serie/escucha_edr.py` | **el instrumento del cable FTDI.** Barrido de 54, `--fijo`, y `--estimulo` con guion de acciones marcadas a mano. Solo lee y deja DTR/RTS en bajo. Validado contra un pty con control de falsación |
 
 > **Defecto conocido de `probador.py`:** el veredicto «ESTE SIRVE» solo exige velocidad y
 > paridad, y ninguna de esas dos toca los pines del DB9. Un cable puede aprobar y fallar

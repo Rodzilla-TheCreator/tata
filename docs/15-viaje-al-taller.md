@@ -245,6 +245,7 @@ En `herramientas/serie/`:
 
 | Archivo | Qué es |
 |---|---|
+| `escucha_edr.py` | **El instrumento del cable FTDI.** Barrido de las 54, modo fijo y modo estímulo. Log con marca de tiempo. Solo lee, y deja DTR/RTS en bajo |
 | `prueba_cadena.ino` | Valida ESP32 + T132 + cableado + conector. Detecta solo si RX y TX están al revés. **Correr antes de cada salida** |
 | `escucha_edr.ino` | Escucha pasiva del puerto. 9 velocidades × 6 framings. `MODO_FIJO` para el modo menú |
 | `probador.py` | Interfaz para calificar un adaptador USB-serie en el mostrador. Velocidad, paridad y loopback, con veredicto en castellano |
@@ -297,6 +298,9 @@ con el que operaba Judit, **sin caja de por medio**. Su memoria era literal.
 
 ### Lo que no cambia
 
+- **El instrumento es `escucha_edr.py`**, no el sketch: el cable va directo al USB de
+  la laptop y el ESP32 sale del camino. Validado contra un pty con sus dos controles —
+  con tráfico dice HABLÓ y volca el hex; sin tráfico dice SILENCIO.
 - **Validar el FTDI antes de viajar**: jumper pin 2–3 y `probador.py`, leyendo la línea
   **LOOPBACK**, no el veredicto. **Jumper fuera antes de acercarse al equipo.**
 - **Solo se escucha. No se transmite.**
