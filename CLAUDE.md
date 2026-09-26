@@ -54,6 +54,10 @@ Velocidad de trabajo **7.9 km/h**, no los 12 de catálogo. Sobre de velocidad: *
 **Se dice ArUco.** No "marcadores", no "etiquetas", no "AprilTag". Es el término del proyecto
 y viene de Botoni, donde el equipo definió cuáles y dónde iban.
 
+**Se dice DB9**, y cuando importa, **DB9 macho** o **DB9 hembra**. En el montacargas es
+hembra; el cable de Judit es macho. `DE-9` es el nombre formal (la letra del medio es el
+tamaño de carcasa, no el género) pero acá no se usa, y **DB9 no es un error a corregir**.
+
 **El LiDAR no navega.** Localizan **dos cámaras USB con ArUco** más la odometría. Al LiDAR le
 queda un solo trabajo — ver lo que no debería estar ahí — y no es redundancia: el mapa acierta
 con los racks y se equivoca todos los días con lo que hay en el pasillo. Detalle en `docs/03`.

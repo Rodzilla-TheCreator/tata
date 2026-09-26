@@ -10,6 +10,7 @@ de operación.
 | `de9_conector.jpg` | el DE-9 de cerca, y el extremo izquierdo de la regleta |
 | `modulo_jungheinrich.jpg` | **la placa de un módulo Jungheinrich, atrás de la misma caja.** Ver la sección propia, abajo |
 | `tarjeta_fusibles_reverso.jpg` | **la tarjeta desmontada, lado de soldadura.** Las pistas a la vista. Ver la sección propia, abajo |
+| `conector_te_tarjeta.jpg` | el conector TE de la tarjeta, de cerca y de frente. Es el que lee bien el número |
 
 Primera foto del DE-9 **en su lugar**, con la tabla de fusibles y su etiqueta en
 el mismo cuadro. Hasta ahora el conector solo estaba descrito por texto.
@@ -293,12 +294,20 @@ Eso es topología, no lectura de etiqueta. Y reordena varias cosas.
 
 ## El conector de la tarjeta
 
-Marcado en el cuerpo, de esta foto:
+Marcado en el cuerpo:
 
 ```
-ASSY  1-957281-1
+ASSY  1-967281-1
 >PBT/ASA-GF30<          ← el material del plástico, no un número de parte
 ```
+
+**Corrección del mismo día:** primero se anotó `1-957281-1`, leído de la foto del
+reverso donde el texto quedaba de canto. `conector_te_tarjeta.jpg`, de frente y
+de cerca, lo lee **`1-967281-1`**. Manda esta.
+
+Es un conector **grande, de dos hileras**, con traba roja de seguridad y un mazo
+de más de veinte conductores. En la tarjeta corresponde a la doble hilera de
+pines que se ve en el reverso. **Este es el mazo que entra al distribuidor.**
 
 ## Por qué el fusible faltante deja de ser una nota al pie
 
@@ -361,23 +370,31 @@ el repo** hasta que alguien lea cada pieza con la marca enfrente:
 |---|---|---|
 | `1-965484-1` | anotado como «el arnés del DE-9» | `docs/15`, origen no re-verificado |
 | `1-962353-1` | conector que entra al módulo Jungheinrich | `modulo_jungheinrich.jpg` |
-| `1-957281-1` | conector de la tarjeta de fusibles | `tarjeta_fusibles_reverso.jpg` |
+| `1-967281-1` | conector de la tarjeta de fusibles | `conector_te_tarjeta.jpg`, de frente |
 
 Lo más probable es que sean **tres conectores distintos de la misma zona**, no tres
 lecturas del mismo. Pero eso también es suposición.
 
+> **Y hay una lección barata acá:** el `1-957281-1` se anotó de una foto donde el
+> relieve quedaba de canto, y estaba mal. Una foto **de frente y de cerca** de cada
+> marca cuesta dos segundos y vale más que una toma general. Los otros dos números
+> de esta tabla se leyeron en ángulo. **Tratarlos como provisionales hasta tener su
+> foto de frente.**
+
 ---
 
-## Nota de nombres — DE-9, DB9, macho y hembra
+## Cómo se nombra acá — convención del proyecto
 
-Para no perder tiempo en esto nunca más:
+**Se dice `DB9`, y cuando importa, `DB9 macho` o `DB9 hembra`.** Decisión de maje,
+26-sep-2026. Es la que usa todo el mundo en el taller y no hay por qué pelearla.
 
-- **DE-9 es el nombre correcto.** La letra del medio es el tamaño de la carcasa, y
-  la de 9 pines usa carcasa **E**. «DB9» es el error común y universal: la carcasa
-  **B** es la de 25 pines. Si alguien dice DB9, se entiende igual y no pasa nada
-- **En el montacargas es HEMBRA** — tiene los huequitos. Se ve en `de9_conector.jpg`
-- **En el cable de Judit es MACHO** — tiene los pines
-- Regla para no pensarlo: **el que entrega, entrega pines.**
+- **En el montacargas: DB9 hembra.** Se ve en `de9_conector.jpg`
+- **El cable de Judit: DB9 macho**
 
-El nombre no cambia una sola medición. Lo que importa es de qué lado está cada
-cosa, y eso está bien en todo el repo.
+`DE-9` es el nombre formal — la letra del medio es el tamaño de la carcasa, y la
+de 9 pines usa carcasa **E**; la **B** es la de 25 pines. Se anota por si aparece
+en una hoja de datos, **pero acá no se usa y DB9 no es un error a corregir.**
+
+**El género nunca estuvo en la letra.** `DB`/`DE` es el tamaño de la carcasa;
+macho y hembra es otra cosa, aparte. Eso era lo único que valía aclarar, y el
+resto del repo siempre dijo bien de qué lado estaba cada cosa.
