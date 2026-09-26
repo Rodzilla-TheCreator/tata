@@ -11,6 +11,7 @@ de operación.
 | `modulo_jungheinrich.jpg` | **la placa de un módulo Jungheinrich, atrás de la misma caja.** Ver la sección propia, abajo |
 | `tarjeta_fusibles_reverso.jpg` | **la tarjeta desmontada, lado de soldadura.** Las pistas a la vista. Ver la sección propia, abajo |
 | `conector_te_tarjeta.jpg` | el conector TE de la tarjeta, de cerca y de frente. Es el que lee bien el número |
+| `conector_te_1-965484-1.jpg` | el segundo conector de la tarjeta, de frente. **Confirma el `1-965484-1` que ya estaba en `docs/15`** |
 
 Primera foto del DE-9 **en su lugar**, con la tabla de fusibles y su etiqueta en
 el mismo cuadro. Hasta ahora el conector solo estaba descrito por texto.
@@ -366,20 +367,23 @@ sospechoso**.
 Van apareciendo marcas distintas en la misma zona. **No se elige una ni se corrige
 el repo** hasta que alguien lea cada pieza con la marca enfrente:
 
-| Número | Dónde se vio | Fuente |
+| Número | Dónde se vio | Estado |
 |---|---|---|
-| `1-965484-1` | anotado como «el arnés del DE-9» | `docs/15`, origen no re-verificado |
-| `1-962353-1` | conector que entra al módulo Jungheinrich | `modulo_jungheinrich.jpg` |
-| `1-967281-1` | conector de la tarjeta de fusibles | `conector_te_tarjeta.jpg`, de frente |
+| `1-965484-1` | **segundo conector de la misma tarjeta** | **CONFIRMADO de frente**, `conector_te_1-965484-1.jpg`. Lleva además `3.2 B` en relieve |
+| `1-967281-1` | primer conector de la tarjeta | **CONFIRMADO de frente**, `conector_te_tarjeta.jpg` |
+| `1-962353-1` | conector que entra al módulo Jungheinrich | leído en ángulo. **Provisional** |
+
+**La tarjeta tiene DOS conectores TE, no uno.** Eso resuelve la tensión que quedó
+anotada ayer: no eran tres lecturas del mismo número, son piezas distintas. Y el
+`1-965484-1` que `docs/15` traía anotado desde hace días **estaba bien** — la duda
+que se le puso encima ayer queda levantada.
 
 Lo más probable es que sean **tres conectores distintos de la misma zona**, no tres
 lecturas del mismo. Pero eso también es suposición.
 
-> **Y hay una lección barata acá:** el `1-957281-1` se anotó de una foto donde el
-> relieve quedaba de canto, y estaba mal. Una foto **de frente y de cerca** de cada
-> marca cuesta dos segundos y vale más que una toma general. Los otros dos números
-> de esta tabla se leyeron en ángulo. **Tratarlos como provisionales hasta tener su
-> foto de frente.**
+> **Lección barata:** el `1-957281-1` se anotó de una foto donde el relieve quedaba
+> de canto, y estaba mal. Una foto **de frente y de cerca** de cada marca cuesta dos
+> segundos y vale más que una toma general. Dos de los tres ya tienen la suya.
 
 ---
 
@@ -398,3 +402,43 @@ en una hoja de datos, **pero acá no se usa y DB9 no es un error a corregir.**
 **El género nunca estuvo en la letra.** `DB`/`DE` es el tamaño de la carcasa;
 macho y hembra es otra cosa, aparte. Eso era lo único que valía aclarar, y el
 resto del repo siempre dijo bien de qué lado estaba cada cosa.
+
+---
+
+## Decisión — 26-sep-2026 · no se prueba hasta poner el fusible
+
+**maje paró la prueba del puerto.** Correcto, y por la razón correcta: con el pin 6
+sin alimentación, un silencio en el barrido **no mediría el puerto, mediría el
+fusible que falta**. Correr las 54 combinaciones hoy habría gastado el día para
+producir un dato falso.
+
+Esto pasa a ser el bloqueo del hito del puerto, arriba del barrido.
+
+### Antes de poner uno cualquiera
+
+**No se adivina el amperaje.** Un fusible más grande del que va deja de proteger;
+uno más chico se abre y manda a buscar una falla que no existe. En orden:
+
+```
+1. Preguntarle al chino: ¿por qué se sacó? ¿fue para aislar algo?
+2. El valor, de la única fuente que lo sabe: el esquema 99515375
+3. Si no aparece: la celda de la etiqueta que corresponde a esa posición,
+   una vez cerrado el mapeo por continuidad — no leyéndola de lejos
+```
+
+Si hay que elegir a ciegas y ya se descartó que el riel esté en corto, **el valor
+más chico de la regleta es el lado seguro del error**: se abre en vez de dejar
+pasar. Pero eso es último recurso, no plan.
+
+### Lo que esta visita sí produjo
+
+Sin escuchar un solo byte:
+
+- El DB9 está montado en el distribuidor de fusibles, con su topología trazada
+- **Una placa Jungheinrich en el fierro**, que vuelve observación lo que era
+  inferencia de manual
+- La causa más probable de que el puerto no responda, con su prueba
+- Dos números de conector confirmados de frente, y uno del repo validado
+
+**Un viaje que encuentra por qué algo no iba a funcionar vale más que uno que lo
+confirma sin saber por qué.**
