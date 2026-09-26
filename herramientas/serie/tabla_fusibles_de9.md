@@ -7,6 +7,8 @@ de operación.
 |---|---|
 | `tabla_fusibles_de9.jpg` | vista general: el DE-9, la regleta completa y la etiqueta |
 | `tabla_fusibles_de9_detalle.jpg` | el extremo derecho de cerca: cola de la etiqueta y la serigrafía de la tarjeta |
+| `de9_conector.jpg` | el DE-9 de cerca, y el extremo izquierdo de la regleta |
+| `modulo_jungheinrich.jpg` | **la placa de un módulo Jungheinrich, atrás de la misma caja.** Ver la sección propia, abajo |
 
 Primera foto del DE-9 **en su lugar**, con la tabla de fusibles y su etiqueta en
 el mismo cuadro. Hasta ahora el conector solo estaba descrito por texto.
@@ -67,6 +69,21 @@ de los argumentos de `docs/15` para creer que es el puerto de servicio.
 ```
 5 · VACÍO · 10 · 7.5 · 7.5 · 10 · 2 · 2 · 2 · VACÍO · 7.5 · 10 · 10 · 5
 ```
+
+`de9_conector.jpg` confirma de cerca el extremo izquierdo: **la primera posición
+vacía es la segunda de la fila**, y el portafusible sigue ahí — se sacó el fusible,
+no se desmontó nada.
+
+### El DE-9, de cerca
+
+`de9_conector.jpg` es la mejor vista del conector hasta ahora:
+
+- **9 pines en dos filas, 5 arriba y 4 abajo. Hembra.** Descarta VGA sin discusión
+- **Con tornillos de fijación a los dos lados** — el capuchón se puede atornillar
+- **Montado pasante en la misma tarjeta verde**, justo debajo de la regleta. No
+  cuelga de un mazo: es parte de la placa
+- Se le ven **dos islas de soldadura sueltas** en la tarjeta, a la derecha del
+  conector. Sin identificar
 
 ### La tarjeta, serigrafiada
 
@@ -165,3 +182,94 @@ Con los paneles abiertos y esta placa a la vista:
 
 El reverso es el que decide la pregunta cara: si el mazo llega al controlador de
 tracción, el DE-9 es el puerto de servicio y se acabó la duda. Ver `docs/15`.
+
+---
+
+# El módulo Jungheinrich — 26-sep-2026
+
+`modulo_jungheinrich.jpg`. Atrás de la misma caja, una **placa de fabricante
+Jungheinrich** sobre un módulo negro. En el borde izquierdo de la foto asoma una
+tarjeta verde.
+
+```
+JUNGHEINRICH
+F.Nr:  51540777
+Bez.   KD Medi CO 250K Jr.
+S-Nr.  802O6202                    DSE
+```
+
+Y el conector que le entra, de unos 9 conductores, marcado:
+
+```
+TE  1-962353-1        ← AMP Junior Power Timer
+```
+
+## Por qué esto importa
+
+**Hasta hoy, que el EDR18N2 fuera un Jungheinrich era una inferencia de
+documento.** Salía del manual de servicio, cuyo cuerpo habla de ETR aunque la
+portada diga Mitsubishi. Buen argumento, pero papel.
+
+**Ahora está en el fierro, con marca de fábrica, en la máquina que tenemos
+enfrente.** Eso deja de ser lectura y pasa a ser observación. Y con ello:
+
+- Toda la documentación Jungheinrich de la familia ETR aplica a este equipo, sin
+  el asterisco
+- El chino tenía **la herramienta nativa del equipo**, no una prestada de otra
+  marca. Otra vez tenía razón
+- **`F.Nr 51540777` es número de parte Jungheinrich**, buscable en catálogo. Es la
+  vía limpia para saber qué es exactamente este módulo
+
+## La lectura del `Bez.`, que es una hipótesis fuerte y NO una conclusión
+
+`Bez.` es *Bezeichnung*, «denominación» en alemán. Desarmando
+`KD Medi CO 250K Jr.`:
+
+| Trozo | Lectura propuesta | Confianza |
+|---|---|---|
+| `CO 250K` | **CANopen 250 kbaud** | alta — es exactamente el bus que declara el manual |
+| `Jr.` | **Junior**, por el conector AMP Junior Power Timer que tiene puesto | alta — el conector está a la vista y es de esa familia |
+| `KD` | **Kundendienst**, «servicio al cliente» en alemán | media |
+| `Medi` | sin resolver. ¿*Medium*? ¿mediador, o sea pasarela? | **baja. No inventar** |
+
+> **Si `KD` es Kundendienst y `CO 250K` es CANopen 250 kbaud, este módulo es
+> «servicio, CANopen 250K» — que es la descripción de la pasarela que se propuso
+> el 25-sep para explicar cómo un DE-9 serie convive con el nodo 30 del manual.**
+
+Eso encajaría demasiado bien, y por eso mismo hay que desconfiar: es la
+explicación que uno *quiere* encontrar. **Se anota como hipótesis con nombre, no
+como hallazgo.**
+
+## Qué la confirma o la tumba, en orden de qué tan barato es
+
+```
+1. Buscar F.Nr 51540777 en catálogo Jungheinrich     ← gratis, desde la compu
+2. Preguntarle al chino qué es esa caja               ← gratis, y él la ha visto
+3. Seguir si la tarjeta verde del DE-9 es de ESTE módulo o de otro
+4. Continuidad: ¿los pines del DE-9 llegan al conector 1-962353-1?
+```
+
+El punto 3 es el que puede cerrar la pregunta más cara del proyecto. En la foto
+asoma una tarjeta verde pegada a este módulo; **si es la misma placa donde está
+montado el DE-9, entonces el puerto cuelga directamente de un módulo Jungheinrich
+de servicio y la duda de `docs/15` se acaba.** No se afirma todavía: hace falta
+una foto que agarre el DE-9 y esta placa en el mismo cuadro.
+
+## Dato en tensión con el repo
+
+`docs/15` y `CLAUDE.md` dicen que el arnés del DE-9 es **TE 1-965484-1**. Este
+conector es **TE 1-962353-1**. Son distintos, los dos de la familia AMP Timer.
+
+Puede ser que sean dos conectores diferentes de la misma zona, o que el número
+viejo estuviera mal anotado. **No se corrige ninguno de los dos todavía** — se
+deja el par a la vista hasta que alguien lea la marca de los dos conectores con la
+pieza en la mano.
+
+## Lo que queda por leer de esta misma placa
+
+```
+□ El S-Nr. exacto: se leyó «802O6202» pero el cuarto carácter puede ser O o 0
+□ Qué significa «DSE» a la derecha del código de barras
+□ Foto que agarre el DE-9 y este módulo en el mismo cuadro
+□ ¿Hay más placas Jungheinrich en otros módulos? Foto de cada una
+```

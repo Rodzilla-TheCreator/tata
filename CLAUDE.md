@@ -28,7 +28,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 
 | Carpeta | Qué contiene |
 |---|---|
-| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **Faltan dos fusibles**, la tarjeta es **Littelfuse 852-023**, y hay un fusible que no calza con su etiqueta |
+| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **Faltan dos fusibles**, la tarjeta es **Littelfuse 852-023**, hay un fusible que no calza con su etiqueta, y apareció una **placa Jungheinrich en el fierro** (`F.Nr 51540777`, `KD Medi CO 250K Jr.`) |
 | `herramientas/can/` | **La cadena de escucha CAN.** `protoboard_can.svg` es el plano de armado, cable por cable. `prueba_can.ino` la valida contra sí misma. Los otros SVG son diagramas de bloques |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
