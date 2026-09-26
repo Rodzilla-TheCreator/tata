@@ -77,7 +77,18 @@ Al final imprime una de dos cosas:
 | **HABLÓ** + ranking | el puerto transmite | Paso 3 con la combinación de arriba |
 | **SILENCIO EN LAS 54** | nada salió | **primero lo de los fusibles**, abajo; después la lista que imprime el log |
 
-### Antes de creerle al silencio: los dos fusibles que faltan
+### PRIMER SOSPECHOSO: el fusible del pin 6
+
+**Actualizado el 26-sep.** Con la tarjeta desmontada se trazó que **el fusible que
+falta en la posición 2 va entre el pin 6 del DE-9 y el resto**. Un fusible va en
+una alimentación, no en una señal ni en una masa: el pin 6 del puerto **entrega
+corriente**, y hoy está muerto.
+
+Eso explica el `+0.1 V flotante` que se midió en el pin 6 el 18-sep, y convierte
+esto en **la primera cosa a revisar si el puerto no habla**, no la última.
+Detalle en `herramientas/serie/tabla_fusibles_de9.md`.
+
+### Lo demás de los dos fusibles que faltan
 
 La foto `herramientas/serie/tabla_fusibles_de9.jpg` muestra **dos posiciones
 vacías** en la misma placa donde vive el DE-9. Si alguno de esos dos alimenta la

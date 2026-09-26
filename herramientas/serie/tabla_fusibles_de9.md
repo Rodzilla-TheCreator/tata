@@ -9,6 +9,7 @@ de operación.
 | `tabla_fusibles_de9_detalle.jpg` | el extremo derecho de cerca: cola de la etiqueta y la serigrafía de la tarjeta |
 | `de9_conector.jpg` | el DE-9 de cerca, y el extremo izquierdo de la regleta |
 | `modulo_jungheinrich.jpg` | **la placa de un módulo Jungheinrich, atrás de la misma caja.** Ver la sección propia, abajo |
+| `tarjeta_fusibles_reverso.jpg` | **la tarjeta desmontada, lado de soldadura.** Las pistas a la vista. Ver la sección propia, abajo |
 
 Primera foto del DE-9 **en su lugar**, con la tabla de fusibles y su etiqueta en
 el mismo cuadro. Hasta ahora el conector solo estaba descrito por texto.
@@ -273,3 +274,110 @@ pieza en la mano.
 □ Foto que agarre el DE-9 y este módulo en el mismo cuadro
 □ ¿Hay más placas Jungheinrich en otros módulos? Foto de cada una
 ```
+
+---
+
+# El reverso de la tarjeta — 26-sep-2026
+
+`tarjeta_fusibles_reverso.jpg`. **maje sacó la tarjeta y fotografió el lado de
+soldadura.** Las pistas quedan a la vista y se pueden seguir a ojo. Esto contesta
+de una la pregunta del mapeo, que los dos días anteriores estaba trabada en
+«no se adivina, se mide».
+
+## Lo que maje trazó, con la tarjeta en la mano
+
+> **El fusible que falta en la posición 2 va entre el pin 6 del DE-9 y el resto.
+> Los demás fusibles van directo al conector TE que la tarjeta tiene por debajo.**
+
+Eso es topología, no lectura de etiqueta. Y reordena varias cosas.
+
+## El conector de la tarjeta
+
+Marcado en el cuerpo, de esta foto:
+
+```
+ASSY  1-957281-1
+>PBT/ASA-GF30<          ← el material del plástico, no un número de parte
+```
+
+## Por qué el fusible faltante deja de ser una nota al pie
+
+El pin 6 del DE-9 **está detrás de un fusible**. Un fusible no se pone en una línea
+de señal ni en una masa: se pone en una **alimentación**. O sea que el pin 6 del
+puerto **entrega corriente**, no datos.
+
+Y eso reconcilia una medición vieja que estaba suelta:
+
+| Medición del 18-sep | Se leyó como | Ahora |
+|---|---|---|
+| pin 6 = **+0.1 V, flotante** | «una entrada al aire, no importa» | **es la alimentación del puerto, y está muerta porque le falta el fusible** |
+
+> **Hipótesis fuerte: el puerto no puede alimentar a la herramienta porque el
+> fusible de su pin 6 no está puesto.**
+
+Si el cable de Judit o la herramienta del otro extremo esperaban tomar corriente
+de ahí, **el puerto puede estar mudo por esto y por nada más.** Deja de ser «una
+cosa que hay que descartar antes de creerle al silencio» y pasa a ser **el primer
+sospechoso**.
+
+### Lo que NO se concluye todavía
+
+- **Que poner el fusible lo arregla.** Alguien lo sacó. Puede haber sido para
+  aislar una falla, y volver a energizar ese riel puede repetirla
+- **Cuánta corriente y a qué tensión.** Sale del esquema `99515375`, que sigue sin
+  conseguirse
+- **Que el pin 6 sea masa.** El pinout CiA-303 pone masa en el 6, pero **esta
+  tarjeta no está cableada como CiA-303**: una masa fusible no tiene sentido. Es
+  un argumento más de que el DE-9 acá no es CAN
+
+### Lo que lo confirma, por orden de qué tan barato es
+
+```
+1. Con la tarjeta afuera: continuidad del pin 6 del DE-9 al borne del
+   portafusible 2. Es lo que maje ya trazó a ojo — confirmarlo con óhmetro
+2. Del otro borne del portafusible 2, ¿a qué pin del conector TE llega?
+3. Con todo montado y encendido: tensión en los dos bornes de esa posición
+4. Preguntarle al chino por qué se sacó ese fusible
+```
+
+**No se pone el fusible hasta tener el 4.**
+
+## Lo que esto le hace al resto de la investigación
+
+- **El mapeo etiqueta ↔ regleta deja de bloquear.** Ya no hace falta para lo que
+  importaba: la topología se sigue por cobre, que es mejor evidencia que un rótulo
+- **El «10 A donde la etiqueta pide 2 A» sigue abierto**, y ahora se puede resolver
+  por el mismo camino: seguir esa posición hasta su carga
+- **Los demás fusibles van al conector TE**, o sea que esta tarjeta es un
+  distribuidor: entra un mazo por abajo, sale protegido a los consumidores. El
+  DE-9 está injertado en ese mismo distribuidor
+
+## Los tres números TE, todos observados, ninguno descartado
+
+Van apareciendo marcas distintas en la misma zona. **No se elige una ni se corrige
+el repo** hasta que alguien lea cada pieza con la marca enfrente:
+
+| Número | Dónde se vio | Fuente |
+|---|---|---|
+| `1-965484-1` | anotado como «el arnés del DE-9» | `docs/15`, origen no re-verificado |
+| `1-962353-1` | conector que entra al módulo Jungheinrich | `modulo_jungheinrich.jpg` |
+| `1-957281-1` | conector de la tarjeta de fusibles | `tarjeta_fusibles_reverso.jpg` |
+
+Lo más probable es que sean **tres conectores distintos de la misma zona**, no tres
+lecturas del mismo. Pero eso también es suposición.
+
+---
+
+## Nota de nombres — DE-9, DB9, macho y hembra
+
+Para no perder tiempo en esto nunca más:
+
+- **DE-9 es el nombre correcto.** La letra del medio es el tamaño de la carcasa, y
+  la de 9 pines usa carcasa **E**. «DB9» es el error común y universal: la carcasa
+  **B** es la de 25 pines. Si alguien dice DB9, se entiende igual y no pasa nada
+- **En el montacargas es HEMBRA** — tiene los huequitos. Se ve en `de9_conector.jpg`
+- **En el cable de Judit es MACHO** — tiene los pines
+- Regla para no pensarlo: **el que entrega, entrega pines.**
+
+El nombre no cambia una sola medición. Lo que importa es de qué lado está cada
+cosa, y eso está bien en todo el repo.
