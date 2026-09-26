@@ -75,7 +75,19 @@ Al final imprime una de dos cosas:
 | Sale | Qué significa | Qué sigue |
 |---|---|---|
 | **HABLÓ** + ranking | el puerto transmite | Paso 3 con la combinación de arriba |
-| **SILENCIO EN LAS 54** | nada salió | el propio log imprime la lista de sospechosos, en orden |
+| **SILENCIO EN LAS 54** | nada salió | **primero lo de los fusibles**, abajo; después la lista que imprime el log |
+
+### Antes de creerle al silencio: los dos fusibles que faltan
+
+La foto `herramientas/serie/tabla_fusibles_de9.jpg` muestra **dos posiciones
+vacías** en la misma placa donde vive el DE-9. Si alguno de esos dos alimenta la
+placa o el riel del puerto, el silencio es del fusible, no del equipo. Dos
+minutos, y si no se revisa se puede quemar el día buscando en el lugar
+equivocado. El detalle y cómo se descarta están en
+`herramientas/serie/tabla_fusibles_de9.md`.
+
+**No se pone un fusible.** Alguien los sacó y no sabemos por qué. Eso lo decide
+el chino.
 
 El ranking **no** se lee como «el que más bytes da gana». Una velocidad
 equivocada puede escupir más basura que la correcta datos buenos. Gana el que
