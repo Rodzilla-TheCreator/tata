@@ -24,6 +24,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/15-viaje-al-taller.md` | **El plan del viaje, la placa de datos y todo lo del puerto de servicio** |
 | `docs/16-manual-de-servicio.md` | **El manual de servicio: el equipo es un Jungheinrich, el bus es CANopen, y existe el APM+** |
 | `docs/17-hito-teleop.md` | **El plan de acción del hito del teleop, por bloques. El bloque 1 se puede empezar hoy** |
+| `docs/18-runbook-de-campo.md` | **El día del puerto, paso a paso, para seguirlo con la máquina enfrente. Windows/i3** |
 
 | Carpeta | Qué contiene |
 |---|---|

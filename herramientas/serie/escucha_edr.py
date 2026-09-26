@@ -26,11 +26,22 @@ import os
 import sys
 import time
 
+# La consola de Windows arranca en cp1252 y revienta con UnicodeEncodeError
+# en el primer «·» o «─» que se imprima. Es el mismo bug de encoding que se
+# corrigió en build_sec.py. Acá se corre en la i3, que es Windows, así que se
+# fuerza utf-8 antes de imprimir nada. errors="replace" para que un carácter
+# raro degrade a «?» en vez de matar una corrida en el taller.
+for _flujo in (sys.stdout, sys.stderr):
+    try:
+        _flujo.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
 try:
     import serial
     import serial.tools.list_ports
 except ImportError:
-    sys.exit("Falta pyserial.  pip install pyserial")
+    sys.exit("Falta pyserial.  py -m pip install pyserial")
 
 
 # ── combinaciones ─────────────────────────────────────────────────────────
