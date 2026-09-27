@@ -92,6 +92,9 @@ registrando. Si da 260 ms, el número del documento está mal y se corrige el do
 
 ### 1.2 · El control, contra el simulador
 
+> **El diseño completo del control está en `docs/19`**: cómo sirve cualquier control, el
+> mapeo, las reglas del mando y lo que viaja al ESP32.
+
 El gamepad ya tiene mapeo definido en `CLAUDE.md`: **RT y LT dosifican, B/O alterna sentido**, y
 el cambio de sentido **solo se acepta con ambos gatillos en cero y el equipo detenido**.
 
