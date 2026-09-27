@@ -12,6 +12,53 @@ y sin ESP32.
 
 ---
 
+## Variante RETHINK — 27-sep-2026 · probar en un EDR que sí está completo
+
+**Lo que debió estar en este documento desde el principio:** el cliente opera
+EDR18N2 del mismo modelo, completos y funcionando. La máquina de Las Palmas está
+canibalizada y sin el fusible que alimenta el pin 6. **Una de RETHINK no tiene ese
+problema**, y es exactamente la máquina que el proyecto quiere volver autónoma.
+
+Todo lo de abajo aplica igual: el mismo cable FTDI, el mismo `escucha_edr.py`, los
+mismos pasos. Cambian cuatro cosas.
+
+### 1 · Es equipo del cliente
+
+- **Permiso de RETHINK antes de abrir la tapa.** Una máquina fuera de turno,
+  estacionada, con llave a la vista
+- **Solo se escucha.** El script no transmite y deja DTR/RTS en bajo
+- Solo se abre la tapa de la tabla de fusibles. **No se saca la tarjeta, no se
+  saca ni se pone ningún fusible.** Nada irreversible
+- Si aparece un código de falla nuevo en el display: se para
+
+### 2 · Antes de conectar: la foto que resuelve el amperaje
+
+```
+□ Foto de frente de la tabla de fusibles, con la POSICIÓN 2 a la vista
+□ ¿Está el fusible? ¿De cuántos amperios?
+```
+
+**Eso contesta, sin esquema y sin adivinar, qué fusible le falta a la de Las
+Palmas.** Es la misma tarjeta en la misma máquina.
+
+### 3 · Medir el pin 6 antes de conectar nada
+
+```
+□ Tensión pin 6 ↔ chasis, equipo encendido   = ______ V
+```
+
+En Las Palmas dio **+0.1 V flotante**. Si acá da una tensión firme, queda
+confirmado que el pin 6 es la alimentación del puerto y que en Las Palmas está
+muerta por el fusible. Es el **control** del hallazgo del 26-sep.
+
+### 4 · Si habla acá y no en Las Palmas
+
+Esa es la prueba más limpia que se puede tener: misma tarjeta, mismo cable, mismo
+script, **la única diferencia es el fusible**. Anotar en el log de cuál máquina
+salió cada corrida.
+
+---
+
 ## Reglas, antes de tocar nada
 
 - **SOLO SE ESCUCHA.** El script no transmite y deja DTR/RTS en bajo
