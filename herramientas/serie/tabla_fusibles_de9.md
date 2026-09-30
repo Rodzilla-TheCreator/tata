@@ -12,6 +12,7 @@ de operación.
 | `tarjeta_fusibles_reverso.jpg` | **la tarjeta desmontada, lado de soldadura.** Las pistas a la vista. Ver la sección propia, abajo |
 | `conector_te_tarjeta.jpg` | el conector TE de la tarjeta, de cerca y de frente. Es el que lee bien el número |
 | `conector_te_1-965484-1.jpg` | el segundo conector de la tarjeta, de frente. **Confirma el `1-965484-1` que ya estaba en `docs/15`** |
+| `manual_fusibles_p142.jpg` · `manual_fusibles_p143.jpg` | **la tabla de fusibles del manual impreso.** Dibujo de la tarjeta con el DB9, y qué es cada fusible con su amperaje. Ver la sección del 30-sep, al final |
 
 Primera foto del DE-9 **en su lugar**, con la tabla de fusibles y su etiqueta en
 el mismo cuadro. Hasta ahora el conector solo estaba descrito por texto.
@@ -553,3 +554,133 @@ ese destino el que falta.
 
 **La regla «la primera visita solo se escucha» se levantó el 30-sep por decisión de
 maje**, y solo para saludos y lecturas. Las escrituras siguen fuera.
+
+---
+
+# La tabla de fusibles del manual — 30-sep-2026
+
+`manual_fusibles_p142.jpg` y `manual_fusibles_p143.jpg`. Páginas 142 y 143 de un
+**manual impreso** que tiene maje, pie de página `04.17 US_ES`. **Cuál manual es
+exactamente no está anotado todavía** — anotarlo.
+
+Trae el **dibujo de la tarjeta**: los fusibles numerados **114 a 127 de izquierda a
+derecha**, y el DB9 abajo a la izquierda. Es la misma tarjeta de las fotos.
+
+## La tabla, transcrita
+
+Los de la tarjeta (columna «caja de fusibles miniatura» marcada):
+
+| Elem. | Fusible | Qué protege | A |
+|---|---|---|---|
+| 114 | F17 | equipo de radiotransmisión, **dispositivo de transmisión de datos** | 5 |
+| 115 | **4F15** | **autorización de acceso** | **2** |
+| 116 | 5F3 | control de la lámpara de marcha atrás | 2 |
+| 117 | F4 | contactor del control maestro | 7.5 |
+| 118 | 5F2 | control del convertidor CC-CC | 7.5 |
+| 119 | 3F11 | **control de dirección de la rueda de tracción** | 2 |
+| 120 | 4F9 | sistema electrónico de fusibles de control | 2 |
+| 121 | 5F7 | opciones del tejadillo protector | 2 |
+| 122 | 3F14 | dirección de rueda de carga RH | 2 |
+| 123 | **6F9** | **cámara** | **2** |
+| 124 | 1F13 | conducción MFC / control de frenado | 7.5 |
+| 125 | 4F10 | ventilador | 2 |
+| 126 | 2F18 | sistema hidráulico MFC | 10 |
+| 127 | F27 | controlador de carga en marcha | 5 |
+
+Y los grandes, fuera de la tarjeta:
+
+| Elem. | Fusible | Qué protege | A |
+|---|---|---|---|
+| 108 | 3F6 | motor de dirección de la rueda de tracción (UL EE) | 50 |
+| 109 | 3F6 | motor de dirección de la rueda de tracción (UL E) | 50 |
+| 110 | F1 | control maestro | 30 |
+| 111 | 4F11 | ordenador de a bordo | 2 |
+| 112 | 2F1 | motor de la bomba | 800 |
+| 113 | 1F1 | motor de tracción | 500 |
+
+## Lo que esto cierra
+
+### 1 · La etiqueta SÍ está alineada con la regleta
+
+El dibujo numera las posiciones en el mismo orden que la etiqueta. El 26-sep quedaron
+dos lecturas abiertas sobre el «10 A donde la etiqueta pide 2 A»:
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| «o la etiqueta no está alineada, o hay un fusible que no corresponde — no se elige» | **la etiqueta está alineada. Hay fusibles que no corresponden** | el dibujo del manual, 114 a 127 en orden |
+
+### 2 · Lo que tiene puesto la tarjeta contra lo que pide el manual
+
+Con la fila de fusibles leída el 26-sep, antes de poner los temporales:
+
+| Elem. | Fusible | Pide | Tenía | |
+|---|---|---|---|---|
+| 114 | F17 | 5 | 5 | ✓ |
+| 115 | 4F15 | 2 | **vacío** | faltaba |
+| 116 | 5F3 | 2 | **10** | ✗ |
+| 117 | F4 | 7.5 | 7.5 | ✓ |
+| 118 | 5F2 | 7.5 | 7.5 | ✓ |
+| 119 | 3F11 | 2 | **10** | ✗ |
+| 120 | 4F9 | 2 | 2 | ✓ |
+| 121 | 5F7 | 2 | 2 | ✓ |
+| 122 | 3F14 | 2 | 2 | ✓ |
+| 123 | 6F9 | 2 | **vacío** | faltaba |
+| 124 | 1F13 | 7.5 | 7.5 | ✓ |
+| 125 | 4F10 | 2 | **10** | ✗ |
+| 126 | 2F18 | 10 | 10 | ✓ |
+| 127 | F27 | 5 | 5 | ✓ |
+
+**Tres posiciones de 2 A tienen fusible de 10 A.** Un fusible cinco veces más grande
+del que pide el circuito deja de protegerlo: si ese circuito tiene un corto, se quema
+el cable o la tarjeta antes que el fusible.
+
+La que más importa es la **119, `3F11`, el control de la dirección.** Es justo el
+circuito que el teleop va a tocar (`docs/10`, plan 3).
+
+> **Lectura por color, no en mano.** Los «10» se leyeron en fotos: en fusibles
+> miniatura el rojo es 10 A y el gris es 2 A, por norma. Es confiable pero no es
+> leerlo con el fusible en la mano. **Confirmar los tres antes de cambiar nada.** Y no
+> se cambian sin el chino: alguien los puso, y conviene saber por qué.
+
+### 3 · Los fusibles que se pusieron el 30-sep son temporales, y ahora se sabe de cuánto
+
+Los dos de **5 A** van en posiciones que piden **2 A**: 4F15 y 6F9. Ya estaba anotado
+como temporal; el manual lo confirma. **Van de 2 A.**
+
+## Lo que abre
+
+### El pin 6 cuelga del fusible de «autorización de acceso»
+
+El 26-sep maje trazó que el fusible de la posición 2 alimenta el pin 6 del DB9. La
+posición 2 es el **115, `4F15`, «autorización de acceso»**. Y la posición 1, justo al
+lado del conector, es el **`F17`, «dispositivo de transmisión de datos»**.
+
+Eso sugiere, **sin concluirlo**, que el DB9 es el punto de conexión de un **accesorio
+de control de acceso o de transmisión de datos** — un lector de clave o tarjeta, o un
+equipo de telemetría — que toma alimentación del pin 6.
+
+Cuadra con dos cosas medidas:
+
+- **El pin 6 es alimentación**, no señal. Eso ya estaba
+- **El puerto no tiene tierra propia.** Si el accesorio trae su masa por su propio
+  mazo, el DB9 no necesita tenerla. Y si el accesorio ya no está, falta justo eso
+
+Queda en tensión con lo que sí se sabe: **el chino entraba con Judit por ese mismo
+DB9.** Las dos cosas pueden ser ciertas a la vez — un puerto de servicio que también
+alimenta un accesorio — y no se elige ninguna todavía. Se suma como **candidato
+nuevo** a la lista de «a dónde iba la masa»:
+
+```
+□ un accesorio de autorización de acceso o de transmisión de datos que ya no está
+□ el módulo Jungheinrich KD Medi CO 250K Jr.
+□ un conector del mismo mazo que quedó suelto
+□ un segundo conector de servicio detrás del display
+```
+
+**Pregunta directa para el chino:** ¿este equipo tenía lector de clave, de tarjeta, o
+algún aparato de telemetría conectado ahí?
+
+### El 6F9 es el de la cámara
+
+El otro fusible que faltaba, **123, `6F9`**, es el de la **cámara**. El 30-sep se probó
+que no alimenta el puerto: el eco salió idéntico con y sin él. Queda anotado qué es.
