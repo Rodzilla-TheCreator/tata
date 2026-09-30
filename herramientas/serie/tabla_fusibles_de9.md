@@ -560,8 +560,8 @@ maje**, y solo para saludos y lecturas. Las escrituras siguen fuera.
 # La tabla de fusibles del manual — 30-sep-2026
 
 `manual_fusibles_p142.jpg` y `manual_fusibles_p143.jpg`. Páginas 142 y 143 de un
-**manual impreso** que tiene maje, pie de página `04.17 US_ES`. **Cuál manual es
-exactamente no está anotado todavía** — anotarlo.
+**manual impreso de operador** que tiene maje, pie de página `04.17 US_ES`. El índice
+está en `herramientas/manual_operacion/`, con lo que se sabe de qué manual es.
 
 Trae el **dibujo de la tarjeta**: los fusibles numerados **114 a 127 de izquierda a
 derecha**, y el DB9 abajo a la izquierda. Es la misma tarjeta de las fotos.
@@ -679,6 +679,9 @@ nuevo** a la lista de «a dónde iba la masa»:
 
 **Pregunta directa para el chino:** ¿este equipo tenía lector de clave, de tarjeta, o
 algún aparato de telemetría conectado ahí?
+
+**Y el mismo manual tiene la respuesta a medias:** sección E 5, **«Sistemas de acceso sin
+llave»** y **«Manejo del teclado»**, páginas 101 a 109. Fotografiarlas es lo siguiente.
 
 ### El 6F9 es el de la cámara
 
