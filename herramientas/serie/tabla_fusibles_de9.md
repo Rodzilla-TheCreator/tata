@@ -480,6 +480,21 @@ Ohmios, escala 200k:
   pin 2 ↔ pin 3    abierto
 ```
 
+### Control: paro de emergencia y llave
+
+El paro de emergencia y la llave cortan circuito, y el paro puede cortar del lado del
+negativo. Si hubieran estado abiertos, el negativo del conector no llegaría a la masa
+interna y el «no pita» sería de la medición, no del equipo. Se repitió con **batería
+desconectada, paro ARRIBA y llave en ON**:
+
+```
+pin 1,2,3,4,5,7,8,9 ↔ negativo   NO pita
+pin 6 ↔ negativo                 ~216 Ω, estable  ← la carga del riel del 4F15. No es corto
+```
+
+**La conclusión sobrevive al control.** Y cuadra: el pin 2 cuelga del pin 6 por 60 kΩ,
+así que el pin 2 llega al negativo por ~60 kΩ + 216 Ω — conectado al riel, no a una masa.
+
 Las puntas sí entraban en el DB9 hembra: el pin 6 marcó contra el negativo y el
 6 ↔ 2 dio 60 kΩ. Los «abierto» son reales.
 
