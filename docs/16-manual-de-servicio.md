@@ -199,6 +199,27 @@ Hidráulico           dibujo nº 99520170    esquema hidráulico
 Montasa. Sin el 99515375 no se sabe a qué va cada cable del DE-9, y esa es la pregunta abierta
 más cara del proyecto.
 
+### Dónde conseguirlo — 30-sep-2026
+
+**Lo que hay que conseguir no es el manual entero: son los dos dibujos.** La portada de este
+PDF dice **`ESR20N2 / ESR23N2 / EDR18N2 · 04.14`** y en su lista de contenido figura
+«Diagramas de cableado (Eléctrico / Hidráulico)». El manual está completo en todo lo demás;
+lo que falta son las láminas plegables, que en el original van aparte.
+
+| Vía | Qué | Estado |
+|---|---|---|
+| **Montasa, por MCF Parts Client** | pedir `99515375` y `99520170` **por número de dibujo**, con el número de serie `82824121`, más el `WENBM8550-01` | **la oficial.** No se ha hecho |
+| Vendedores de PDF en internet | anuncian un *«Jungheinrich ETR335D Operation and Repair Manual 05-2014»* que cubre ETR335D/340/345 y dice incluir *«Wiring Diagrams (Electrical/Hydraulic)»* | **no verificado:** las páginas de venta no se pudieron abrir desde acá. No son distribuidores oficiales |
+
+**05-2014 contra el 04.14 de nuestro PDF**: misma familia y la misma época, así que es
+probable que sea la misma revisión. Probable, no seguro.
+
+**Lo que se le pregunta al vendedor antes de pagar:** *«¿Incluye el esquema eléctrico número
+99515375?»* Si no puede contestar eso, no trae lo que falta.
+
+**Trampa:** los mismos sitios venden manuales **Mitsubishi ESR20N / ESR23N**, sin el «2».
+Esa es la **serie anterior**, no el EDR18N2 = Jungheinrich ETR que tenemos. No sirven.
+
 ---
 
 ## Lo que cambia sobre el puerto DE-9 — y la tensión que abre
