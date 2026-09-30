@@ -211,6 +211,22 @@ lo que falta son las láminas plegables, que en el original van aparte.
 | **Montasa, por MCF Parts Client** | pedir `99515375` y `99520170` **por número de dibujo**, con el número de serie `82824121`, más el `WENBM8550-01` | **la oficial.** No se ha hecho |
 | Vendedores de PDF en internet | anuncian un *«Jungheinrich ETR335D Operation and Repair Manual 05-2014»* que cubre ETR335D/340/345 y dice incluir *«Wiring Diagrams (Electrical/Hydraulic)»* | **no verificado:** las páginas de venta no se pudieron abrir desde acá. No son distribuidores oficiales |
 
+**Encontrado el 30-sep, con los números de dibujo exactos.** Un vendedor de terceros
+(`autoepcservice.com`, el mismo archivo aparece en el foro `autorepairmanuals.ws`) lista
+*«Jungheinrich Forklift ETR 335D 345 Electric & Hydraulic Schematic»*: PDF en **alemán**,
+3.52 MB, **25 USD**, y declara que trae tres archivos:
+
+```
+e99515375.pdf   ← el eléctrico que falta, el número exacto del manual
+e99520663.pdf   ← un segundo eléctrico. No figura en nuestro manual. ¿Opción? ¿otra variante?
+h99520170.pdf   ← el hidráulico, el número exacto del manual
+```
+
+Que los nombres de archivo coincidan con los números de dibujo de nuestro manual es la
+mejor señal hasta ahora de que es lo que falta. **Sigue sin verificar**: es un revendedor,
+no Jungheinrich ni MCF, y no se compró. La vía oficial sigue siendo Montasa por MCF, que
+además es distribuidor y puede pedirlos por número.
+
 **05-2014 contra el 04.14 de nuestro PDF**: misma familia y la misma época, así que es
 probable que sea la misma revisión. Probable, no seguro.
 
