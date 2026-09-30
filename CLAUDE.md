@@ -29,7 +29,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 
 | Carpeta | Qué contiene |
 |---|---|
-| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **El fusible que falta alimenta el pin 6 del DE-9** — primer sospechoso si el puerto no habla. Tarjeta **Littelfuse 852-023**, y una **placa Jungheinrich en el fierro** (`F.Nr 51540777`, `KD Medi CO 250K Jr.`) |
+| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **El fusible que falta alimentaba el pin 6 del DE-9**; se puso el 30-sep y **no era la causa**: **ningún pin del DB9 tiene tierra** (ver la sección del 30-sep en el `.md`). Tarjeta **Littelfuse 852-023**, y una **placa Jungheinrich en el fierro** (`F.Nr 51540777`, `KD Medi CO 250K Jr.`) |
 | `herramientas/can/` | **La cadena de escucha CAN.** `protoboard_can.svg` es el plano de armado, cable por cable. `prueba_can.ino` la valida contra sí misma. Los otros SVG son diagramas de bloques |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
@@ -483,6 +483,8 @@ Los dos controles pasaron. La cadena mide lo que dice medir.
 | `herramientas/serie/escucha_edr.ino` | barrido pasivo 9 bauds × 6 encuadres. Tiene `MODO_FIJO` para clavar una combinación |
 | `herramientas/serie/probador.py` | banco tkinter azul retro para calificar un cable USB-serie: velocidad, paridad, loopback |
 | `herramientas/serie/escucha_edr.py` | **el instrumento del cable FTDI.** Barrido de 54, `--fijo`, y `--estimulo` con guion de acciones marcadas a mano. Solo lee y deja DTR/RTS en bajo. Validado contra un pty con control de falsación |
+| `herramientas/serie/lineas_edr.py` | levanta DTR/RTS por fases y escucha. Pone tensión en los pines 4 y 7 |
+| `herramientas/serie/saludo_edr.py` | **transmite** saludos y lecturas CiA 309-3, nunca escrituras. `--seco`, `--banco`, y separa eco deformado de respuesta |
 
 > **Defecto conocido de `probador.py`:** el veredicto «ESTE SIRVE» solo exige velocidad y
 > paridad, y ninguna de esas dos toca los pines del DB9. Un cable puede aprobar y fallar

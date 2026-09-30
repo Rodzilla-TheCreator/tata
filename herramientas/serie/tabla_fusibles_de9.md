@@ -442,3 +442,99 @@ Sin escuchar un solo byte:
 
 **Un viaje que encuentra por qué algo no iba a funcionar vale más que uno que lo
 confirma sin saber por qué.**
+
+---
+
+# El puerto no tiene tierra — 30-sep-2026
+
+Día de campo con los dos fusibles de 5 A que consiguió el taller. Manda sobre la
+«Decisión — 26-sep-2026» de arriba: la prueba se destrabó, se corrió, y **el fusible
+no era la causa**.
+
+## Qué se hizo, en orden
+
+| Paso | Resultado |
+|---|---|
+| 5 A en **4F15** (la del pin 6), temporal, con cinta | el cable lee **DSR = 1**: el pin 6 ya tiene tensión. El 26-sep leía DSR = 0 |
+| `escucha_edr.py --barrido` y `--fijo` | 0 bytes. Igual que sin fusible |
+| `lineas_edr.py` (DTR/RTS por fases) | 0 bytes. DSR cae tres veces ~0.2 s, sin patrón claro. Anotado, sin conclusión |
+| `saludo_edr.py`, **primera transmisión del proyecto** (decisión de maje) | **eco deformado**: cada saludo vuelve con el mismo largo, el texto nuestro con bits cambiados, peor cuanto más lenta la velocidad. Ninguna respuesta propia |
+| Control: el mismo saludo con el cable **al aire**, sin jumper | silencio total a 1200 y a 115200. **El eco sale del lado del equipo, no del cable** |
+| 5 A también en **6F9** | el eco sale idéntico. El 6F9 tampoco alimenta el puerto |
+
+## El mapa de pines, medido con batería desconectada
+
+```
+Continuidad:
+  pin 5 ↔ chasis                NO pita
+  negativo de batería ↔ chasis  NO pita   ← normal: la batería va aislada
+  pin 1,2,3,4,5,7,8,9 ↔ negativo  NO pita
+  pin 6 ↔ negativo              no pita, pero la lectura se mueve: carga normal de un riel
+
+Ohmios, escala 200k:
+  pin 6 ↔ pin 2    ~60 kΩ, IGUAL con las puntas invertidas → resistencia, no semiconductor
+  pin 6 ↔ pin 3    abierto
+  pin 6 ↔ pin 5    abierto
+  pin 5 ↔ pin 2    abierto
+  pin 5 ↔ pin 3    abierto
+  pin 2 ↔ pin 3    abierto
+```
+
+Las puntas sí entraban en el DB9 hembra: el pin 6 marcó contra el negativo y el
+6 ↔ 2 dio 60 kΩ. Los «abierto» son reales.
+
+## La conclusión
+
+> **Ningún pin del DB9 tiene tierra.** El pin 5, que el cable FTDI usa como masa
+> de señal, no está unido a nada. Sin masa común no hay RS-232, esté vivo o no el
+> transceptor del otro lado.
+
+Eso explica junto todo lo que se vio desde el 25-sep, sin forzar nada:
+
+| Síntoma | Con «el puerto no tiene tierra» |
+|---|---|
+| silencio en las 54, en el arranque y navegando el menú | no hay referencia contra la cual recibir |
+| eco deformado, peor a baja velocidad | nuestro TX se cuela al RX por conductores sin referencia |
+| ningún fusible cambió nada | no era alimentación en esta tarjeta |
+
+**Y queda en tensión con el 18-sep**, que no se borra: ese día el pin 3 daba
+**−14.6 V estable** contra chasis. Una línea suelta no da −14.6 V estables. O sea que
+**ese día había un transmisor alimentado del otro lado, y hoy no.** Algo cambió entre
+las dos fechas, y no hay registro de qué.
+
+## Lo que NO se concluye
+
+- **Que el −14.6 V estuviera bien referido.** Hoy se supo que el chasis no es el
+  negativo ni la masa del puerto. Lo medido contra chasis el 18-sep queda como dato
+  válido de que *había tensión*, no de *cuánta* respecto a la masa real
+- **A dónde iba la masa.** No se adivina. Candidatos, sin elegir: el módulo
+  Jungheinrich `KD Medi CO 250K Jr.`, un conector del mismo mazo que quedó suelto, o
+  un segundo conector de servicio detrás del display
+- **Qué son los 60 kΩ entre 6 y 2.** Una resistencia, pasiva. Para qué, no se sabe
+
+## Dato del mismo mazo
+
+**El display funciona, y va por el mismo mazo que el conector de la tarjeta.** El mazo
+no está cortado entero: los conductores del DB9 van a otro destino dentro de él, y es
+ese destino el que falta.
+
+## Lo que sigue
+
+```
+□ Preguntarle al chino qué se desconectó o se sacó de esa zona después del 18-sep
+□ ¿El módulo KD Medi CO 250K Jr. tiene su conector puesto?
+□ ¿El display tiene atrás un segundo conector, suelto o vacío?
+□ Seguir el mazo desde el conector TE de la tarjeta hasta el otro extremo
+□ Esquema 99515375: a qué pin va la masa del puerto
+□ Los dos fusibles de 5 A son TEMPORALES. Van de 2 A según la etiqueta
+```
+
+## Herramientas nuevas
+
+| Archivo | Qué hace |
+|---|---|
+| `lineas_edr.py` | levanta DTR y RTS por fases y escucha. **Pone tensión en los pines 4 y 7** |
+| `saludo_edr.py` | **transmite** una lista fija de saludos y lecturas CiA 309-3, sin escrituras. `--seco` muestra qué mandaría; `--banco` es el control con jumper; separa **eco deformado** de respuesta real |
+
+**La regla «la primera visita solo se escucha» se levantó el 30-sep por decisión de
+maje**, y solo para saludos y lecturas. Las escrituras siguen fuera.
