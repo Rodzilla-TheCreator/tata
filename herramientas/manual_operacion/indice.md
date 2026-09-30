@@ -23,6 +23,18 @@ mantenimiento dice **«ESR 15N2 - ESR 23N2»**.
 > lista. Lo que sí se sabe: su tabla de fusibles coincide posición por posición con la
 > tarjeta del equipo, así que al menos esa parte aplica.
 
+**Resuelto el 30-sep por maje, con el librito en la mano:** la portada dice
+**«Mitsubishi Forklift Trucks — Instrucciones de servicio y de mantenimiento»**, nombra
+**tres equipos y uno es el EDR18N2**, y abajo a la derecha: **`04.17` · `51620221`**.
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| «puede ser el de la familia ESR sin el EDR» | **es el manual de operador del EDR18N2**, documento `51620221`, edición `04.17` | la portada |
+
+Sigue sin ser el `01/2022` de la lista: es **otra edición del mismo manual**, más vieja.
+El número `51620221` es de la misma serie que el `51620213` del manual de operación
+Jungheinrich ETR 230–345, lo que cuadra con que el equipo sea un ETR con placa Mitsubishi.
+
 El manual de **taller**, `WENBM8550-01`, sigue sin conseguirse.
 
 ## El índice, transcrito
@@ -101,3 +113,32 @@ En orden de lo que más destraba:
 | **99** | Descenso de emergencia | Entra en la pregunta abierta de `docs/10`: frenar con carga en alto |
 | **37** | Requisitos eléctricos | Tensión de trabajo y referencias |
 | **40** | Placa de características | Qué dice la placa, para cruzar con la del equipo |
+
+
+---
+
+## Páginas 101 a 109 — acceso sin llave y parada de emergencia
+
+`p101.jpg` a `p109.jpg`. **Opcional** en este manual (símbolo ○), y **nada habla del DB9.**
+
+- **EasyAccess:** encender con código PIN, por las teclas debajo del display (89) o por un
+  teclado aparte (90). Hasta 10 códigos por display, 100 por teclado. De fábrica: código
+  de entrega `1-2-3-4`, código de configuración `2-4-1-2` — el manual pide cambiarlos en la
+  primera puesta en servicio
+- **El display tiene menú de ajuste** (tecla bajo el símbolo de engranes, 92): cambiar el
+  código de configuración y agregar o borrar códigos de acceso. Es de operador, no de
+  diagnóstico
+- **Parada de emergencia** (5.3.6 a 5.3.8, tres copias casi iguales): desactiva todas las
+  funciones eléctricas. Con la opción **«CanCode»**, al soltarla el equipo **sigue apagado**
+  hasta meter el código
+- **Si hay falla de dirección o frenos**, el equipo reduce velocidad hasta parar y lo
+  indica en el display
+
+### Por qué importa para el puerto
+
+El fusible del pin 6 del DB9 es el **4F15, «autorización de acceso»**. Estas páginas dicen
+qué es un sistema de acceso en este equipo: un teclado o lector que se conecta aparte.
+**Hipótesis, no conclusión:** el DB9 podría ser, además o en vez de puerto de servicio, el
+punto donde se conecta ese accesorio, alimentado por el pin 6. **Este equipo arranca con
+llave**, así que el accesorio no está puesto. En tensión con que el chino entraba con Judit
+por ese mismo DB9 — no se elige.
