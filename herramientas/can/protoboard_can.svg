@@ -567,4 +567,9 @@
 <text x="40" y="1256" font-size="12" fill="#888">El ancho de tu conversor decide en qué filas exactas cae. Lo que importa es que una fila quede en el banco de arriba y la otra en el de abajo, a caballo del canal.</text>
 <text x="40" y="1276" font-size="12" fill="#888">Bus del EDR18N2: CANopen 250 kbaud (docs/16). Solo se escucha: TWAI_MODE_LISTEN_ONLY. No se corta ningún cable del montacargas.</text>
 <text x="40" y="1296" font-size="12" fill="#888">Taller Las Palmas — 22-sep-2026.</text>
+<g id="AVISO-01OCT">
+<rect x="0" y="0" width="1520" height="78" fill="#b00000" opacity="0.96"/>
+<text x="760" y="32" text-anchor="middle" font-size="24" font-weight="bold" fill="#fff">⚠ SUPERADO EL 01-OCT-2026 — NO CONECTAR AL EQUIPO CON ESTE CABLEADO</text>
+<text x="760" y="62" text-anchor="middle" font-size="18" fill="#fff">El pin 6 del DB9 NO es tierra: es +24 V por el fusible 4F15 (medido 30-sep). Ver herramientas/can/LEEME.md</text>
+</g>
 </svg>

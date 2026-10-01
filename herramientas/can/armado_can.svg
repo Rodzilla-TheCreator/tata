@@ -144,4 +144,9 @@
 <text x="40" y="1482" font-size="12" fill="#888">Bus del EDR18N2: CANopen 250 kbaud. Ver docs/16.   ·   Solo se escucha: TWAI_MODE_LISTEN_ONLY.   ·   No se corta ningún cable del montacargas.</text>
 <text x="40" y="1502" font-size="12" fill="#888">A bordo, con la Jetson, esto NO sirve tal cual: hace falta transceptor aislado (ISO1050). Ver docs/10.</text>
 <text x="40" y="1522" font-size="12" fill="#888">Fotos de los módulos reales, taller Las Palmas — 22-sep-2026.</text>
+<g id="AVISO-01OCT">
+<rect x="0" y="0" width="1280" height="78" fill="#b00000" opacity="0.96"/>
+<text x="640" y="32" text-anchor="middle" font-size="24" font-weight="bold" fill="#fff">⚠ SUPERADO EL 01-OCT-2026 — NO CONECTAR AL EQUIPO CON ESTE CABLEADO</text>
+<text x="640" y="62" text-anchor="middle" font-size="18" fill="#fff">El pin 6 del DB9 NO es tierra: es +24 V por el fusible 4F15 (medido 30-sep). Ver herramientas/can/LEEME.md</text>
+</g>
 </svg>

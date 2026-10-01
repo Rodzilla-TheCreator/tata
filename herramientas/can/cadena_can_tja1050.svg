@@ -131,4 +131,9 @@
 <text x="50" y="820" font-size="12" fill="#888">Bus del EDR18N2: CANopen 250 kbaud. PC de servicio = nodo 30, APM+ = nodo 31. Ver docs/16.</text>
 <text x="50" y="840" font-size="12" fill="#888">A bordo con la Jetson esto NO sirve tal cual: hace falta transceptor aislado (ISO1050) para no compartir tierra con el bus de 24–48 V. Ver docs/10.</text>
 <text x="50" y="860" font-size="12" fill="#888">El TJA1050 y el SN65HVD230 son el mismo componente funcional. La única diferencia es 5 V contra 3.3 V, y por eso acá hay conversor.</text>
+<g id="AVISO-01OCT">
+<rect x="0" y="0" width="1240" height="78" fill="#b00000" opacity="0.96"/>
+<text x="620" y="32" text-anchor="middle" font-size="24" font-weight="bold" fill="#fff">⚠ SUPERADO EL 01-OCT-2026 — NO CONECTAR AL EQUIPO CON ESTE CABLEADO</text>
+<text x="620" y="62" text-anchor="middle" font-size="18" fill="#fff">El pin 6 del DB9 NO es tierra: es +24 V por el fusible 4F15 (medido 30-sep). Ver herramientas/can/LEEME.md</text>
+</g>
 </svg>
