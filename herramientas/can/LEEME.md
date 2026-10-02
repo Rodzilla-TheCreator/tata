@@ -59,7 +59,23 @@ conectado** — CANH y CANL solos, laptop a batería, todo flotando. El TJA se a
 contra el bus por su impedancia de entrada, y en solo-escucha eso suele bastar. Si no
 entra ninguna trama, recién ahí se prueba el GND al pin 2.
 
-## El borne «GND» del DB9 macho de bornera es la CARCASA, no un pin
+## Corrección del 02-oct: el borne «GND» probablemente es el PIN 5, no la carcasa
+
+La sección de abajo supuso que el borne GND iba a la carcasa. **La foto del reverso de la
+tarjeta de maje no lo muestra así:** las pistas sugieren que el borne **GND** y el borne
+**5** comparten pista hasta el pin 5 del conector, y **no se ve ninguna pista hacia las
+lengüetas de la carcasa**. Leído de foto; se confirma en diez segundos con el óhmetro:
+
+```
+borne GND ↔ borne 5      ≈ 0 Ω  → GND es un duplicado del pin 5
+borne GND ↔ borne 9      ____
+borne GND ↔ carcasa      ____
+```
+
+Si es el pin 5, **el borne GND también queda vacío en el equipo**, por la misma razón que el
+5: en el `X200` es «GND conmutado» y no se sabe qué hay ahí.
+
+## (superado) El borne «GND» del DB9 macho de bornera es la CARCASA, no un pin
 
 El DB9 macho comprado tiene 10 bornes: los 9 pines y uno marcado **GND**. Ese GND va a la
 **carcasa metálica** del conector. Al enchufarlo, esa carcasa toca la carcasa del DB9 hembra
