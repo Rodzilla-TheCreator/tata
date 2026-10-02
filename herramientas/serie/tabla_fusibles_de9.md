@@ -481,6 +481,39 @@ Ohmios, escala 200k:
   pin 2 ↔ pin 3    abierto
 ```
 
+### Revisión del 02-oct-2026 — «ninguna respuesta propia» es más fuerte que la evidencia
+
+La fila de `saludo_edr.py` de arriba dice **«ninguna respuesta propia»**. Lo que pasó fue
+otra cosa: además de los ecos deformados hubo líneas que el propio script clasificó como
+**«RESPUESTA»** — distinto contenido, distinto largo. El veredicto las descartó con esta
+frase, que está escrita en el código y no medida:
+
+> «Las «RESPUESTA» sueltas a velocidad baja **probablemente** son el mismo eco, más
+> destrozado.»
+
+| Se escribió | Lo que la evidencia sostiene |
+|---|---|
+| ninguna respuesta propia | **hubo respuestas sin explicar**, descartadas con un «probablemente» |
+| el control del cable al aire prueba que es eco | el control prueba que **lo que vuelve sale del lado del equipo**. Un eco y una respuesta salen los dos de ahí: **ese control no los separa** |
+
+**Y hay una tercera lectura que nadie anotó.** Si el `X200` es correcto, el TX del FTDI
+(pin 3) estaba metiendo ±12 V en **CAN_L**. Lo que volvió puede ser **el bus reaccionando**
+— tramas de error de los nodos ante la perturbación — que no es una respuesta al saludo
+pero sí es el equipo haciendo algo.
+
+**Lo que decide es el log**, y no está en el repo: `*.log` está en `.gitignore`. Vive en
+`herramientas\serie\logs\edr-*-saludo.log` en la i3. Se sube con `git add -f`.
+
+Cómo se separa, leyendo ese log, **sin transmitir otra vez**:
+
+- **Repetibilidad:** una respuesta real da los mismos bytes cada vez que se manda el mismo
+  saludo a la misma velocidad. El eco destrozado y el ruido cambian
+- **Largo contra lo mandado:** un eco tiende al mismo largo. Una respuesta no tiene por qué
+- **Si aparece sin haber mandado nada** (la línea «ya venía algo»), no es ni eco ni respuesta
+
+**No se repite `saludo_edr.py` en el equipo** mientras siga en pie el `X200`: mete tensión en
+CAN_L. Eso ya está en `herramientas/pendientes.md`.
+
 ### Control: paro de emergencia y llave
 
 El paro de emergencia y la llave cortan circuito, y el paro puede cortar del lado del
