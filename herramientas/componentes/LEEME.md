@@ -5,14 +5,14 @@ edición 12.14, ETR 335D / 340 / 345), sacadas como imagen con `pdftoppm`.
 
 | Archivo | Pos. | Componente |
 |---|---|---|
-| `arreglo-03.png` | 1 | Controlador de elevación `2U1` |
+| `arreglo-003.png` | 1 | Controlador de elevación `2U1` |
 | | 2 | Controlador de tracción `1U1` |
 | | **3** | **Maestro MCF / módulo I-O `1U16`** |
 | | 4 | Bloque de válvulas |
 | | 5 | ventilador |
 | | 6 | multipiloto (la palanca) |
-| `arreglo-04.png` | 7 · 8 | motor hidráulico · motor de dirección |
-| `arreglo-05.png` | 9 | controlador de dirección |
+| `arreglo-004.png` | 7 · 8 | motor hidráulico · motor de dirección |
+| `arreglo-005.png` | 9 | controlador de dirección |
 | | 10 · 11 · 12 | motor de tracción · claxon · caja de cambios |
 | | **13** | **caja de fusibles** (donde está el DB9) |
 
@@ -23,7 +23,7 @@ hablan entre sí por el bus CANopen. La pantalla es otro nodo del bus (el nodo 3
 se abre *Diagnose*, le **pide** los valores a los otros por el bus y los muestra.
 
 El que coordina es el **Maestro** (nodo 1), que físicamente es el **`1U16`, «maestro MCF /
-módulo I-O»**: la caja con conectores en el centro de la foto `arreglo-03.png`, al lado de
+módulo I-O»**: la caja con conectores en el centro de la foto `arreglo-003.png`, al lado de
 la base del multipiloto. El manual lo confirma por otro lado: el autotest «lo coordina el
 maestro», los eventos van a su «libro de registro maestro», y hay un «ordenador de
 seguridad» que compara contra él.
