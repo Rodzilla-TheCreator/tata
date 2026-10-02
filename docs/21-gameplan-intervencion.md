@@ -107,6 +107,19 @@ funcionando con la mano. Si no, la inyección está mal hecha.
 > Lo de abajo vale para la placa de **hombre muerto**. La otra se planifica cuando se sepa
 > qué es.
 
+> **Y el 02-oct: a este equipo le sacaron los pedales.** Explica los códigos activos
+> **`E0106.01/.02`, hombre muerto**, que ya estaban en `herramientas/pendientes.md`: no hay
+> pedal, así que el equipo ve el hombre muerto como no plausible. Lo que cambia:
+>
+> - **No se puede medir el pedal acá.** Se mide en otro EDR18N2 (los del chino), o se
+>   recupera el pedal de donde haya ido
+> - **El conector del lado del equipo quedó libre.** Es justo donde se enchufa nuestro relé:
+>   para el hombre muerto no hace falta arnés en Y ni selector, se enchufa directo
+> - **El pinout del lado del equipo** (cuál pin alimenta, cuáles son las entradas NC y NA) se
+>   saca midiendo con la llave en ON y comparando con un EDR18N2 que tenga pedal
+> - El sensor del pedal doble tiene número de parte en el manual: **`51297587`**. Sirve para
+>   buscarlo o pedirlo
+
 **Objetivo:** que el «pie» sea un **relé DPDT** manejado por el ESP32, y que **ese relé sea
 el watchdog**: si se corta el latido, cae, y el equipo ve «pedal suelto».
 
