@@ -14,23 +14,34 @@ sentido), el watchdog de `docs/10` y el plan por bloques de `docs/17`.
 
 ---
 
-## Decisión — 02-oct-2026 · los ojos por el bus, las manos en los mandos
+## Idea en mesa — 02-oct-2026 · los ojos por el bus, y las manos donde convenga
 
-**El equipo no viene preparado para teleop.** El DB9 es de servicio. La arquitectura queda
-partida en dos, y cada mitad por su camino:
+**No es decisión.** A maje le gusta como piso, pero queda abierto. Lo que sí está claro: el
+equipo no viene preparado para teleop, y el DB9 hoy solo se sabe que es de servicio.
 
-| | Por dónde | Riesgo sobre el equipo |
+| | Por dónde | Estado |
 |---|---|---|
-| **Ojos** — velocidad, ángulo, altura, estado, lo que manda el operador | **el bus, por el DB9** (o una toma del bus). Solo lectura | casi nulo: escuchar y pedir valores |
-| **Manos** — tracción, sentido, timón, hidráulica, hombre-presente | **los mandos físicos**, reemplazados uno por uno: multipiloto, timón, pedal | el que se controla con el watchdog y el hongo |
+| **Ojos**: velocidad, ángulo, altura, estado, lo que manda el operador | el bus, por el DB9. Solo lectura | es lo que se va a probar primero |
+| **Manos**: tracción, sentido, timón, hidráulica, hombre-presente | **abierto entre dos caminos** | se decide con lo que diga el bus |
 
-**El control por el bus queda como plan A solo si se cumplen las dos cosas:** que exista una
-interfaz de mando documentada (el APM+, nodo 31) **y** que la latencia medida entre en los
-200 ms. Si no, **plan B y sin discusión**: control físico de cada mando, y los ojos se quedan
-en el bus igual.
+Los dos caminos para las manos:
 
-Esto es lo que este documento ya suponía sin decirlo: la compu manda intenciones, y *cómo*
-llegan al fierro se decide abajo. Ahora está decidido: **a los mandos.**
+| | Por el bus (DB9 / APM+) | Por los mandos físicos |
+|---|---|---|
+| Qué es | mandarle al equipo por su propia interfaz | reemplazar multipiloto, timón y pedal |
+| Ventaja | **no se toca ni un mando**: lo menos invasivo | no depende de que el fabricante dejó una puerta |
+| Lo necesita | una interfaz de mando que exista y funcione, y latencia dentro de los 200 ms | DAC, optoacopladores, multipiloto de repuesto |
+
+**Si el DB9 resulta servir para mandar, ese es el preferido**: menos hardware, menos
+invasivo, y es la entrada que dejó el fabricante. Los mandos físicos son el camino que no
+depende de nadie, y quedan listos por si el bus no da.
+
+Esto es lo que este documento ya suponía: la compu manda intenciones, y *cómo* llegan al
+fierro se decide abajo.
+
+> **Historial:** la primera versión de esta sección (mismo día) la tituló «Decisión» y cerró
+> con «ahora está decidido: a los mandos». **Estaba mal**: maje dijo que le gustaba la idea,
+> no que la decidía, y dejó explícito que si el DB9 resulta bueno, se va por ahí.
 
 ---
 
