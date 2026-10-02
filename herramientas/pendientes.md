@@ -53,7 +53,16 @@ Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md
 □ H. Cuando lleguen: fusibles de 2 A en 4F15, 6F9, 5F3, 3F11, 4F10 — con el chino
 ```
 
-**No se hace:** FTDI al DB9 (mete tensión en CAN_L) · mover hidráulica (falta sensor,
+□ I. Si el DB9 no llega al bus: escuchar en el conector del MAESTRO 1U16
+       (ver herramientas/componentes/). El bus pasa sí o sí por ahí.
+       Sin cortar ni pinchar aislante: puntas de retro-sondeo por detrás del conector.
+       Cómo encontrar el par CAN sin esquema:
+         · batería fuera, escala 200 Ω: el par que da ≈ 60 Ω entre sí
+         · llave ON, contra batería −: los dos ≈ 2.5 V en reposo;
+           con tráfico, CANH promedia algo arriba y CANL algo abajo
+       Alternativa más chica, si existe: el conector del CanCode junto a la llave (F)
+
+**No se hace:** abrir, reprogramar o escribir en el 1U16 · FTDI al DB9 (mete tensión en CAN_L) · mover hidráulica (falta sensor,
 riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATION.
 
 ## Fuera del equipo
