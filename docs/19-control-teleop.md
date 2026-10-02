@@ -14,6 +14,26 @@ sentido), el watchdog de `docs/10` y el plan por bloques de `docs/17`.
 
 ---
 
+## Decisión — 02-oct-2026 · los ojos por el bus, las manos en los mandos
+
+**El equipo no viene preparado para teleop.** El DB9 es de servicio. La arquitectura queda
+partida en dos, y cada mitad por su camino:
+
+| | Por dónde | Riesgo sobre el equipo |
+|---|---|---|
+| **Ojos** — velocidad, ángulo, altura, estado, lo que manda el operador | **el bus, por el DB9** (o una toma del bus). Solo lectura | casi nulo: escuchar y pedir valores |
+| **Manos** — tracción, sentido, timón, hidráulica, hombre-presente | **los mandos físicos**, reemplazados uno por uno: multipiloto, timón, pedal | el que se controla con el watchdog y el hongo |
+
+**El control por el bus queda como plan A solo si se cumplen las dos cosas:** que exista una
+interfaz de mando documentada (el APM+, nodo 31) **y** que la latencia medida entre en los
+200 ms. Si no, **plan B y sin discusión**: control físico de cada mando, y los ojos se quedan
+en el bus igual.
+
+Esto es lo que este documento ya suponía sin decirlo: la compu manda intenciones, y *cómo*
+llegan al fierro se decide abajo. Ahora está decidido: **a los mandos.**
+
+---
+
 ## La idea central: el control nunca habla con el montacargas
 
 ```
