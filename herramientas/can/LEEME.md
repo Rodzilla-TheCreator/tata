@@ -41,12 +41,31 @@ del bus, no en el stub: midiendo CANH ↔ CANL en cualquier punto de un bus term
 todo apagado, se ven los dos 120 Ω en paralelo, **≈ 60 Ω**. Un abierto entre 2 y 7 sí era
 evidencia de que ahí no había CAN. Cuadra con el `X200`.
 
+## 02-oct · «probé todos los pines a GND y ninguno pitó»
+
+Cuadra con el 30-sep: ningún pin tiene tierra. **No tumba el `X200`**, por dos razones:
+
+- **El pitido no ve 60 Ω ni 216 Ω.** El modo continuidad de casi todos los multímetros pita
+  por debajo de ~30–50 Ω. El 30-sep el pin 6 ↔ negativo dio **216 Ω** en escala de ohmios,
+  y con el pitido no habría sonado. **Las dos mediciones que importan van en la escala de
+  200 Ω, no en el pitido**
+- **El CAN 0 V puede no estar unido a batería −** con el equipo apagado: puede pasar por la
+  electrónica de un módulo, o estar aislado. Es la tensión que ya estaba anotada abajo
+
+Si se probó contra **chasis**, tampoco dice nada: en este equipo el chasis no es el negativo.
+
+**Consecuencia para el cable:** si el 3 ↔ 8 confirma el bus, la primera escucha va **sin GND
+conectado** — CANH y CANL solos, laptop a batería, todo flotando. El TJA se auto-polariza
+contra el bus por su impedancia de entrada, y en solo-escucha eso suele bastar. Si no
+entra ninguna trama, recién ahí se prueba el GND al pin 2.
+
 ## La medición que confirma antes de soldar
 
 Un minuto, con óhmetro, **batería desconectada**:
 
 ```
-pin 3 ↔ pin 8   ≈ 60 Ω   →  X200 confirmado: soldar 8 / 3 / 2
+pin 3 ↔ pin 8   ≈ 60 Ω   →  X200 confirmado: soldar 8 / 3 (y el 2, solo si hace falta)
+                (ESCALA DE 200 Ω, no el pitido: el pitido no suena con 60 Ω)
                 abierto  →  X200 tumbado: no soldar nada, volver a pensar
 ```
 
