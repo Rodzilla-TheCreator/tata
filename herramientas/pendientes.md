@@ -46,6 +46,12 @@ Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md
 □ D. STEER → Diagnose + escucha, girando el timón tope a tope, en video:
        · valores de los sensores de ángulo · qué PDO cambia
        · contar vueltas tope a tope (el simulador usa 2.6; fábrica 5.5)
+□ D2. LATENCIA, con el mismo log de D (escucha_can.ino imprime marca de tiempo):
+       mover la palanca de un golpe y el timón de un golpe, y medir en el log
+       cuánto pasa entre la trama del mando (multipiloto, nodo 2) y la primera
+       trama del controlador que responde (tracción 8/9, dirección 4).
+       Ese número es el retardo de la cadena DEL OPERADOR. Si lo mandamos por el
+       mismo camino, no puede ser más lento que eso. Comparar contra los 200 ms
 □ E. Fotos de TODAS las pantallas de Diagnose y Parameter, solo leer.
        Buscar: relación de dirección, P1/P2/P3, retardo de freno
 □ F. Buscar el conector del CanCode (12 pines, Mini-Mate-N-Lok) junto a la llave. Foto
