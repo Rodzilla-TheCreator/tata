@@ -68,6 +68,21 @@ Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md
            con tráfico, CANH promedia algo arriba y CANL algo abajo
        Alternativa más chica, si existe: el conector del CanCode junto a la llave (F)
 
+## El DB9 no maneja — 02-oct-2026
+
+El equipo **no viene preparado para teleop**. El DB9 es de **servicio**: leer sensores,
+leer y cambiar parámetros. **Nunca se vio que sirva para manejar**, y no hay que esperarlo.
+
+| | El DB9 / el bus | El teleop |
+|---|---|---|
+| Qué da | **ver**: sensores, mandos del operador, latencias, parámetros | **mandar**: velocidad, sentido, timón, hidráulica |
+| Por dónde | el conector de servicio (o una toma del bus) | **los mandos del operador**, reemplazados: multipiloto, timón, pedal |
+| Quién lo construye | ya existe | **nosotros** |
+
+Aunque el DB9 resulte ser CAN, mandar desde ahí no sirve: el multipiloto real sigue en el
+bus mandando lo suyo, y dos nodos diciendo cosas distintas es una falla. El mando se mete
+**donde está el mando**: en el conector del multipiloto (peldaño 5) o en sus botones (ruta B).
+
 ## El camino seguro hacia el maestro — escalera, un peldaño a la vez
 
 Corrige lo que se dijo el 02-oct («escribirle por el bus, no»). Era demasiado amplio:
