@@ -59,6 +59,25 @@ conectado** — CANH y CANL solos, laptop a batería, todo flotando. El TJA se a
 contra el bus por su impedancia de entrada, y en solo-escucha eso suele bastar. Si no
 entra ninguna trama, recién ahí se prueba el GND al pin 2.
 
+## El borne «GND» del DB9 macho de bornera es la CARCASA, no un pin
+
+El DB9 macho comprado tiene 10 bornes: los 9 pines y uno marcado **GND**. Ese GND va a la
+**carcasa metálica** del conector. Al enchufarlo, esa carcasa toca la carcasa del DB9 hembra
+del equipo. **Lo que se cablee a ese borne queda unido a lo que sea que tenga la carcasa del
+equipo.**
+
+Y eso abre una medición que no se hizo nunca: **la carcasa del DB9 del equipo**. Va
+atornillada a la tarjeta, y en muchos diseños la carcasa es la masa. Si ningún pin tiene
+tierra, la tierra puede estar ahí.
+
+```
+batería desconectada, escala de 200 Ω:
+  carcasa del DB9 del equipo (o su tornillo hexagonal) ↔ negativo de batería = ____
+  carcasa ↔ pin 2 = ____        carcasa ↔ pin 5 = ____
+```
+
+Hasta medirla, **el borne GND de la bornera queda vacío.**
+
 ## La medición que confirma antes de soldar
 
 Un minuto, con óhmetro, **batería desconectada**:
