@@ -118,7 +118,11 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
 □ Scribd: ETR335D Spare Parts Catalog 82822585 · ETR345A (teoría de operación, 13 p.)
 □ De la Mitsubishi Publication List: todas las filas EDR18N2 / ESR20N2 / ESR23N2
 □ Chino: ¿qué se sacó después del 18-sep? ¿también un sensor de presión (E2320)?
-□ Chino: ¿en QUÉ EDR18N2 usaba el cable FTDI? ¿En este (serie 82824121) o en otros?
+□ 02-oct, CONTESTADO: el chino usaba el cable FTDI en los EDR18N2. El DB9 sirve para
+   LEER sensores, no para manejar. Hipótesis que lo une todo (docs/21): el DB9 dependía
+   del módulo de acceso 6U10 (X680/X681, «24V for JUDIT», fusible 4F15), y se canibalizó
+   entre el 18 y el 30 de septiembre. → Buscar el 6U10 y sus conectores
+□ (viejo) Chino: ¿en QUÉ EDR18N2 usaba el cable FTDI? ¿En este (serie 82824121) o en otros?
    Si fue en otros, ese equipo es el CONTROL: misma medición que acá
    (pin 3↔8, pin 2↔7, foto de la tarjeta de fusibles y de su etiqueta, número de serie).
    Si allá el DB9 es serie y acá es CAN, la diferencia es de configuración o revisión

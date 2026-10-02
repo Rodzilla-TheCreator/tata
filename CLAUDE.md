@@ -27,6 +27,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/18-runbook-de-campo.md` | **El día del puerto, paso a paso, para seguirlo con la máquina enfrente. Windows/i3** |
 | `docs/19-control-teleop.md` | **El control del teleop: cualquier control sirve, qué funciones y en qué orden, y las reglas del mando** |
 | `docs/20-simular-mandos.md` | **Cómo simular pedal, timón y multipiloto sin que el equipo lo note: las reglas de plausibilidad del manual, y arneses enchufables** |
+| `docs/21-gameplan-intervencion.md` | **El gameplan en cuatro secciones: leer sensores, multipiloto (primero, en el banco con el repuesto), pedal y timón. Y lo que dijo el chino el 02-oct** |
 
 | Carpeta | Qué contiene |
 |---|---|
