@@ -87,6 +87,26 @@ funcionando con la mano. Si no, la inyección está mal hecha.
 
 ## 3 · El pedal — hombre muerto
 
+> **Corrección del mismo día: probablemente no es UN pedal.** Esta sección se escribió con
+> lo que decía `CLAUDE.md` («hay pedal de hombre-presente»). maje preguntó si no son dos, y
+> el manual de servicio del ETR le da la razón al menos en la pieza: en *Especificaciones
+> técnicas* (pág. 10, edición 06.14) aparece un **«pedal doble»** — un solo conjunto con dos
+> placas y **sensores** propios (`herramientas/componentes/pedal_doble-015.png`). Y el evento
+> `1.13` nombra el «pedal doble» entre los mandos de **sentido de marcha**.
+>
+> **Qué hace la segunda placa no se sabe todavía.** Candidatos, sin elegir: freno dosificado
+> (sería analógico, regla 2 de `docs/20`), un segundo contacto de hombre muerto, o sentido de
+> marcha. **Se decide mirando el equipo**, no el manual:
+>
+> ```
+> □ Preguntarle a un operador qué hace cada pedal
+> □ Diagnose con cada pedal pisado y suelto: qué valor cambia
+> □ En el conector, batería fuera: ¿contactos (NC/NA) o dos voltajes que suman ~5 V?
+> ```
+>
+> Lo de abajo vale para la placa de **hombre muerto**. La otra se planifica cuando se sepa
+> qué es.
+
 **Objetivo:** que el «pie» sea un **relé DPDT** manejado por el ESP32, y que **ese relé sea
 el watchdog**: si se corta el latido, cae, y el equipo ve «pedal suelto».
 
