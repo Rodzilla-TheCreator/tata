@@ -62,7 +62,31 @@ Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md
            con tráfico, CANH promedia algo arriba y CANL algo abajo
        Alternativa más chica, si existe: el conector del CanCode junto a la llave (F)
 
-**No se hace:** abrir, reprogramar o escribir en el 1U16 · FTDI al DB9 (mete tensión en CAN_L) · mover hidráulica (falta sensor,
+## El camino seguro hacia el maestro — escalera, un peldaño a la vez
+
+Corrige lo que se dijo el 02-oct («escribirle por el bus, no»). Era demasiado amplio:
+**Judit hace exactamente eso**, por el bus, y es la herramienta de fábrica. El camino seguro
+no es no tocarlo: es tocarlo **en orden y con respaldo**.
+
+| # | Peldaño | Qué arriesga | Se vuelve atrás |
+|---|---|---|---|
+| 1 | **Escuchar** el bus (LISTEN_ONLY) | nada | no hace falta |
+| 2 | **Leer** por SDO (pedir objetos, sin escribir), como nodo 30 | carga mínima del bus | no cambia nada |
+| 3 | **Respaldo**: leer y guardar TODOS los parámetros `0x2xxx` del maestro | nada | es el seguro de los que siguen |
+| 4 | **Escribir UN parámetro documentado** (p. ej. `0x2414`, vueltas del timón), leerlo de vuelta, y **devolverlo** al valor del respaldo | una falla si el valor no cuadra | sí, con el respaldo |
+| 5 | **Reemplazar el multipiloto** (nodo 2): desenchufarlo y que nuestro nodo mande sus mismas tramas. El maestro sigue aplicando sus propios límites | lo que mande nuestro nodo | sí, se vuelve a enchufar el original |
+| 6 | APM+ (nodo 31), la interfaz de automatización oficial | — | — |
+
+El 5 es el teleop por el bus **sin cortar un cable**: se cambia un conector por otro.
+
+Condiciones para pasar del 2 en adelante:
+- en el equipo de **Las Palmas**, que está fuera de operación. **Nunca en uno de RETHINK**
+- **con el chino** al lado, y sabiendo **cómo se borran los códigos de falla**
+- **con el respaldo del paso 3 guardado en el repo** antes de escribir nada
+- un solo cambio por vez, y se lee de vuelta antes de seguir
+- nunca los menús `STD-PARAMETER` ni `CONFIGURATION`, ni *Save* en el display
+
+**No se hace:** abrir el 1U16 · reflashear firmware · FTDI al DB9 (mete tensión en CAN_L) · mover hidráulica (falta sensor,
 riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATION.
 
 ## Fuera del equipo
