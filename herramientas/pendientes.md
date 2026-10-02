@@ -64,5 +64,10 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
 □ Scribd: ETR335D Spare Parts Catalog 82822585 · ETR345A (teoría de operación, 13 p.)
 □ De la Mitsubishi Publication List: todas las filas EDR18N2 / ESR20N2 / ESR23N2
 □ Chino: ¿qué se sacó después del 18-sep? ¿también un sensor de presión (E2320)?
+□ Chino: ¿en QUÉ EDR18N2 usaba el cable FTDI? ¿En este (serie 82824121) o en otros?
+   Si fue en otros, ese equipo es el CONTROL: misma medición que acá
+   (pin 3↔8, pin 2↔7, foto de la tarjeta de fusibles y de su etiqueta, número de serie).
+   Si allá el DB9 es serie y acá es CAN, la diferencia es de configuración o revisión
+   del equipo, no de la tarjeta: la tarjeta es pasiva, solo une el DB9 con el mazo.
 □ Reporte a Miguel: listo en Documents\TaTa\Reporte_EDR18N2_2026-09-30.docx, sin enviar
 ```
