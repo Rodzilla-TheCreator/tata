@@ -89,6 +89,30 @@ carcasa ni de ningún pin confirmado del DB9.** Si hace falta, se toma del **neg
 batería** con un cable aparte (o del pin 7 de la ficha del multipiloto, que es negativo
 confirmado). La primera escucha sigue siendo **sin GND**.
 
+### Resuelto el mismo día: el DB9 y el multipiloto están en EL MISMO bus
+
+maje, cable largo, llave OFF:
+
+```
+DB9 pin 3 ↔ multipiloto pin 3   0.2 Ω    ← mismo hilo
+DB9 pin 8 ↔ multipiloto pin 2   0.1 Ω    ← mismo hilo
+DB9 pin 3 ↔ multipiloto pin 2   120 Ω    ← cruzado: el terminador
+DB9 pin 8 ↔ multipiloto pin 3   120 Ω
+```
+
+| Pin DB9 | Pin multipiloto | Señal (nombre según `X200`) |
+|---|---|---|
+| **8** | **2** | **CAN_H** |
+| **3** | **3** | **CAN_L** |
+
+- **Escuchar en el DB9 es escuchar el bus del multipiloto.** El cable soldado sirve tal cual
+- **El bus tiene UN solo terminador** (120 Ω, no 60). Un CANopen bien armado lleva dos.
+  **Falta uno.** Candidato natural: estaba en un componente que se canibalizó (la misma
+  hipótesis del `6U10`). El bus anda igual — la pantalla muestra sensores —, pero con
+  márgenes peores. **No se agrega un 120 Ω por nuestra cuenta**: se anota y se decide después
+- El **80 Ω** de la ficha del multipiloto queda como lectura en tensión. Hay que repetirlo
+  igual que estos, sabiendo si la ficha estaba enchufada
+
 ## Corrección del 02-oct: el borne «GND» probablemente es el PIN 5, no la carcasa
 
 La sección de abajo supuso que el borne GND iba a la carcasa. **La foto del reverso de la
