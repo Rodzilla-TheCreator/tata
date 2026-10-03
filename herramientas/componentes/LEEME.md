@@ -83,3 +83,6 @@ W.Nr.     S170100312096
   de carcasa / blindaje, sin medir
 - **Para el repuesto:** comparar su `M.Nr` e `Index`. Si no son `51232662 H`, cuidado con el
   evento `6.71` sub 2 — «tipo de piloto incompatible» — que el maestro revisa al arrancar
+- **Ficha del mazo, contada por maje el 03-oct: 11 de 14 posiciones con cable.** Vacías:
+  **11, 12 y 14**. Un nodo solo-CAN usaría 4; once hilos dicen que por ahí viajan señales
+  cableadas además (o en vez) del bus
