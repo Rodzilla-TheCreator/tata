@@ -50,6 +50,57 @@ pedimos) y para la autonomía después.
 
 ## 2 · El multipiloto — primero, porque hay uno de repuesto
 
+### 2.0 · Antes del repuesto: leer el que ya está puesto (agregado el 03-oct)
+
+maje preguntó si no se podía averiguar todo del multipiloto instalado, e incluso enchufar
+su conector directo al ESP32. **Lo primero sí, y va antes. Lo segundo todavía no.**
+
+**Lo que se sabe de su conexión, del manual:** que es el **nodo 2**, CANopen a 250 k, y que
+va al lado del `1U16`. **No se sabe** qué conector es, cuántos pines tiene, de cuánto se
+alimenta, ni si lleva el **terminador** del bus adentro.
+
+**Por qué enchufar su conector al ESP32 no es tan simple.** Eso es el peldaño 5 de
+`herramientas/pendientes.md`, y para que el maestro lo acepte el ESP32 tendría que imitar
+todo, no solo las palancas:
+
+- **El maestro interroga al multipiloto al arrancar.** El evento `6.71` sub 2: «el maestro
+  lee […] el **tipo de piloto** de la EEPROM del piloto»; el sub 1 revisa las **versiones de
+  software**. Hay una conversación SDO al encender, y el imitador tiene que contestarla
+  igual
+- **Las tramas tienen que llegar a tiempo**: si no llega un PDO en 3.5 ciclos, hay falla
+  (evento `8.08`, el de recepción)
+- **Y si el terminador está en el multipiloto**, desenchufarlo deja el bus con un solo
+  120 Ω y empieza a fallar todo, no solo el mando
+
+Nada de eso se adivina. **Se graba del multipiloto instalado, solo escuchando** — y la
+conversación del arranque **solo se puede grabar de ese**, porque hace falta el maestro
+para que exista.
+
+```
+□ 2.0.1  Foto del conector del multipiloto, de frente. Contar pines, buscar número de parte
+□ 2.0.2  Batería fuera, escala de 200 Ω, por atrás del conector puesto:
+           buscar el par que dé ≈ 60 Ω → ese es CANH / CANL
+           desenchufado, del lado del multipiloto: ¿≈ 120 Ω? → lleva terminador adentro
+□ 2.0.3  Llave ON, puntas de retro-sondeo contra el NEGATIVO DE BATERÍA:
+           alimentación (¿24 V? ¿12 V?) y CANH / CANL en reposo ≈ 2.5 V
+□ 2.0.4  Escucha CAN (LISTEN_ONLY) en ese par, y RECIÉN AHÍ dar llave:
+           → boot-up 0x702, NMT del maestro, y el intercambio SDO 0x602 / 0x582
+□ 2.0.5  Con la escucha corriendo, un mando por vez, anotando la hora de cada uno:
+           cada palanca de tope a tope, cada botón, y nada por 10 s entre uno y otro
+           → qué ID cambia (0x182, 0x282…), qué bytes, y cada cuánto se repite
+□ 2.0.6  Diagnose del multipiloto en la pantalla, grabada, para cruzar valores
+```
+
+Esto **no necesita pedales ni que el equipo ande**: el multipiloto transmite igual con los
+`E0106` activos. Y **no transmite nada**: es el peldaño 1.
+
+**Qué cambia en el plan:** el repuesto sigue sirviendo para la ruta B (inyectar por
+adentro), pero **ya no hace falta para hacer el diccionario** — sale del instalado. Con la
+grabación del 2.0 se decide la ruta: si la conversación de arranque es corta y las tramas
+son pocas, el imitador (peldaño 5) es más limpio que abrir el repuesto. Si es un enredo, ruta B.
+
+### 2.1 en adelante · El repuesto
+
 **Objetivo:** que el ESP32 apriete los botones y mueva las palancas **del repuesto**, por
 adentro, y que su electrónica siga armando las tramas CAN. Ruta B.
 
