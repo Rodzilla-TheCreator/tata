@@ -64,3 +64,22 @@ más. Dos lecturas, sin elegir:
 
 **Lo decide:** contar los pines poblados, foto de frente del conector suelto, y la etiqueta
 de la palanca (fabricante y número de parte, debajo de la placa).
+
+### La etiqueta — 03-oct (`multipiloto_etiqueta.jpg`, `multipiloto_cabezal.jpg`)
+
+```
+JUNGHEINRICH          Made in Germany
+M.Nr.     51232662    ← número de material Jungheinrich (el que se pide)
+Index     H           ← revisión
+Lief.Nr.  1848        ← código del proveedor
+S.Nr.     P5134200084H
+W.Nr.     S170100312096
+```
+
+- **Es pieza Jungheinrich original**, no Mitsubishi. Cuadra con que el equipo sea un ETR
+- `51232662` **no aparece en el manual de servicio** ni en una búsqueda web rápida
+- El cabezal desenchufado es **macho, dos filas de ~7 pines**, en carcasa ovalada con dos
+  tornillos. Al costado de la carcasa hay una **lengüeta faston metálica**: candidata a masa
+  de carcasa / blindaje, sin medir
+- **Para el repuesto:** comparar su `M.Nr` e `Index`. Si no son `51232662 H`, cuidado con el
+  evento `6.71` sub 2 — «tipo de piloto incompatible» — que el maestro revisa al arrancar
