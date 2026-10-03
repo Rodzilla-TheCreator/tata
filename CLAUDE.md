@@ -470,6 +470,27 @@ estante. Su presencia en el taller no prueba nada del montacargas. Se archiva.
 
 ---
 
+## RESUELTO — 03-oct-2026 · el DB9 es CAN, y se sabe qué pin es qué
+
+Medido por maje en el equipo, llave OFF, óhmetro. **Manda sobre todo lo de arriba del DB9.**
+
+| DB9 hembra | Ficha del multipiloto | Señal |
+|---|---|---|
+| **8** | **2** | **CAN_H** |
+| **3** | **3** | **CAN_L** |
+| — | **7** | **negativo de batería** (continuidad) |
+| — | **8** | **+39.2 V, tensión de batería** — el equipo **no es de 24 V de batería** |
+
+- DB9 3 ↔ 8 ≈ **120 Ω**; DB9 ↔ multipiloto 0.1–0.2 Ω por hilo: **el mismo bus**
+- **Un solo terminador** (120, no 60): falta uno, probablemente en algo canibalizado
+- **La carcasa del DB9 no es masa.** La masa se toma del negativo de batería
+- El pinout `X200` dejó de ser hipótesis en los pines 3 y 8
+- **En tensión, sin resolver:** el chino usaba un cable FTDI serie en los EDR18N2
+
+Detalle en `herramientas/can/LEEME.md` y `herramientas/componentes/LEEME.md`.
+
+---
+
 ## El instrumento, validado antes de viajar
 
 Primer instrumento de todo este hilo que se verificó **antes** de usarlo en el equipo.
