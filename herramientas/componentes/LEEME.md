@@ -43,3 +43,24 @@ Los demás cerebros, cada uno con lo suyo:
 bus**. Es la mejor señal hasta ahora de que la retroalimentación de velocidad, ángulo y
 altura se puede leer sin tocar un cable. Es el paso C de `herramientas/pendientes.md`:
 escuchar el bus **mientras** la pantalla pide datos.
+
+## El multipiloto instalado — foto del 03-oct
+
+`multipiloto_instalado.jpg`. Palanca con funda de fuelle, botonera de 4 flechas arriba,
+montada sobre placa con cuatro tornillos. Abajo:
+
+- **Un conector redondo** con los números **2 · 4 · 6 · 8 · 10 · 12 · 14** visibles en la
+  cara (los impares quedan del otro lado): **unos 14 pines, y muchos cables poblados**
+- **Un conector blanco chico, de 2 vías**, aparte, al costado. No se sabe qué es
+
+**Dato en tensión:** un nodo CAN necesita **4 hilos** (CANH, CANL, + y −). Este trae muchos
+más. Dos lecturas, sin elegir:
+
+1. **En este equipo la palanca es analógica/discreta** y la lee el `1U16`, el «módulo I-O»
+   que está justo al lado. El «nodo 2» de la tabla del manual sería la variante CAN de otros
+   equipos de la familia
+2. **Es nodo CAN y además lleva señales cableadas aparte** (botones de seguridad dobles,
+   claxon, alimentación de sensores)
+
+**Lo decide:** contar los pines poblados, foto de frente del conector suelto, y la etiqueta
+de la palanca (fabricante y número de parte, debajo de la placa).
