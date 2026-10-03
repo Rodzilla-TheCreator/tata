@@ -59,6 +59,36 @@ conectado** — CANH y CANL solos, laptop a batería, todo flotando. El TJA se a
 contra el bus por su impedancia de entrada, y en solo-escucha eso suele bastar. Si no
 entra ninguna trama, recién ahí se prueba el GND al pin 2.
 
+## 03-oct · MEDIDO: pin 3 ↔ pin 8 ≈ 120 Ω, y la carcasa no es masa
+
+maje, en el equipo, llave OFF, escala de ohmios:
+
+```
+DB9 hembra del equipo:  pin 3 ↔ pin 8   ≈ 120 Ω
+                        carcasa ↔ negativo de batería: NO es masa
+```
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| el `X200` (CANL 3, CANH 8) era hipótesis sacada del ECR | **hay un par terminado entre 3 y 8**: el `X200` queda **muy reforzado** en este equipo | 120 Ω medidos |
+| esperábamos ≈ 60 Ω (dos terminadores) | **≈ 120 Ω: se ve UN solo terminador** | — |
+| la tierra podía estar en la carcasa | **la carcasa no es masa** | medido |
+
+**Dato en tensión:** en la ficha del multipiloto, el par CAN (pines 2 y 3) dio **80 Ω**. Si
+el DB9 y el multipiloto estuvieran en el mismo bus, los dos puntos darían lo mismo (el cable
+casi no suma). **120 contra 80 dice que son redes distintas, o que una de las dos mediciones
+está corrida.** Se resuelve con un cable largo y el óhmetro, llave OFF:
+
+```
+DB9 pin 8 ↔ multipiloto pin 2  y  DB9 pin 3 ↔ multipiloto pin 3   (y cruzados)
+≈ 0 Ω → mismo bus;  abierto → buses separados
+```
+
+**Para el cable soldado:** TJA CANH → 8, CANL → 3 queda como estaba. **La masa no sale de la
+carcasa ni de ningún pin confirmado del DB9.** Si hace falta, se toma del **negativo de
+batería** con un cable aparte (o del pin 7 de la ficha del multipiloto, que es negativo
+confirmado). La primera escucha sigue siendo **sin GND**.
+
 ## Corrección del 02-oct: el borne «GND» probablemente es el PIN 5, no la carcasa
 
 La sección de abajo supuso que el borne GND iba a la carcasa. **La foto del reverso de la
