@@ -86,7 +86,8 @@ W.Nr.     S170100312096
 - **Ficha del mazo, contada por maje el 03-oct: 11 de 14 posiciones con cable.** Vacías:
   **11, 12 y 14**. Un nodo solo-CAN usaría 4; once hilos dicen que por ahí viajan señales
   cableadas además (o en vez) del bus
-- **El conector blanco chico del costado es masa** (maje, 03-oct). Va a la lengüeta faston
-  de la carcasa: masa de carcasa / blindaje del multipiloto, aparte de los 11 hilos de la
-  ficha. **Falta anotar contra qué se confirmó** — chasis o negativo de batería, que en este
-  equipo no son lo mismo
+- ~~**El conector blanco chico del costado es masa**~~ (maje, 03-oct, dicho antes de medir).
+  **Corregido el mismo día por maje, midiendo:** con el pitido, el blanco **no pita a masa**.
+  Queda **sin identificar**; falta medirlo en escala de 200 Ω (el pitido no ve más de ~50 Ω)
+- **Pin 7 de la ficha: continuidad (pitido) con masa.** Candidato a **negativo de
+  alimentación** del multipiloto. Falta anotar si la masa fue chasis o negativo de batería
