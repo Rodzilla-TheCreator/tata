@@ -90,4 +90,4 @@ W.Nr.     S170100312096
   **Corregido el mismo día por maje, midiendo:** con el pitido, el blanco **no pita a masa**.
   Queda **sin identificar**; falta medirlo en escala de 200 Ω (el pitido no ve más de ~50 Ω)
 - **Pin 7 de la ficha: continuidad (pitido) con masa.** Candidato a **negativo de
-  alimentación** del multipiloto. Falta anotar si la masa fue chasis o negativo de batería
+  alimentación** del multipiloto. Medido **contra el negativo de batería**
