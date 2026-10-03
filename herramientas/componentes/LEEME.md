@@ -122,3 +122,17 @@ W.Nr.     S170100312096
 
 **Pendiente:** 2–5 en escala de 20 V; con llave OFF, resistencia entre cada par de 2, 3, 4, 5
 en 200 Ω; el pin 13 otra vez; la etiqueta de la batería; y si la ficha estaba enchufada o no.
+
+**Segunda pasada, mismo día:**
+
+```
+20 V, llave ON:   2 = 2.3   3 = 2.3   4 = 2.3   5 = 2.0   13 = 0.015 (quieto, no oscila)
+200 Ω, llave OFF: 2 ↔ 3 = 80 Ω        4 ↔ 5 = abierto
+```
+
+- **2 y 3 son un par CAN terminado.** 80 Ω y no 60: fuera del «60 Ω ± 10 %» del manual.
+  Dato en tensión: puede ser un terminador más otra impedancia en paralelo (120 ∥ 240 = 80),
+  la ficha enchufada o no, o la medición. No cambia que sea el par
+- **4 y 5 no son un par terminado.** Siguen en ~2 V. Quedan sin identificar: otro bus sin
+  terminar, o entradas del `1U16` polarizadas
+- El 13 de la primera pasada era lectura mala; está en ~0
