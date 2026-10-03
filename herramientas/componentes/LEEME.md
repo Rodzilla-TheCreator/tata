@@ -91,3 +91,34 @@ W.Nr.     S170100312096
   Queda **sin identificar**; falta medirlo en escala de 200 Ω (el pitido no ve más de ~50 Ω)
 - **Pin 7 de la ficha: continuidad (pitido) con masa.** Candidato a **negativo de
   alimentación** del multipiloto. Medido **contra el negativo de batería**
+
+### Voltajes de la ficha del multipiloto — 03-oct, llave ON, contra negativo de batería
+
+| Pin | Escala | Lectura | Lectura probable |
+|---|---|---|---|
+| 1 | 2 V | 0.022 | ~0 |
+| 2 | 200 V | 2.3 | **zona CAN (~2.5 V)** |
+| 3 | 200 V | 2.3 | **zona CAN** |
+| 4 | 200 V | 2.4 | **zona CAN** |
+| 5 | 200 V | 2.1 | **zona CAN** |
+| 6 | 2 V | 0.016 | ~0 |
+| 7 | — | continuidad a batería − | **negativo de alimentación** |
+| 8 | 200 V | **39.2** | **positivo de alimentación — tensión de BATERÍA, no 24 V** |
+| 9 | 2 V | 0.014 | ~0 |
+| 10 | 2 V | 0.016 | ~0 |
+| 13 | 2 V / 200 V | 0.016 / oscila 2–10 | **inconsistente**: ¿señal pulsada, o flotante? |
+
+**Lectura, sin cerrar:**
+
+- **Cuatro pines en ~2.3 V** son el aspecto de un bus CAN en reposo/actividad. Cuatro y no dos
+  sugiere **dos pares**: el bus entra al multipiloto y sale hacia el siguiente nodo
+  (encadenado), o hay dos buses. Se decide con óhmetro (abajo)
+- **Pin 8 a 39.2 V:** el multipiloto toma la tensión de batería directo. **El equipo no es de
+  24 V de batería**: 39.2 V cuadra con una batería de **36 V** cargada o de **48 V**
+  descargada. Los «24 V» del manual son la lógica interna regulada (evento con `V24V`).
+  **Todo lo que se conecte al equipo tiene que aguantar la tensión de batería**
+- Con esto **gana la lectura 2**: el multipiloto es **nodo CAN**, más señales aparte en
+  1, 6, 9, 10 y 13
+
+**Pendiente:** 2–5 en escala de 20 V; con llave OFF, resistencia entre cada par de 2, 3, 4, 5
+en 200 Ω; el pin 13 otra vez; la etiqueta de la batería; y si la ficha estaba enchufada o no.
