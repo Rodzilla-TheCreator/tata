@@ -136,3 +136,30 @@ en 200 Ω; el pin 13 otra vez; la etiqueta de la batería; y si la ficha estaba 
 - **4 y 5 no son un par terminado.** Siguen en ~2 V. Quedan sin identificar: otro bus sin
   terminar, o entradas del `1U16` polarizadas
 - El 13 de la primera pasada era lectura mala; está en ~0
+
+## El multipiloto de repuesto, abierto — 05-oct
+
+`multipiloto_repuesto_tarjeta.jpg`, `_costado.jpg`, `_iman.jpg`. Leído de foto; las
+marcas de los chips todavía no se leen.
+
+| Qué se ve | Lectura | Firmeza |
+|---|---|---|
+| Tarjeta redonda, serigrafía «EB 111A» | la electrónica del nodo | foto |
+| Bobina Würth («WE 400»), ferritas `FE1`/`FE2`, diodos `D1`/`D2`, dos electrolíticos «33 / 2A» | **fuente conmutada** que baja la tensión de batería; los «2A» serían 100 V. Cuadra con los 39 V del pin 8 | probable |
+| Chip de 8 patas (SO-8) junto a `R17`/`C16` | **candidato a transceptor CAN** | falta leer la marca |
+| `IC6`, chip grande de ~24 patas | microcontrolador o conversor | falta leer la marca |
+| `LED1`, `LED2` | estado | foto |
+| `X1` «**Pruef 2**», ~8 vías | **conector de prueba / programación de fábrica**. No se toca | foto |
+| `X2`, ~14 vías | hacia el conector exterior de la carcasa | probable |
+| Conector con **~12 hilos de colores** que bajan de la empuñadura | **los botones del mango** | foto |
+| **Arco imantado** en el pivote de la palanca, debajo de la tarjeta | **la palanca se lee SIN CONTACTO, por efecto Hall**: un imán que se mueve sobre sensores en la cara de abajo | probable |
+
+**Qué cambia en la ruta B (`docs/21`, 2.6):**
+
+- **Botones: más fácil de lo pensado.** Llegan por un conector enchufable. Se puede hacer un
+  arnés que se enchufe ahí, sin soldar en la tarjeta
+- **Palanca: más difícil.** No hay potenciómetro con cables donde meter dos canales de DAC.
+  Las salidas son de sensores Hall soldados en la tarjeta. Opciones: levantar la salida del
+  sensor (en el repuesto se permite), o **mover la palanca mecánicamente** (servo sobre el
+  mango, sin tocar electrónica)
+- **El imitador del bus (peldaño 5) gana puntos**: el nodo es «inteligente» de punta a punta
