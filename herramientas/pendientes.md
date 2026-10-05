@@ -40,6 +40,21 @@ Consecuencia: **el cable de escucha no lleva terminador**. La 100 Ω es solo de 
 - La prueba de «lazo de pines» con TX pegado en bajo NO vale: el TJA1050 suelta el bus a los
   250–750 µs (time-out de dominante). Se mide con pulsos cortos
 
+### La cadena queda validada PARA ESCUCHAR — 05-oct-2026
+
+- **Control: el ESP32 solo.** GPIO21 → GPIO22 con un cable: 0.16 µs los dos flancos. La
+  medición y el ESP32 están bien; los ~15 µs de subida los pone el módulo
+- **Control positivo, el receptor.** GPIO25/26 → 100 Ω → CANH/CANL simulan otro nodo, con
+  el TX del TJA1050 quieto: reposo RX = 1, dominante RX = 0, **bajada 0.40 µs, subida
+  0.24 µs**, 500/500. El receptor sirve a 250k; lo lento es solo el transmisor del módulo
+- **Control negativo.** `escucha_can.ino` en la mesa, sin bus: 5 min, **0 tramas, 0 errores**
+- `prueba_can.ino` (self-test) **no va a pasar con este módulo**: necesita su transmisor.
+  Eso ya no bloquea, porque en el equipo no se transmite
+- **En el equipo, el TX del TJA1050 va SIN CONECTAR.** Su pull-up interno lo deja en
+  recesivo: el módulo físicamente no puede transmitir, haga lo que haga el software
+- Cadena final, **sin conversor de nivel**: RX por divisor 1k/2k a GPIO22, VCC desde VIN
+  (4.7 V, apenas bajo el mínimo de 4.75 V de la hoja — anotado)
+
 ## Banco, en la i3 — antes de ir al equipo
 
 ```
