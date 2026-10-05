@@ -61,6 +61,9 @@ bool unaVuelta(int n) {
   tx.identifier       = 0x100 + n;
   tx.extd             = 0;
   tx.data_length_code = 8;
+  tx.self             = 1;   // Self Reception Request: sin esto el controlador no
+                             // guarda su propia trama y la prueba da SIN ECO aunque
+                             // la cadena esté perfecta (pasó el 02-oct-2026)
   for (int i = 0; i < 8; i++) tx.data[i] = (uint8_t)(n * 8 + i);
 
   if (twai_transmit(&tx, pdMS_TO_TICKS(ESPERA_MS)) != ESP_OK) {

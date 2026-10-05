@@ -18,10 +18,32 @@ Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md
 - Fusibles: **5 A temporales en 4F15 y 6F9** (van 2 A). **10 A en 5F3, 3F11 y 4F10**
   (van 2 A según el manual; 3F11 es el control de dirección).
 
+### Medido el 04-oct-2026 en el DB9 hembra del equipo
+
+**Pin 3 ↔ pin 8 = 120 Ω.** Es una terminación CAN entre los pines que la tabla del `X200`
+asigna a CAN_LOW (3) y CAN_HIGH (8). La hipótesis X200 pasa de «pinout de otro modelo» a
+**medida en este equipo**. 120 y no 60: desde el puerto se ve un solo terminador (¿ramal?
+¿bus con una sola terminación?) — anotado, sin elegir.
+
+Consecuencia: **el cable de escucha no lleva terminador**. La 100 Ω es solo de banco.
+
+### La cadena CAN en banco — 02/03-oct
+
+- Sin conversor de nivel: TX directo (el TJA1050 acepta 2.0 V como alto) y RX por divisor 1k/2k
+- El lazo funciona: self-test **10/10 a 25k**, 8/10 a 50k, 0/10 desde 100k
+- Medido con el contador de ciclos: **bajada TX→RX 0.36 µs, subida ~15 µs**, igual con o sin
+  terminación y con o sin conversor. A 250k el bit dura 4 µs: así no transmite
+- El chip dice `TJA1050 NXP SX XJ D408`, pin S en 0 V (modo normal). Según la hoja de NXP el
+  RXD empuja activo hacia arriba: 15 µs está fuera de lo que el chip debería hacer
+- Pendiente: mediciones l–p (¿algo del módulo en las patas 1 o 4?) o cambiar a SN65HVD230
+- Bug corregido en `prueba_can.ino`: faltaba `tx.self = 1` (Self Reception Request)
+- La prueba de «lazo de pines» con TX pegado en bajo NO vale: el TJA1050 suelta el bus a los
+  250–750 µs (time-out de dominante). Se mide con pulsos cortos
+
 ## Banco, en la i3 — antes de ir al equipo
 
 ```
-□ 1. 120 Ω TEMPORAL entre CANH y CANL en la protoboard (sin soldar)
+□ 1. 100–120 Ω TEMPORAL entre CANH y CANL en la protoboard (sin soldar) — solo banco
 □ 2. prueba_can.ino corrida 1  → ECO COMPLETO 20/20
        30-sep sin terminador: 0/20 y 135 errores RX. Sospecha: el terminador
 □ 3. prueba_can.ino corrida 2, sin el cable RX (LV2 → GPIO22) → CERO RECIBIDAS
