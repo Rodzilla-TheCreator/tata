@@ -99,6 +99,22 @@ adentro), pero **ya no hace falta para hacer el diccionario** — sale del insta
 grabación del 2.0 se decide la ruta: si la conversación de arranque es corta y las tramas
 son pocas, el imitador (peldaño 5) es más limpio que abrir el repuesto. Si es un enredo, ruta B.
 
+### 2.0b · La palanca es Hall, sin contacto (05-oct) — propuesta, no decisión
+
+Al abrir el repuesto apareció un **imán en el pivote** y la tarjeta encima: la palanca se lee
+por **sensores Hall soldados**, no por un potenciómetro con cables. Los «2 canales de DAC por
+palanca» del 2.6 **no tienen dónde enchufarse**. Lo que queda, ordenado:
+
+| Ruta | Qué es | A favor | En contra |
+|---|---|---|---|
+| **A · Servo en la palanca** | un actuador mueve el mango; los botones, por un arnés en el conector de la empuñadura | **cero riesgo de plausibilidad**: los sensores reales, con su redundancia, miden un movimiento real. Reversible. Sirve hasta con el multipiloto original | montaje mecánico; si se corta la energía, la palanca **tiene que poder volver sola al centro** (servo que no frene, o acople que se suelte) |
+| **B · Imitar al nodo por el bus** (peldaño 5) | el ESP32 manda las tramas del multipiloto, y el multipiloto se desenchufa | lo más limpio y lo que escala (NRE una vez por modelo). No toca el fierro | necesita la grabación del 2.0 y contestar la consulta de arranque (`6.71`). Es transmitir en el equipo |
+| **C · Inyectar en la salida del Hall** | levantar la pata de salida del sensor e inyectar ahí | en el repuesto se permite | **depende del chip**: si la salida es digital (SPI, PWM, SENT) no hay DAC que valga. Se decide leyendo la marca |
+
+**Propuesta:** **A para el hito del teleop**, porque funciona sin entender ningún protocolo, y
+**B en paralelo** con la grabación del 2.0, para reemplazar a A cuando se entienda el bus. **C
+solo si la marca del chip dice salida analógica.**
+
 ### 2.1 en adelante · El repuesto
 
 **Objetivo:** que el ESP32 apriete los botones y mueva las palancas **del repuesto**, por
