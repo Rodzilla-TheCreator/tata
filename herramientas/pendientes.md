@@ -3,6 +3,13 @@
 Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md`,
 `manuales_scribd.md` y `docs/16`.
 
+## ✅ 06-oct-2026 12:05 · EL MULTIPILOTO, DESCIFRADO
+
+Diccionario de `0x182` y la conversación de arranque en **`can/multipiloto.md`**. Grabado con
+el guion con temporizador (`py grabar_can.py COM6 921600 multipiloto_tiempo`).
+Siguiente: decidir ruta A (servo) o B (imitar el nodo 2 por el bus) con esto en la mano;
+y un formato de grabación que no pierda tramas.
+
 ## ✅ 06-oct-2026 11:34 · SE OYE EL BUS
 
 `escucha_can.ino` en el equipo: **38 identificadores, ~3000 tramas en 28 s, 0 errores RX.**

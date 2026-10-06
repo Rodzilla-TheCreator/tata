@@ -169,7 +169,7 @@ void imprimirResumen(uint32_t ms) {
 long bausElegido = 0;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(921600);   // 115200 perdía ~80 % de las tramas (06-oct)
   delay(700);
   Serial.println();
   Serial.println("========================================================");
