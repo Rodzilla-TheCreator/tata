@@ -244,6 +244,17 @@ Todo con fuente: la hoja de datos de NXP del TJA1050 y lo medido.
   the bus lines»** — ni apagado molesta
 - **No se agrega terminador**: el bus queda con lo que tiene
 
+**2b · La terminación: el bus se queda como está**
+- El equipo tiene **un solo terminador** (120 Ω medidos entre 3 y 8; lo normal son dos, 60 Ω).
+  **El cable no agrega ninguno.** La primera escucha ve el bus tal como funciona hoy, y el
+  display ya se entiende con sus módulos así
+- Dejar el 120 Ω del módulo lo llevaría a 60 Ω: no es peligroso (es el valor estándar), pero
+  es **modificar el bus**, y en mal lugar — los terminadores van en las puntas, el DB9 es un
+  ramal
+- Cables del TJA1050 al DB9 **cortos (≤ 30 cm) y torcidos**, para que el ramal no sume
+- Si la escucha da muchos errores, completar a 60 Ω con 120 Ω en el DB9 es una opción
+  reversible. **Se decide con esos datos, no antes**
+
 **3 · No toca nada de potencia**
 - Solo van los pines 3 y 8, que son el par CAN **medido** (120 Ω entre ellos, mismo hilo que
   el multipiloto)
