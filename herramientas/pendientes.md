@@ -3,6 +3,25 @@
 Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md`,
 `manuales_scribd.md` y `docs/16`.
 
+## ✅ 06-oct-2026 11:34 · SE OYE EL BUS
+
+`escucha_can.ino` en el equipo: **38 identificadores, ~3000 tramas en 28 s, 0 errores RX.**
+Log: `can/logs/escucha_equipo_20261006-113136.log`.
+
+- **El DB9 es el bus CANopen a 250k**: CANH = pin 8, CANL = pin 3 (con los cables al revés:
+  0 tramas, 0 errores). GND al pin 2: funciona, sin errores
+- Nodos vistos: **1 Master** (heartbeat `701` = 05, operacional), 2 y 10 Multipiloto, **3
+  Display** (con SDO `603`/`583`), **4/5/6 Dirección**, **7 Elevación** (+ una EMCY `087`),
+  **8 Tracción**, **30** (`19E`…`49E`: hay un nodo 30 transmitiendo PDOs — ¿el KD Medi CO
+  250K?), SYNC `080`
+- **En campo el divisor quedó en el GPIO 21**: se cargó una copia con RX = 21, TX = 22 (sin
+  conectar). El repo sigue con RX = 22 como el plano
+- **Falla del instrumento:** `perdidas 14532` — imprimir cada trama a 115200 no da abasto.
+  Hay que imprimir solo el resumen o subir la velocidad del puerto
+- **El USB se cayó 3 veces** al mover cables. Vigilar
+- Pista sin confirmar: `188`/`187` traen `52 0E`/`51 0E` = 3666 — ¿batería en 10 mV (36.7 V)?
+- `grabar_can.py`: graba sin límite, se reconecta solo y muestra en pantalla
+
 ## ▶ SIGUIENTE PASO — la primera escucha en el equipo (06-oct-2026, para el próximo chat)
 
 **Estado:** la cadena ESP32 + TJA1050 está **validada para escuchar** (ver `can/LEEME.md`,
