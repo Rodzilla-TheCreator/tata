@@ -35,6 +35,13 @@ TX del módulo ↔ GPIO 21                         → ABIERTO
    menú de servicio → **Diagnose** (el display pide valores por el bus: deberían verse SDO
    `0x6xx` / `0x5xx`)
 
+5. **Si a 250k entran tramas: el diccionario del multipiloto** (paso 2.0 de `docs/21`).
+   Con la escucha corriendo, **un mando por vez**, anotando la **hora del reloj de la i3**
+   de cada uno, y **10 s quieto** entre mando y mando:
+   palanca adelante despacio y vuelta · atrás y vuelta · cada botón de la empuñadura,
+   apretar y soltar. Eso, cruzado con el log, dice **qué ID y qué bytes** son de cada mando
+6. Foto de la **etiqueta de la batería** (¿36 o 48 V nominales? el pin 8 midió 39.2 V)
+
 **Cómo leer el resultado:**
 
 | Sale | Qué significa | Qué sigue |
