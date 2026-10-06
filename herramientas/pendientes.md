@@ -3,6 +3,56 @@
 Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md`,
 `manuales_scribd.md` y `docs/16`.
 
+## ▶ SIGUIENTE PASO — la primera escucha en el equipo (06-oct-2026, para el próximo chat)
+
+**Estado:** la cadena ESP32 + TJA1050 está **validada para escuchar** (ver `can/LEEME.md`,
+sección 02 al 06-oct). `escucha_can.ino` **ya está cargado** en el ESP32. El plano vigente es
+`can/armado_escucha.svg`. maje sale al equipo con este cable.
+
+**Revisar en la mesa (USB desconectado, Ω):**
+```
+pin 6 del DB9 macho ↔ cualquier cable nuestro   → ABIERTO
+pin 3 ↔ pin 8                                   → decenas de kΩ, nunca ~100/120
+pin 8 ↔ CANH del módulo · pin 3 ↔ CANL          → ~0
+TX del módulo ↔ GPIO 21                         → ABIERTO
+```
+
+**En el equipo:**
+1. Laptop a **batería**. Llave en **OFF**. DB9: solo **8 (CANH) y 3 (CANL)**, **sin GND**,
+   sin terminador, cables ≤ 30 cm
+2. USB del ESP32 a la i3 (aparece como **COM6**, CP210x)
+3. Grabar 10 min (abrir el puerto reinicia el ESP32: arranca de cero con el barrido
+   250k / 500k / 125k):
+   ```python
+   import serial, time
+   s = serial.Serial("COM6", 115200, timeout=0.5)
+   f = open("escucha_equipo.log", "w", encoding="utf-8"); t = time.time()
+   while time.time() - t < 600:
+       d = s.read(8192)
+       if d: f.write(d.decode("utf-8", "replace")); f.flush()
+   ```
+4. Paro de emergencia **arriba**, llave a **ON**. 30 s quieto → un **ciclo de llave** →
+   menú de servicio → **Diagnose** (el display pide valores por el bus: deberían verse SDO
+   `0x6xx` / `0x5xx`)
+
+**Cómo leer el resultado:**
+
+| Sale | Qué significa | Qué sigue |
+|---|---|---|
+| tramas a 250k, pocos errores | el bus se oye. **Primer objetivo cumplido** | identificar nodos con la tabla de `manuales_scribd.md` (1 master, 3 display, 4 dirección, 7 elevación, 8 tracción…) |
+| 0 tramas y **0 errores** | no llega señal | masa: **negativo de batería** con un cable aparte al GND del ESP32 (nunca del pin 2, 5, 6 ni 9). Después, CANH/CANL invertidos |
+| 0 tramas y **muchos errores** | llega señal, no se decodifica | otra velocidad, o CANH/CANL invertidos (en listen-only cambiarlos no daña nada) |
+| tramas con errores altos | ramal o terminación | cables más cortos; recién ahí evaluar 120 Ω en el DB9 (decisión de maje) |
+
+**Lo que NO se hace:** transmitir, conectar los pines 5, 6 o 9, agregar terminador sin
+decidirlo, cargar `prueba_can.ino` con el cable en el equipo (ese SÍ transmite).
+
+**Datos de hoy que el próximo chat necesita:**
+- El multipiloto **no trae terminador** (H–L abierto). El 120 Ω del bus está en otro lado
+- `arduino-cli` de la i3: `C:/Users/Rodz/AppData/Local/Programs/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe`,
+  placa `esp32:esp32:esp32` (core 3.3.11). Si COM6 da «Access denied», está abierto el
+  monitor serie del IDE. Si la carga falla con «No serial data received», apretar BOOT
+
 ## Dónde quedó
 
 - **El DB9 probablemente es CAN, no serie.** El pinout del conector de servicio
