@@ -163,3 +163,14 @@ marcas de los chips todavía no se leen.
   sensor (en el repuesto se permite), o **mover la palanca mecánicamente** (servo sobre el
   mango, sin tocar electrónica)
 - **El imitador del bus (peldaño 5) gana puntos**: el nodo es «inteligente» de punta a punta
+
+### Terminador del repuesto — 06-oct
+
+maje, flex enchufado a `X2`, sin alimentar, 200 Ω, pines 2 ↔ 3 del conector de afuera:
+**abierto** («¿capaz?»). Lectura provisoria: **el multipiloto no trae terminador.** Falta el
+control de falsación: en escala de 20 k / 200 k el mismo par debería dar **algo finito** (la
+entrada del transceptor). Si da abierto en todas las escalas, puede ser que el flex no esté
+bien asentado y la medición no haya llegado a la tarjeta.
+
+Si se confirma, el **80 Ω** medido en el equipo no lo explica el multipiloto y queda en tensión
+con los 120 Ω del DB9.
