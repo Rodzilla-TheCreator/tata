@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 570" font-family="Segoe UI, Arial, sans-serif">
+<title>Armado de escucha CAN — versión para el equipo (05-oct-2026)</title>
+<rect width="720" height="570" fill="#ffffff"/>
+<text x="20" y="30" font-size="17" font-weight="600" fill="#1a1a1a">Armado de escucha CAN — para el equipo · 05-oct-2026</text>
+<text x="20" y="50" font-size="12" fill="#555">Reemplaza a protoboard_can.svg y armado_can.svg (conversor y pinout CiA-303 superados). Sin conversor de nivel.</text>
+
+<line x1="30" y1="90" x2="690" y2="90" stroke="#d64545" stroke-width="2.5"/>
+<text x="34" y="82" font-size="12" fill="#a32d2d">+5 V · del pin 5V/VIN del ESP32 (~4.7 V)</text>
+<line x1="30" y1="500" x2="690" y2="500" stroke="#777" stroke-width="2.5"/>
+<text x="34" y="518" font-size="12" fill="#444">GND del ESP32 — NO va al equipo en la primera escucha</text>
+
+<rect x="30" y="130" width="160" height="320" rx="8" fill="#e6f1fb" stroke="#185fa5"/>
+<text x="110" y="152" font-size="15" font-weight="600" text-anchor="middle" fill="#0c447c">ESP32</text>
+<g font-size="12" fill="#0c447c" text-anchor="end">
+<text x="182" y="174">5V / VIN</text><text x="182" y="274">GPIO 21 (TX)</text>
+<text x="182" y="334">GPIO 22 (RX)</text><text x="182" y="414">GND</text></g>
+
+<rect x="380" y="130" width="140" height="320" rx="8" fill="#e1f5ee" stroke="#0f6e56"/>
+<text x="450" y="152" font-size="15" font-weight="600" text-anchor="middle" fill="#085041">TJA1050</text>
+<g font-size="12" fill="#085041">
+<text x="388" y="174">VCC</text><text x="388" y="274">TX</text><text x="388" y="334">RX</text><text x="388" y="414">GND</text></g>
+<g font-size="12" fill="#085041" text-anchor="end"><text x="512" y="234">CANH</text><text x="512" y="314">CANL</text></g>
+<text x="512" y="440" font-size="11" fill="#085041" text-anchor="end">sin terminador</text>
+
+<rect x="580" y="190" width="120" height="250" rx="8" fill="#f1efe8" stroke="#5f5e5a"/>
+<text x="640" y="212" font-size="14" font-weight="600" text-anchor="middle" fill="#2c2c2a">DB9 macho</text>
+<g font-size="12" fill="#2c2c2a"><text x="588" y="234">8 · CANH</text><text x="588" y="314">3 · CANL</text>
+<text x="588" y="372">2 · VACÍO</text><text x="588" y="392">(no confirmado)</text>
+<text x="588" y="420" fill="#a32d2d">5 · 6 · 9 NUNCA</text></g>
+
+<polyline points="190,170 215,170 215,90" fill="none" stroke="#d64545" stroke-width="1.6"/>
+<polyline points="380,170 355,170 355,90" fill="none" stroke="#d64545" stroke-width="1.6"/>
+
+<line x1="190" y1="270" x2="245" y2="270" stroke="#378add" stroke-width="1.6"/>
+<circle cx="250" cy="270" r="5" fill="none" stroke="#378add" stroke-width="1.6"/>
+<text x="222" y="258" font-size="12" fill="#a32d2d">GPIO 21: sin conectar</text>
+<line x1="380" y1="270" x2="345" y2="270" stroke="#378add" stroke-width="1.6" stroke-dasharray="4 3"/>
+<circle cx="340" cy="270" r="5" fill="none" stroke="#378add" stroke-width="1.6"/>
+<text x="222" y="292" font-size="11" fill="#555">TX del TJA al aire → recesivo</text>
+
+<line x1="380" y1="330" x2="345" y2="330" stroke="#1d9e75" stroke-width="1.6"/>
+<rect x="305" y="322" width="40" height="16" rx="3" fill="#faeeda" stroke="#854f0b"/>
+<text x="325" y="316" font-size="12" text-anchor="middle" fill="#633806">R1 1 kΩ</text>
+<line x1="305" y1="330" x2="190" y2="330" stroke="#1d9e75" stroke-width="1.6"/>
+<circle cx="270" cy="330" r="3.5" fill="#1d9e75"/>
+<line x1="270" y1="330" x2="270" y2="390" stroke="#1d9e75" stroke-width="1.6"/>
+<rect x="262" y="390" width="16" height="40" rx="3" fill="#faeeda" stroke="#854f0b"/>
+<text x="284" y="414" font-size="12" fill="#633806">R2 2 kΩ</text>
+<line x1="270" y1="430" x2="270" y2="500" stroke="#777" stroke-width="1.6"/>
+
+<polyline points="190,410 215,410 215,500" fill="none" stroke="#777" stroke-width="1.6"/>
+<polyline points="380,410 355,410 355,500" fill="none" stroke="#777" stroke-width="1.6"/>
+
+<line x1="520" y1="230" x2="580" y2="230" stroke="#7f77dd" stroke-width="1.8"/>
+<line x1="520" y1="310" x2="580" y2="310" stroke="#d85a30" stroke-width="1.8"/>
+
+<text x="20" y="538" font-size="12" fill="#1a1a1a">Laptop a BATERÍA · conectar con la llave en OFF · escucha_can.ino (LISTEN_ONLY)</text><text x="20" y="554" font-size="12" fill="#1a1a1a">Si no entra nada: masa del NEGATIVO DE BATERÍA con cable aparte (LEEME.md). Nunca de los pines 5, 6, 9.</text>
+</svg>

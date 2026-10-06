@@ -35,7 +35,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/manual_operacion/` | **El índice del manual impreso de operador** (`04.17 US_ES`, familia ESR N2). `indice.md` lo transcribe y dice qué páginas fotografiar: **101–109, acceso sin llave**, que es de donde cuelga el pin 6 del DB9 |
 | `herramientas/pendientes.md` | **Dónde quedó el puerto y qué falta, en banco y en el equipo. Empezar por acá** |
 | `herramientas/componentes/` | **Dónde está cada controlador**, del manual de servicio. El cerebro es el **Maestro `1U16`**, nodo 1; los sensores van a su controlador y la pantalla los pide por el bus |
-| `herramientas/can/` | **La cadena de escucha CAN.** **Leer `LEEME.md` primero: el cableado del DB9 de los SVG está superado — el pin 6 es +24 V, no tierra.** `prueba_can.ino` la valida contra sí misma; `escucha_can.ino` escucha en LISTEN_ONLY |
+| `herramientas/can/` | **La cadena de escucha CAN.** **Leer `LEEME.md` primero.** Plano vigente: **`armado_escucha.svg`** (sin conversor, TX al aire, CANH→8, CANL→3, sin GND). Los SVG viejos están superados: **el pin 6 es +24 V, no tierra**. `escucha_can.ino` escucha en LISTEN_ONLY; **validada para escuchar el 05-oct** con `diagnostico/`. `prueba_can.ino` no pasa con el módulo actual (transmisor lento) y no hace falta para escuchar |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
 

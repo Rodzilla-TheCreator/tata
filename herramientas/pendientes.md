@@ -63,7 +63,8 @@ Consecuencia: **el cable de escucha no lleva terminador**. La 100 Ω es solo de 
        30-sep sin terminador: 0/20 y 135 errores RX. Sospecha: el terminador
 □ 3. prueba_can.ino corrida 2, sin el cable RX (LV2 → GPIO22) → CERO RECIBIDAS
 □ 4. QUITAR el 120 Ω temporal
-□ 5. Re-soldar el DB9 macho:  CANH → 8 · CANL → 3 · GND → 2 · nada en 5, 6, 9
+□ 5. Re-soldar el DB9 macho:  CANH → 8 · CANL → 3 · nada en 2, 5, 6, 9
+       (06-oct: el 2 va VACÍO en la primera escucha — no está confirmado como masa. Ver can/LEEME.md)
        Hoy está como CiA-303 (CANH 7, CANL 2). ⚠ Si el GND quedó en el pin 6,
        NO se conecta al equipo: ahí hay +24 V
 □ 6. Cargar escucha_can.ino (LISTEN_ONLY, compila con esp32 3.3.11)

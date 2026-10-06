@@ -177,3 +177,97 @@ El orden de `herramientas/pendientes.md`: 120 Ω **temporal** en la protoboard p
 autoprueba (sin terminador el TWAI da errores, porque las líneas no vuelven a recesivo),
 `prueba_can.ino` con sus dos corridas, **quitar** el 120 Ω, recablear el DB9 y cargar
 `escucha_can.ino`.
+
+---
+
+# 02 al 06-oct · la cadena final, cómo se validó, y por qué no daña el equipo
+
+**Manda sobre los planos viejos.** El plano vigente es **`armado_escucha.svg`**.
+
+## La cadena final
+
+```
+ESP32 5V/VIN  → TJA1050 VCC        ESP32 GND → TJA1050 GND
+ESP32 GPIO 21 → NADA. El TX del TJA1050 queda AL AIRE
+TJA1050 RX    → 1 kΩ → GPIO 22 ;  GPIO 22 → 2 kΩ → GND      (divisor 5 V → 3.3 V)
+TJA1050 CANH  → DB9 pin 8          TJA1050 CANL → DB9 pin 3
+DB9 pin 2     → sin conectar en la primera escucha
+DB9 5, 6, 9   → nunca
+sin terminador · laptop a batería · conectar con la llave en OFF
+```
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| conversor de nivel (BSS138/TXS) entre ESP32 y TJA1050 | **sin conversor**: TX directo, RX por divisor | sacarlo no cambió nada medible, y la hoja de NXP dice que la entrada TXD acepta 3.3 V (`VIH` mín 2.0 V). maje había propuesto el divisor desde el principio |
+| TX del TJA1050 conectado al GPIO 21 | **al aire** en el equipo | su transmisor es lento (abajo) y así el módulo no puede transmitir aunque falle el software |
+| `prueba_can.ino` valida la cadena | **no pasa con este módulo**, y no hace falta para escuchar | ver abajo |
+
+## Cómo se validó — `diagnostico/`
+
+| Prueba | Sketch | Resultado |
+|---|---|---|
+| self-test CAN a varias velocidades | `multibaud` | **10/10 a 25k**, 8/10 a 50k, **0/10 desde 100k** |
+| qué hace el controlador con 1 trama | `diag_twai` | 396 pérdidas de arbitraje en 50 ms: lee dominante cuando pone recesivo |
+| retardo de cada flanco, contador de ciclos | `retardo` | con el módulo: **bajada 0.36 µs, subida ~15 µs**, igual con o sin conversor y con o sin terminación |
+| **control: el ESP32 solo**, GPIO21 → GPIO22 | `retardo` | **0.16 µs los dos flancos**: el ESP32 y la medición están bien |
+| **receptor del TJA**, otro nodo simulado por GPIO25/26 → 100 Ω → CANH/CANL | `receptor` | reposo RX = 1, dominante RX = 0, **bajada 0.40 µs, subida 0.24 µs**, 500/500 |
+| **control negativo**: escucha en la mesa sin bus | `../escucha_can.ino` | 5 min, **0 tramas, 0 errores** |
+
+**Lo lento es el transmisor del módulo al soltar el bus. El receptor es rápido.** Para
+escuchar a 250k (bit de 4 µs) sirve; para transmitir no. El chip dice `TJA1050 NXP SX XJ
+D408`; según la hoja de NXP no debería tardar 15 µs. Candidatos sin elegir: clon, chip
+dañado, VCC en 4.7 V (la hoja pide 4.75–5.25 V).
+
+**Trampa que costó una tarde:** una prueba de lazo con TX pegado en bajo da siempre RX = 1,
+porque el TJA1050 suelta el bus solo a los **250–750 µs** (time-out de dominante). El lazo
+se mide con **pulsos cortos** (`lazo_pulsos`), nunca con niveles fijos.
+
+**Bug corregido:** a `prueba_can.ino` le faltaba `tx.self = 1` (Self Reception Request).
+
+## Por qué conectar esto no daña el equipo
+
+Todo con fuente: la hoja de datos de NXP del TJA1050 y lo medido.
+
+**1 · No puede transmitir — tres capas independientes**
+- **Hardware:** el TX del TJA1050 va al aire. Su pull-up interno (la hoja: −200 µA con TXD
+  en 0 V) lo deja en alto = **recesivo**. Sin un nivel bajo en TXD el chip no maneja el bus
+- **Software:** `TWAI_MODE_LISTEN_ONLY` no manda tramas, ni ACK, ni tramas de error. El
+  sketch no llama a `twai_transmit()`
+- **El propio chip:** aunque TXD quedara en bajo por un corto, la hoja garantiza que suelta
+  el bus a los **250–750 µs** (TXD dominant time-out). No puede trabar el bus
+
+**2 · La carga que agrega es despreciable**
+- Resistencia diferencial de entrada: **25–75 kΩ** (hoja). En paralelo con los 120 Ω del bus:
+  120 → 119.7 Ω
+- Capacitancia de entrada: **7.5 pF** típico por línea
+- La hoja: **«at least 110 nodes can be connected»** y **«an unpowered node does not disturb
+  the bus lines»** — ni apagado molesta
+- **No se agrega terminador**: el bus queda con lo que tiene
+
+**3 · No toca nada de potencia**
+- Solo van los pines 3 y 8, que son el par CAN **medido** (120 Ω entre ellos, mismo hilo que
+  el multipiloto)
+- **Pin 6 (+24 V del 4F15), 5 (GND conmutado) y 9 (+12 V): sin conectar.** No se toma
+  corriente del equipo; el ESP32 se alimenta del USB de la laptop
+- **Pin 2: sin conectar**, porque no está confirmado que sea masa
+
+**4 · No hay lazo de tierra**
+- Laptop a **batería** y sin GND hacia el equipo: no hay camino para que circule corriente
+  entre la laptop y el montacargas. El receptor se polariza contra el bus por su propia
+  impedancia de entrada
+
+**5 · Ya pasó algo peor y el bus lo aguantó**
+- El 30-sep el cable FTDI estuvo minutos metiendo **−6 V de RS-232 en el pin 3 (CAN_L)**, más
+  DTR/RTS en el 4 y el 7, y tramas de saludo. **El display no mostró ningún código de bus** (los
+  de CAN serían grupo de evento 8). Lo de ahora mete **nada**
+
+**Lo que NO cubre esto — el riesgo real está en el cable, no en el diseño.** Antes de enchufar,
+con el USB desconectado y en Ω:
+
+```
+DB9 macho pin 6 ↔ cualquier cable nuestro     → ABIERTO   (lo único que de verdad daña)
+DB9 macho pin 3 ↔ pin 8                       → decenas de kΩ (el TJA), NUNCA ~100/120 Ω
+DB9 macho pin 8 ↔ CANH del módulo             → ~0
+DB9 macho pin 3 ↔ CANL del módulo             → ~0
+TX del módulo   ↔ GPIO 21                     → ABIERTO
+```

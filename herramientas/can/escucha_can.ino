@@ -1,6 +1,6 @@
 // escucha_can.ino — escucha pasiva del bus CAN del EDR18N2 por el DB9 de servicio
 //
-// TaTa · herramientas/can · misma cadena que prueba_can.ino (ESP32 + conversor + TJA1050)
+// TaTa · herramientas/can · cadena ESP32 + TJA1050, sin conversor de nivel
 //
 // ############################################################################
 // #  SOLO ESCUCHA. TWAI_MODE_LISTEN_ONLY: el ESP32 no transmite NADA — ni    #
@@ -8,21 +8,26 @@
 // #  Este archivo no llama a twai_transmit() en ningún lado. Que siga así.   #
 // ############################################################################
 //
-// ANTES DE LLEVARLO AL EQUIPO
-//   1. prueba_can.ino en banco, con su control de falsación. Si no pasó las dos
-//      corridas, esto no mide nada.
-//   2. Quitar el terminador de 120 Ω del módulo TJA1050 (el resistor «121», ver
-//      protoboard_can.svg). El bus del equipo ya tiene los suyos; uno más lo
-//      deja en 40 Ω.
-//   3. Laptop a batería, desenchufada: ahora SÍ hay tierra común con el equipo.
+// VALIDACIÓN (05-oct-2026, ver LEEME.md y diagnostico/)
+//   prueba_can.ino NO pasa con el módulo TJA1050 actual: su transmisor tarda ~15 µs en
+//   soltar el bus. Para ESCUCHAR no importa. Lo que valida esta cadena es:
+//     · diagnostico/receptor  — otro nodo simulado: RX baja en 0.40 µs y sube en 0.24 µs
+//     · este sketch en la mesa, sin bus: 5 min, 0 tramas y 0 errores (no inventa nada)
 //
-// CABLEADO — hipótesis «X200 = Service-Stecker», sacada del pinout del ECR
-// (herramientas/manuales_scribd.md). NO está confirmada para este equipo:
+// CABLEADO FINAL — sin conversor de nivel (el conversor fue descartado el 02-oct)
 //
-//      TJA1050 CANH  →  DB9 pin 8   (CAN_High)
-//      TJA1050 CANL  →  DB9 pin 3   (CAN_LOW)
-//      GND común     →  DB9 pin 2   (CAN bus 0 V)
-//      pines 5, 6, 9 del DB9: NO SE CONECTAN (GND conmutado, +24 V, +12 V)
+//      ESP32 5V/VIN  →  TJA1050 VCC          ESP32 GND  →  TJA1050 GND
+//      ESP32 GPIO 21 →  NADA. El TX del TJA1050 queda AL AIRE: su pull-up interno lo
+//                       deja en recesivo y el módulo físicamente no puede transmitir
+//      TJA1050 RX → 1 kΩ → GPIO 22, y de GPIO 22 → 2 kΩ → GND   (divisor 5 V → 3.3 V)
+//
+//      TJA1050 CANH  →  DB9 pin 8   (CAN_H — medido: 120 Ω contra el 3, mismo hilo que
+//      TJA1050 CANL  →  DB9 pin 3    el multipiloto)
+//      DB9 pin 2     →  SIN CONECTAR en la primera escucha: no está confirmado como masa
+//      pines 5, 6, 9 del DB9: NUNCA (GND conmutado, +24 V del 4F15, +12 V)
+//      SIN terminador: el bus del equipo ya tiene el suyo. La 100/120 Ω es solo de banco
+//
+//   Laptop a BATERÍA, desenchufada. Conectar con la llave en OFF.
 //
 // QUÉ HACE
 //   Fase 1 · barrido: prueba 250k (lo que dice el manual), 500k y 125k, 4 s
@@ -193,6 +198,8 @@ void setup() {
     Serial.println("  · ¿Paso prueba_can.ino en banco, con su control?");
     Serial.println("  · ¿Llave en ON y paro de emergencia arriba?");
     Serial.println("  · ¿CANH y CANL invertidos? Cambiarlos no daña nada en listen-only.");
+    Serial.println("  · Sin GND conectado: si no entra nada, la masa se toma del NEGATIVO");
+    Serial.println("    DE BATERIA con un cable aparte (LEEME.md). Nunca de los pines 5, 6, 9.");
     Serial.println("  · Si hubo errores RX altos: hay senal pero no a esas velocidades,");
     Serial.println("    o el pinout X200 no es el de este equipo.");
     Serial.println("  · Errores RX en cero: no llega nada. Pin equivocado o bus apagado.");
