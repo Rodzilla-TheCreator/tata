@@ -282,3 +282,10 @@ DB9 macho pin 8 ↔ CANH del módulo             → ~0
 DB9 macho pin 3 ↔ CANL del módulo             → ~0
 TX del módulo   ↔ GPIO 21                     → ABIERTO
 ```
+
+## 06-oct · el multipiloto NO trae terminador
+
+maje, multipiloto desconectado, Ω escala 200, entre sus pines CAN_H y CAN_L: **abierto**.
+No es una punta terminada del bus: el 120 Ω que se mide en el DB9 está en otro componente, y
+el que falta también. El **80 Ω** medido antes en la ficha del multipiloto sigue en tensión
+(¿se midió con el multipiloto enchufado? ¿otra red?).
