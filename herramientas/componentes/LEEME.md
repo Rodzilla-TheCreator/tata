@@ -174,3 +174,27 @@ bien asentado y la medición no haya llegado a la tarjeta.
 
 Si se confirma, el **80 Ω** medido en el equipo no lo explica el multipiloto y queda en tensión
 con los 120 Ω del DB9.
+
+## 07-oct · con el multipiloto desenchufado, la PANTALLA NO PRENDE
+
+maje: con la ficha del multipiloto desenchufada, la pantalla (la única, nodo 3, la del mismo
+mazo que el DB9) queda **totalmente oscura**: con el paro levantado, con la llave en ON, y con
+las dos cosas. No es un código de falla: no hay pantalla que lo muestre.
+
+**Lectura, sin confirmar:** algo de la alimentación o la habilitación del sistema **pasa a
+través del multipiloto**. Un nodo que falta en el bus da una falla, pero la pantalla prende.
+Candidatos: un puente interno entre pines de la ficha (1, 4, 5, 6, 9, 10, 13 sin
+identificar), o una salida activa del multipiloto.
+
+**Pega en la ruta B:** el imitador por el bus exige desenchufar el multipiloto. Lo que sea que
+el multipiloto le da al sistema, el reemplazo lo tiene que dar también.
+
+**Cómo se resuelve:**
+1. En el repuesto, sin alimentar: **continuidad entre todos los pares** de los 11 pines del
+   conector de afuera. Un par que pite es un puente → el reemplazo lleva el mismo puente
+2. En el equipo: voltajes de los 11 pines **con el multipiloto enchufado** (por atrás de la
+   ficha) contra la tabla de abajo. **Un pin en ~0 V desenchufado y en ~39 V enchufado es una
+   alimentación que vuelve del multipiloto**
+3. En el equipo, multipiloto desenchufado, escucha en el DB9: **¿hay tráfico CAN?** Si hay
+   cero tramas, se apaga todo el sistema; si hay tráfico, solo la pantalla
+4. Anotar si la tabla de voltajes del 03-oct se tomó con la ficha enchufada o desenchufada
