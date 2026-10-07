@@ -42,6 +42,11 @@ programa que se usó en el equipo, y así compararlo con `multipiloto.md` línea
 
 ## La prueba, con sus controles
 
+> **Ojo con el watchdog a mano:** con `WATCHDOG_MS = 200`, un valor escrito a mano en el
+> monitor serie dura 200 ms y vuelve a cero. Para los pasos 1 y 2, o se sube a `5000` solo
+> en la mesa, o se manda el latido desde un script que repita la última orden cada 100 ms.
+> **Al equipo, siempre 200**, con el latido saliendo del programa del control.
+
 1. Encender A, después B. En A tiene que salir, en orden: `702 00 boot-up` → `582 … OK` →
    `NMT START` → tramas `182`
 2. En el monitor de B escribir `a 100`: en A, `adelante/atras 100 ADEL`. Escribir `n`: en A,
