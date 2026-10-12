@@ -738,6 +738,17 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
 - **Verificar antes de contradecir a quien lo hizo con las manos.** Se objetó que Judit no
   podía aplicar a un Mitsubishi. El chino tenía razón: MCFA distribuye las tres marcas. Quien
   operó el equipo tiene evidencia que ningún catálogo tiene.
+- **Y el testimonio se verifica midiendo, en paralelo, no después.** El chino confirmó el
+  cable FTDI serie dos veces — la segunda el 02-oct, **cuando la ruta serie ya se había
+  agotado** — y el DB9 de este equipo resultó ser CAN (03-oct). No se sabe si recordó mal, si
+  sus EDR18N2 estaban configurados distinto, o si el módulo que alimentaba esa ruta se
+  canibalizó acá; sigue **en tensión**. La lección no es desconfiar de él: es que **una
+  medición pasiva no compite con el testimonio, lo acompaña**. Frente a un conector
+  desconocido, antes de cualquier hipótesis:
+  1. **matriz completa en ohmios con la batería fuera** (en un DB9, 36 pares, cinco minutos;
+     no tiene riesgo y no depende de ninguna teoría — habría mostrado el 120 Ω entre 3 y 8)
+  2. **voltajes contra el negativo de batería**, llave en ON
+  3. recién ahí las hipótesis, y conectar instrumentos activos
 - **Verificar antes de decir que algo no existe.** Antes de afirmar que un archivo no está en
   el repo: `git fetch`. Se declaró inexistente un `docs/14` que sí estaba.
 - **Consultar el CLI y los docs antes de adivinar.** Cuatro adivinanzas seguidas sobre Remote
