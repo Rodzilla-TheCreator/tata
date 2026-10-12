@@ -37,6 +37,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/componentes/` | **Dónde está cada controlador**, del manual de servicio. El cerebro es el **Maestro `1U16`**, nodo 1; los sensores van a su controlador y la pantalla los pide por el bus |
 | `herramientas/can/` | **La cadena de escucha CAN.** **Leer `LEEME.md` primero.** Plano vigente: **`armado_escucha.svg`** (sin conversor, TX al aire, CANH→8, CANL→3, sin GND). Los SVG viejos están superados: **el pin 6 es +24 V, no tierra**. `escucha_can.ino` escucha en LISTEN_ONLY; **validada para escuchar el 05-oct** con `diagnostico/`. `prueba_can.ino` no pasa con el módulo actual (transmisor lento) y no hace falta para escuchar |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
+| `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
