@@ -13,6 +13,7 @@
 | Fondo de rack | 1.10 m | **supuesto**, copiado de RETHINK |
 | Huecos por bahía | 2 | **supuesto**, copiado de RETHINK |
 | Equipo | EDR18N2, 2.91 m con uñas | `CLAUDE.md` |
+| Equipo que opera hoy en el sitio | «MIMA o LIMA», pantógrafo | **de oídas, 12-oct.** No aparece como marca de montacargas; ITW Mima hace emplayadoras. Dato en tensión hasta ver la placa |
 
 ## El giro de 90°
 
@@ -43,6 +44,8 @@ python3 almacen-nuevo/build_animacion.py       # → animacion_pasillo.html (se 
 ```
 
 ## Falta
+
+- **Foto de la placa del equipo que opera ahí.** Si no es EDR18N2, el giro se recalcula con su largo con uñas, ancho y radio
 
 - Nombre del cliente/sitio, y si la unidad de carga también es IBC
 - Medir fondo de rack y confirmar si caben dos cargas por bahía
