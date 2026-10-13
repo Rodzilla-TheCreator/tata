@@ -49,6 +49,9 @@ contacto. **No se da por cierto: se mide.**
      **13-oct, medido:** VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, el resto abierto; nada pitó.
      Es lo normal en un circuito con chips (diodos de protección internos, y lo que cuelgue
      del ESP32); un puente daría ~0 Ω. **Sin puentes**
+□ 2a. **13-oct, medido:** CANH↔CANL sin nada puesto, apagado → solo da lectura en la escala de
+     2 MΩ (cientos de kΩ o más). **El módulo no tiene terminador.** Con eso, al soltar el bus la
+     línea se descarga por cientos de kΩ: unos pocos cientos de pF bastan para los ~15 µs
 □ 2. Apagado. CANH ↔ CANL en las patas del módulo, escala de ohmios:
        sin nada puesto → decenas de kΩ (confirma que no hay terminador)
        con la 120 Ω del banco puesta → ~120 Ω. Si no da eso, la resistencia no hace contacto
