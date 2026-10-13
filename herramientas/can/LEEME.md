@@ -289,3 +289,17 @@ maje, multipiloto desconectado, Ω escala 200, entre sus pines CAN_H y CAN_L: **
 No es una punta terminada del bus: el 120 Ω que se mide en el DB9 está en otro componente, y
 el que falta también. El **80 Ω** medido antes en la ficha del multipiloto sigue en tensión
 (¿se midió con el multipiloto enchufado? ¿otra red?).
+
+## 13-oct · candidato a transceptor: MCP2551 sacado de un ELM327
+
+Foto `elm327_mcp2551.jpg`. Un ELM327 USB clon («Ver 1.5a», micro `PIC18F25K80`) trae como
+`U4` un **MCP2551 I/SN**, código de fecha `1147`, con logo de Microchip. Al lado, `R04` = «121»
+(120 Ω, su terminador). Logo no prueba que sea original: **lo decide `diagnostico/retardo`**
+(subida < 1 µs) después de desoldarlo.
+
+Si pasa (datos de la hoja del MCP2551, a confirmar con la hoja antes de soldar): 5 V; TXD con
+umbral TTL, así que el TX de 3.3 V del ESP32 debería bastar; RXD sale a 5 V → el mismo divisor
+1 kΩ / 2 kΩ; **RS (pata 8) a GND** para modo rápido — si queda al aire o en alto, el chip no
+transmite. Pinout: 1 TXD · 2 VSS · 3 VDD · 4 RXD · 5 VREF · 6 CANL · 7 CANH · 8 RS.
+
+En paralelo se pidió un **Waveshare SN65HVD230** (2 piezas, Amazon).
