@@ -13,6 +13,12 @@ así que la mesa con **una sola** 120 Ω es la réplica exacta.
 
 Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nada pita. Sin puentes.
 
+> **MEDIDO 13-oct, en la mesa, con 120 Ω exactos (100 + 10 + 10 en serie, DB9 8↔3):**
+> `retardo` (RX = GPIO 21, TX = GPIO 22, VCC del TJA desde VIN = 4.7 V): **bajada 0.36 µs,
+> subida 15.8 µs**, 500/500. **Igual que con 100 Ω y sin terminador el 05-oct.** Pasos 1–3 de
+> abajo: hechos. La hipótesis del terminador queda tumbada con el mismo valor del equipo.
+> **Siguiente: el mismo `retardo` con el TJA a 5.0 V firmes** (fuente aparte, GND común).
+
 > **Dato en tensión (13-oct, otra sesión):** la hipótesis «faltaba terminador» **ya se probó
 > el 05-oct y no se cumplió** (`can/LEEME.md`, sección 02 al 06-oct): `retardo` dio **15.3 µs
 > CON la 100 Ω entre CANH y CANL** (h/i ≈ 100 Ω medidos en los pines del módulo) y **15.3 µs
