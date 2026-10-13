@@ -13,6 +13,14 @@ así que la mesa con **una sola** 120 Ω es la réplica exacta.
 
 Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nada pita. Sin puentes.
 
+> **Dato en tensión (13-oct, otra sesión):** la hipótesis «faltaba terminador» **ya se probó
+> el 05-oct y no se cumplió** (`can/LEEME.md`, sección 02 al 06-oct): `retardo` dio **15.3 µs
+> CON la 100 Ω entre CANH y CANL** (h/i ≈ 100 Ω medidos en los pines del módulo) y **15.3 µs
+> SIN terminación**. El receptor solo, con otro nodo simulado: **0.24 µs**. Lo lento es el
+> **transmisor**. El paso 1–2 de abajo puede repetirse como control, pero **lo que no se probó
+> nunca es el paso 3 con 5.0 V firmes** (hoy VCC = 4.7 V, la hoja pide 4.75–5.25 V). Ese es el
+> que decide entre «chip sano mal alimentado» y «chip malo / clon».
+
 ```
 □ 0. OJO PINES: en campo el divisor de RX quedó en GPIO 21 (copia con RX=21, TX=22).
      retardo.ino usa TX=21 / RX=22. Ver dónde está HOY el divisor y ajustar los #define.
