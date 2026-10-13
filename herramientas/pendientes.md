@@ -24,6 +24,11 @@ Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nad
 > placa del módulo en la **pata 1 (TXD)** — mediciones l y n sin hacer (pata 1 ↔ pin TX del
 > conector; pata 1 ↔ GND, USB desconectado). **Para escuchar el módulo sirve; para transmitir,
 > otro transceptor** (MCP2515 de C&D, SN65HVD230 o CANable).
+>
+> **CERRADO 13-oct:** l (pata 1 ↔ pin TX del conector) = **1.0 Ω**, directo; n (pata 1 ↔ GND)
+> = **abierto**. La placa no tiene nada en la TXD. **El transmisor lento es el chip** (clon o
+> dañado). Probado y descartado: terminador (0 / 100 / 120 Ω), alimentación (4.7 / 5.0 V),
+> conversor de nivel, componentes de la placa en TXD. **Este TJA1050 queda solo para escuchar.**
 
 > **Dato en tensión (13-oct, otra sesión):** la hipótesis «faltaba terminador» **ya se probó
 > el 05-oct y no se cumplió** (`can/LEEME.md`, sección 02 al 06-oct): `retardo` dio **15.3 µs
