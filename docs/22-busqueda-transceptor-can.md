@@ -42,7 +42,10 @@ terminación», lo que no cuadra con la física: puede que la resistencia del ba
 contacto. **No se da por cierto: se mide.**
 
 ```
-□ 1. Apagado. Continuidad entre bornes vecinos: VCC–TX, TX–RX, RX–GND → ninguno debe pitar
+□ 1. (opcional, 10 s) Apagado. Continuidad entre bornes vecinos: VCC–TX, TX–RX, RX–GND.
+     maje objetó con razón: este módulo ya escuchó el equipo (06-oct, 0 errores a 250k) y el
+     retardo midió la bajada en 0.36 µs. Eso prueba VCC, GND, RX, CANH/CANL y que el TX baja
+     el bus. Un puente de estaño no explica una SUBIDA lenta con todo lo demás sano
 □ 2. Apagado. CANH ↔ CANL en las patas del módulo, escala de ohmios:
        sin nada puesto → decenas de kΩ (confirma que no hay terminador)
        con la 120 Ω del banco puesta → ~120 Ω. Si no da eso, la resistencia no hace contacto
