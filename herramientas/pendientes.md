@@ -3,6 +3,42 @@
 Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md`,
 `manuales_scribd.md` y `docs/16`.
 
+## ▶ SIGUIENTE PASO (13-oct-2026, para la i3) — ¿el TJA1050 era lento o le faltaba terminador?
+
+Todo el razonamiento en **`docs/22-busqueda-transceptor-can.md`**. Resumen: el módulo TJA1050
+**no tiene terminador** (CANH↔CANL apagado: solo lee en escala de 2 MΩ; maje le quitó `R3`).
+Sin terminador, al soltar el bus la línea se descarga por cientos de kΩ → los **~15 µs** que
+midió `retardo`. **Hipótesis:** el chip está sano. El equipo tiene **un solo** 120 Ω (DB9 3↔8),
+así que la mesa con **una sola** 120 Ω es la réplica exacta.
+
+Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nada pita. Sin puentes.
+
+```
+□ 0. OJO PINES: en campo el divisor de RX quedó en GPIO 21 (copia con RX=21, TX=22).
+     retardo.ino usa TX=21 / RX=22. Ver dónde está HOY el divisor y ajustar los #define.
+     El TX del módulo tiene que ir al otro GPIO (en el equipo iba al aire)
+□ 1. Resistencia 120 Ω en la bornera CANH/CANL, bien apretada
+□ 2. Apagado: CANH↔CANL → ~120 Ω. Si no, no hace contacto: arreglar antes de seguir
+□ 3. can/diagnostico/retardo → subida < 1 µs = chip sano
+     · si sigue ~15 µs: TJA a 5.0 V firmes (cargador USB/fuente), medir VCC en la prueba, repetir
+     · si sigue: chip malo → MCP2515 (C&D, L230) o Waveshare
+□ 4. Si pasó: can/prueba_can.ino → 20/20 a 250k
+     control: desconectar el cable de RX → 0 recibidas
+□ 5. Anotar resultados en docs/22 (tabla de estado) y en can/LEEME.md
+```
+
+**Lo que NO se hace:** llevar el TJA al equipo a transmitir para «ver si anda». Si la hipótesis
+falla, ensucia el bus real. Y aunque pase en la mesa, transmitir en el equipo es el peldaño 5:
+multipiloto real desenchufado, lo de **la pantalla que no prende sin multipiloto** resuelto
+primero (`componentes/LEEME.md`, 07-oct), el chino al lado y la escucha corriendo en paralelo.
+
+**En paralelo, sin depender de esto:**
+- Continuidad entre los 11 pines del **multipiloto de repuesto** (el puente de la pantalla)
+- Períodos del `0x182` y del `702 05` en el log del 06-oct → reemplazar los supuestos de
+  `can/banco_imitador/` (20 ms / 500 ms). Subir el log con `git add -f` si hace falta
+- Comprar el **MCP2515** de C&D (uno). El ELM327 de Montasa **no se desarma**
+- Transceptor suelto: `can/donde_conseguir.md`
+
 ## ✅ 06-oct-2026 12:05 · EL MULTIPILOTO, DESCIFRADO
 
 Diccionario de `0x182` y la conversación de arranque en **`can/multipiloto.md`**. Grabado con
