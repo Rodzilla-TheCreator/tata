@@ -302,4 +302,4 @@ umbral TTL, así que el TX de 3.3 V del ESP32 debería bastar; RXD sale a 5 V �
 1 kΩ / 2 kΩ; **RS (pata 8) a GND** para modo rápido — si queda al aire o en alto, el chip no
 transmite. Pinout: 1 TXD · 2 VSS · 3 VDD · 4 RXD · 5 VREF · 6 CANL · 7 CANH · 8 RS.
 
-En paralelo se pidió un **Waveshare SN65HVD230** (2 piezas, Amazon).
+En paralelo, visto en Amazon un **Waveshare SN65HVD230** (2 piezas). Compra sin confirmar.

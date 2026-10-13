@@ -20,6 +20,6 @@ DIP-8 si hay; si no, SOIC-8
 | 3 | **Yonkes**: computadora de motor, módulo de carrocería o tablero, dañados | transceptores originales, a desoldar | Reconco 9619-8192 · Alfa y Omega · Mafer +504 3300-8030 · El Triángulo (B° Medina, 11 calle, 5–6 ave.) · Revaparts (Blvd. Juan Pablo II) · Diesel Guerrero (B° Medina, 14 calle, 3 ave.) |
 | 4 | Tiendas de componentes | chip suelto, probabilidad baja | Sam Electronic (preguntado, tienda de repuestos de TV) · Steren (B° Suyapa) · Electro Repuestos · Electronica Geo +504 2257-2264 · Emec +504 2552-0959 |
 | 5 | Car audio | «decodificador CAN-bus» de radios Android | no se encontró una tienda concreta en SPS |
-| 6 | **Pedido afuera** | Waveshare SN65HVD230 ×2, Amazon (US$16.99), en camino | — |
+| 6 | **Afuera** | Waveshare SN65HVD230 ×2, Amazon (US$16.99). Compra sin confirmar | — |
 
 **Nunca de módulos de bolsa de aire.**
