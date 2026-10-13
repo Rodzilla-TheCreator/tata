@@ -18,6 +18,12 @@ Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nad
 > subida 15.8 µs**, 500/500. **Igual que con 100 Ω y sin terminador el 05-oct.** Pasos 1–3 de
 > abajo: hechos. La hipótesis del terminador queda tumbada con el mismo valor del equipo.
 > **Siguiente: el mismo `retardo` con el TJA a 5.0 V firmes** (fuente aparte, GND común).
+>
+> **MEDIDO 13-oct, con 5.0 V de fuente aparte y GND común, mismo 120 Ω:** bajada 0.36 µs,
+> **subida 16.8 µs**. Tampoco es la alimentación. Queda: **chip malo/clon**, o algo de la
+> placa del módulo en la **pata 1 (TXD)** — mediciones l y n sin hacer (pata 1 ↔ pin TX del
+> conector; pata 1 ↔ GND, USB desconectado). **Para escuchar el módulo sirve; para transmitir,
+> otro transceptor** (MCP2515 de C&D, SN65HVD230 o CANable).
 
 > **Dato en tensión (13-oct, otra sesión):** la hipótesis «faltaba terminador» **ya se probó
 > el 05-oct y no se cumplió** (`can/LEEME.md`, sección 02 al 06-oct): `retardo` dio **15.3 µs
