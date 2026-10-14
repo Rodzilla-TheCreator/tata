@@ -121,3 +121,17 @@ ESP32 A + TJA1050 (TWAI)  ──CANH/CANL──  MCP2515 (SPI) + ESP32 B
 automotriz, yonkes del Barrio Medina, car audio, y las tiendas preguntadas. Las tiendas de
 electrónica de acá venden LED, Arduino y repuestos de TV; **los transceptores CAN viven en los
 carros**, y de ahí es más fácil sacarlos.
+
+## RESUELTO — 14-oct-2026 · el TJA1050 nuevo sube rápido: el viejo era el chip
+
+TJA1050 nuevo de C&D, soldado por maje y puesto en **el mismo circuito** del viejo (mismos
+cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, 120 Ω en 8–3, 5 V), mismo `retardo_rx21`:
+
+| Chip | Baja | Sube | Muestras / fallas |
+|---|---|---|---|
+| viejo (13-oct) | 0.36 µs | **15.8–16.8 µs** | 500 / 0 |
+| **nuevo (14-oct)** | **0.36 µs** | **0.42 µs** | 500 / 0 |
+
+Única variable cambiada: el chip. **El nuevo sirve para transmitir.** El viejo queda solo para
+escuchar. Siguiente: `prueba_can` en banco con el nuevo; `diagnostico/mcp_prueba/` queda
+listo para el MCP2515.
