@@ -328,3 +328,22 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
    del equipo, no de la tarjeta: la tarjeta es pasiva, solo une el DB9 con el mazo.
 □ Reporte a Miguel: listo en Documents\TaTa\Reporte_EDR18N2_2026-09-30.docx, sin enviar
 ```
+
+## 14-oct · APM+ descartado en este equipo, y el orden de la ruta B
+
+- **APM+ (nodo 31): no está.** En los 11 logs del 06-oct, **cero tramas** de `0x71F`, `0x19F`,
+  `0x29F`… Latidos fijos solo de 701, 702, 703; boot-ups de 704, 707, 708, 71E. El manual lo
+  nombra en la tabla de nodos y en eventos de **paro de emergencia** (`1.26`–`1.27`): es un
+  módulo opcional, no protocolo de fábrica. Se cierra salvo que el chino diga otra cosa
+- **El pedal que le falta al equipo va primero en el equipo** (sin él no se prueba nada que se
+  mueva, y es el watchdog). El manual habla de «pedal doble» (mat. 51297587) y de un **pedal
+  de freno ANALÓGICO de dos canales** (eventos `1.10`/`1.11`, V1 + V2 ≈ 5 V). **Antes que nada:
+  cuál de los dos pedales falta y qué espera su conector** (llave ON, voltaje de cada pin;
+  contactos → relé DPDT, analógico → 2 canales de DAC). Mejor fuente: el EDR del taller del chino
+- **El multipiloto va en paralelo, en banco**, con el repuesto que maje tiene en casa:
+  1. continuidad de los 11 pines sin alimentar (puentes y si el bus entra y sale: 2↔4, 3↔5)
+  2. alimentarlo a ~39 V (pin 8 +, pin 7 −) y escuchar: ¿`702 00` y latido? Si sí, **funciona**
+  3. con el TJA nuevo, mandarle `000 01 02` (NMT start, solo en banco): ¿empieza a mandar `0x182`?
+- **Para hacerse pasar por el nodo 2 algo tiene que quedar donde iba** (la pantalla no prende
+  sin él, 07-oct). Opción más simple: **dejar el multipiloto real enchufado y cortar solo su par
+  CAN en un arnés**, nuestro nodo en su lugar. Se decide después de la continuidad del punto 1
