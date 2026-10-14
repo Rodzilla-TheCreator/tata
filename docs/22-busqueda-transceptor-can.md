@@ -139,3 +139,14 @@ listo para el MCP2515.
 **Marca del transceptor del MCP2515 (14-oct, leída por maje):** `NXP A1050/C · IKH000 · nD302`.
 Distinta de la familia `SX XJ` de los dos módulos sueltos: otro lote. Que `A1050/C` sea la
 marca corta del TJA1050 en SO8 es probable, **no verificado** contra la hoja de marcado.
+
+**`prueba_can` con el TJA nuevo (14-oct), TX 22 / RX 21, 120 Ω, banco:**
+
+| Corrida | Transmitidas | Recibidas | Idénticas | Errores TX / RX |
+|---|---|---|---|---|
+| normal | 20/20 | 20 | 20 | 0 / 0 |
+| **control**: TX del programa a GPIO 25 (al aire), sin tocar cables | 1/20 | **0** | 0 | 128 / 0 |
+| normal otra vez | 20/20 | 20 | 20 | 0 / 0 |
+
+El eco pasa por el transceptor, no por dentro del ESP32. **La cadena de transmisión queda
+validada en banco.** Con el viejo, la misma prueba daba 0/20.

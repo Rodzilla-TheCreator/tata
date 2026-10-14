@@ -34,7 +34,7 @@ Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nad
 > el MISMO circuito del viejo (mismos cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, 120 Ω en
 > 8–3, 5 V), mismo `retardo_rx21`: **baja 0.36 µs, sube 0.42 µs, 500 muestras, 0 fallas**.
 > El viejo en ese armado: sube 15.8–16.8 µs. **Era el chip.** El nuevo sirve para transmitir.
-> Siguiente: `prueba_can` (self-test, `tx.self=1`) en banco con el nuevo, todavía sin equipo.
+> `prueba_can` 14-oct: 20/20 con el nuevo; control (TX a GPIO 25 al aire) 0 recibidas. Validado.
 > `diagnostico/mcp_prueba/` queda listo para el MCP2515 (SPI por conversor, CS 5 / SCK 18 /
 > SI 23 / SO 19, cristal a leer).
 
