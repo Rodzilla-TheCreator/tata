@@ -20,6 +20,7 @@ con 120 Ω entre CANH y CANL. Después, `prueba_can.ino` 20/20 a 250k y su contr
 |---|---|---|
 | **El TJA1050 que ya tenemos** | sospecha nueva: el lento **no sería el chip, sino la falta de terminador** | medir y repetir `retardo` (abajo) |
 | **Módulo MCP2515 + TJA1050 de C&D Tecnología, L230** | **en mano (14-oct).** Su transceptor dice `A1050/C · IKH000 · nD302` con logo NXP (foto `herramientas/can/mcp2515_tja1050.jpg`): **otro lote** que el nuestro (`TJA1050 NXP SX XJ D408`). `R2` = «121», su terminador (por `J1`) | banco de dos nodos con nuestro TJA (abajo) |
+| **Segundo módulo TJA1050, nuevo** (14-oct) | en mano. Chip `TJA1050 · NXP · SX XJ · nD406`: **misma familia de marcación** que el nuestro (`SX XJ D408`), no la del MCP2515. **Trae su terminador puesto**: `R3` = «121» (foto `herramientas/can/tja1050_modulo_nuevo.jpg`) | **`retardo` tal cual viene** — es la prueba directa de la hipótesis del terminador (abajo) |
 | **Waveshare SN65HVD230 ×2**, Amazon, US$16.99 | visto; **compra sin confirmar**. Entrega en EE.UU. ~18-oct + courier | si se compra, es el candidato más limpio: 3.3 V directo al ESP32 |
 | **Chip suelto** (MCP2562, MCP2551, SN65HVD230…) | preguntado a Sam Electronic; búsqueda en `herramientas/can/donde_conseguir.md` | talleres de electrónica automotriz y yonkes |
 | **MCP2551 del ELM327 de Montasa** | identificado, **no se toca**: no es nuestro | si hace falta, comprar un ELM327 propio (C&D, L290) para desarmar |
