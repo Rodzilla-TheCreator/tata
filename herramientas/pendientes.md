@@ -329,12 +329,21 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
 □ Reporte a Miguel: listo en Documents\TaTa\Reporte_EDR18N2_2026-09-30.docx, sin enviar
 ```
 
-## 14-oct · APM+ descartado en este equipo, y el orden de la ruta B
+## 14-oct · APM+: no presente y desactivado (ABIERTO), y el orden de la ruta B
 
 - **APM+ (nodo 31): no está.** En los 11 logs del 06-oct, **cero tramas** de `0x71F`, `0x19F`,
   `0x29F`… Latidos fijos solo de 701, 702, 703; boot-ups de 704, 707, 708, 71E. El manual lo
   nombra en la tabla de nodos y en eventos de **paro de emergencia** (`1.26`–`1.27`): es un
-  módulo opcional, no protocolo de fábrica. Se cierra salvo que el chino diga otra cosa
+  módulo opcional. **Corregido el mismo día (maje): NO se descarta.** Evento `8 06` n:
+  «mensaje de arranque de un componente opcional que está configurado como no presente» →
+  «liberar/activar … nodo por parámetro». **Los opcionales se activan por parámetro**; uno
+  desactivado no recibe nada del Master, igual que el 31. Si se conecta, el Master lo detecta.
+  Para saber si el firmware lo soporta, de barato a caro: (1) menú de servicio, buscar opción
+  APM / PLC / automatización junto a ISM y CanCode, solo mirar; (2) preguntar al chino si Judit
+  lo muestra; (3) mandar `71F 00` al equipo y ver si sale `8 06 31` (eso YA ES TRANSMITIR, último)
+- **Dato en tensión:** el Master tiene interfaces serie, una llamada **«interfaz PLC COM4»**
+  (evento `6 87 4`; COM2/COM3 son radio y logística). No se sabe dónde está físicamente. Puede
+  tener que ver con el cable FTDI serie que el chino usaba
 - **Por qué no puede ser un nodo «solo recibe»:** todo nodo CANopen manda boot-up al arrancar,
   y el Master le habla a los que tiene configurados. Arranque del 06-oct (3 arranques):
   lee `0x1000` de 2, 4, 7, 8, 30 · NMT start a 2, 3, 4, 7, 8, 30 **y 28** · boot-ups de 1, 2, 4,
