@@ -125,7 +125,7 @@ carros**, y de ahí es más fácil sacarlos.
 ## RESUELTO — 14-oct-2026 · el TJA1050 nuevo sube rápido: el viejo era el chip
 
 TJA1050 nuevo de C&D, soldado por maje y puesto en **el mismo circuito** del viejo (mismos
-cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, 120 Ω en 8–3, 5 V), mismo `retardo_rx21`:
+cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, 5 V; terminación: la R3 de 121 Ω del propio módulo, sin los 100+10+10 de banco), mismo `retardo_rx21`:
 
 | Chip | Baja | Sube | Muestras / fallas |
 |---|---|---|---|
@@ -140,7 +140,7 @@ listo para el MCP2515.
 Distinta de la familia `SX XJ` de los dos módulos sueltos: otro lote. Que `A1050/C` sea la
 marca corta del TJA1050 en SO8 es probable, **no verificado** contra la hoja de marcado.
 
-**`prueba_can` con el TJA nuevo (14-oct), TX 22 / RX 21, 120 Ω, banco:**
+**`prueba_can` con el TJA nuevo (14-oct), TX 22 / RX 21, terminación R3 (121 Ω) del módulo, banco:**
 
 | Corrida | Transmitidas | Recibidas | Idénticas | Errores TX / RX |
 |---|---|---|---|---|
