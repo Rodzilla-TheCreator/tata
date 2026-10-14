@@ -116,6 +116,13 @@ DB9 pin 8 ↔ multipiloto pin 3   120 Ω
   R3 del TJA nuevo en el DB9 es lo que pensó el fabricante); **C** un nodo lo conmuta por
   electrónica y en OFF no se ve. El manual de servicio no dice nada de terminación (buscado).
   **Cómo se decide:** llave OFF, desenchufar módulos de a uno midiendo 3 ↔ 8 hasta que abra
+- **EL MANUAL PIDE 60 Ω (14-oct):** en «Mensajes de eventos», págs. 181G–182G, los errores
+  `8 01` (CAN Bus averiado), `8 02` (nodo no responde) y `8 05` (latido) traen como acción
+  «Controlar las resistencias de los terminales (60 Ω ± 10%)». **El equipo está fuera de
+  especificación con 120 Ω.** Con la R3 (121) del TJA nuevo queda en 60: lo que pide el
+  fabricante. Decisión de maje: **se escucha con el TJA nuevo + R3.** Antes de prender: 3 ↔ 8
+  sin cable ≈ 120, con cable ≈ 60; anotar los códigos que ya tiene el display. Si sale uno
+  nuevo `8 01 / 8 02 / 8 05`, el subíndice dice qué nodo: llave OFF y quitar el cable
 - El **80 Ω** de la ficha del multipiloto queda como lectura en tensión. Hay que repetirlo
   igual que estos, sabiendo si la ficha estaba enchufada
 

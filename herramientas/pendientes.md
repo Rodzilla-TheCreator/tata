@@ -42,6 +42,8 @@ Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nad
 >   del equipo tiene UN solo 120 Ω: con el nuevo conectado quedaría en 60 Ω. Es la
 >   terminación estándar, pero **es agregar un terminador y se decide antes**. Opciones:
 >   desoldar `R3`, o escuchar con el TJA viejo (validado en el equipo el 06-oct)
+>   **Resuelto 14-oct:** el manual pide 60 Ω ± 10% (págs. 181G–182G). Se escucha con el nuevo
+>   + R3. Ver `can/LEEME.md`, sección de la terminación
 > `diagnostico/mcp_prueba/` queda listo para el MCP2515 (SPI por conversor, CS 5 / SCK 18 /
 > SI 23 / SO 19, cristal a leer).
 
