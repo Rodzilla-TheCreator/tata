@@ -35,6 +35,14 @@ Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nad
 > 8–3, 5 V), mismo `retardo_rx21`: **baja 0.36 µs, sube 0.42 µs, 500 muestras, 0 fallas**.
 > El viejo en ese armado: sube 15.8–16.8 µs. **Era el chip.** El nuevo sirve para transmitir.
 > `prueba_can` 14-oct: 20/20 con el nuevo; control (TX a GPIO 25 al aire) 0 recibidas. Validado.
+>
+> **ANTES DE LLEVAR EL CABLE AL EQUIPO (14-oct):**
+> - En el ESP32 quedó cargado `escucha_rx21` (LISTEN_ONLY, RX 21). En la mesa: silencio, 0 errores
+> - **Quitar los 120 Ω de banco** (100+10+10 entre 8 y 3 del DB9 macho)
+> - **El TJA nuevo trae su terminador puesto** (`R3` = 121). Al viejo se le quitó. El bus
+>   del equipo tiene UN solo 120 Ω: con el nuevo conectado quedaría en 60 Ω. Es la
+>   terminación estándar, pero **es agregar un terminador y se decide antes**. Opciones:
+>   desoldar `R3`, o escuchar con el TJA viejo (validado en el equipo el 06-oct)
 > `diagnostico/mcp_prueba/` queda listo para el MCP2515 (SPI por conversor, CS 5 / SCK 18 /
 > SI 23 / SO 19, cristal a leer).
 
