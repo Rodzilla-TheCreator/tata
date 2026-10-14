@@ -316,3 +316,49 @@ umbral TTL, así que el TX de 3.3 V del ESP32 debería bastar; RXD sale a 5 V �
 transmite. Pinout: 1 TXD · 2 VSS · 3 VDD · 4 RXD · 5 VREF · 6 CANL · 7 CANH · 8 RS.
 
 En paralelo, visto en Amazon un **Waveshare SN65HVD230** (2 piezas). Compra sin confirmar.
+
+## 14-oct · TJA nuevo: transmite. Y lo que dice el manual del bus
+
+### El transceptor
+
+| Prueba | TJA viejo (`SX XJ D406`) | TJA nuevo (`SX XJ D406`, misma marca) |
+|---|---|---|
+| `retardo`, subida TX→RX | 15.8–16.8 µs | **0.42 µs** (baja 0.36, 500/0 fallas) |
+| `prueba_can` (self-test 250k) | 0/20 | **20/20**, 0 errores |
+| control: TX del sketch a GPIO 25 (al aire), sin tocar cables | — | 1/20 transmitidas, **0 recibidas**, TEC 128 |
+
+Mismo circuito, mismo código, solo cambia el chip: **el viejo era una unidad mala, no la
+familia.** El nuevo trae su terminador puesto (`R3` = 121 Ω); las pruebas del 14-oct se
+hicieron con esa R3 y **sin** los 100+10+10 de banco. El transceptor del MCP2515 de C&D dice
+`NXP A1050/C · IKH000 · nD302` (otro lote; sin probar todavía, ver `diagnostico/mcp_prueba/`).
+
+**Pines alineados con el armado real:** desde el 06-oct el divisor está en el GPIO 21. Los
+sketches del repo (`escucha_can`, `prueba_can`, `diagnostico/retardo`, `diag_twai`,
+`multibaud`) pasan a **TX = 22, RX = 21**. `receptor` y `lazo_pulsos` quedan como estaban: son
+el registro de pruebas con otro cableado.
+
+### El manual pide 60 Ω
+
+Págs. 181G–182G, errores del bus: «Controlar las resistencias de los terminales (60 Ω ± 10%)».
+El equipo mide 120 Ω: **fuera de especificación.** Se escucha con el TJA nuevo + R3 (queda en
+60). Antes de prender: 3 ↔ 8 sin cable ≈ 120, con cable ≈ 60; anotar los códigos que ya tiene
+el display.
+
+| Evento | Qué es | Lo genera |
+|---|---|---|
+| `8 01 1` | un nodo se recuperó de bus-off | EMCY `8140` del nodo |
+| `8 01 2` / `3` | controlador en error pasivo | el Master / EMCY `8120` |
+| `8 01 3–5` | buffers desbordados | EMCY `8110` |
+| `8 02 n` | el nodo n no aparece en 10 s al arrancar | el Master |
+| `8 05 n` | latido del nodo n ausente por 3.5 × su período | el Master / EMCY `8130` |
+| `8 06 n` | arrancó un opcional **configurado como no presente** | el Master. Acción: «activar o eliminar nodo **por parámetro**» |
+| `1 26` / `1 27` | paro de emergencia pedido por **APM+** por el bus, sin respuesta | el Master |
+| `6 87 4` | buffer lleno de la **«interfaz PLC COM4»** (serie) | el Master |
+
+### Quién está en el bus (logs del 06-oct, limpios)
+
+10 nodos, 53 identificadores: **1, 2, 3, 4, 5, 6, 7, 8, 10, 30.** En el arranque el Master lee
+`0x1000` de 2, 4, 7, 8, 30; manda NMT start a 2, 3, 4, 7, 8, 30 **y 28** (CanCode, que nunca
+contesta); boot-ups de 1, 2, 4, 7, 8, 30. **Al 31 (APM+) no le habla nunca.** Por el `8 06`:
+los opcionales se activan por parámetro, así que **el APM+ queda ABIERTO** (no presente y
+desactivado; no se sabe si el firmware lo soporta). Plan en `pendientes.md` y `sdo_lee/`.

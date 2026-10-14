@@ -2,7 +2,7 @@
 #include "driver/twai.h"
 struct V { const char* n; twai_timing_config_t t; };
 void prueba(const char* nombre, twai_timing_config_t t) {
-  twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_21, GPIO_NUM_22, TWAI_MODE_NO_ACK);
+  twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_22, GPIO_NUM_21, TWAI_MODE_NO_ACK);
   twai_filter_config_t f = TWAI_FILTER_CONFIG_ACCEPT_ALL();
   if (twai_driver_install(&g, &t, &f) != ESP_OK || twai_start() != ESP_OK) { Serial.printf("BAUD %-5s no arranca\n", nombre); return; }
   int ok = 0;

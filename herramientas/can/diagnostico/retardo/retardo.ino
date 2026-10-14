@@ -1,7 +1,7 @@
 // Mide el retardo TX->RX de cada flanco, en ns, con el contador de ciclos (240 MHz).
 #include "soc/gpio_reg.h"
-#define TX 21
-#define RX 22
+#define TX 22   // armado vigente 14-oct
+#define RX 21
 static inline int rx() { return (REG_READ(GPIO_IN_REG) >> RX) & 1; }
 void setup() {
   Serial.begin(115200); delay(700);

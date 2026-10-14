@@ -28,7 +28,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `docs/19-control-teleop.md` | **El control del teleop: cualquier control sirve, qué funciones y en qué orden, y las reglas del mando** |
 | `docs/20-simular-mandos.md` | **Cómo simular pedal, timón y multipiloto sin que el equipo lo note: las reglas de plausibilidad del manual, y arneses enchufables** |
 | `docs/21-gameplan-intervencion.md` | **El gameplan en cuatro secciones: leer sensores, multipiloto (primero, en el banco con el repuesto), pedal y timón. Y lo que dijo el chino el 02-oct** |
-| `docs/22-busqueda-transceptor-can.md` | **La búsqueda del transceptor para transmitir al bus.** El TJA1050 lento quizá era falta de terminador; MCP2515 disponible en C&D; qué se descartó y por qué |
+| `docs/22-busqueda-transceptor-can.md` | **La búsqueda del transceptor para transmitir al bus.** **Resuelto 14-oct:** el TJA1050 viejo era una unidad mala; el nuevo (misma marca) sube en 0.42 µs y pasa `prueba_can` 20/20 con control. MCP2515 de C&D en mano, sin probar |
 
 | Carpeta | Qué contiene |
 |---|---|
@@ -36,7 +36,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/manual_operacion/` | **El índice del manual impreso de operador** (`04.17 US_ES`, familia ESR N2). `indice.md` lo transcribe y dice qué páginas fotografiar: **101–109, acceso sin llave**, que es de donde cuelga el pin 6 del DB9 |
 | `herramientas/pendientes.md` | **Dónde quedó el puerto y qué falta, en banco y en el equipo. Empezar por acá** |
 | `herramientas/componentes/` | **Dónde está cada controlador**, del manual de servicio. El cerebro es el **Maestro `1U16`**, nodo 1; los sensores van a su controlador y la pantalla los pide por el bus |
-| `herramientas/can/` | **La cadena de escucha CAN.** **Leer `LEEME.md` primero.** Plano vigente: **`armado_escucha.svg`** (sin conversor, TX al aire, CANH→8, CANL→3, sin GND). Los SVG viejos están superados: **el pin 6 es +24 V, no tierra**. `escucha_can.ino` escucha en LISTEN_ONLY; **validada para escuchar el 05-oct** con `diagnostico/`. `prueba_can.ino` no pasa con el módulo actual (transmisor lento) y no hace falta para escuchar |
+| `herramientas/can/` | **La cadena de escucha CAN.** **Leer `LEEME.md` primero.** Plano vigente: **`armado_escucha.svg`** (sin conversor, TX al aire, CANH→8, CANL→3, sin GND). Los SVG viejos están superados: **el pin 6 es +24 V, no tierra**. `escucha_can.ino` escucha en LISTEN_ONLY; **validada para escuchar el 05-oct** con `diagnostico/`. `prueba_can.ino` **pasa 20/20 con el TJA nuevo (14-oct)**; el viejo queda solo para escuchar. **Pines: TX 22, RX 21.** `sdo_lee/` lee objetos por SDO (solo lectura, todavía sin probar en banco). **El manual pide 60 Ω en el bus; el equipo tiene 120** |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |

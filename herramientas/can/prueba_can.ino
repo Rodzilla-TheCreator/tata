@@ -21,8 +21,8 @@
 
 #include "driver/twai.h"
 
-#define PIN_TX   GPIO_NUM_21     // va al LV1 del conversor
-#define PIN_RX   GPIO_NUM_22     // viene del LV2 del conversor
+#define PIN_TX   GPIO_NUM_22     // → TX del TJA1050 NUEVO (armado vigente, 14-oct)
+#define PIN_RX   GPIO_NUM_21     // ← RX del TJA por el divisor 1k/2k
 
 const int   N_TRAMAS   = 20;
 const int   ESPERA_MS  = 120;    // por trama, antes de darla por perdida
@@ -124,7 +124,7 @@ void setup() {
     Serial.println("  >>> ECO COMPLETO. La cadena pasa.");
     Serial.println();
     Serial.println("  AHORA EL CONTROL, y no es opcional:");
-    Serial.println("  desconectá el cable de RX (LV2 -> GPIO 22), reiniciá,");
+    Serial.println("  desconectá el RX (GPIO 21) o poné PIN_TX en un GPIO libre (25), reiniciá,");
     Serial.println("  y volvé a correr. Tiene que dar CERO RECIBIDAS.");
     Serial.println("  Si igual da eco, el lazo se cierra adentro del ESP32");
     Serial.println("  y esta prueba no probo el transceptor.");

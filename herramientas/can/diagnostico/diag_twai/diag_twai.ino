@@ -20,7 +20,7 @@ void alertas(const char* t) {
 }
 void setup() {
   Serial.begin(115200); delay(700);
-  twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_21, GPIO_NUM_22, TWAI_MODE_NO_ACK);
+  twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_22, GPIO_NUM_21, TWAI_MODE_NO_ACK);
   g.alerts_enabled = TWAI_ALERT_ALL;
   twai_timing_config_t t = TWAI_TIMING_CONFIG_250KBITS();
   twai_filter_config_t f = TWAI_FILTER_CONFIG_ACCEPT_ALL();

@@ -17,9 +17,10 @@
 // CABLEADO FINAL — sin conversor de nivel (el conversor fue descartado el 02-oct)
 //
 //      ESP32 5V/VIN  →  TJA1050 VCC          ESP32 GND  →  TJA1050 GND
-//      ESP32 GPIO 21 →  NADA. El TX del TJA1050 queda AL AIRE: su pull-up interno lo
+//      ESP32 GPIO 22 →  NADA. El TX del TJA1050 queda AL AIRE: su pull-up interno lo
 //                       deja en recesivo y el módulo físicamente no puede transmitir
-//      TJA1050 RX → 1 kΩ → GPIO 22, y de GPIO 22 → 2 kΩ → GND   (divisor 5 V → 3.3 V)
+//      TJA1050 RX → 1 kΩ → GPIO 21, y de GPIO 21 → 2 kΩ → GND   (divisor 5 V → 3.3 V)
+//      (14-oct: pines alineados con el armado real; hasta el 13-oct el repo decía TX 21 / RX 22)
 //
 //      TJA1050 CANH  →  DB9 pin 8   (CAN_H — medido: 120 Ω contra el 3, mismo hilo que
 //      TJA1050 CANL  →  DB9 pin 3    el multipiloto)
@@ -40,8 +41,8 @@
 
 #include "driver/twai.h"
 
-#define PIN_TX   GPIO_NUM_21     // igual que prueba_can.ino; en listen-only no se maneja
-#define PIN_RX   GPIO_NUM_22
+#define PIN_TX   GPIO_NUM_22     // armado vigente (06-oct en adelante): el divisor quedó en el 21
+#define PIN_RX   GPIO_NUM_21     // RX del TJA → 1k/2k → GPIO 21
 
 const uint32_t VENTANA_BARRIDO_MS = 4000;
 const uint32_t RESUMEN_MS         = 5000;
