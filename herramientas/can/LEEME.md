@@ -215,7 +215,7 @@ sin terminador · laptop a batería · conectar con la llave en OFF
 
 **Lo lento es el transmisor del módulo al soltar el bus. El receptor es rápido.** Para
 escuchar a 250k (bit de 4 µs) sirve; para transmitir no. El chip dice `TJA1050 NXP SX XJ
-D408`; según la hoja de NXP no debería tardar 15 µs. Candidatos sin elegir: clon, chip
+D406`; según la hoja de NXP no debería tardar 15 µs. Candidatos sin elegir: clon, chip
 dañado, VCC en 4.7 V (la hoja pide 4.75–5.25 V).
 
 **Trampa que costó una tarde:** una prueba de lazo con TX pegado en bajo da siempre RX = 1,

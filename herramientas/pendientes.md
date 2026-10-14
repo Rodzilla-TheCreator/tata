@@ -185,7 +185,7 @@ Consecuencia: **el cable de escucha no lleva terminador**. La 100 Ω es solo de 
 - El lazo funciona: self-test **10/10 a 25k**, 8/10 a 50k, 0/10 desde 100k
 - Medido con el contador de ciclos: **bajada TX→RX 0.36 µs, subida ~15 µs**, igual con o sin
   terminación y con o sin conversor. A 250k el bit dura 4 µs: así no transmite
-- El chip dice `TJA1050 NXP SX XJ D408`, pin S en 0 V (modo normal). Según la hoja de NXP el
+- El chip dice `TJA1050 NXP SX XJ D406`, pin S en 0 V (modo normal). Según la hoja de NXP el
   RXD empuja activo hacia arriba: 15 µs está fuera de lo que el chip debería hacer
 - Pendiente: mediciones l–p (¿algo del módulo en las patas 1 o 4?) o cambiar a SN65HVD230
 - Bug corregido en `prueba_can.ino`: faltaba `tx.self = 1` (Self Reception Request)
