@@ -335,6 +335,13 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
   `0x29F`… Latidos fijos solo de 701, 702, 703; boot-ups de 704, 707, 708, 71E. El manual lo
   nombra en la tabla de nodos y en eventos de **paro de emergencia** (`1.26`–`1.27`): es un
   módulo opcional, no protocolo de fábrica. Se cierra salvo que el chino diga otra cosa
+- **Por qué no puede ser un nodo «solo recibe»:** todo nodo CANopen manda boot-up al arrancar,
+  y el Master le habla a los que tiene configurados. Arranque del 06-oct (3 arranques):
+  lee `0x1000` de 2, 4, 7, 8, 30 · NMT start a 2, 3, 4, 7, 8, 30 **y 28** · boot-ups de 1, 2, 4,
+  7, 8, 30. **Al 31 nunca le habla.** Nodos que transmiten: 1, 2, 3, 4, 5, 6, 7, 8, 10, 30 (10
+  nodos, 53 identificadores; no 29)
+- **Nodo 28 (CanCode): el Master lo arranca y nunca contesta.** Lo espera y no está, o no
+  responde. Preguntar al chino qué es el CanCode en este EDR
 - **El pedal que le falta al equipo va primero en el equipo** (sin él no se prueba nada que se
   mueva, y es el watchdog). El manual habla de «pedal doble» (mat. 51297587) y de un **pedal
   de freno ANALÓGICO de dos canales** (eventos `1.10`/`1.11`, V1 + V2 ≈ 5 V). **Antes que nada:
