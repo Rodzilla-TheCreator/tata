@@ -363,3 +363,21 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
 - **Para hacerse pasar por el nodo 2 algo tiene que quedar donde iba** (la pantalla no prende
   sin él, 07-oct). Opción más simple: **dejar el multipiloto real enchufado y cortar solo su par
   CAN en un arnés**, nuestro nodo en su lugar. Se decide después de la continuidad del punto 1
+
+### Averiguar el APM+ nosotros (14-oct) — `can/sdo_lee/`
+
+Si Judit (nodo 30) cambia parámetros por SDO, un nodo nuestro también puede — **si** el Master
+no pide acceso, **si** se encuentra el objeto, y **si** el firmware conoce el 31. Activarlo sin
+APM+ presente probablemente dé `8 02 31` y bloquee el equipo hasta revertir: **leer y guardar
+el valor original antes de escribir nada.**
+
+| Paso | Qué | Esperado | Si no |
+|---|---|---|---|
+| 0 | banco: `id 2` al multipiloto de repuesto alimentado a ~39 V | `1000` = `…` como en el equipo (`43 00 10 00 …`) | el sketch está mal, no se va al equipo |
+| 1 | equipo: `id 1` (Master). **Control:** `id 31` | Master contesta; 31 SIN RESPUESTA | Master no contesta → pide acceso / no acepta SDO de cualquiera |
+| 2 | `esperados 1` → `0x1F81` (CiA 302: nodos que espera el Master) | marcados 2, 3, 4, 7, 8, 28, 30; 31 sin marcar | «objeto no existe» → `barre 1 2000 5FFF` (solo lecturas) |
+| 3 | escribir el bit del 31, ciclo de llave, mirar | el Master le habla al 31 (`61F`, `000 01 1F`) | revertir al valor guardado |
+
+`sdo_lee.ino` **solo lee**: no hay comandos 0x2x en el archivo. Antes de transmitir escucha 3 s
+y no transmite si no hay bus sano a 250k. **Pasos 1–2 son la primera transmisión al equipo**
+(ACK + pedidos de lectura): decisión de maje, no automática. El paso 3 va en otro sketch.
