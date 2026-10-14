@@ -110,6 +110,12 @@ DB9 pin 8 ↔ multipiloto pin 3   120 Ω
   **Falta uno.** Candidato natural: estaba en un componente que se canibalizó (la misma
   hipótesis del `6U10`). El bus anda igual — la pantalla muestra sensores —, pero con
   márgenes peores. **No se agrega un 120 Ω por nuestra cuenta**: se anota y se decide después
+- **Corregido 14-oct:** «falta uno» es **deducción**, no medición. Lo medido es 120 Ω entre 3 y
+  8 con la llave en OFF. Hipótesis abiertas: **A** estaba en un módulo canibalizado; **B** el DB9
+  es una punta del bus y el segundo terminador lo trae la herramienta de servicio (entonces la
+  R3 del TJA nuevo en el DB9 es lo que pensó el fabricante); **C** un nodo lo conmuta por
+  electrónica y en OFF no se ve. El manual de servicio no dice nada de terminación (buscado).
+  **Cómo se decide:** llave OFF, desenchufar módulos de a uno midiendo 3 ↔ 8 hasta que abra
 - El **80 Ω** de la ficha del multipiloto queda como lectura en tensión. Hay que repetirlo
   igual que estos, sabiendo si la ficha estaba enchufada
 
