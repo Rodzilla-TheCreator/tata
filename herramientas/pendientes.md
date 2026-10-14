@@ -30,6 +30,14 @@ Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nad
 > dañado). Probado y descartado: terminador (0 / 100 / 120 Ω), alimentación (4.7 / 5.0 V),
 > conversor de nivel, componentes de la placa en TXD. **Este TJA1050 queda solo para escuchar.**
 
+> **CONFIRMADO 14-oct — control con chip nuevo:** TJA1050 nuevo de C&D, soldado y puesto en
+> el MISMO circuito del viejo (mismos cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, 120 Ω en
+> 8–3, 5 V), mismo `retardo_rx21`: **baja 0.36 µs, sube 0.42 µs, 500 muestras, 0 fallas**.
+> El viejo en ese armado: sube 15.8–16.8 µs. **Era el chip.** El nuevo sirve para transmitir.
+> Siguiente: `prueba_can` (self-test, `tx.self=1`) en banco con el nuevo, todavía sin equipo.
+> `diagnostico/mcp_prueba/` queda listo para el MCP2515 (SPI por conversor, CS 5 / SCK 18 /
+> SI 23 / SO 19, cristal a leer).
+
 > **Dato en tensión (13-oct, otra sesión):** la hipótesis «faltaba terminador» **ya se probó
 > el 05-oct y no se cumplió** (`can/LEEME.md`, sección 02 al 06-oct): `retardo` dio **15.3 µs
 > CON la 100 Ω entre CANH y CANL** (h/i ≈ 100 Ω medidos en los pines del módulo) y **15.3 µs
