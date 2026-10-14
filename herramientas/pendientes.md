@@ -339,8 +339,7 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
   «liberar/activar … nodo por parámetro». **Los opcionales se activan por parámetro**; uno
   desactivado no recibe nada del Master, igual que el 31. Si se conecta, el Master lo detecta.
   Para saber si el firmware lo soporta, de barato a caro: (1) menú de servicio, buscar opción
-  APM / PLC / automatización junto a ISM y CanCode, solo mirar; (2) preguntar al chino si Judit
-  lo muestra; (3) mandar `71F 00` al equipo y ver si sale `8 06 31` (eso YA ES TRANSMITIR, último)
+  APM / PLC / automatización junto a ISM y CanCode, solo mirar; (2) con `sdo_lee`, leer `0x1F81` del Master (paso 2 de abajo); (3) mandar `71F 00` al equipo y ver si sale `8 06 31` (eso YA ES TRANSMITIR, último)
 - **Dato en tensión:** el Master tiene interfaces serie, una llamada **«interfaz PLC COM4»**
   (evento `6 87 4`; COM2/COM3 son radio y logística). No se sabe dónde está físicamente. Puede
   tener que ver con el cable FTDI serie que el chino usaba
@@ -350,7 +349,10 @@ riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATI
   7, 8, 30. **Al 31 nunca le habla.** Nodos que transmiten: 1, 2, 3, 4, 5, 6, 7, 8, 10, 30 (10
   nodos, 53 identificadores; no 29)
 - **Nodo 28 (CanCode): el Master lo arranca y nunca contesta.** Lo espera y no está, o no
-  responde. Preguntar al chino qué es el CanCode en este EDR
+  responde. El manual lo nombra junto al interruptor de llave y el ISM («Verifique el interruptor
+  de llave / ISM / CANCODE», eventos `3 02`): **probablemente un acceso por código**, la alternativa a la
+  llave. Cuadra con el pin 6 del DB9 colgando del `4F15` «autorización de acceso». Se confirma
+  con `sdo_lee` (`esperados 1`: ¿el 28 está marcado como obligatorio u opcional?)
 - **El pedal que le falta al equipo va primero en el equipo** (sin él no se prueba nada que se
   mueva, y es el watchdog). El manual habla de «pedal doble» (mat. 51297587) y de un **pedal
   de freno ANALÓGICO de dos canales** (eventos `1.10`/`1.11`, V1 + V2 ≈ 5 V). **Antes que nada:
