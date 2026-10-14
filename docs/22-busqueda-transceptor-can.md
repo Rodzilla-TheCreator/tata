@@ -135,3 +135,7 @@ cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, 120 Ω en 8–3, 5 V), mismo `re
 Única variable cambiada: el chip. **El nuevo sirve para transmitir.** El viejo queda solo para
 escuchar. Siguiente: `prueba_can` en banco con el nuevo; `diagnostico/mcp_prueba/` queda
 listo para el MCP2515.
+
+**Marca del transceptor del MCP2515 (14-oct, leída por maje):** `NXP A1050/C · IKH000 · nD302`.
+Distinta de la familia `SX XJ` de los dos módulos sueltos: otro lote. Que `A1050/C` sea la
+marca corta del TJA1050 en SO8 es probable, **no verificado** contra la hoja de marcado.
