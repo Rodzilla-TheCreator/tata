@@ -16,12 +16,12 @@ tiempo, y con el multipiloto real **desenchufado**. Y con las condiciones del pe
 ## El cableado — CAN sin transceptor
 
 ```
-ESP32 A  GPIO21 (TX) ──|◄── 1N4148 ──┐
-ESP32 B  GPIO21 (TX) ──|◄── 1N4148 ──┤
+ESP32 A  GPIO22 (TX) ──|◄── 1N4148 ──┐
+ESP32 B  GPIO22 (TX) ──|◄── 1N4148 ──┤
                                      ├──── LÍNEA ──── 4.7 kΩ ──── 3.3 V
-ESP32 A  GPIO22 (RX) ────────────────┤
-ESP32 B  GPIO22 (RX) ────────────────┤
-(ESP32 C GPIO22, si hay un tercero escuchando) ┘
+ESP32 A  GPIO21 (RX) ────────────────┤
+ESP32 B  GPIO21 (RX) ────────────────┤
+(ESP32 C GPIO21, si hay un tercero escuchando) ┘
 
 GND de todas las placas unidos
 ```
@@ -60,6 +60,23 @@ programa que se usó en el equipo, y así compararlo con `multipiloto.md` línea
 
 Qué pasa si el master real se reinicia con el multipiloto andando **no se sabe**: el sketch
 sigue operacional. Se ve en un log del equipo con un ciclo de llave.
+
+## Contra el multipiloto de REPUESTO real (17-oct)
+
+`master_falso` sirve también con el multipiloto de verdad, en la mesa, con el **TJA nuevo**
+(el que transmite; su `R3` de 120 Ω es la única terminación, igual que en el equipo):
+
+```
+ESP32 GPIO 22 → TX del TJA nuevo        RX del TJA → 1k/2k → GPIO 21
+TJA CANH → pin 2 del multipiloto        TJA CANL → pin 3 del multipiloto
+fuente (+) → pin 8                      fuente (−) → pin 7  ── y GND del ESP32 al mismo (−)
+```
+
+- **Por qué este y no `escucha_can`:** con un solo nodo en la mesa, nadie le da ACK al
+  multipiloto; sus tramas fallan en el ACK y ni un receptor en LISTEN_ONLY las ve. Este da ACK
+- Si no sale `0x182` después del NMT START: `y 10` (SYNC cada 10 ms) — puede que el multipiloto
+  solo mande su PDO al recibir SYNC, como en el equipo
+- Lo que imprime el resumen de 5 s es el **período real** del `0x182`: reemplaza el supuesto
 
 ## Lo que todavía es SUPUESTO
 

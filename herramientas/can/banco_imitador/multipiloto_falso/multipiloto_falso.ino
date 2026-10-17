@@ -34,8 +34,8 @@
 
 #include "driver/twai.h"
 
-#define PIN_TX   GPIO_NUM_21
-#define PIN_RX   GPIO_NUM_22
+#define PIN_TX   GPIO_NUM_22     // mismo armado que escucha_can y sdo_lee (14-oct)
+#define PIN_RX   GPIO_NUM_21
 
 const uint8_t  NODO           = 2;
 const uint32_t PERIODO_182_MS = 20;    // SUPUESTO — reemplazar por lo medido en el log
