@@ -198,3 +198,28 @@ el multipiloto le da al sistema, el reemplazo lo tiene que dar también.
 3. En el equipo, multipiloto desenchufado, escucha en el DB9: **¿hay tráfico CAN?** Si hay
    cero tramas, se apaga todo el sistema; si hay tráfico, solo la pantalla
 4. Anotar si la tabla de voltajes del 03-oct se tomó con la ficha enchufada o desenchufada
+
+## 17-oct · Hipótesis: el multipiloto es un eslabón de la cadena hacia la pantalla
+
+**De dónde sale (pista, no dato):** el manual de Scribd que dio el `X200` (`manuales_scribd.md`)
+muestra que el módulo ISM (`X680`, pág. 360) lleva **CAN de entrada y CAN de salida** (va *en* el
+bus, encadenado) y una **alimentación de salida** («U-ISM out (24V)»). Si el multipiloto sigue
+el mismo patrón de Jungheinrich:
+
+| Pin | Hipótesis | Estado |
+|---|---|---|
+| 2 / 3 | CAN de entrada (desde el master) | **medido**: CAN_H / CAN_L, mismo hilo que el DB9 |
+| 4 / 5 | CAN de salida, hacia el siguiente nodo | ~2 V desenchufado, 4↔5 abierto. Sin confirmar |
+| 8 | alimentación de entrada | **medido**: +39.2 V |
+| 7 | negativo | **medido** |
+| uno de 1, 6, 9, 10, 13 | **alimentación de salida** hacia el siguiente módulo | a buscar |
+
+Explicaría que **la pantalla no prenda sin el multipiloto**: estaría aguas abajo, y le llegarían
+la alimentación y el bus a través de él.
+
+**Lo que lo confirma o lo tumba:**
+- Equipo, llave ON, multipiloto **enchufado**: el pin de «salida» pasa de ~0 V a tensión
+- Repuesto, sin alimentar: continuidad **2↔4 y 3↔5** (bus que pasa por adentro), **4↔5** (¿trae
+  terminador para el tramo de salida?), y **8↔cada pin** (salida pasiva)
+- En la i3, del mismo PDF: págs. **25–30** (esquema del ETR 320, que es reach truck con
+  Multi-Pilot: puede traer el pinout de su conector) y **352–355** (pines del display CANDIS)
