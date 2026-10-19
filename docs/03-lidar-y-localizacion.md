@@ -7,7 +7,99 @@
 
 ---
 
-# Lo vigente
+# Lo vigente — 19-oct-2026 · el LiDAR vuelve a navegar: SLAM y mapeo en vivo
+
+> **Esto revierte la decisión del 27-ago** («el LiDAR no navega»), que queda abajo, intacta,
+> como parte del camino. No se borra, y no todo lo de aquel día se cae —lo de las dos cámaras
+> con ArUco sigue en pie. Lo que cambia es que **el LiDAR deja de ser solo detector de bultos**.
+
+## La decisión
+
+**El LiDAR 3D vuelve al alcance como sensor de navegación: SLAM / mapeo en tiempo real.**
+No reemplaza necesariamente a las cámaras con ArUco —por ahora **suma**, no resta. Qué pesa
+más en el filtro de pose, o si una capa respalda a la otra, queda abierto (abajo).
+
+Tres hechos de maje que lo mueven:
+
+- **El ambiente es cerrado, y se va a cerrar más** —la meta es que no entren humanos al pasillo
+  de operación. Eso cambia el cálculo de seguridad y abarata depender de un mapa en vivo.
+- **El LiDAR va montado sobre la jaula de seguridad del techo del EDR**, no al nivel del chasis.
+- **SLAM ya se hizo en Botoni sobre una Jetson de 2 GB, y no fue fácil.** La experiencia manda:
+  8 GB «podría no alcanzar», así que el cómputo sube a **16 GB**.
+
+## Qué lo cambió — decía / es / qué lo tumbó
+
+| Decía (27-ago) | Es (19-oct) | Qué lo tumbó |
+|---|---|---|
+| El LiDAR no navega; solo ve lo que no debería estar | **El LiDAR hace SLAM / mapeo en vivo**, además de ver bultos | Decisión de maje: sí se va a hacer SLAM, con el LiDAR para mapeo en tiempo real |
+| El almacén no cambia de forma, no hay nada que mapear | El pasillo **sí cambia** día a día (bultos, tambores, la rejilla, IBC fuera de línea), y un mapa en vivo lo absorbe mejor que un mapa fijo + detección de bultos | El mismo argumento de `IMG_0208/0209/0212` que ya estaba escrito, leído al revés |
+| Comprar un LiDAR **2D**, ~10 m, sin intensidad | Comprar un **3D**: Unitree L2, 360°×96° | El 3D vuelve a hacer falta porque el LiDAR vuelve a localizar |
+| «LiDAR montado tan alto que solo ve por encima de la estructura» = caso singular, a evitar | **Va montado alto a propósito** (techo de la jaula) | El 96° vertical del L2 mitiga el riesgo: ve hacia abajo lo suficiente para no quedarse sin caras perpendiculares. **Pero el riesgo no desaparece** (abajo) |
+
+## La compra — decidida 19-oct
+
+| Pieza | Elegido | ~USD | Por qué |
+|---|---|---|---|
+| **LiDAR 3D** | **Unitree L2** · 360°×96° | **$419** oficial (~$478 con aranceles) | El 96° vertical le gana al 59° del Mid-360 para montaje en el techo: desde arriba, 59° dejan un cono ciego grande hacia el piso del pasillo y la base de los racks —justo lo que hay que ver de cerca. Rango 30 m @90%, 15 m @10%; punto ciego 0.05 m; 2 cm; 230 g |
+| **Cómputo** | **Jetson Orin NX 16 GB** | **~$999** módulo (subió de $599 en 2026); dev kit armado ~$1,480 | 16 GB por la lección de Botoni (SLAM en 2 GB fue durísimo; 8 GB podría no alcanzar). Orin y no Raspberry: CUDA + Isaac ROS, el ecosistema de SLAM con GPU |
+| **Fuente** | DC-DC 39–55 V → 19 V | ~$40 | El equipo **no es de 24 V**: el pin 8 del multipiloto dio 38–48 V (ver `herramientas/componentes/LEEME.md`). Todo lo que se monte aguanta tensión de batería |
+
+### El presupuesto no cuadra en $1,500 — y hay que decirlo
+
+El presupuesto de **$1,500** se fijó **antes** de que NVIDIA subiera el Orin NX 16 GB de $599 a
+~$999 (julio 2026). Con el precio nuevo:
+
+```
+Unitree L2                        ~$450   (oficial $419, algo más con aranceles)
+Orin NX 16 GB armado (módulo +    ~$1,250 (módulo $999 + carrier + SSD + fuente)
+  carrier + SSD)
+DC-DC 39–55 V                     ~$40
+                                  ───────
+subtotal antes de importar        ~$1,740   ← ya pasa los $1,500
+```
+
+Y falta la importación a Honduras encima. **Realista: ~$1,900–2,000 puesto en el taller.**
+Dos salidas, y es decisión de maje:
+
+1. **Subir el presupuesto a ~$2,000.** Es lo que maje ya anticipó que Omar aprobaría sin
+   pensarlo para la etapa de autonomía.
+2. **Bajar a Jetson Orin Nano Super 8 GB** (~$249–399 el dev kit): L2 + Nano + fuente entra
+   bajo $1,000 con holgura, pero maje ya juzgó 8 GB marginal para SLAM. Queda como plan B si el
+   presupuesto no se mueve.
+
+**Lo decidido sigue siendo L2 + Orin NX 16 GB.** Lo que se corrige es el número: no son $1,500,
+son ~$2,000.
+
+## La tensión que esto reactiva: la degeneración vuelve a la mesa
+
+Mientras el LiDAR no localizaba, `analisis/analisis_degeneracion.py` estaba archivado. **Si el
+LiDAR vuelve a navegar, su pregunta vuelve a ser real:** un pasillo largo y uniforme degenera el
+emparejado de escaneos —la matriz de información se vuelve singular a lo largo del eje. Y el
+montaje en el techo de la jaula es exactamente el caso que el propio análisis marcó como peligroso
+(«LiDAR montado tan alto que solo ve por encima de la estructura»).
+
+El 96° vertical del L2 es la razón técnica por la que el montaje alto no mata el SLAM: desde el
+techo, 96° todavía alcanzan las caras de los racks y el piso, que son las features perpendiculares
+que restringen el eje longitudinal. **Pero es hipótesis, no medición.** Hay que correr
+`analisis_degeneracion.py` otra vez con la altura real de montaje y el FOV del L2 antes de darlo
+por bueno. Sale del archivo.
+
+## Lo que queda abierto con la reversión
+
+- **¿SLAM reemplaza o complementa el ArUco?** Sin decidir. Lo prudente: ArUco sigue siendo la
+  referencia absoluta sin deriva, SLAM da el mapa en vivo y la robustez cuando el ArUco se ocluye.
+- **La altura exacta de montaje en la jaula**, que además fija el resultado de la degeneración.
+- **Cómo se sella el pasillo a humanos.** Es lo que cambia el cálculo de seguridad; es diseño de
+  la celda, no del sensor, y toca a `docs/04`.
+- Correr `analisis_degeneracion.py` con L2 + altura de jaula.
+
+---
+
+# Lo que estuvo vigente del 27-ago al 19-oct — el LiDAR como detector, no navegador
+
+> **Superado el 19-oct-2026** por la sección de arriba: el LiDAR vuelve a navegar. Lo de las
+> **dos cámaras con ArUco sigue vigente**; lo que ya no manda es «el LiDAR no localiza» y la
+> recomendación de comprar un 2D. Se conserva íntegro.
 
 *Decidido el 27-ago-2026.*
 

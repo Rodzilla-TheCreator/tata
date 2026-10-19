@@ -9,7 +9,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 |---|---|
 | `docs/01-hallazgos-rethink.md` | Lo que encontramos en el almacén del cliente |
 | `docs/02-maquina-y-geometria.md` | El EDR18N2 y si cabe el giro en 3 m |
-| `docs/03-lidar-y-localizacion.md` | **Localizan las cámaras con ArUco. El LiDAR no navega** |
+| `docs/03-lidar-y-localizacion.md` | Localizan las cámaras con ArUco. **19-oct: el LiDAR vuelve a navegar (SLAM); se compra Unitree L2 + Orin NX 16 GB** |
 | `docs/04-seguridad-y-normativa.md` | Por qué la capa de seguridad va aparte |
 | `docs/05-producto-y-negocio.md` | Escala de madurez, costos, retorno |
 | `docs/06-simuladores.md` | Los dos simuladores y cómo se usan |
@@ -66,9 +66,12 @@ y viene de Botoni, donde el equipo definió cuáles y dónde iban.
 hembra; el cable de Judit es macho. `DE-9` es el nombre formal (la letra del medio es el
 tamaño de carcasa, no el género) pero acá no se usa, y **DB9 no es un error a corregir**.
 
-**El LiDAR no navega.** Localizan **dos cámaras USB con ArUco** más la odometría. Al LiDAR le
-queda un solo trabajo — ver lo que no debería estar ahí — y no es redundancia: el mapa acierta
-con los racks y se equivoca todos los días con lo que hay en el pasillo. Detalle en `docs/03`.
+**Localizan dos cámaras USB con ArUco más la odometría** — eso sigue firme. ~~El LiDAR no
+navega~~ **revertido el 19-oct-2026: el LiDAR 3D vuelve al alcance para SLAM / mapeo en vivo**
+(no reemplaza al ArUco, suma). El ambiente es cerrado y se va a sellar a humanos, y el LiDAR va
+sobre la jaula del techo. Se compra **Unitree L2 (360°×96°) + Jetson Orin NX 16 GB**. Reactiva
+la pregunta de degeneración de `analisis/analisis_degeneracion.py`. Detalle y la reversión
+completa (decía/es/qué lo tumbó) en `docs/03`.
 
 **La seguridad va aparte por norma**, no por recorte. ISO 3691-4 exige que la capa
 certificada esté aislada de la navegación.
