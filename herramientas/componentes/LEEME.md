@@ -324,3 +324,31 @@ el pedal **suelto vs pisado**, qué pares abren/cierran = los switches). Tabla p
 | 8 | | | | |
 | 9 | | | | |
 | 10 | | | | |
+
+## 19-oct · El conector del multipiloto — identidad (foto moldeado)
+
+Foto de frente del moldeado del conector del multipiloto. Leído:
+
+```
+42125800      ← número moldeado (OEM, no es SKU de estante)
+>PBT<         material
+GERMANY
+1/2  1013     cavidad de molde / fecha
+```
+
+Collar de pines: una cara **2 4 6 8 10 12 14** (pares), la otra **1 3 5 7 9 11 13**
+(impares) → **14 vías, 2 filas (2×7)**. Cuadra con «cabezal macho, dos filas de ~7 pines».
+
+**Pista fuerte de familia (búsqueda web, sin confirmar SKU):** **Amphenol serie 42** —
+*radially sealed flat housing, traba secundaria, 1–14 pines*, con cross-ref de números
+automotrices alemanes. El prefijo `42`, el housing plano sellado, las 14 vías y el `GERMANY`
+calzan. Probablemente **Amphenol-Tuchel**. El `42125800` es molde OEM; el mate de reposición
+sale del catálogo Amphenol (cross-ref) o del chino/Miguel.
+
+**Consecuencia para no cortar 2/3:** los housings sellados planos de esta familia tienen
+**terminales removibles detrás de la traba secundaria**. Se libera la traba, con un pick se
+**extraen los terminales 2 y 3** sin cortar cable, reversible. Es la alternativa al corte y no
+exige conseguir un conector nuevo. Herramienta: pick de extracción de la serie (o genérico).
+
+**Pendiente:** confirmar la serie exacta por el cross-ref Amphenol o preguntando al chino; y el
+estilo de traba, para el pick correcto.
