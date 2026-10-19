@@ -273,3 +273,54 @@ seno/coseno) y el controlador cuenta vueltas. Por eso **no se puede «contar vue
 tope»**: ese método era de un volante mecánico. El 2.6 vs 5.5 del control Obed se resuelve de
 otra forma: leer el parámetro `0x2414` por el bus (Diagnose o SDO), o mirar cuántas vueltas de
 volante mueven la rueda de tope a tope **mirando la rueda**, no el volante.
+
+## 19-oct · El conector de pedales (SAAB 6114013) y el sensor que falta
+
+Fotos del 19-oct (conector en situ y en mano). Marca: **`SAAB 6114013`, `>PBT/ASA-GF30<`** —
+housing automotriz TE/Tyco (SAAB fue el cliente original; Jungheinrich reusa la carcasa). **Dos
+filas, 10 vías (2×5), traba secundaria roja (CPA). 10/10 pobladas** (maje; primero contó 8,
+recontó 10 — el arnés está completo).
+
+**Lo que falta no es el arnés sino un SENSOR que va entre este conector y la placa de pedales.**
+Por eso el equipo no habilita marcha: sin sensor válido, el pedal está muerto. Reconcilia el
+«hombre-muerto faltante» de sesiones previas: lo que quitaron fue el sensor, no el arnés.
+
+**Qué vive en esta interfaz, del manual de servicio — dos bestias, dificultad opuesta:**
+
+| Función | Evento | Qué es | Emular |
+|---|---|---|---|
+| Hombre-muerto (interruptor de pie) | `1.06` | switch de seguridad **NC + NO complementario**: solo valen 0/1 y 1/0; 0/0 o 1/1 por 500 ms = falla | **fácil**: dos contactos complementarios |
+| Sensor de posición del pedal (freno) | `1.2x`/`1.7x` | **doble canal analógico**: Vf1 + Vf2 debe sumar **4.5–5.5 V**; posición en % | difícil: dos analógicas con suma fija |
+| Rango del pedal | `1.36` | el rango se **aprende por TEACH-IN vía Judit** | bloqueante si se emula el analógico |
+
+**Los dos pedales son iguales — hay que pisar ambos para que ande** (maje, vía Miguel): dos
+canales de presencia, no freno + acelerador. El «acelerador» de este equipo es la palanca de
+mano; el manual dice «pedal acelerador / palanca del timón» según variante.
+
+**El atajo de Miguel (19-oct):** en el taller **puentean este conector para simular el pedal
+pisado**, y tienen el **diagrama** (pendiente de conseguir). Clave: el puente respeta la
+complementariedad **NC + NO** del `1.06` — un corto bruto da 0/0 o 1/1 y tira la falla; por eso
+«no es difícil» *con el diagrama* y sí lo es a ciegas. **Esto resuelve el enable sin emular el
+sensor analógico ni tocar Judit:** el teach-in deja de bloquear la marcha. El sensor de posición
+solo haría falta para modular freno/velocidad por pedal, que no es el caso (la velocidad sale de
+la palanca).
+
+> **Seguridad:** el puente puesto es exactamente lo que le quita al equipo su interlock gratis.
+> Entra solo en gato, con paro en mano, y sale al terminar. Ver `docs/21` §Runbook paso 5.
+
+**Pendiente:** el diagrama del puente (Miguel); número de parte del sensor faltante (el chino);
+y de fallback la matriz de los 10 pines (batería fuera: continuidad entre pines y a masa; y con
+el pedal **suelto vs pisado**, qué pares abren/cierran = los switches). Tabla para llenar:
+
+| Pin | Continuidad a | V (llave ON, vs neg. batería) | Suelto/pisado | Lectura |
+|---|---|---|---|---|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+| 6 | | | | |
+| 7 | | | | |
+| 8 | | | | |
+| 9 | | | | |
+| 10 | | | | |

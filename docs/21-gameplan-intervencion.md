@@ -255,3 +255,59 @@ gira la rueda.** Toda esta sección se valida con el equipo quieto.
 - **Nada se corta**: arneses enchufables y selector manual / teleop
 - **En el equipo no se transmite por el bus.** En el banco, con el repuesto, sí
 - Un mando a la vez. No se pasa al siguiente con un evento sin explicar
+
+---
+
+## 19-oct · Runbook para i3 — del log al equipo, en orden
+
+Consolida la sesión del 19-oct. **Reencuadra la ruta:** el DB9 es CAN y el comando del
+multipiloto viaja por PDO (`0x182`), así que **tracción + sentido de marcha + hidráulica se
+comandan imitando el nodo 2 por el bus**, no cortando Hall. La sección 2 de arriba (DAC sobre
+Hall para la palanca) queda como **plan B** para lo que resulte NO ser CAN. El enable del pedal
+se resuelve con el **puente de Miguel** (ver `componentes/LEEME.md`), no emulando el sensor.
+
+**Equipo en gato, sin mangueras. El hombre-muerto SIN puentear en los pasos 0–3: nada se
+mueve. El puente solo entra en el paso 5, con paro en mano.** Cada paso trae su control de
+falsación: si la prueba no puede fallar, no midió nada.
+
+```
+0 · LAPTOP — el período real (no necesita el equipo)
+  □ periodo_182.py sobre el .log del 06-oct → período del 0x182, del heartbeat, veredicto SYNC
+  □ hornear esos números en banco_imitador/multipiloto_falso.ino (reemplazan los supuestos)
+
+1 · ESCUCHA, joystick intacto (LISTEN_ONLY en el DB9)
+  □ escucha_can + grabar_can, mover el joystick con acciones marcadas → línea base
+  □ confirmar el decode de multipiloto.md y QUÉ nodos reaccionan (tracción, 0x20A, 0x303)
+  □ ¿el master lee 0x1018 (identidad) en el boot además de 0x1000? decide si hay que
+    falsificar identidad, no solo el tipo de equipo
+
+2 · CORTAR 2/3, multipiloto enchufado (los 5 cables intactos = variable congelada)
+  □ prender y anotar: ¿prende el equipo? ¿la pantalla vive? ¿sale 8.08 / EMCY 8250?
+    ¿el resto del bus sigue hablando en el DB9?
+  □ LECTURA: el 8.08 confirma que el PDO del joystick era COMANDO, no telemetría — el manual
+    dice que un consumidor falla + emergencia si no recibe el PDO en 3.5× su ciclo
+  □ control de ramal vs eslabón: si el bus queda MUDO, el multipiloto era eslabón del tronco
+    (no ramal) → resoldar y repensar. Si el bus sigue → era ramal, vas bien
+  □ si NO prende NADA → el boot por CAN está enredado con el arranque; el paso 3 pasa a ser
+    necesario para encender, no solo para limpiar la falla
+
+3 · NUESTRO NODO imita al multipiloto (TJA nuevo, lado MASTER del corte)
+  □ multipiloto_falso con el período real y arranque-en-cero (regla 4 de docs/20)
+  □ power-cycle con el nodo presente desde el boot (así cacha la lectura de 0x1000)
+  □ ¿se limpia el 8.08? ¿Diagnose muestra los valores que inyectás (a 100, n...)?
+  □ control: desconectar nuestro TX → el 8.08 tiene que VOLVER
+
+4 · LA DIRECCIÓN — ¿CAN o Hall? (la incógnita que falta de los actuadores)
+  □ ANTES del DAC seno/coseno de la sección 4 de arriba: escucha en el bus mientras alguien
+    gira el volante DESPACIO (equipo habilitado). ¿Aparece una trama que cambia con el ángulo?
+      sí  → la dirección es CAN, se inyecta como el multipiloto. La sección 4 (Hall) NO aplica
+      no  → es Hall; recién ahí vale el DAC seno/coseno de la sección 4
+  □ vigilar los eventos 1.54 / 1.55 / 1.56
+
+5 · RUEDA EN EL AIRE (la prueba del comando) — solo con 0–3 limpios
+  □ puente del pedal PUESTO (diagrama de Miguel; respeta NC+NO, NO es un corto bruto)
+  □ paro físico en mano, gato verificado, despejado de la rueda motriz
+  □ inyectar tracción pequeña (marcha lenta) → ¿gira la rueda en el aire?
+      sí → CAN es el actuador de tracción, confirmado en el fierro
+  □ sacar el puente al terminar: puesto, es el interlock gratis que se va
+```
