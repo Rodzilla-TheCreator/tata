@@ -311,3 +311,35 @@ falsación: si la prueba no puede fallar, no midió nada.
       sí → CAN es el actuador de tracción, confirmado en el fierro
   □ sacar el puente al terminar: puesto, es el interlock gratis que se va
 ```
+
+### Paso 0 y la pregunta del paso 1 — HECHOS en la i3, 19-oct
+
+`periodo_182.py` sobre los logs del 06-oct (5 logs a 921600 con el joystick, ~600 s; el de
+115200 perdía tramas y se descarta):
+
+| Trama | Período (mediana) | Medio | Lectura |
+|---|---|---|---|
+| `0x182` TPDO1 multipiloto | **20 ms** | 20.04–20.17 ms | 49.8 Hz |
+| `0x080` SYNC | **20 ms** | 20.02–20.13 ms | el Master lo manda |
+| `0x702` latido multipiloto | **100 ms** | 100.0–102.1 ms | **no 500** como se supuso |
+
+**99–100 % de los `0x182` salen dentro de 3 ms detrás de un SYNC: el PDO es SÍNCRONO.**
+`multipiloto_falso.ino` ya lo hace así (`POR_SYNC = true`: manda `0x182` al recibir cada
+`080`, latido cada 100 ms). Sin SYNC no sale ningún `0x182`, igual que el real: en el banco,
+`master_falso` con **`y 20`** (no `y 10`: el equipo usa 20 ms).
+
+**¿El Master lee `0x1018` (identidad) en el arranque? NO.** En los 3 arranques grabados, lo
+único que el Master le pide al nodo 2 es `0x1000`, y siempre igual:
+
+```
+602 40 00 10 00 …        lee 0x1000
+602 80 00 10 00 00 00 04 05   el Master aborta: timeout SDO (el multipiloto bootea tarde)
+602 40 00 10 00 …        reintenta
+582 43 00 10 00 00 00 00 00   responde: tipo de equipo = 0x00000000
+702 00                   boot-up
+000 01 02                NMT START
+```
+
+3 de 3 arranques idénticos. **No hay que falsificar identidad**, solo `0x1000 = 0`, que
+`multipiloto_falso` ya contesta. (Con ~23k tramas perdidas por el serie es posible que se
+escape algo; tres arranques iguales lo hacen poco probable.)

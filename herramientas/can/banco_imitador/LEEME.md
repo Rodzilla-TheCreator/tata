@@ -74,7 +74,7 @@ fuente (+) → pin 8                      fuente (−) → pin 7  ── y GND d
 
 - **Por qué este y no `escucha_can`:** con un solo nodo en la mesa, nadie le da ACK al
   multipiloto; sus tramas fallan en el ACK y ni un receptor en LISTEN_ONLY las ve. Este da ACK
-- Si no sale `0x182` después del NMT START: `y 10` (SYNC cada 10 ms) — puede que el multipiloto
+- Si no sale `0x182` después del NMT START: `y 20` (SYNC cada 20 ms, como el equipo — **medido 19-oct: el `0x182` es síncrono**, ver `docs/21`) — puede que el multipiloto
   solo mande su PDO al recibir SYNC, como en el equipo
 - Lo que imprime el resumen de 5 s es el **período real** del `0x182`: reemplaza el supuesto
 

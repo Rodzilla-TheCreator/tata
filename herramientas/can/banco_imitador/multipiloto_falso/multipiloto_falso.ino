@@ -13,13 +13,17 @@
 //   1. al arrancar: boot-up            702 [1] 00
 //   2. contesta la lectura de 0x1000:  602 40 00 10 00 … → 582 43 00 10 00 00 00 00 00
 //      cualquier otra lectura SDO: aborto 0x06020000 (objeto inexistente) y se avisa
-//   3. tras NMT START (000 01 02 o 000 01 00): manda 182 cada PERIODO_182_MS
+//   3. tras NMT START (000 01 02 o 000 01 00): manda 182 AL RECIBIR CADA SYNC (080)
 //      y heartbeat 702 [1] 05 cada PERIODO_HB_MS. En pre-operacional, heartbeat 7F
 //
-// LO QUE NO SE SABE TODAVÍA (salen del log del 06-oct, no se adivinan)
-//   · PERIODO_182_MS: cada cuánto manda el real el 0x182. Hoy es un supuesto
-//   · PERIODO_HB_MS:  cada cuánto manda el real su heartbeat. Hoy es un supuesto
-//   · si el 0x182 va por tiempo o por SYNC (080)
+// MEDIDO el 19-oct con periodo_182.py sobre los logs del 06-oct (5 logs a 921600, ~600 s):
+//   · 0x182 cada 20.0 ms (mediana 20, 49.8 Hz) y SYNC 080 cada 20.0 ms en el equipo
+//   · 99–100 % de los 0x182 salen dentro de 3 ms DETRÁS de un SYNC: PDO SÍNCRONO
+//   · heartbeat 702 cada 100 ms (no 500 como se supuso)
+// Sin SYNC en el bus (banco sin master_falso «y 20») no sale ningún 0x182, igual que el real.
+// POR_SYNC = false vuelve al temporizador propio de 20 ms, solo para pruebas.
+//
+// LO QUE NO SE SABE TODAVÍA
 //   · si b6 es un contador: en la grabación «sin cambios»
 //
 // MANDO, por el monitor serie (115200, fin de línea \n). Cada orden renueva el latido:
@@ -38,8 +42,9 @@
 #define PIN_RX   GPIO_NUM_21
 
 const uint8_t  NODO           = 2;
-const uint32_t PERIODO_182_MS = 20;    // SUPUESTO — reemplazar por lo medido en el log
-const uint32_t PERIODO_HB_MS  = 500;   // SUPUESTO — reemplazar por lo medido en el log
+const bool     POR_SYNC       = true;  // MEDIDO 19-oct: el real manda 0x182 detrás de cada SYNC
+const uint32_t PERIODO_182_MS = 20;    // MEDIDO 19-oct (solo se usa con POR_SYNC = false)
+const uint32_t PERIODO_HB_MS  = 100;   // MEDIDO 19-oct: mediana 100 ms
 const uint32_t WATCHDOG_MS    = 200;
 
 enum Estado { PREOP, OPERACIONAL, PARADO };
@@ -147,6 +152,10 @@ void loop() {
   while (twai_receive(&m, 0) == ESP_OK) {
     if (m.identifier == 0x000)              atenderNMT(m);
     else if (m.identifier == 0x600 + NODO)  atenderSDO(m);
+    else if (m.identifier == 0x080 && POR_SYNC && estado == OPERACIONAL) {
+      uint8_t d[8]; armar182(d);            // PDO síncrono: sale detrás del SYNC
+      mandar(0x180 + NODO, d, 8);
+    }
   }
   leerSerie();
 
@@ -157,7 +166,7 @@ void loop() {
 
   static uint32_t t182 = 0, thb = 0;
   uint32_t ahora = millis();
-  if (estado == OPERACIONAL && ahora - t182 >= PERIODO_182_MS) {
+  if (!POR_SYNC && estado == OPERACIONAL && ahora - t182 >= PERIODO_182_MS) {
     t182 = ahora;
     uint8_t d[8]; armar182(d);
     mandar(0x180 + NODO, d, 8);

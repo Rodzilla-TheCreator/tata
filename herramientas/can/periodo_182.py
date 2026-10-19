@@ -32,6 +32,12 @@ import re
 import statistics
 import sys
 
+for _f in (sys.stdout, sys.stderr):      # la consola de Windows (cp1252) no imprime «→»
+    try:
+        _f.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
 # id a 3 hex (%03lX), con timestamp al inicio; tolera el "EXT" o los espacios del %s
 LINEA = re.compile(r"^\s*(\d+)\s+(?:EXT\s+)?([0-9A-Fa-f]{3})\s+\[")
 
