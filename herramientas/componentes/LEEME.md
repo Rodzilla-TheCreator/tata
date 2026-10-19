@@ -223,3 +223,28 @@ la alimentación y el bus a través de él.
   terminador para el tramo de salida?), y **8↔cada pin** (salida pasiva)
 - En la i3, del mismo PDF: págs. **25–30** (esquema del ETR 320, que es reach truck con
   Multi-Pilot: puede traer el pinout de su conector) y **352–355** (pines del display CANDIS)
+
+## 19-oct · MEDIDO: ficha del multipiloto ENCHUFADO, llave ON, contra negativo de batería
+
+| Pin | Desenchufado (03-oct) | **Enchufado (19-oct)** | Lectura |
+|---|---|---|---|
+| 1 | 0 | **16–17 V** | **se enciende con el multipiloto** |
+| 2 | 2.3 | 3 | CAN_H con tráfico |
+| 3 | 2.3 | 3.3 | CAN_L (lectura en escala de 200, gruesa) |
+| 4 | 2.3 | 2.4 | igual |
+| 5 | 2.0 | 2.1 | igual |
+| 6 | 0 | **varía 0.05–12, se asienta en 0.7–0.9** | **señal activa** |
+| 7 | negativo | 0.012 | negativo |
+| 8 | 39.2 | 38–48 (saltos) | batería |
+| 9 | 0 | **~9 V** | **se enciende con el multipiloto** |
+| 10 | 0 | **5.2 V** | **se enciende** — parece una alimentación de 5 V |
+| 13 | 0 | **12–22 V, variando** | **señal activa** |
+
+**Cinco pines (1, 6, 9, 10, 13) solo tienen tensión con el multipiloto puesto.** Son **salidas que
+genera su electrónica**, con valores distintos entre sí (5.2, ~9, 16–17, variables): no son
+puentes pasivos del pin 8. Cuadra con la hipótesis del eslabón y con que la pantalla no prenda
+sin él.
+
+**Consecuencia para la ruta B:** un reemplazo tendría que generar esas cinco salidas. Lo simple
+es **dejar el multipiloto real enchufado** (sigue dando las salidas) y **cortar solo su par CAN
+(2 y 3) en un arnés**, con nuestro nodo en su lugar.
