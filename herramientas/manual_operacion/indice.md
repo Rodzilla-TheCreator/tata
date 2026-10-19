@@ -142,3 +142,22 @@ qué es un sistema de acceso en este equipo: un teclado o lector que se conecta 
 punto donde se conecta ese accesorio, alimentado por el pin 6. **Este equipo arranca con
 llave**, así que el accesorio no está puesto. En tensión con que el chino entraba con Judit
 por ese mismo DB9 — no se elige.
+
+## Parada de emergencia — pág. 106 (foto `p106_paro_emergencia.jpg`), 19-oct
+
+Sección 5.3.6. El **interruptor de paro (12)** está en la consola, junto al multipiloto.
+
+- Al presionarlo: **se desactivan TODAS las funciones eléctricas** y el equipo **frena hasta
+  detenerse**. No usarlo como freno de servicio
+- Se suelta tirando o girando (12). Al soltarlo, **se rehabilitan todas las funciones** y el
+  equipo vuelve a estar operativo **si lo estaba antes**
+- **Con la opción CanCode (nodo 28): el equipo QUEDA DESCONECTADO** tras el paro, hasta meter
+  el código. Cuadra con lo visto: el Master arranca al 28 y espera. Si este equipo trae
+  CanCode activo, **después de un paro habría que reingresar el código** — eso afecta el rearme
+- **El equipo tiene su propio dispositivo de paro:** si detecta un mal funcionamiento en el
+  sistema, **baja la velocidad solo hasta parar**. Si es en dirección o frenos, lo muestra en
+  el display (4)
+
+**Para la capa de seguridad (`docs/10`):** el paro de fábrica es un corte duro de todo lo
+eléctrico + freno. El hongo físico nuestro va **en serie** con este. Y el equipo ya trae un
+vigilante nativo que frena ante fallas: no hay que pelearlo, hay que no dispararlo sin querer.
