@@ -248,3 +248,28 @@ sin él.
 **Consecuencia para la ruta B:** un reemplazo tendría que generar esas cinco salidas. Lo simple
 es **dejar el multipiloto real enchufado** (sigue dando las salidas) y **cortar solo su par CAN
 (2 y 3) en un arnés**, con nuestro nodo en su lugar.
+
+## 19-oct · placa de datos (`placa_datos.jpg`)
+
+```
+MODELO          EDR18N2
+NÚMERO DE SERIE 82824121
+Centro de carga A/B 600 mm (24"), desplazamiento 0
+Altura máx horquilla 6858 mm (270") · capacidad 1600 kg / 3500 lb · mástil vertical
+placa SP 51369424
+```
+
+- **Nº de serie `82824121`** — es el que va a MCF Parts Client para pedir la configuración
+  (ancho entre patas `b1`, parámetros, esquema `99515375`)
+- **Altura de horquilla 6858 mm.** El repo pedía `h3 = 6.77 m` hasta N5; la placa da **6.858 m**,
+  un poco más. Holgado para el rack
+- **Capacidad 1600 kg**, cuadra con que el IBC de 1000 L lleno pesa ~1.0–1.1 t
+
+## 19-oct · el volante gira libre, no topa
+
+maje: el volante del equipo **no tiene topes** — da vueltas sin fin. Es coherente con EPS
+(steer-by-wire): no hay unión mecánica a la rueda, el sensor es **absoluto por vuelta** (el
+seno/coseno) y el controlador cuenta vueltas. Por eso **no se puede «contar vueltas tope a
+tope»**: ese método era de un volante mecánico. El 2.6 vs 5.5 del control Obed se resuelve de
+otra forma: leer el parámetro `0x2414` por el bus (Diagnose o SDO), o mirar cuántas vueltas de
+volante mueven la rueda de tope a tope **mirando la rueda**, no el volante.
