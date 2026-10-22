@@ -9,6 +9,44 @@ fierro y que la cadena de paro llega antes.**
 
 ---
 
+## Checkpoint 22-oct-2026 · la cadena de mando LLEGA al fierro (comando probado)
+
+La mitad del hito —**que la cadena de mando llega al fierro**— quedó **probada en el equipo
+real.** Es el riesgo que podía matar el proyecto (¿se puede mandar a este equipo por el bus?),
+y la respuesta es **sí**. Detalle en `docs/21` y en los commits `dbd085d` / `1ee759c`.
+
+**Cómo se hizo (ruta B, por el bus, no cortando Hall):** el multipiloto es un **eslabón** del
+tronco CAN (entra 2/3, sale 4/5, puenteados por dentro; el mazo no puentea). Repuesto enchufado
+**solo para alimentar** (pines 2–5 fuera), **puente 2↔4 / 3↔5 en el mazo** para cerrar la cadena,
+y nuestro ESP32/TJA en el DB9 haciéndose pasar por el **nodo 2**.
+
+**Lo que se probó, con su control de falsación:**
+
+| Evidencia | Qué prueba |
+|---|---|
+| Con el puente, aparece el Master (`701 00→05`, SYNC, PDOs) | El puente cierra el tronco sin el multipiloto |
+| Nuestro nodo 2 aceptado, **TEC 0**, y `E4809` (falta nodo 2) **desaparece** | El Master nos toma como el multipiloto real |
+| `a 100` → `E1903.01` (aviso hombre muerto) **solo mientras dura el mando** | **El Master recibió el comando de marcha y trató de ejecutarlo** — lo frena solo el pedal. CAN es **comando**, no telemetría |
+| Sin nuestro nodo → vuelve `E4809` | Control: la diferencia la hace nuestro nodo |
+
+**Qué cambia en el plan de abajo:** la intervención es **inyección CAN** (imitar el nodo 2), no
+cortar cables Hall. Por eso el riesgo de la **doble Hall redundante** del Bloque 2 **queda sin
+efecto** para tracción e hidráulica (van en el `0x182` del multipiloto). El Bloque 2 original se
+conserva abajo como plan B si algo resultara no ser CAN.
+
+**Lo que falta para el hito, sin cambios de fondo:**
+- **La otra mitad —la cadena de paro— NO está construida.** El watchdog de 200 ms y el hongo
+  (Bloque 1) siguen pendientes. *Un sistema que todavía no demostró que para no debería moverse.*
+- **El enable (hombre muerto):** el sensor del pedal llega el 23-oct. Con él + el comando →
+  **rueda en el aire** (la prueba de actuación). Hasta entonces, nada se mueve y por eso es seguro.
+- **La dirección:** sin decodificar aún (¿CAN o Hall?). Es el otro actuador. Ver abajo y `docs/21` §4.
+- Mapear qué `E190x` dispara cada mando, y agregar el mando de la palanca trasera (`b2`).
+
+**Teleop, honesto: ~1/3.** El canal del multipiloto (tracción + hidráulica) está probado a nivel
+**comando**; faltan dirección, el enable, la cadena de paro y la prueba física de movimiento.
+
+---
+
 ## La pregunta del adaptador, primero
 
 Preguntaste si conviene armar ya `DE-9 hembra ↔ CAN ↔ ESP32 ↔ compu` (y después Jetson), o si
