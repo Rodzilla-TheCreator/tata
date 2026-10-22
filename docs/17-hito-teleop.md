@@ -39,11 +39,17 @@ conserva abajo como plan B si algo resultara no ser CAN.
   (Bloque 1) siguen pendientes. *Un sistema que todavía no demostró que para no debería moverse.*
 - **El enable (hombre muerto):** el sensor del pedal llega el 23-oct. Con él + el comando →
   **rueda en el aire** (la prueba de actuación). Hasta entonces, nada se mueve y por eso es seguro.
-- **La dirección:** sin decodificar aún (¿CAN o Hall?). Es el otro actuador. Ver abajo y `docs/21` §4.
+- **La dirección: TAMBIÉN es CAN (decodificado 22-oct).** El volante publica su **velocidad de
+  giro** (no ángulo) en `0x284` b3-b4 (int16 con signo, izq +, der −, 0 quieto) del nodo 4. Se
+  inyecta por el bus como el multipiloto; el DAC sen/cos de `docs/21` §4 **queda sin efecto**.
+  Abierto: **quién consume `0x284`** (define si imitamos el nodo 4 entero o solo su TPDO2).
 - Mapear qué `E190x` dispara cada mando, y agregar el mando de la palanca trasera (`b2`).
 
-**Teleop, honesto: ~1/3.** El canal del multipiloto (tracción + hidráulica) está probado a nivel
-**comando**; faltan dirección, el enable, la cadena de paro y la prueba física de movimiento.
+**Teleop, honesto:** el **qué comandar ya está resuelto** —tracción + hidráulica por el `0x182`
+del multipiloto, y dirección por el `0x284`, los dos **CAN, decodificados**. Lo que queda no es
+incógnita, es trabajo: el **enable** (pedal, 23-oct), la **cadena de paro** (Bloque 1, sin
+construir), el **objetivo de inyección de la dirección** (consumidor de `0x284`), la
+**integración** (gamepad → ESP) y la **prueba física de movimiento** (rueda en el aire).
 
 ---
 
