@@ -362,3 +362,11 @@ el display.
 contesta); boot-ups de 1, 2, 4, 7, 8, 30. **Al 31 (APM+) no le habla nunca.** Por el `8 06`:
 los opcionales se activan por parámetro, así que **el APM+ queda ABIERTO** (no presente y
 desactivado; no se sabe si el firmware lo soporta). Plan en `pendientes.md` y `sdo_lee/`.
+
+## 22-oct · `visor_can.py` — visor tipo cansniffer
+
+Lee la salida de `escucha_can` (921600) y muestra **una fila por COB-ID, fija en su lugar** (~10 Hz, sin
+scroll). Los bytes que cambiaron hace < 1 s salen en invertido; columna «hace» por fila. Teclas: `m`
+marca, `f` filtra a dirección (184/5/6, 284/5/6, 704/5/6, 204/5/6, 304/5/6), `r` marca como ruido lo
+que cambió en los últimos 3 s (`R` limpia), `q` sale. Log crudo a `logs/direccion_<fecha>.log`.
+`py visor_can.py --log <archivo>` reproduce un log grabado. Con él salió la dirección (`docs/21`).

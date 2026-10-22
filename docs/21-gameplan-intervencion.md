@@ -426,3 +426,33 @@ sin nuestro nodo da E4809.01.
 Antes de pisarlo, confirmar qué función hace cada mando (cada `E190x` lo dice: probar `a`, `t`,
 `i`, `d` y botones sin pedal y anotar el código). La palanca trasera (`b2`, bits `0x40`/`0x20`)
 todavía no tiene mando en `campo_nodo2.py`.
+
+
+### 22-oct tarde · Paso 4: LA DIRECCIÓN ES CAN — `0x284` b3-b4
+
+`visor_can.py` (tabla en su lugar, sobre `escucha_can`; log `direccion_20261022-150558`, 37 IDs,
+0 errores, 0 perdidas). Mismo armado de la ruta B, **sin pedal, nada se mueve**: el volante
+gira libre y solo mueve su sensor. Marcas: giro izq · centro (quieto) · giro der · centro.
+
+| Ventana | `0x284` b3-b4 (int16 LE con signo) | Suma |
+|---|---|---|
+| reposo, 97 s | ±1 | 0 |
+| **giro izq**, 23 s | **+9 … +27** (rampa suave: `0F 00`, `12 00`, `15 00`…) | **+8931** |
+| quieto | ±1 | +3 |
+| **giro der**, 28 s | **−8 … −40** (`DE FF`, `E0 FF`…) | **−21812** |
+
+- **Un solo valor con signo, no seno/coseno en cuadratura.** Positivo = izquierda, negativo =
+  derecha, el resto de los bytes en 0. Período ~20 ms (al ritmo del SYNC)
+- **Es VELOCIDAD de giro, no ángulo:** vuelve a 0 apenas se suelta el volante, en cualquier
+  posición. Cuadra con el volante sin topes (19-oct): el que integra es el controlador
+- **Lo publica el nodo 4** (TPDO2, «Dirección 1»): el nodo 4 lee el volante. `0x184` del mismo
+  nodo no reacciona (b4-b5 tiembla ±5 en reposo y girando). El RPDO `0x204` del Master al nodo 4
+  queda fijo en `88 00 16 1A 00 00`
+- **Corrige el 06-oct** («sin el pedal el timón no publica nada»): el `0x284` publica sin pedal.
+  Lo que no cambiaba era el Diagnose de STEER
+- **Consecuencia:** la sección 4 (DAC seno/coseno sobre Hall) **no aplica**; la dirección se
+  inyecta por el bus, como el multipiloto. **Pregunta abierta:** el nodo 4 también publica
+  `0x184` y otras tramas, y hay que saber quién consume el `0x284` (¿Master? ¿5/6?) antes de
+  decidir si se imita el nodo 4 entero o se intercepta solo su TPDO2
+- `0x2414` (vueltas de tope a tope) **no se leyó**: es SDO, o sea transmitir, y esta sesión era
+  solo de escucha
