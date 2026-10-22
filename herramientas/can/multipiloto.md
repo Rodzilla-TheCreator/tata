@@ -14,7 +14,7 @@ Nombres de botones puestos por maje: north/south arriba-abajo; east/west la incl
 | b1 | joystick **izquierda/derecha**, magnitud | 0–255 |
 | b2 | **palanca trasera**, magnitud (continua: parece potenciómetro/Hall) | 0–255 |
 | b3 | 255 mientras **east o west** están apretados | |
-| b4 | **bits**: `0x08` joystick adelante · `0x10` joystick atrás · `0x04` izquierda · `0x02` derecha · `0x40` palanca trasera adelante · `0x20` palanca trasera atrás · `0x01` **botón trasero** | bits |
+| b4 | **bits**: `0x08` joystick adelante · `0x10` joystick atrás · `0x04` izquierda · `0x02` derecha · `0x40` palanca trasera adelante · `0x20` palanca trasera atrás · `0x01` **botón trasero = PITO (claxon)** — confirmado 22-oct: con el pito del repuesto trabado, todos los `0x182` dan `00 00 00 00 01 00 00 00` | bits |
 | b5 | **botones de arriba**: `0x08` north · `0x04` south · `0x02` east · `0x01` west | bits |
 | b6 | sin cambios | |
 | b7 | 255 mientras **north o south** están apretados | |

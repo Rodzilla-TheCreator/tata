@@ -343,3 +343,36 @@ falsación: si la prueba no puede fallar, no midió nada.
 3 de 3 arranques idénticos. **No hay que falsificar identidad**, solo `0x1000 = 0`, que
 `multipiloto_falso` ya contesta. (Con ~23k tramas perdidas por el serie es posible que se
 escape algo; tres arranques iguales lo hacen poco probable.)
+
+
+### 22-oct · Paso 2 en el equipo: el corte del 2/3 y el multipiloto de repuesto
+
+Cable del DB9 con `escucha_can` (LISTEN_ONLY). Logs `escucha_equipo_20261022-100420` (corte) y
+`-101009` (repuesto completo).
+
+**Con el repuesto enchufado y los pines 2/3 DOBLADOS:** pantalla oscura. En el bus:
+
+| s (ESP32) | Qué | Lectura |
+|---|---|---|
+| 144–152 | solo `703` (pantalla), ~1540/s | sola en el bus, sin ACK, reintenta |
+| 152 | boot-up de 4, 7, 8, 30 (+4 tramas `6xx 0E 00…` sueltas, basura del encendido) | llegan nodos; `703` baja a cada 100 ms |
+| 153–176 | solo `703 7F` | **ni Master (701), ni SYNC, ni NMT** |
+| 177 | `703` vuelve a reintentar sola | los otros nodos se apagaron a los ~25 s |
+
+**Con los pines reparados (repuesto completo): pantalla prende.** El repuesto **funciona**:
+boot-up `702 00`, `0x1000` abortado una vez y contestado `43 00 10 00 00 00 00 00` (idéntico
+al original del 06-oct), latido 100 ms, `0x182` detrás del SYNC. El pito estaba trabado:
+**bit `0x01` de b4 = pito** (antes «botón trasero»).
+
+**Lo que no cuadra:** el Master manda su boot-up `701 00` ANTES de hablarle al multipiloto
+(hoy: `701` a 282945, `602` a 282948). Con el corte no salió nunca → **el Master no estaba
+encendido**, no esperando al multipiloto por el bus. Sospechosos:
+1. **los pines doblados** — maje tuvo que repararlos; si tocaron otro pin, el corte no fue limpio
+2. **el multipiloto apaga sus salidas (1, 6, 9, 10, 13) si queda solo en su lado del CAN**
+   (sin ACK reintenta su boot-up sin fin y puede entrar en falla), y el Master cuelga de una
+
+**Cómo se separan:** repetir el corte SIN doblar (cinta/funda en 2 y 3, o pigtail) y, llave ON,
+medir 1, 6, 9, 10, 13 contra el negativo; comparar con el 19-oct (16–17 / ~0.8 / ~9 / 5.2 /
+12–22 V). Salidas presentes y Master ausente → otra causa. Salidas ausentes → sospechoso 2, y
+el arreglo es un nodo nuestro del lado del multipiloto que le dé ACK (la pasarela, con el
+MCP2515 de ese lado).
