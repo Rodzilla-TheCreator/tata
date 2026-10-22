@@ -31,11 +31,9 @@
 //   Laptop a BATERÍA, desenchufada. Conectar con la llave en OFF.
 //
 // QUÉ HACE
-//   Fase 1 · barrido: prueba 250k (lo que dice el manual), 500k y 125k, 4 s
-//            cada una, y se queda con la que dé tramas válidas. En listen-only
-//            una velocidad errada solo sube el contador de errores propio; no
-//            molesta al bus.
-//   Fase 2 · escucha: imprime cada trama y cada 5 s un resumen por identificador.
+//   Arranca FIJO a 250k (22-oct). El barrido 250k/500k/125k de antes se quitó: la
+//            velocidad está confirmada por el manual y por la escucha del 06-oct.
+//   Escucha: imprime cada trama y cada 5 s un resumen por identificador.
 //            Decodifica el COB-ID como CANopen: función + nodo, con los nombres
 //            de la tabla de nodos del manual (págs. 346–348 del PDF de Scribd).
 
@@ -44,7 +42,6 @@
 #define PIN_TX   GPIO_NUM_22     // armado vigente (06-oct en adelante): el divisor quedó en el 21
 #define PIN_RX   GPIO_NUM_21     // RX del TJA → 1k/2k → GPIO 21
 
-const uint32_t VENTANA_BARRIDO_MS = 4000;
 const uint32_t RESUMEN_MS         = 5000;
 const bool     IMPRIMIR_CADA_TRAMA = true;   // en false, solo el resumen
 
@@ -178,39 +175,10 @@ void setup() {
   Serial.println("========================================================");
   Serial.printf("  TX = GPIO %d (no se usa)   RX = GPIO %d\n\n", PIN_TX, PIN_RX);
 
-  const long candidatos[] = {250000, 500000, 125000};
-  Serial.println("Fase 1 · barrido de velocidad, 4 s cada una");
-  for (long b : candidatos) {
-    if (!arrancar(b)) { Serial.printf("  %6ld  FALLA al instalar el driver\n", b); continue; }
-    uint32_t fin = millis() + VENTANA_BARRIDO_MS, validas = 0;
-    twai_message_t m;
-    while (millis() < fin)
-      if (twai_receive(&m, pdMS_TO_TICKS(50)) == ESP_OK) validas++;
-    twai_status_info_t st; twai_get_status_info(&st);
-    Serial.printf("  %6ld  tramas validas %5lu   errores RX %3lu\n",
-                  b, (unsigned long)validas, (unsigned long)st.rx_error_counter);
-    parar();
-    if (validas > 0 && bausElegido == 0) bausElegido = b;
-  }
-
-  Serial.println();
-  if (bausElegido == 0) {
-    Serial.println("SILENCIO en las tres velocidades.");
-    Serial.println("  · ¿Paso prueba_can.ino en banco, con su control?");
-    Serial.println("  · ¿Llave en ON y paro de emergencia arriba?");
-    Serial.println("  · ¿CANH y CANL invertidos? Cambiarlos no daña nada en listen-only.");
-    Serial.println("  · Sin GND conectado: si no entra nada, la masa se toma del NEGATIVO");
-    Serial.println("    DE BATERIA con un cable aparte (LEEME.md). Nunca de los pines 5, 6, 9.");
-    Serial.println("  · Si hubo errores RX altos: hay senal pero no a esas velocidades,");
-    Serial.println("    o el pinout X200 no es el de este equipo.");
-    Serial.println("  · Errores RX en cero: no llega nada. Pin equivocado o bus apagado.");
-    Serial.println();
-    Serial.println("Se queda escuchando a 250k por si el bus arranca despues.");
-    bausElegido = 250000;
-  } else {
-    Serial.printf("HABLO a %ld. Fase 2 · escucha continua.\n\n", bausElegido);
-  }
-  arrancar(bausElegido);
+  // 22-oct: sin barrido. La velocidad está confirmada (250k: manual y escucha del 06-oct)
+  bausElegido = 250000;
+  if (!arrancar(bausElegido)) { Serial.println("FALLA al instalar el driver"); return; }
+  Serial.println("Escuchando FIJO a 250k desde el arranque.\n");
 }
 
 uint32_t proximoResumen = RESUMEN_MS;

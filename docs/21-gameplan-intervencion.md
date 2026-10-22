@@ -376,3 +376,53 @@ medir 1, 6, 9, 10, 13 contra el negativo; comparar con el 19-oct (16–17 / ~0.8
 12–22 V). Salidas presentes y Master ausente → otra causa. Salidas ausentes → sospechoso 2, y
 el arreglo es un nodo nuestro del lado del multipiloto que le dé ACK (la pasarela, con el
 MCP2515 de ese lado).
+
+> **Resuelto la misma tarde (ver abajo):** ninguno de los dos sospechosos. El mazo **no
+> puentea** 2↔4 ni 3↔5: el tronco del bus pasa **solo por adentro del multipiloto**. Doblar
+> 2/3 partía el bus en dos (DB9 + controladores de un lado, Master del otro). Por eso el DB9
+> no veía al Master.
+
+
+### 22-oct tarde · RUTA B: el Master acepta nuestro nodo 2 — teleop 1/3
+
+**Topología** (medida por maje): el bus es una cadena; el multipiloto es un eslabón (entra por
+2/3, sale por 4/5, puenteados por dentro). Segmento 2/3 = DB9 + controladores (3/4/7/8/30);
+segmento 4/5 = Master (nodo 1). **El mazo no puentea 2-4 ni 3-5.**
+
+**Armado:** multipiloto de **repuesto** enchufado solo para alimentar (1, 6, 7, 8, 9, 10, 13;
+**2, 3, 4, 5 fuera**: su transceptor sale del bus) + **puente en la ficha hembra del mazo, 2↔4
+y 3↔5** (verificado con óhmetro) + ESP32/TJA en el DB9. Equipo en gato, sin sensor de pedal.
+
+**Prueba 1 — escucha** (`escucha_can`, fijo a 250k; log `escucha_equipo_20261022-140856`):
+
+- **La pantalla prende** con las 5 salidas del multipiloto y su CAN fuera ✓
+- **El Master aparece**: boot-up `701 00`, latido `701 05`, SYNC cada 20 ms, PDO de todos.
+  **El puente reconecta el tronco ✓**
+- Pide `0x1000` al nodo 2 dos veces y **aborta las dos** (`602 80 … 00 00 04 05`, timeout SDO);
+  igual manda NMT START a 2
+- **La pantalla muestra `E4809.01`**: lo manda el Master por `203` (texto ASCII). Es la familia
+  del evento **8.09** («PDO no recibido en 3.5× su ciclo») = **falta el nodo 2**
+- Una corrida anterior dio 0 tramas / 0 errores durante 5 min (log `-134922`, con barrido). **Sin
+  explicar**; la repetición sin barrido y con la llave subida de nuevo oyó todo. Anotado
+
+**Prueba 2 — nuestro nodo 2** (`multipiloto_campo` + `campo_nodo2.py`; log
+`campo_nodo2_20261022-141854`). Armado con la llave OFF, power cycle con el nodo desde el boot:
+
+| | Sin nuestro nodo (prueba 1) | **Con nuestro nodo** |
+|---|---|---|
+| `0x1000` al nodo 2 | 2 timeouts | 1.º timeout, el reintento **lo contestamos** `43 00 10 00 00…` |
+| NMT START `01 02` | nadie | recibido → operacional; **TEC 0, REC 0**, ~4500 tramas aceptadas |
+| Texto a la pantalla | `E4809.01` | **E4809: 0 veces** en todo el log |
+| Mando `a 100` (`182 64 00 00 00 08 00 00 00`) | — | **aviso amarillo de hombre muerto** (`E1903.01`), solo mientras dura el mando |
+| `a 0` | — | el aviso se va |
+
+**El Master toma nuestro `0x182` como mando del operador**: pide el pedal igual que con el
+multipiloto real. maje: sin el pedal el equipo da siempre `E190x`, con `x` según la función que
+se intenta (en el manual: 9.02 elevación, 9.03 descenso, 9.04 viaje…). **La única razón por la
+que no se mueve es el pedal.** El control de falsación es la prueba 1: la misma configuración
+sin nuestro nodo da E4809.01.
+
+**Siguiente (23-oct):** llega el sensor del pedal de hombre muerto → rueda en el aire (paso 5).
+Antes de pisarlo, confirmar qué función hace cada mando (cada `E190x` lo dice: probar `a`, `t`,
+`i`, `d` y botones sin pedal y anotar el código). La palanca trasera (`b2`, bits `0x40`/`0x20`)
+todavía no tiene mando en `campo_nodo2.py`.

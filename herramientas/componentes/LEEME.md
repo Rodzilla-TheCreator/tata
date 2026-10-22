@@ -352,3 +352,14 @@ exige conseguir un conector nuevo. Herramienta: pick de extracción de la serie 
 
 **Pendiente:** confirmar la serie exacta por el cross-ref Amphenol o preguntando al chino; y el
 estilo de traba, para el pick correcto.
+
+## 22-oct · El conector del multipiloto es un eslabón del TRONCO
+
+Medido por maje: el repuesto puentea por dentro **2↔4 y 3↔5**; **el mazo no** (abierto en la
+ficha hembra). El bus entra por 2/3 (DB9 + controladores 3/4/7/8/30) y sale por 4/5 (Master,
+nodo 1). Sacar el CAN del multipiloto **parte el bus**.
+
+**Arnés de la ruta B, probado:** multipiloto enchufado solo para alimentar (1, 6, 7, 8, 9, 10,
+13), **2-5 fuera**, y **puente 2↔4 / 3↔5 en la ficha hembra del mazo**. Con eso la pantalla
+prende (las 5 salidas no dependen de su CAN), el Master arranca y el nodo 2 lo pone el ESP32
+por el DB9. Ver `docs/21`, 22-oct tarde.

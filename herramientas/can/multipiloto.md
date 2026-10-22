@@ -52,3 +52,15 @@ de `0x1000` con `43 00 10 00 00 00 00 00`, y tras el NMT START mandar `0x182` + 
 - **Sin el pedal de hombre muerto el timón no publica nada** y el Diagnose de STEER no cambia
 - **Pérdidas:** a 921600 se perdieron 23 252 tramas con el bus más cargado. El diccionario no se
   afecta (cada acción ×3), pero para grabar todo hace falta un formato binario o solo resumen
+
+## 22-oct · Imitado en el equipo: el Master acepta el nodo 2 falso
+
+`banco_imitador/multipiloto_campo` + `campo_nodo2.py`, con el CAN del multipiloto real fuera y
+el tronco puenteado en el mazo (`docs/21`, 22-oct tarde). Con este diccionario y la
+conversación de arriba (boot-up, `0x1000 = 0`, `0x182` detrás de cada SYNC, latido 100 ms):
+
+- **E4809.01 (falta el nodo 2) desaparece**
+- `a 100` → `182 64 00 00 00 08 00 00 00` → el Master pide el pedal de hombre muerto (`E1903.01`)
+- **El diccionario de b0/b4 es correcto del lado del Master**, no solo como lectura
+- Mandos por serie (`campo_nodo2.py`): `a/t/i/d N`, `n s e w r`, `0`, `X` (silencio).
+  Continuos hasta `0`; watchdog de 200 ms en el ESP32 si se cae la laptop
