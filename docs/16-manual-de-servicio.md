@@ -383,6 +383,10 @@ altura ni de peso** como opción del Master: la altura de uña tiene que salir d
 (¿un PDO del nodo 7? ¿un sensor nuestro?). Los 7.9 km/h de campo quedan por debajo del
 programa 1 (9.0).
 
+> **Seguido el mismo día:** la altura tampoco está en los PDO del nodo 7 (mapeo leído por SDO,
+> `componentes/LEEME.md`, 23-oct). Esta unidad no tiene medición continua de altura de uña; a lo
+> sumo interruptores. **La altura va con sensor propio.**
+
 ## Historial
 
 | Decía | Es | Qué lo tumbó |

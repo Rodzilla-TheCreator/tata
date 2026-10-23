@@ -384,3 +384,26 @@ por el DB9. Ver `docs/21`, 22-oct tarde.
   resolver
 - 5, 6 y 10 no contestan SDO: o no tienen servidor SDO o no están (los PDO `205/206/20A` son
   del Master hacia ellos)
+
+## 23-oct · Nodo 7 (Elevación, `ACS36L PUMP`): sus PDO, leídos por SDO
+
+`sdo_inventario.py --pdos 7` (mapeo CiA 301 `0x1800`/`0x1A00`, `0x1400`/`0x1600`; log
+`sdo_inventario_20261023-133951`). Qué objeto va en cada byte y su valor con la horquilla quieta:
+
+| PDO | COB-ID · tipo | Contenido | Lectura |
+|---|---|---|---|
+| TPDO1 | `187` · 254 (por evento) | b0-1 `2001.01` = `0x3083` · b2-3 `2001.02` = 0 · b4-5 **`2030.02` = 3646** · b6-7 `2073.01` = 0 | `2001.01` = palabra de estado (su bit `0x80` alterna cada ~2 s, como un reloj). **`2030.02` = tensión de batería, ×0.01 V (36.46 V)** |
+| TPDO2 | `287` · 10 (cada 10 SYNC) | b0 `2029.02` · b1-2 `2029.03` · b3-4 `2029.04` · b5 `2029.05` | todo 0 en reposo; a ráfagas sale `2029.04` ≈ 1001 con `2029.05` con signo, sin que nadie toque nada |
+| TPDO3 | `387` · 10 | `2078.02` · `2096.01` · `2096.03` | siempre 0 en todos los logs |
+| TPDO4 | `487` | — | **desactivado** |
+| RPDO1 | `207` (del Master) | `2000.01` = `0xC1` · `2000.02` · `2000.05` · `2000.06` · `2029.01` · `2029.06` | palabra de mando del Master a la bomba + el grupo `2029` |
+| RPDO2/3/4 | `307`/`407`/`507` | — | desactivados |
+
+**La altura de uña no viaja en ningún PDO del nodo 7.** Cuadra con `0x23BA = 0` en el Master
+(docs/16): la familia admite un **incrementador de altura** opcional (eventos `1.17.7`, `1.24`) y
+esta unidad no lo trae. Lo que sí puede haber son **interruptores** (elevación libre NC+NO,
+«altura superior/inferior», evento `1.24`), que serían bits de `2001.01`/`2001.02`. No se puede
+confirmar sin subir la horquilla, y la hidráulica no se mueve (regla del repo).
+
+**Consecuencia para TaTa:** la altura de uña necesita un **sensor nuestro** (de hilo o láser en el
+mástil). Los índices `20xx` del nodo 7 no están en el manual: son internos del controlador ACS.

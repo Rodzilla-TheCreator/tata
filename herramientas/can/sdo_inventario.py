@@ -14,6 +14,8 @@ comandos «l», «id» y «esperados». No hay forma de escribir desde acá.
     py sdo_inventario.py COM7
 
     py sdo_inventario.py --crudo    # solo: tramas crudas 601/581 de 1000, 2414 y 2100, subs 0–7
+    py sdo_inventario.py --opciones # opciones del Master: actual, mín, máx, fábrica
+    py sdo_inventario.py --pdos 7   # mapeo de los PDO de un nodo (qué objeto va en cada byte)
 
 El nodo 3 (pantalla) NO se lee por defecto: el Master le escribe por SDO (603) ~5 veces por
 segundo y nuestro pedido iría por el mismo canal. --con-pantalla lo agrega al final.
@@ -52,7 +54,7 @@ OPCIONES = [
 ]
 RES = re.compile(r"^nodo\s+(\d+)\s+([0-9A-F]{4})\.([0-9A-F]{2})\s+(.*)$")
 
-puerto = next((a for a in sys.argv[1:] if not a.startswith("-")), "COM6")
+puerto = next((a for a in sys.argv[1:] if a.upper().startswith("COM") or a.startswith("/dev/")), "COM6")
 con_pantalla = "--con-pantalla" in sys.argv
 aqui = os.path.dirname(os.path.abspath(__file__))
 os.makedirs(os.path.join(aqui, "logs"), exist_ok=True)
@@ -131,6 +133,44 @@ if "--opciones" in sys.argv:
             m = re.match(r"= 0x([0-9A-F]+)", r[0][3]) if r else None
             v[sub] = int(m.group(1), 16) if m else (r[0][3] if r else "?")
         print("  %04X  actual %-6s (mín %s · máx %s · fábrica %s)   %s" % (idx, v[2], v[3], v[4], v[5], que), flush=True)
+    s.close(); anotar("FIN"); log.close()
+    print("\nlog: " + ruta)
+    sys.exit(0)
+
+def valor(nodo, idx, sub):
+    r = resultados(comando("l %d %X %d" % (nodo, idx, sub)))
+    if not r:
+        return None, "?"
+    m = re.match(r"= 0x([0-9A-F]+)", r[0][3])
+    return (int(m.group(1), 16), r[0][3]) if m else (None, r[0][3])
+
+
+if "--pdos" in sys.argv:
+    # 23-oct: qué objeto viaja en cada byte de cada PDO de un nodo (CiA 301: 0x1800/0x1A00 TPDO,
+    # 0x1400/0x1600 RPDO). Cada entrada de mapeo = índice << 16 | sub << 8 | bits.
+    nodo = int(sys.argv[sys.argv.index("--pdos") + 1])
+    print("== PDOs del nodo %d (%s) ==" % (nodo, NOMBRE.get(nodo, "?")), flush=True)
+    for tipo, com, mapa in (("TPDO", 0x1800, 0x1A00), ("RPDO", 0x1400, 0x1600)):
+        for k in range(4):
+            cob, txt = valor(nodo, com + k, 1)
+            if cob is None:
+                print("  %s%d  %04X: %s" % (tipo, k + 1, com + k, txt), flush=True)
+                continue
+            tt, _ = valor(nodo, com + k, 2)
+            n, txtn = valor(nodo, mapa + k, 0)
+            print("  %s%d  COB-ID 0x%03X%s · tipo %s · %s objetos" % (
+                tipo, k + 1, cob & 0x7FF, " (DESACTIVADO)" if cob & 0x80000000 else "", tt, n if n is not None else txtn), flush=True)
+            byte = 0
+            for e in range(1, (n or 0) + 1):
+                ent, txte = valor(nodo, mapa + k, e)
+                if ent is None:
+                    print("      %d: %s" % (e, txte), flush=True)
+                    continue
+                oi, os_, bits = ent >> 16, (ent >> 8) & 0xFF, ent & 0xFF
+                _, actual = valor(nodo, oi, os_) if oi >= 0x2000 else (None, "")
+                print("      b%-4s %04X.%02X  %2d bits   %s" % (
+                    "%d" % (byte // 8) if bits >= 8 else "%d.%d" % (byte // 8, byte % 8), oi, os_, bits, actual), flush=True)
+                byte += bits
     s.close(); anotar("FIN"); log.close()
     print("\nlog: " + ruta)
     sys.exit(0)
