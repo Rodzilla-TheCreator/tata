@@ -18,6 +18,8 @@
 //   id <nodo>                     identidad: 1000, 1008, 1009, 100A, 1018.1-4
 //   esperados <nodo>              0x1F81 sub 0..127 (CiA 302: qué nodos espera el Master)
 //   barre <nodo> <desde> <hasta>  qué objetos existen (sub 0) en ese rango, ej: barre 1 2000 20FF
+//   crudo on | crudo off          imprime cada trama que mandamos (TX) y toda trama SDO del bus
+//                                 (0x580–0x67F) mientras esperamos respuesta (RX). 23-oct
 
 #include "driver/twai.h"
 
@@ -27,6 +29,13 @@ const uint32_t ESPERA_MS = 300;     // respuesta SDO
 const uint32_t PAUSA_MS  = 40;      // entre pedidos: no cargar el bus
 
 bool habilitado = false;
+bool crudo = false;
+
+void imprimirCrudo(const char* dir, const twai_message_t& m) {
+  Serial.printf("   %s %lu %03lX [%d]", dir, (unsigned long)millis(), (unsigned long)m.identifier, m.data_length_code);
+  for (int i = 0; i < m.data_length_code; i++) Serial.printf(" %02X", m.data[i]);
+  Serial.println();
+}
 
 const char* abortTexto(uint32_t c) {
   switch (c) {
@@ -47,16 +56,19 @@ const char* abortTexto(uint32_t c) {
 
 bool mandar(uint32_t id, const uint8_t* d) {
   twai_message_t m = {}; m.identifier = id; m.data_length_code = 8; memcpy(m.data, d, 8);
+  if (crudo) imprimirCrudo("TX", m);
   return twai_transmit(&m, pdMS_TO_TICKS(50)) == ESP_OK;
 }
 
-// espera la respuesta 0x580+nodo; descarta todo lo demás
+// espera la respuesta 0x580+nodo; descarta todo lo demás (en crudo, imprime las SDO ajenas)
 bool respuesta(int nodo, uint8_t* r) {
   uint32_t fin = millis() + ESPERA_MS; twai_message_t m;
   while ((int32_t)(fin - millis()) > 0)
-    if (twai_receive(&m, pdMS_TO_TICKS(10)) == ESP_OK && !m.extd && m.identifier == 0x580u + nodo) {
-      memcpy(r, m.data, 8); return true;
+    if (twai_receive(&m, pdMS_TO_TICKS(10)) == ESP_OK && !m.extd) {
+      if (crudo && m.identifier >= 0x580 && m.identifier <= 0x67F) imprimirCrudo("RX", m);
+      if (m.identifier == 0x580u + nodo) { memcpy(r, m.data, 8); return true; }
     }
+  if (crudo) Serial.println("   -- sin respuesta en el tiempo de espera");
   return false;
 }
 
@@ -122,14 +134,17 @@ void setup() {
   }
   g.mode = TWAI_MODE_NORMAL; g.tx_queue_len = 4;
   twai_driver_install(&g, &t, &f); twai_start(); habilitado = true;
-  Serial.println("Bus sano. Modo normal. Comandos: l <n> <idx> <sub> · id <n> · esperados <n> · barre <n> <desde> <hasta>");
+  Serial.println("Bus sano. Modo normal. Comandos: l <n> <idx> <sub> · id <n> · esperados <n> · barre <n> <desde> <hasta> · crudo on|off");
 }
 
 void loop() {
   if (!habilitado || !Serial.available()) { delay(5); return; }
   String s = Serial.readStringUntil('\n'); s.trim();
   int n; unsigned idx, sub, hasta;
-  if (sscanf(s.c_str(), "l %d %x %u", &n, &idx, &sub) == 3) mostrar(n, idx, sub);
+  if (s == "crudo on" || s == "crudo off") {
+    crudo = (s == "crudo on"); Serial.printf("crudo %s\n", crudo ? "ENCENDIDO" : "apagado");
+  }
+  else if (sscanf(s.c_str(), "l %d %x %u", &n, &idx, &sub) == 3) mostrar(n, idx, sub);
   else if (sscanf(s.c_str(), "id %d", &n) == 1) {
     mostrar(n, 0x1000, 0); mostrar(n, 0x1008, 0); mostrar(n, 0x1009, 0); mostrar(n, 0x100A, 0);
     for (int k = 1; k <= 4; k++) mostrar(n, 0x1018, k);
@@ -153,5 +168,5 @@ void loop() {
     }
     Serial.println("  fin del barrido");
   }
-  else Serial.println("? comandos: l <n> <idx> <sub> · id <n> · esperados <n> · barre <n> <desde> <hasta>");
+  else Serial.println("? comandos: l <n> <idx> <sub> · id <n> · esperados <n> · barre <n> <desde> <hasta> · crudo on|off");
 }

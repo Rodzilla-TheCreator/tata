@@ -351,6 +351,38 @@ probablemente un protocolo propio de Judit o un acceso previo. **`0x2414`, el pr
 báscula siguen sin saberse.** Siguiente: ver las tramas crudas `601/581` de una lectura (sdo_lee
 no las imprime hoy) antes de suponer nada.
 
+> **Tumbado la misma tarde (`sdo_lee` con `crudo on`, log `sdo_inventario_20261023-132927`):**
+> el Master sí contesta. **Cada parámetro `0x2xxx` es un REGISTRO**, y el sub 0 es una cabecera
+> fija (upload segmentado de 6 bytes `06 00 08 00 00 78`). Por eso daba igual en todos: se leía
+> solo el sub 0. Los subs 1–6 son expeditos de 2 bytes:
+>
+> | sub | Qué es | Cómo se supo |
+> |---|---|---|
+> | 1 | `0x0100` en todos (¿tipo/acceso?) | — |
+> | **2** | **valor ACTUAL** | en `0x2100` vale 60 y la fábrica 70 |
+> | 3 / 4 | mínimo / máximo | coinciden con el manual (`2414`: 4 / 8; `2100`: 0.15 / 1) |
+> | 5 | **valor de fábrica** | coincide con el manual (`2414` 5.5, `2100` 0.7) |
+> | 6 | igual a 5 en todo lo visto | — |
+
+### Las opciones de ESTA unidad — leídas (log `sdo_inventario_20261023-133028`)
+
+| Índice | Actual | Mín · Máx · Fábrica | Lectura |
+|---|---|---|---|
+| **`0x2414`** relación de dirección | **5.5 vueltas** | 4.0 · 8.0 · 5.5 | **el 2.6 del control Obed está mal**: el real es 5.5, de fábrica |
+| `0x23BA` altura de elevación | **0 = no instalado** | 0 · 4 · 0 | **sin indicador ni preselector de altura**: la altura de uña NO sale de esta opción |
+| `0x23BB` elevación libre | **3831 mm** | 1000 · 3900 · 3831 | el manual daba 2500 de fábrica; esta unidad trae 3831 |
+| `0x23D1` peso de carga | **0 = no instalado** | 0 · 2040 · 0 | **sin báscula** |
+| `0x2108` / `0x2128` tracción, prog. 1 / 3 | **9.0 / 12.1 km/h** | 5.0 · 12.9 · igual | prog. 3 = 12.1, no 12.9 (12.9 es el máximo) |
+| `0x210C` / `0x211C` / `0x212C` horquilla, prog. 1 / 2 / 3 | **9.0 / 10.5 / 12.1 km/h** | 5.0 · 12.9 · igual | |
+| `0x2100` aceleración, prog. 1 | **0.60 m/s²** | 0.15 · 1.00 · **0.70** | **modificada** respecto de fábrica |
+
+Escala: velocidades ×0.1 km/h, aceleración ×0.01 m/s², dirección ×0.1 vueltas.
+
+**Para TaTa:** la dirección es **5.5 vueltas** (corregir el simulador). **No hay medición de
+altura ni de peso** como opción del Master: la altura de uña tiene que salir de otro lado
+(¿un PDO del nodo 7? ¿un sensor nuestro?). Los 7.9 km/h de campo quedan por debajo del
+programa 1 (9.0).
+
 ## Historial
 
 | Decía | Es | Qué lo tumbó |

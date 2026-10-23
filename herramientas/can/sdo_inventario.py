@@ -13,6 +13,8 @@ comandos «l», «id» y «esperados». No hay forma de escribir desde acá.
     py sdo_inventario.py            # COM6
     py sdo_inventario.py COM7
 
+    py sdo_inventario.py --crudo    # solo: tramas crudas 601/581 de 1000, 2414 y 2100, subs 0–7
+
 El nodo 3 (pantalla) NO se lee por defecto: el Master le escribe por SDO (603) ~5 veces por
 segundo y nuestro pedido iría por el mismo canal. --con-pantalla lo agrega al final.
 
@@ -102,6 +104,36 @@ if not listo:
     print("sdo_lee NO habilitó la transmisión (bus no sano o no contestó). No se pidió nada.")
     print("log: " + ruta); sys.exit(1)
 print("Bus sano. Empiezo (solo lecturas).\n", flush=True)
+
+if "--crudo" in sys.argv:
+    # 23-oct: el Master contesta lo mismo a todo 0x2xxx sub 0. Ver la conversación trama a trama.
+    # 0x1000 va primero como control: un objeto estándar que sabemos que contesta bien.
+    comando("crudo on")
+    for idx in (0x1000, 0x2414, 0x2100):
+        for sub in range(8):
+            print("== nodo 1  %04X.%02X" % (idx, sub), flush=True)
+            for l in comando("l 1 %X %d" % (idx, sub)):
+                print("  " + l, flush=True)
+    comando("crudo off")
+    s.close(); anotar("FIN"); log.close()
+    print("\nlog: " + ruta)
+    sys.exit(0)
+
+if "--opciones" in sys.argv:
+    # 23-oct, descifrado con --crudo: cada parámetro 0x2xxx del Master es un registro.
+    # sub 0 = cabecera fija (06 00 08 00 00 78), 1 = 0x0100, 2 = ACTUAL, 3 = mín, 4 = máx,
+    # 5 = fábrica, 6 = igual a 5 en lo visto. Comprobado con 0x2100 (actual 60 ≠ fábrica 70).
+    print("== OPCIONES en el Master: actual (mín · máx · fábrica) ==", flush=True)
+    for idx, _, que in OPCIONES:
+        v = {}
+        for sub in (2, 3, 4, 5):
+            r = resultados(comando("l 1 %X %d" % (idx, sub)))
+            m = re.match(r"= 0x([0-9A-F]+)", r[0][3]) if r else None
+            v[sub] = int(m.group(1), 16) if m else (r[0][3] if r else "?")
+        print("  %04X  actual %-6s (mín %s · máx %s · fábrica %s)   %s" % (idx, v[2], v[3], v[4], v[5], que), flush=True)
+    s.close(); anotar("FIN"); log.close()
+    print("\nlog: " + ruta)
+    sys.exit(0)
 
 resumen = []
 
