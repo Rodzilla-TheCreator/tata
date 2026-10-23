@@ -173,6 +173,18 @@ controlador USB: MJPEG o buses separados.
 La tercera cámara —la de uña, que viene de fábrica— es la del ajuste final en la bahía. Antes
 de contar con ella hay que saber **qué señal se le puede sacar**; ver `docs/11`.
 
+> **Resuelto 23-oct-2026 (maje reparó el cable de la cámara de otro EDR):** el cable es
+> **coaxial, end-to-end, sin componentes** (ni resistencias ni activos en el medio). El conector
+> es combo-D con **un contacto coaxial central + 2 pines poblados** (de 4 alrededor): el coax
+> lleva el **video analógico compuesto** (NTSC/PAL) y los 2 pines son **alimentación + tierra**
+> de la cámara (fusible `6F9`). No va por CAN (el bus a 250 kbaud no lleva video).
+>
+> **Consecuencia —la cámara de fábrica es trivial de usar:** un **T-tap pasivo en el coax**
+> (splitter de video 75 Ω o tap de alta impedancia, para no degradarle la imagen al display) →
+> una **capturadora USB de video compuesto** (~$10–20) → stream estándar al cómputo, listo para
+> ArUco. El feed de fábrica al display sigue intacto en paralelo. **No hace falta montar cámara
+> propia en la uña.** Confirmar en campo que la capturadora engancha (verifica que es compuesto).
+
 ## Lo que hicimos en Botoni, verificado en el código
 
 Repo: `github.com/MDLTE/Autonomous-Warehouse-Forklift`. Lo que arranca
@@ -266,7 +278,8 @@ deriva longitudinal en pasillos largos, que es otro problema.
 - **La altura de montaje del LiDAR.** Se mide en campo.
 - **Cuántos ArUco, a qué separación y a qué altura.** Botoni fijó los suyos mirando la cámara
   en muchos ángulos hasta decidir. Acá toca repetir ese ejercicio con la geometría del EDR.
-- **Qué señal sale de la cámara de uña de fábrica.** `docs/11`.
+- ~~**Qué señal sale de la cámara de uña de fábrica.**~~ **Resuelto 23-oct:** video analógico
+  compuesto por coaxial, se toma con T-tap + capturadora USB (ver arriba, sección de cámara).
 - **Si hay zona clasificada** en el área de mixers. Cambia sensor, precio y proveedor por
   completo. Es pregunta para el cliente.
 
