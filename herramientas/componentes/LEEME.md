@@ -363,3 +363,24 @@ nodo 1). Sacar el CAN del multipiloto **parte el bus**.
 13), **2-5 fuera**, y **puente 2↔4 / 3↔5 en la ficha hembra del mazo**. Con eso la pantalla
 prende (las 5 salidas no dependen de su CAN), el Master arranca y el nodo 2 lo pone el ESP32
 por el DB9. Ver `docs/21`, 22-oct tarde.
+
+## 23-oct · Quién es cada nodo — leído por SDO (`0x1008`, `0x1000`, `0x1018`)
+
+| Nodo | Manual | `0x1008` nombre | `0x1000` | `0x1018` vendor / producto / rev / serie |
+|---|---|---|---|---|
+| 1 | Master `1U16` | **`VMC30`** (`1009`/`100A`: «Not used») | `0x04000000` | `0x99` / `05060708` / `090A0B0C` / `0D0E0F10` (relleno, no identidad real) |
+| 2 | Multi-Pilot 1 | **`MP1`** | 0 | `0x102` / `0x4D` / `0x00011300` / **`0x00299094`** (serie 2723988) |
+| 4 | Dirección 1 | **`APS36M-70C-35P`** | `0x03000000` | `0x99` (sin subs 2–4) |
+| 7 | Elevación | **`ACS36L PUMP`** | `0x02000000` | `0x99` |
+| 8 | Tracción 1 | **`ACS36S TRAC`** | `0x01000000` | `0x99` |
+| 30 | «PC de servicio» | **`Supervisor 1.0`** | `0x0012D686` | `0x99` |
+| 5, 6, 10 | Dirección 2/3, Multi-Pilot 2 | sin respuesta SDO | | |
+
+- **Vendor `0x99` en todos los Jungheinrich**; el multipiloto es de otro fabricante (`0x102`)
+- Nombres de controladores: `ACS36S TRAC` (tracción), `ACS36L PUMP` (bomba/elevación),
+  `APS36M-70C-35P` (dirección). Sirven para buscar hojas de datos y repuestos
+- **Dato en tensión:** el nodo 30 se llama «Supervisor 1.0», no algo de servicio. El manual lo
+  pone como «PC de servicio» (Judit). ¿Es el `KD Medi CO 250K` haciendo de supervisor? Sin
+  resolver
+- 5, 6 y 10 no contestan SDO: o no tienen servidor SDO o no están (los PDO `205/206/20A` son
+  del Master hacia ellos)

@@ -327,6 +327,30 @@ exacta de esa unidad.** Eso resuelve `b1` sin flexómetro.
 
 ---
 
+## 23-oct · Inventario por SDO en el equipo (solo lectura)
+
+`sdo_lee.ino` + `herramientas/can/sdo_inventario.py`, multipiloto original enchufado, llave ON.
+Primera transmisión nuestra al bus de verdad: **solo uploads** (0x40/0x60/0x70), escucha previa
+3 s (3279 tramas, 0 errores) antes de habilitar. Log `sdo_inventario_20261023-132353`.
+
+**Control cruzado:** el `0x1000` leído coincide con lo que el Master lee en el arranque (nodo 4
+`…03`, 7 `…02`, 8 `…01`, 30 `0x0012D686`, 2 = 0). El lector mide bien.
+
+### Los parámetros `0x2xxx` del Master: NO se pudieron leer
+
+| Índice | Nodo donde se buscó | Resultado |
+|---|---|---|
+| `0x2414` | 4 | aborta: objeto no existe |
+| `0x23BA`, `0x23BB`, `0x23D1` | 7 | abortan: objeto no existe |
+| **todos** (`2414`, `23BA`, `23BB`, `23D1`, `2100`, `2108`, `2128`, `210C`, `211C`, `212C`) | **1** | **los mismos 6 bytes `06 00 08 00 00 78` para cada índice** |
+| `0x1F81` (nodos esperados, CiA 302) | 1 | aborta: objeto no existe |
+
+**Un valor que no cambia con el índice no es el valor.** Los parámetros viven en el Master (los
+controladores abortan), pero su respuesta no es un upload estándar que `sdo_lee` entienda:
+probablemente un protocolo propio de Judit o un acceso previo. **`0x2414`, el preselector y la
+báscula siguen sin saberse.** Siguiente: ver las tramas crudas `601/581` de una lectura (sdo_lee
+no las imprime hoy) antes de suponer nada.
+
 ## Historial
 
 | Decía | Es | Qué lo tumbó |
