@@ -16,6 +16,7 @@ comandos «l», «id» y «esperados». No hay forma de escribir desde acá.
     py sdo_inventario.py --crudo    # solo: tramas crudas 601/581 de 1000, 2414 y 2100, subs 0–7
     py sdo_inventario.py --opciones # opciones del Master: actual, mín, máx, fábrica
     py sdo_inventario.py --pdos 7   # mapeo de los PDO de un nodo (qué objeto va en cada byte)
+    py sdo_inventario.py --barre 4 2300 2500   # qué objetos existen en el rango y su valor
 
 El nodo 3 (pantalla) NO se lee por defecto: el Master le escribe por SDO (603) ~5 veces por
 segundo y nuestro pedido iría por el mismo canal. --con-pantalla lo agrega al final.
@@ -171,6 +172,39 @@ if "--pdos" in sys.argv:
                 print("      b%-4s %04X.%02X  %2d bits   %s" % (
                     "%d" % (byte // 8) if bits >= 8 else "%d.%d" % (byte // 8, byte % 8), oi, os_, bits, actual), flush=True)
                 byte += bits
+    s.close(); anotar("FIN"); log.close()
+    print("\nlog: " + ruta)
+    sys.exit(0)
+
+if "--barre" in sys.argv:
+    # 23-oct: qué objetos existen en un rango (sub 0, con «barre» de sdo_lee) y el valor en reposo
+    # de cada sub de los que existen. Solo lecturas.
+    k = sys.argv.index("--barre")
+    nodo, desde, hasta = int(sys.argv[k + 1]), sys.argv[k + 2], sys.argv[k + 3]
+    print("== nodo %d · objetos %s–%s ==" % (nodo, desde, hasta), flush=True)
+    hallados = []
+    c = "barre %d %s %s" % (nodo, desde, hasta)
+    anotar("> " + c); s.write((c + "\n").encode())
+    lineas, fin = [], time.time() + 300           # los que no existen no imprimen: esperar el final
+    while time.time() < fin:
+        l = s.readline().decode("utf-8", "replace").strip()
+        if l:
+            anotar("< " + l); lineas.append(l)
+            if "fin del barrido" in l:
+                break
+    for l in lineas:
+        m = re.match(r"([0-9A-F]{4}) existe(\?)?", l)
+        if m:
+            hallados.append(int(m.group(1), 16))
+        if "SIN RESPUESTA" in l:
+            print("  " + l, flush=True)
+    print("  %d objetos existen" % len(hallados), flush=True)
+    for idx in hallados:
+        n, txt = valor(nodo, idx, 0)
+        print("  %04X.00  %s" % (idx, txt), flush=True)
+        if n is not None and 0 < n <= 16:            # registro: leer sus subs
+            for sub in range(1, n + 1):
+                print("  %04X.%02X  %s" % (idx, sub, valor(nodo, idx, sub)[1]), flush=True)
     s.close(); anotar("FIN"); log.close()
     print("\nlog: " + ruta)
     sys.exit(0)

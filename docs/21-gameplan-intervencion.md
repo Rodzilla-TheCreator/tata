@@ -456,3 +456,10 @@ gira libre y solo mueve su sensor. Marcas: giro izq · centro (quieto) · giro d
   decidir si se imita el nodo 4 entero o se intercepta solo su TPDO2
 - `0x2414` (vueltas de tope a tope) **no se leyó**: es SDO, o sea transmitir, y esta sesión era
   solo de escucha
+
+> **Corregido el 23-oct (mapeo por SDO, `componentes/LEEME.md`):** «la dirección se inyecta por
+> el bus» estaba mal. El `0x284` lo **publica** el nodo 4 a partir de su propio sensor de volante,
+> que le llega por cable; el nodo 4 **no tiene ningún RPDO de consigna de giro** (consume solo
+> `204` = palabra de modo del Master, y `188` = tracción). **La sección 4 (emular el sensor del
+> volante) vuelve a aplicar**: hay que medir qué espera el conector del sensor del volante.
+> `0x2414` se leyó el 23-oct: 5.5 vueltas (`docs/16`).

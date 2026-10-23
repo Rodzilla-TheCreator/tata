@@ -78,7 +78,16 @@ uint32_t codigo(const uint8_t* r) { return r[4] | r[5] << 8 | r[6] << 16 | (uint
 int leer(int nodo, uint16_t idx, uint8_t sub, uint8_t* datos, int& largo, uint32_t& abortc) {
   uint8_t q[8] = {0x40, (uint8_t)idx, (uint8_t)(idx >> 8), sub, 0, 0, 0, 0}, r[8];
   twai_message_t basura; while (twai_receive(&basura, 0) == ESP_OK) {}
-  if (!mandar(0x600 + nodo, q) || !respuesta(nodo, r)) return 2;
+  if (!mandar(0x600 + nodo, q)) return 2;
+  // 23-oct: la respuesta tiene que traer NUESTRO índice/sub; una atrasada de otro pedido se
+  // descarta (en un barrido, 0x2469 salió «existe» y la relectura dijo que no)
+  bool mia = false;
+  for (int k = 0; k < 3 && !mia; k++) {
+    if (!respuesta(nodo, r)) return 2;
+    mia = (r[1] == q[1] && r[2] == q[2] && r[3] == q[3]);
+    if (!mia && crudo) Serial.println("   -- respuesta de otro pedido, descartada");
+  }
+  if (!mia) return 2;
   if (r[0] == 0x80) { abortc = codigo(r); return 1; }
   if ((r[0] & 0xE2) == 0x42) {                          // expedito
     largo = (r[0] & 0x01) ? 4 - ((r[0] >> 2) & 3) : 4; memcpy(datos, r + 4, largo); return 0;

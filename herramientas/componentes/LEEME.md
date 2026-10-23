@@ -407,3 +407,28 @@ confirmar sin subir la horquilla, y la hidráulica no se mueve (regla del repo).
 
 **Consecuencia para TaTa:** la altura de uña necesita un **sensor nuestro** (de hilo o láser en el
 mástil). Los índices `20xx` del nodo 7 no están en el manual: son internos del controlador ACS.
+
+## 23-oct · Nodo 4 (Dirección, `APS36M-70C-35P`): sus PDO, leídos por SDO — NO tiene RPDO de giro
+
+`sdo_inventario.py --pdos 4` y `--barre 4 2300 2500` (logs `sdo_inventario_20261023-151643` y
+`-151819`). Solo lecturas.
+
+| PDO | COB-ID · tipo | Contenido (valor en reposo) | Lectura |
+|---|---|---|---|
+| TPDO1 | `184` · 254 | `2001.01` = `0x2003` · `2029.15` = 100 · `2001.02` = 2 · `2073.01` = 0 | estado |
+| **TPDO2** | **`284`** · 10 | `2028.02` · `2028.03` · **`2210.01` (b3-4)** · `2028.04` · `2028.05` | **`2210.01` = la velocidad del volante** que se vio el 22-oct (b3-b4) |
+| TPDO3 / 4 | `384` / `484` | — | desactivados |
+| **RPDO1** | **`204`** (del Master) · 254 | `2000.01` · **`2029.16` = `0x1A16` (6678)** · `2028.01` · `2028.06` | palabra de modo + un valor que **no cambió al girar** el 22-oct (`204` fijo `88 00 16 1A 00 00`) |
+| **RPDO2** | **`188`** (¡de TRACCIÓN!) · 254 | `2029.14` = 3 · `2160.02` = 0 · `2160.03` = 10 | el nodo 4 escucha a tracción: probablemente velocidad de marcha para la dirección según velocidad |
+| RPDO3 / 4 | `404` / `504` | — | desactivados, 0 objetos |
+
+Barrido `0x2300–0x2500`: solo existe **`0x2500`**, un registro de 7: `6000`, `−6000`, `6000`,
+`−6000`, `100`, `75`, `25`. Tiene forma de **límites** (±6000, porcentajes), no de consigna.
+(`0x2469` salió como existente en el barrido y la relectura dijo que no: falso positivo de
+`sdo_lee`, que aceptaba una respuesta sin verificar el índice. Corregido en el código.)
+
+**Respuesta: el nodo 4 NO tiene un RPDO de comando de giro.** Lo único que consume es la palabra
+de modo del Master (`204`) y la trama de tracción (`188`). **El volante entra al nodo 4 por cable**
+(su sensor) y el propio nodo publica la velocidad (`284`). La dirección no se comanda por el bus
+como el multipiloto: hay que **emular el sensor del volante en su conector** (o encontrar un modo
+de operación por `2000.01`, sin documentar).
