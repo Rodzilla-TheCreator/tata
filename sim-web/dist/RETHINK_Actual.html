@@ -487,7 +487,7 @@ function holgura(p){ let m=9; for(const o of OBB) for(const[px,pz] of p){
   const dx=Math.abs(px-o.cx)-o.hx, dz=Math.abs(pz-o.cz)-o.hz;
   if(dx<0&&dz<0) return 0; m=Math.min(m,Math.max(dx,dz)); } return m; }
 
-const VUELTAS = 2.6;                       // vueltas de tope a tope del timon
+const VUELTAS = 5.5;                       // vueltas de tope a tope del timon (0x2414 medido 23-oct; antes 2.6, mal)
 function manual(u, dt){
   leerPad(u);
   // EL TIMON SE QUEDA DONDE LO DEJAS. Es la diferencia con un stick.
