@@ -21,33 +21,43 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
 
 **Diagrama de conexionado: [`armado_emulador.svg`](armado_emulador.svg).** Abajo el mismo en texto.
 
+Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así que el op-amp va a
+**+11 V** (no a 5 V): a 5 V no llegaría a los 4.5 V que node 4 necesita.
+
 ```
- [POWER BANK USB 5V] (+)──┬──────────────── +5V ──┬── Vcc MCP6002 (op-amp RRIO)
-                          │                        │   (op-amp a 5V = CLAMP: la salida
-                      ESP32 (5V/VIN)               │    nunca pasa de 5V → protege node 4)
-                          │
+ [POWER BANK USB 5V] ── ESP32 (5V + DAC a 0-3.3V)
+ [+11 V del BLANCO]  ── Vcc del LM358 (pin 8)   ← el blanco queda libre: el sensor real se desconecta
+
   ESP32
    GPIO34  ◄── pote 10k (0-3.3V) = VELOCIDAD de giro (centro = quieto)
                [en campo; en el kit lo reemplaza la Jetson/gamepad]
-   GPIO25 (DAC verde, 0-3.3V) ──► U1a no-inversor, G=1.36 ──► pin VERDE → node 4
-   GPIO26 (DAC café , 0-3.3V) ──► U1b no-inversor, G=1.36 ──► pin CAFÉ  → node 4
+   GPIO25 (DAC verde) ──► U1a no-inv G=1.36 ──►[R 150Ω]──┬──► pin VERDE → node 4
+   GPIO26 (DAC café ) ──► U1b no-inv G=1.36 ──►[R 150Ω]──┤     cada salida: [zener 5.1V a GND]
+                                                         └──► pin CAFÉ  → node 4
 
-  Ganancia de cada canal:  G = 1 + Rf/Rg = 1.36    (Rg = 10k ;  Rf = 3.6k, en trimpot de 5k)
+  Por canal:  IN+ = DAC ;  Rg 10k de IN− a GND ;  Rf 3.6k (trim 5k) de IN− a OUT ;  G = 1+Rf/Rg = 1.36
+  Clamp:      R 150Ω en serie + zener 5.1V de la salida a GND (protege node 4)
 
-  TIERRA COMÚN (un solo nodo):
-     power bank(−) = ESP GND = MCP6002 GND = amarillo del conector (= GND de node 4)
-     → el **amarillo** es la ÚNICA conexión al equipo.
+  LM358 (8 pines):  Vcc(8)=+11V blanco · V−(4)=GND · VERDE: IN1+ 3, IN1− 2, OUT1 1 · CAFÉ: IN2+ 5, IN2− 6, OUT2 7
 
+  TIERRA COMÚN:  power bank(−) = ESP GND = LM358 V−(4) = amarillo del conector (= GND de node 4).
   SIN RELÉ: el sensor REAL se DESCONECTA; el emulador va DIRECTO al conector de node 4.
-  blanco (+11 V del equipo) queda SIN USAR — el emulador hace sus propias señales.
+
+  Si conseguís un op-amp RAIL-TO-RAIL (LMV358 / TLV2372 / MCP602): corrélo a 5 V del power bank
+  y quitá el +11 V y el zener (el propio riel de 5 V hace de clamp).
 ```
 
-**Por qué power bank y no el DROK a los 12 V del equipo:**
-- El riel de 11 V del sensor es de node 4 (~15 mA): colgarle el circuito lo sobrecarga.
-- La batería es ~39–48 V: pasa del máximo de entrada de casi todo DROK (~30 V) → lo quema.
-- El emulador solo necesita **5 V** (riel del op-amp + ESP por USB). Un power bank los da, **flota**
-  (sin tierra física → sin ground loop) y deja al equipo fuera del lazo de potencia. En el kit
-  integrado la energía sale del DC-DC del kit (batería → bus de 5 V), que el Orin ya necesita.
+**Alimentación (dos fuentes, tierra común):**
+- **ESP32: power bank USB 5 V.** Flota (sin tierra física → sin ground loop) y da el 3.3 V que es
+  la referencia del DAC.
+- **LM358: +11 V del BLANCO del conector.** El LM358 no es rail-to-rail; a 5 V no llega a 4.5 V,
+  necesita más riel. El blanco (supply del sensor de node 4, ~11 V) **queda libre** porque el
+  sensor real se desconecta, y el op-amp solo chupa ~2 mA (dentro de su presupuesto de ~15 mA).
+- **NO** alimentar nada de la batería (~39-48 V) directo ni por el DROK (lo quema: pasa de su
+  máximo de ~30 V).
+- En el kit integrado todo sale del **DC-DC del kit** (batería → bus de 5 V), que el Orin ya necesita.
+- Con un op-amp **rail-to-rail** (LMV358 / TLV2372 / MCP602) el op-amp corre a **5 V** del power
+  bank y **no hace falta el +11 V ni el zener**.
 
 ## Componentes (BOM)
 
@@ -55,8 +65,9 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
 |---|---|---|
 | Power bank USB 5 V | alimentar todo | flota, sin ground loop |
 | ESP32 | cómputo de θ + 2 DAC | del kit |
-| **MCP6002** (dual RRIO, salida 0-5V) | las 2 etapas de salida | o MCP6004 (quad) si después se agregan los 2 canales de la palanca |
+| **LM358** (dual; DIP mejor para protoboard) | las 2 etapas de salida | C&D lo tiene. NO rail-to-rail → va a +11V. Si hay **LMV358 / TLV2372 / MCP602** (rail-to-rail), mejor: corre a 5V y se quita el zener |
 | 2× 10k (Rg), 2× trimpot 5k (Rf) | ganancia 1.36 | afinable |
+| 2× **zener 5.1V** (1W) + 2× **R 150Ω** | clamp de salida (protege node 4) | del kit de zener 28 valores de C&D |
 | Pote 10k | entrada de velocidad (campo) | lo reemplaza la Jetson/gamepad |
 
 ## Función de transferencia y software
@@ -76,8 +87,10 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
   operador). Si el ESP se cuelga, node 4 lee una señal inválida → **falla y deshabilita la
   dirección** (seguro en parado). Para un equipo **en operación** habría que volver a poner un
   selector/handoff.
-- **Op-amp a 5 V = clamp inherente:** la salida nunca pasa de 5 V (protege la entrada de node 4);
-  un valor fuera del círculo lo lee node 4 como falla y deshabilita la dirección.
+- **Clamp: R 150 Ω en serie + zener 5.1 V** de cada salida a GND. Si el op-amp (a 11 V) se
+  dispara, la salida queda clampeada a ~5.1 V y protege la entrada de node 4; un valor fuera del
+  círculo lo lee node 4 como falla y deshabilita la dirección. (Con op-amp rail-to-rail a 5 V, el
+  propio riel ya es el clamp y el zener sobra.)
 - Equipo **en gato / parado**, **paro físico en mano**, hombre-muerto **sin puentear** hasta la
   prueba de movimiento.
 
