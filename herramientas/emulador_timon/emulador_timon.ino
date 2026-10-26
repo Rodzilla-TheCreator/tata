@@ -17,11 +17,10 @@
 #include <math.h>
 
 const float Vo = 2.47, Va = 1.98;   // medidos en banco (24-oct)
-// Ganancia POR CANAL (G = 1 + Rf/Rg). Con resistencias iguales en ambos, poné el mismo numero.
-// Con el stock actual: verde Rg=5.1k Rf=2k -> 1.39 ; cafe Rg=100k Rf=43k -> 1.43.
+// Ganancia POR CANAL (G = 1 + Rf/Rg). Mismos resistores en ambos: Rg=10k, Rf=5.1k -> G=1.51.
 // AJUSTAR cada uno con el caracterizador hasta que el circulo de radio ~1.95 / nrad ~1.
-const float G_V = 1.39;             // ganancia canal verde
-const float G_C = 1.43;             // ganancia canal cafe
+const float G_V = 1.51;             // ganancia canal verde  (Rg=10k, Rf=5.1k)
+const float G_C = 1.51;             // ganancia canal cafe   (Rg=10k, Rf=5.1k)
 const int DAC_V = 25, DAC_C = 26;
 
 float theta = 0;                    // rad

@@ -19,7 +19,7 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
 
 ## El circuito
 
-**Diagrama de conexionado: [`armado_emulador.svg`](armado_emulador.svg).** Abajo el mismo en texto.
+**Diagramas:** esquemático [`armado_emulador.svg`](armado_emulador.svg) · **montaje en protoboard [`armado_breadboard.svg`](armado_breadboard.svg)**. Abajo el mismo en texto.
 
 Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así que el op-amp va a
 **+11 V** (no a 5 V): a 5 V no llegaría a los 4.5 V que node 4 necesita.
@@ -29,11 +29,11 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
  [+11 V del BLANCO]  ── Vcc del LM358 (pin 8)   ← el blanco queda libre: el sensor real se desconecta
 
   ESP32  (θ comandado por SOFTWARE / teleop por USB-serial; SIN pote)
-   GPIO25 (DAC verde) ──► U1a (G_V=1.39) ──►[R 100Ω]──┬──► pin VERDE → node 4
-   GPIO26 (DAC café ) ──► U1b (G_C=1.43) ──►[R 100Ω]──┤     cada salida: [zener 5.1V a GND]
+   GPIO25 (DAC verde) ──► U1a (G=1.51) ──►[R 100Ω]──┬──► pin VERDE → node 4
+   GPIO26 (DAC café ) ──► U1b (G=1.51) ──►[R 100Ω]──┤     cada salida: [zener 5.1V a GND]
                                                          └──► pin CAFÉ  → node 4
 
-  Por canal:  IN+ = DAC ;  Rg de IN− a GND ;  Rf de IN− a OUT ;  G = 1+Rf/Rg (verde 5.1k/2k=1.39 · café 100k/43k=1.43)
+  Ambos canales:  IN+ = DAC ;  Rg 10k de IN− a GND ;  Rf 5.1k de IN− a OUT ;  G = 1 + 5.1/10 = 1.51
   Clamp:      R 100Ω en serie + zener 5.1V de la salida a GND (protege node 4)
 
   LM358 (8 pines):  Vcc(8)=+11V blanco · V−(4)=GND · VERDE: IN1+ 3, IN1− 2, OUT1 1 · CAFÉ: IN2+ 5, IN2− 6, OUT2 7
@@ -64,7 +64,7 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
 | Power bank USB 5 V | alimentar el ESP (el op-amp va a +11 V) | flota, sin ground loop |
 | ESP32 | cómputo de θ + 2 DAC | del kit. θ por software/teleop, **sin pote** |
 | **1× LM358** (dual; DIP mejor para protoboard) | las 2 etapas de salida | C&D lo tiene. NO rail-to-rail → va a +11V. Si hay **LMV358 / TLV2372 / MCP602** (rail-to-rail), mejor: corre a 5V y se quita el zener |
-| **6 resistencias** (por canal): verde Rg 5.1k + Rf 2k, café Rg 100k + Rf 43k, 2× 100Ω (serie) | ganancia por canal + serie del clamp | lo que importa es **G = 1+Rf/Rg ≥ 1.35**; con otros valores se calibra G **por canal** en el sketch (ej. verde 5.1k/2k=1.39, café 100k/43k=1.43). La R serie no es crítica: cualquier **100-330 Ω** |
+| **6 resistencias:** 2× 10k (Rg), 2× 5.1k (Rf), 2× 100Ω (serie) | ganancia G=1.51 + serie del clamp | lo que importa es **G = 1+Rf/Rg ≥ 1.35**; con otros valores se calibra G **por canal** en el sketch (ej. verde 5.1k/2k=1.39, café 100k/43k=1.43). La R serie no es crítica: cualquier **100-330 Ω** |
 | **2× zener 5.1V** (1W) | clamp de salida (protege node 4) | del kit de zener 28 valores de C&D |
 
 ## Función de transferencia y software
@@ -103,7 +103,8 @@ después**, por el relé, al conector del equipo.
 
 | Archivo | Qué hace |
 |---|---|
-| `armado_emulador.svg` | Diagrama de conexionado (power bank, ESP32, op-amp, relé, conector, sensor real) |
+| `armado_emulador.svg` | Esquemático (bloques + detalle de una etapa + pinout) |
+| `armado_breadboard.svg` | Montaje físico en protoboard (dónde va cada resistencia, zener y jumper) |
 | `caracterizador_timon.ino` | Arduino Uno/Nano: mide Vo/Va por canal, confirma cuadratura (radio normalizado ≈ 1), cuenta vueltas, log CSV. Es el que sacó Vo=2.47 / Va=1.98 |
 | `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC. Velocidad de giro por **serial** (deg/s), sin pote. Salida directa a node 4 (sin relé) |
 
