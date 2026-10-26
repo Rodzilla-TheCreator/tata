@@ -29,24 +29,17 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
   ESP32
    GPIO34  ◄── pote 10k (0-3.3V) = VELOCIDAD de giro (centro = quieto)
                [en campo; en el kit lo reemplaza la Jetson/gamepad]
-   GPIO25 (DAC verde, 0-3.3V) ──► U1a no-inversor, G=1.36 ──► NO ┐
-   GPIO26 (DAC café , 0-3.3V) ──► U1b no-inversor, G=1.36 ──► NO ┤
-   GPIO27 ──1k──►│ B 2N2222 ; C──bobina relé──+5V ; 1N4148 flyback sobre la bobina
-                                 (energiza el relé SOLO en teleop; arranca en LOW)
-
-  RELÉ DPDT (señal, contactos de oro):
-     polo 1:  COM → pin VERDE de node 4 │ NC → verde del sensor REAL │ NO → salida op-amp verde
-     polo 2:  COM → pin CAFÉ  de node 4 │ NC → café  del sensor REAL │ NO → salida op-amp café
-     BOBINA DESENERGIZADA = NC = sensor REAL  (fail-safe)
+   GPIO25 (DAC verde, 0-3.3V) ──► U1a no-inversor, G=1.36 ──► pin VERDE → node 4
+   GPIO26 (DAC café , 0-3.3V) ──► U1b no-inversor, G=1.36 ──► pin CAFÉ  → node 4
 
   Ganancia de cada canal:  G = 1 + Rf/Rg = 1.36    (Rg = 10k ;  Rf = 3.6k, en trimpot de 5k)
 
   TIERRA COMÚN (un solo nodo):
-     power bank(−) = ESP GND = MCP6002 GND = emisor del 2N2222 = retorno de la bobina = amarillo
-     → el **amarillo del sensor** es la ÚNICA conexión de masa al equipo.
+     power bank(−) = ESP GND = MCP6002 GND = amarillo del conector (= GND de node 4)
+     → el **amarillo** es la ÚNICA conexión al equipo.
 
-  El sensor REAL queda SIEMPRE alimentado por el equipo (blanco = +11V, amarillo = GND).
-  El relé solo conmuta cuáles 2 señales le llegan a node 4: las del sensor o las nuestras.
+  SIN RELÉ: el sensor REAL se DESCONECTA; el emulador va DIRECTO al conector de node 4.
+  blanco (+11 V del equipo) queda SIN USAR — el emulador hace sus propias señales.
 ```
 
 **Por qué power bank y no el DROK a los 12 V del equipo:**
@@ -63,8 +56,6 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
 | Power bank USB 5 V | alimentar todo | flota, sin ground loop |
 | ESP32 | cómputo de θ + 2 DAC | del kit |
 | **MCP6002** (dual RRIO, salida 0-5V) | las 2 etapas de salida | o MCP6004 (quad) si después se agregan los 2 canales de la palanca |
-| Relé **DPDT de señal**, bobina 5 V, contactos de oro | handoff real/teleop | ej. OMRON G6K-2P-Y; NO de potencia (EMF térmica) |
-| 2N2222 + 1N4148 + R 1k | driver de la bobina | base del transistor |
 | 2× 10k (Rg), 2× trimpot 5k (Rf) | ganancia 1.36 | afinable |
 | Pote 10k | entrada de velocidad (campo) | lo reemplaza la Jetson/gamepad |
 
@@ -80,12 +71,15 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
 
 ## Seguridad
 
-- **Relé desenergizado = sensor real (fail-safe):** corte de energía o ESP colgado → el relé cae
-  solo y el operador recupera la dirección. Arranca en LOW; se energiza SOLO con el comando `e`.
+- **Sin relé de handoff** (quitado a pedido): el emulador va **cableado directo** a node 4 y el
+  sensor real queda **desconectado**. En el EDR **parado de desarrollo** está bien (no hay
+  operador). Si el ESP se cuelga, node 4 lee una señal inválida → **falla y deshabilita la
+  dirección** (seguro en parado). Para un equipo **en operación** habría que volver a poner un
+  selector/handoff.
 - **Op-amp a 5 V = clamp inherente:** la salida nunca pasa de 5 V (protege la entrada de node 4);
   un valor fuera del círculo lo lee node 4 como falla y deshabilita la dirección.
-- Equipo **en gato**, **paro físico en mano**, hombre-muerto **sin puentear** hasta la prueba de
-  movimiento. Energizar el relé solo con todo lo anterior.
+- Equipo **en gato / parado**, **paro físico en mano**, hombre-muerto **sin puentear** hasta la
+  prueba de movimiento.
 
 ## Validación — ANTES de tocar node 4
 
@@ -99,7 +93,7 @@ después**, por el relé, al conector del equipo.
 |---|---|
 | `armado_emulador.svg` | Diagrama de conexionado (power bank, ESP32, op-amp, relé, conector, sensor real) |
 | `caracterizador_timon.ino` | Arduino Uno/Nano: mide Vo/Va por canal, confirma cuadratura (radio normalizado ≈ 1), cuenta vueltas, log CSV. Es el que sacó Vo=2.47 / Va=1.98 |
-| `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC, entrada de velocidad por pote, control del relé (`e`/`d`) |
+| `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC, entrada de velocidad por pote. Salida directa a node 4 (sin relé) |
 
 ## Estado / pendientes
 
