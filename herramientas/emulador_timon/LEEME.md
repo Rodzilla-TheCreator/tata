@@ -19,6 +19,8 @@ el lazo con la rueda. Somos un drop-in de la mano del operador.
 
 ## El circuito
 
+**Diagrama de conexionado: [`armado_emulador.svg`](armado_emulador.svg).** Abajo el mismo en texto.
+
 ```
  [POWER BANK USB 5V] (+)──┬──────────────── +5V ──┬── Vcc MCP6002 (op-amp RRIO)
                           │                        │   (op-amp a 5V = CLAMP: la salida
@@ -95,6 +97,7 @@ después**, por el relé, al conector del equipo.
 
 | Archivo | Qué hace |
 |---|---|
+| `armado_emulador.svg` | Diagrama de conexionado (power bank, ESP32, op-amp, relé, conector, sensor real) |
 | `caracterizador_timon.ino` | Arduino Uno/Nano: mide Vo/Va por canal, confirma cuadratura (radio normalizado ≈ 1), cuenta vueltas, log CSV. Es el que sacó Vo=2.47 / Va=1.98 |
 | `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC, entrada de velocidad por pote, control del relé (`e`/`d`) |
 
