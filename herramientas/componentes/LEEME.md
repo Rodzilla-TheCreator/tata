@@ -432,3 +432,32 @@ de modo del Master (`204`) y la trama de tracción (`188`). **El volante entra a
 (su sensor) y el propio nodo publica la velocidad (`284`). La dirección no se comanda por el bus
 como el multipiloto: hay que **emular el sensor del volante en su conector** (o encontrar un modo
 de operación por `2000.01`, sin documentar).
+
+## 24-oct · El sensor del volante (dirección, nodo 4): seno/coseno absoluto
+
+Medido en banco con el sensor fuera del equipo (12 V de fuente). El conector es de **4 vías**
+(automotriz, keyed rosado), **no es CAN**: da abierto contra el par CAN del DB9 (8/3) y contra el
+negativo de batería. Es un **sensor analógico dedicado al nodo 4 (`APS36M`)**, que lo lee por
+cable y **publica** la velocidad de giro en `0x284` (telemetría; **el nodo 4 no tiene RPDO de
+comando de giro** — SDO 23-oct). Por eso la dirección **no se comanda por el bus**: se intercepta
+en este sensor (`docs/21` §4).
+
+| Cable | Señal |
+|---|---|
+| blanco | +supply (~11 V en el equipo; el sensor regula su 5 V interno) |
+| amarillo | GND / referencia (aislada del negativo de batería) |
+| verde | `Vo + Va·cos θ` |
+| café/rojo | `Vo + Va·sen θ` |
+
+- **Seno/coseno en cuadratura, single-turn, absoluto.** Vo ≈ 2.5 V, Va ≈ 1.9 V.
+- **Invariante: el RADIO** `√((verde−Vo)²+(café−Vo)²) ≈ 1.8–2.0`, constante. **NO la suma**: la
+  suma varía 2.3–7.6 V. El «complementarias, suma = 5» fue un error (lecturas estáticas cable por
+  cable), tumbado en banco viéndolas oscilar.
+- **Ángulo = atan2(café−Vo, verde−Vo).** Tiene valor en reposo sin mover (absoluto, no
+  incremental). Ambigüedad multi-vuelta al encender, irrelevante: el volante es entrada de
+  **velocidad**; el ángulo absoluto de la rueda lo da el sensor de realimentación.
+- **550 Ω** entre dos pines (medido en el equipo) = resistencia interna del IC del sensor, **no**
+  bobinado de motor. **Sin número de parte** en el cuerpo.
+- **Emulación (`docs/21` §4):** el ESP computa θ → **dos DAC independientes** `Vo+Va·cos θ`,
+  `Vo+Va·sen θ`. No se deriva una de la otra. Buffers op-amp alimentados **del kit** (no del riel
+  de 11 V del sensor de node 4). Relé en las 2 señales para el handoff al operador.

@@ -463,3 +463,52 @@ gira libre y solo mueve su sensor. Marcas: giro izq · centro (quieto) · giro d
 > `204` = palabra de modo del Master, y `188` = tracción). **La sección 4 (emular el sensor del
 > volante) vuelve a aplicar**: hay que medir qué espera el conector del sensor del volante.
 > `0x2414` se leyó el 23-oct: 5.5 vueltas (`docs/16`).
+
+### 24-oct · El sensor del volante, caracterizado en banco: seno/coseno (confirma que §4 aplica)
+
+El lado SDO (nodo 4 sin RPDO de giro) lo dejó la nota de arriba; esto agrega el lado físico. Tres
+medidas independientes tumbaron «la dirección se inyecta por el bus»:
+
+1. **Eléctrica (equipo):** los 4 cables del sensor del volante dan **abierto** contra el par CAN
+   del DB9 (pin 8 CANH, pin 3 CANL) y contra el negativo de batería. El timón **no cuelga del
+   bus**: es un sensor analógico dedicado al nodo 4.
+2. **SDO (nodo 4, `APS36M`):** el nodo 4 **no tiene RPDO de comando de giro** (`0x1400`/`0x1600`
+   sin consigna de ángulo; el RPDO1 `204` del Master es otra cosa; `0x2500` son los límites).
+   Lee el volante **por cable** y **publica** `0x284`. O sea `0x284` es **telemetría**, no un
+   comando que podamos escribir.
+3. **Banco (tiempo real):** el sensor es **seno/coseno en cuadratura**, confirmado viéndolo
+   oscilar (no por puntos estáticos).
+
+| | decía (22-oct) | es (24-oct) | qué lo tumbó |
+|---|---|---|---|
+| Camino | se inyecta por el bus | se intercepta el **sensor de mando del volante** (§4) | timón abierto a CAN + nodo 4 sin RPDO de giro |
+| Señal | un int16 con signo en `0x284` | eso es lo que **publica** node 4; el **sensor** es seno/coseno | medición en banco |
+| `0x284` | comando a escribir | **telemetría** (TPDO del nodo 4) | SDO: node 4 no consume consigna |
+
+**Error intermedio propio (24-oct, antes del banco):** se asumió «dos señales complementarias,
+suma = 5 V», a partir de lecturas **estáticas, cable por cable** en el equipo (nunca se vieron
+oscilar juntas). **Mal.** La suma **varía** 2.3–7.6 V. Lo tumbó la oscilación en tiempo real del
+banco. El invariante real es el **radio**, no la suma. Lección: puntos estáticos no distinguen
+complementario de cuadratura; no cerrar el modelo sin medición en vivo.
+
+**El sensor, caracterizado en banco (sensor fuera del equipo, 12 V):**
+- **Seno/coseno absoluto, single-turn.** `verde = Vo + Va·cos θ`, `café = Vo + Va·sen θ`.
+- **Vo ≈ 2.5 V, Va ≈ 1.9 V.** Radio `√((verde−Vo)²+(café−Vo)²) ≈ 1.8–2.0`, **constante** = el
+  invariante que chequea node 4 (no la suma).
+- **Ángulo = atan2(café−Vo, verde−Vo).** Absoluto: **tiene valor en reposo sin mover** (no es
+  incremental). Al encender no se sabe en cuál de las ~5.5 vueltas está (ambigüedad
+  multi-vuelta), pero **no importa**: node 4 usa el volante como **velocidad** y la rueda tiene
+  su propio sensor de realimentación para el ángulo absoluto.
+- **4 cables:** blanco = +supply (~11 V en el equipo), amarillo = GND, verde y café = las dos
+  señales. Aislados del negativo de batería y del DB9.
+- **Sin número de parte** en el cuerpo del sensor. El 550 Ω medido entre dos pines es la
+  resistencia interna del IC del sensor, no un bobinado de motor.
+- Instrumento de banco validado: lector Arduino (`atan2` + radio) con conteo de vueltas por
+  unwrap; las vueltas contadas coinciden con las dadas a mano.
+
+**Consecuencia:** la **sección 4 (DAC seno/coseno) vuelve a aplicar** — era correcta desde el
+principio. El emulador: el ESP computa θ y saca `Vo+Va·cos θ` y `Vo+Va·sen θ` por **dos DAC
+independientes** (no se deriva una de la otra; **no hay restador**). El wrap es continuo, sin
+salto. Buffers op-amp alimentados **del kit**, no del riel de 11 V del sensor de node 4. Relé en
+las 2 señales para el handoff al operador. **Falta:** Vo/Va exactos por canal, cuál es sen y
+cuál cos y el signo, y el número de parte.
