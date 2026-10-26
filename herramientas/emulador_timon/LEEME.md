@@ -29,12 +29,12 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
  [+11 V del BLANCO]  ── Vcc del LM358 (pin 8)   ← el blanco queda libre: el sensor real se desconecta
 
   ESP32  (θ comandado por SOFTWARE / teleop por USB-serial; SIN pote)
-   GPIO25 (DAC verde) ──► U1a no-inv G=1.36 ──►[R 150Ω]──┬──► pin VERDE → node 4
-   GPIO26 (DAC café ) ──► U1b no-inv G=1.36 ──►[R 150Ω]──┤     cada salida: [zener 5.1V a GND]
+   GPIO25 (DAC verde) ──► U1a (G_V=1.39) ──►[R 100Ω]──┬──► pin VERDE → node 4
+   GPIO26 (DAC café ) ──► U1b (G_C=1.43) ──►[R 100Ω]──┤     cada salida: [zener 5.1V a GND]
                                                          └──► pin CAFÉ  → node 4
 
-  Por canal:  IN+ = DAC ;  Rg 10k de IN− a GND ;  Rf 3.6k (trim 5k) de IN− a OUT ;  G = 1+Rf/Rg = 1.36
-  Clamp:      R 150Ω en serie + zener 5.1V de la salida a GND (protege node 4)
+  Por canal:  IN+ = DAC ;  Rg de IN− a GND ;  Rf de IN− a OUT ;  G = 1+Rf/Rg (verde 5.1k/2k=1.39 · café 100k/43k=1.43)
+  Clamp:      R 100Ω en serie + zener 5.1V de la salida a GND (protege node 4)
 
   LM358 (8 pines):  Vcc(8)=+11V blanco · V−(4)=GND · VERDE: IN1+ 3, IN1− 2, OUT1 1 · CAFÉ: IN2+ 5, IN2− 6, OUT2 7
 
@@ -64,15 +64,16 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
 | Power bank USB 5 V | alimentar el ESP (el op-amp va a +11 V) | flota, sin ground loop |
 | ESP32 | cómputo de θ + 2 DAC | del kit. θ por software/teleop, **sin pote** |
 | **1× LM358** (dual; DIP mejor para protoboard) | las 2 etapas de salida | C&D lo tiene. NO rail-to-rail → va a +11V. Si hay **LMV358 / TLV2372 / MCP602** (rail-to-rail), mejor: corre a 5V y se quita el zener |
-| **6 resistencias:** 2× 10k (Rg), 2× 3.6k (Rf), 2× 150Ω (serie) | ganancia G=1.36 + serie del clamp | lo que importa es **G = 1+Rf/Rg ≥ 1.35**; con otros valores se calibra G **por canal** en el sketch (ej. verde 5.1k/2k=1.39, café 100k/43k=1.43). La R serie no es crítica: cualquier **100-330 Ω** |
+| **6 resistencias** (por canal): verde Rg 5.1k + Rf 2k, café Rg 100k + Rf 43k, 2× 100Ω (serie) | ganancia por canal + serie del clamp | lo que importa es **G = 1+Rf/Rg ≥ 1.35**; con otros valores se calibra G **por canal** en el sketch (ej. verde 5.1k/2k=1.39, café 100k/43k=1.43). La R serie no es crítica: cualquier **100-330 Ω** |
 | **2× zener 5.1V** (1W) | clamp de salida (protege node 4) | del kit de zener 28 valores de C&D |
 
 ## Función de transferencia y software
 
-- `out = G·Vdac`, con **G = 1.36** → `Vdac = out / 1.36`.
+- `out = G·Vdac`, con **G por canal** (`G_V`, `G_C`) → `Vdac = out / G`.
 - El software computa `verde = Vo + Va·cos θ`, `café = Vo + Va·sin θ` (0.49–4.45 V) y escribe
-  `aDac(out) = (out/G)/3.3·255` en cada DAC. **El centro (Vo) y la amplitud (Va) los pone el
-  software; la etapa analógica solo es ganancia + buffer.**
+  `aDac(out, G)` con la G de cada canal. **El centro (Vo) y la amplitud (Va) los pone el software**,
+  así que **resistencias dispares entre canales dan igual amplitud** (círculo, no elipse): la etapa
+  analógica solo es ganancia + buffer, y el software compensa la ganancia de cada una.
 - **Afinar:** el sketch tiene **G por canal** (`G_V`, `G_C`). Medí la **G real** de cada canal
   leyendo la salida con el caracterizador y ajustá `G_V`/`G_C` hasta que el círculo dé radio ≈ 1.95 /
   nrad ≈ 1. (Con resistencias iguales en ambos canales, `G_V = G_C`. Si usás trimpot, lo ajustás por

@@ -19,7 +19,7 @@
   </style>
 
   <text x="24" y="26" class="tb" font-size="18">Emulador del timón — LM358, controlado por el ESP (sin pote, sin relé)</text>
-  <text x="24" y="45" class="sm">verde = 2.47 + 1.98·cos θ   ·   café = 2.47 + 1.98·sin θ   ·   G = 1+Rf/Rg = 1.36 (DAC 0-3.3 V → 0-4.5 V)</text>
+  <text x="24" y="45" class="sm">verde = 2.47 + 1.98·cos θ   ·   café = 2.47 + 1.98·sin θ   ·   ganancia POR CANAL, compensada en software (G_V, G_C)</text>
 
   <!-- rails -->
   <line x1="80" y1="70" x2="360" y2="70" class="pwr"/>
@@ -52,13 +52,13 @@
   <!-- Etapa VERDE block -->
   <rect x="400" y="208" width="215" height="60" rx="6" class="blk"/>
   <text x="507" y="232" class="sm" text-anchor="middle" font-weight="bold">Etapa VERDE — LM358 U1a</text>
-  <text x="507" y="250" class="xs" text-anchor="middle">G=1.36 · + R150 + zener 5.1V</text>
+  <text x="507" y="250" class="xs" text-anchor="middle">Rg 5.1k/Rf 2k (G=1.39) · R100 + zener</text>
   <line x1="615" y1="238" x2="700" y2="238" class="verde"/>
 
   <!-- Etapa CAFE block -->
   <rect x="400" y="303" width="215" height="60" rx="6" class="blkc"/>
   <text x="507" y="327" class="sm" text-anchor="middle" font-weight="bold">Etapa CAFÉ — LM358 U1b</text>
-  <text x="507" y="345" class="xs" text-anchor="middle">pines 5/6/7 · idéntica</text>
+  <text x="507" y="345" class="xs" text-anchor="middle">pines 5/6/7 · Rg 100k/Rf 43k (G=1.43)</text>
   <line x1="615" y1="333" x2="700" y2="333" class="cafe"/>
 
   <!-- +11V bus to both blocks -->
@@ -100,12 +100,12 @@
   <line x1="160" y1="600" x2="160" y2="618" class="gnd"/>
   <!-- Rf feedback (arriba) -->
   <path d="M160,553 L160,478 L320,478" class="sig"/>
-  <rect x="205" y="472" width="60" height="12" class="res"/><text x="235" y="469" class="xs" text-anchor="middle">Rf 3.6k</text>
+  <rect x="205" y="472" width="60" height="12" class="res"/><text x="235" y="469" class="xs" text-anchor="middle">Rf (por canal)</text>
   <line x1="320" y1="478" x2="320" y2="530" class="sig"/>
   <!-- output -->
   <line x1="250" y1="530" x2="320" y2="530" class="verde"/>
   <circle cx="320" cy="530" r="2.3" class="dot"/>
-  <rect x="337" y="524" width="36" height="12" class="res"/><text x="355" y="520" class="xs" text-anchor="middle">R 150</text>
+  <rect x="337" y="524" width="36" height="12" class="res"/><text x="355" y="520" class="xs" text-anchor="middle">R 100</text>
   <line x1="320" y1="530" x2="337" y2="530" class="verde"/>
   <line x1="373" y1="530" x2="410" y2="530" class="verde"/>
   <circle cx="410" cy="530" r="2.3" class="dot"/>
@@ -138,8 +138,8 @@
   <!-- BOM -->
   <rect x="535" y="562" width="450" height="74" fill="#eef3fb" stroke="#9ab"/>
   <text x="547" y="580" class="tb">Lista (final, ESP controla)</text>
-  <text x="547" y="597" class="xs">1× LM358  ·  2× R 10k (Rg)  ·  2× R 3.6k (Rf)  ·  2× R 150Ω  ·  2× zener 5.1V</text>
-  <text x="547" y="612" class="xs">0 potes (θ por software). Ganancia G se afina en el sketch tras validar.</text>
+  <text x="547" y="597" class="xs">1× LM358 · verde: Rg 5.1k + Rf 2k · café: Rg 100k + Rf 43k · 2× R 100Ω · 2× zener 5.1V</text>
+  <text x="547" y="612" class="xs">0 potes (θ por software). Ganancia POR CANAL (G_V/G_C) en el sketch; se afina con el caracterizador.</text>
   <text x="547" y="627" class="xs">Ya tenés: ESP32, power bank 5V. (Opcional: 2 trimpot si querés ajustar G por hardware.)</text>
 
   <!-- legend -->
