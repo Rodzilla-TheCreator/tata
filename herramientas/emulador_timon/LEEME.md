@@ -28,9 +28,7 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
  [POWER BANK USB 5V] ── ESP32 (5V + DAC a 0-3.3V)
  [+11 V del BLANCO]  ── Vcc del LM358 (pin 8)   ← el blanco queda libre: el sensor real se desconecta
 
-  ESP32
-   GPIO34  ◄── pote 10k (0-3.3V) = VELOCIDAD de giro (centro = quieto)
-               [en campo; en el kit lo reemplaza la Jetson/gamepad]
+  ESP32  (θ comandado por SOFTWARE / teleop por USB-serial; SIN pote)
    GPIO25 (DAC verde) ──► U1a no-inv G=1.36 ──►[R 150Ω]──┬──► pin VERDE → node 4
    GPIO26 (DAC café ) ──► U1b no-inv G=1.36 ──►[R 150Ω]──┤     cada salida: [zener 5.1V a GND]
                                                          └──► pin CAFÉ  → node 4
@@ -63,12 +61,11 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
 
 | Qué | Para | Nota |
 |---|---|---|
-| Power bank USB 5 V | alimentar todo | flota, sin ground loop |
-| ESP32 | cómputo de θ + 2 DAC | del kit |
-| **LM358** (dual; DIP mejor para protoboard) | las 2 etapas de salida | C&D lo tiene. NO rail-to-rail → va a +11V. Si hay **LMV358 / TLV2372 / MCP602** (rail-to-rail), mejor: corre a 5V y se quita el zener |
-| 2× 10k (Rg), 2× trimpot 5k (Rf) | ganancia 1.36 | afinable |
-| 2× **zener 5.1V** (1W) + 2× **R 150Ω** | clamp de salida (protege node 4) | del kit de zener 28 valores de C&D |
-| Pote 10k | entrada de velocidad (campo) | lo reemplaza la Jetson/gamepad |
+| Power bank USB 5 V | alimentar el ESP (el op-amp va a +11 V) | flota, sin ground loop |
+| ESP32 | cómputo de θ + 2 DAC | del kit. θ por software/teleop, **sin pote** |
+| **1× LM358** (dual; DIP mejor para protoboard) | las 2 etapas de salida | C&D lo tiene. NO rail-to-rail → va a +11V. Si hay **LMV358 / TLV2372 / MCP602** (rail-to-rail), mejor: corre a 5V y se quita el zener |
+| **6 resistencias:** 2× 10k (Rg), 2× 3.6k (Rf), 2× 150Ω (serie) | ganancia G=1.36 + serie del clamp | opcional: 2 trimpot en vez de los 3.6k para ajustar G por hardware |
+| **2× zener 5.1V** (1W) | clamp de salida (protege node 4) | del kit de zener 28 valores de C&D |
 
 ## Función de transferencia y software
 
@@ -76,9 +73,10 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
 - El software computa `verde = Vo + Va·cos θ`, `café = Vo + Va·sin θ` (0.49–4.45 V) y escribe
   `aDac(out) = (out/G)/3.3·255` en cada DAC. **El centro (Vo) y la amplitud (Va) los pone el
   software; la etapa analógica solo es ganancia + buffer.**
-- **Afinar:** mové el trimpot Rf hasta que un `out` comandado de 4.45 V **lea 4.45** en el
-  caracterizador. La precisión de amplitud sale de ahí (la ref del DAC nativo es el riel de
-  3.3 V del ESP, ±1-2 %; con MCP4728 después, su ref interna es más estable).
+- **Afinar:** con resistencias fijas, G ≈ 1.36 (±tolerancia). Medí la **G real** leyendo la salida
+  con el caracterizador y ajustá la constante `G` del sketch hasta que el círculo dé radio ≈ 1.95 /
+  nrad ≈ 1. (Si usás trimpot en vez de los 3.6k, lo ajustás por hardware en lugar del software.)
+  La ref del DAC nativo es el riel de 3.3 V del ESP (±1-2 %).
 
 ## Seguridad
 
@@ -106,7 +104,7 @@ después**, por el relé, al conector del equipo.
 |---|---|
 | `armado_emulador.svg` | Diagrama de conexionado (power bank, ESP32, op-amp, relé, conector, sensor real) |
 | `caracterizador_timon.ino` | Arduino Uno/Nano: mide Vo/Va por canal, confirma cuadratura (radio normalizado ≈ 1), cuenta vueltas, log CSV. Es el que sacó Vo=2.47 / Va=1.98 |
-| `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC, entrada de velocidad por pote. Salida directa a node 4 (sin relé) |
+| `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC. Velocidad de giro por **serial** (deg/s), sin pote. Salida directa a node 4 (sin relé) |
 
 ## Estado / pendientes
 
