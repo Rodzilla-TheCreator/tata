@@ -2,9 +2,16 @@
   Emulador del sensor del volante (direccion) — ESP32, version LM358 (DAC nativo 8-bit)
   Ver herramientas/emulador_timon/LEEME.md y armado_emulador.svg.
 
-  Params de banco (24-oct): Vo=2.47, Va=1.98.  verde=Vo+Va*cos(th)  cafe=Vo+Va*sin(th)
-  Etapa op-amp LM358: G=1.51 (DAC 0-3.3V -> 0-4.5V), Vcc=+11V del blanco, clamp R100+zener.
+  Objetivo (lo que daba el sensor real): Vo=2.47 V, Va=1.98 V.
+    verde = Vo + Va*cos(theta)      cafe = Vo + Va*sin(theta)
   node 4 deriva VELOCIDAD del cambio de theta -> para girar, theta BARRE (quieto = recto).
+
+  CALIBRACION: la etapa (DAC nativo + op-amp LM358, Rg=10k Rf=5.1k, Vcc=+11V) es lineal:
+      salida = k*Vdac + o
+  Para sacar un voltaje D en el pin se invierte:  Vdac = (D - o) / k.
+  Esto corrige ganancia Y centro (el DAC nativo mete un offset ~0.13V que la ganancia sola
+  no arregla). Los k/o se miden UNA vez con el caracterizador y van abajo. Re-medir si se
+  cambian resistencias o el ESP.
 
   CONTROLADO POR EL ESP (sin pote). Dos modos por SERIAL:
     - VELOCIDAD: un numero = grados/seg (con signo). 0 = recto.   ej. "90", "-45", "0"
@@ -16,11 +23,12 @@
 */
 #include <math.h>
 
-const float Vo = 2.47, Va = 1.98;   // medidos en banco (24-oct)
-// Ganancia POR CANAL (G = 1 + Rf/Rg). Mismos resistores en ambos: Rg=10k, Rf=5.1k -> G=1.51.
-// AJUSTAR cada uno con el caracterizador hasta que el circulo de radio ~1.95 / nrad ~1.
-const float G_V = 1.51;             // ganancia canal verde  (Rg=10k, Rf=5.1k)
-const float G_C = 1.51;             // ganancia canal cafe   (Rg=10k, Rf=5.1k)
+const float Vo = 2.47, Va = 1.98;   // objetivo (sensor real, 24-oct)
+
+// CALIBRACION POR CANAL (medida con el caracterizador, 26-oct): salida = k*Vdac + o
+const float kV = 1.381, oV = 0.131; // verde (GPIO25)
+const float kC = 1.386, oC = 0.115; // cafe  (GPIO26)
+
 const int DAC_V = 25, DAC_C = 26;
 
 float theta = 0;                    // rad
@@ -28,17 +36,20 @@ float rate  = 0;                    // rad/s (comandado por serial)
 unsigned long tPrev;
 String buf = "";
 
-int aDac(float out, float G){       // volts deseados en el pin -> codigo DAC 8-bit (inverso de G)
-  float v = out / G;
-  if(v < 0) v = 0; if(v > 3.3) v = 3.3;
-  return (int)(v/3.3*255.0 + 0.5);
+int code(float vdac){               // voltaje DAC deseado (0-3.3V) -> codigo 8-bit
+  if(vdac < 0) vdac = 0; if(vdac > 3.3) vdac = 3.3;
+  return (int)(vdac/3.3*255.0 + 0.5);
+}
+void sacar(float verde, float cafe){               // escribe los dos DAC con su calibracion
+  dacWrite(DAC_V, code((verde - oV)/kV));
+  dacWrite(DAC_C, code((cafe  - oC)/kC));
 }
 
 void setup(){
   Serial.begin(115200);
-  dacWrite(DAC_V, aDac(Vo + Va, G_V)); dacWrite(DAC_C, aDac(Vo, G_C));  // arranca en un punto valido del circulo
+  sacar(Vo + Va, Vo);               // arranca en un punto valido del circulo (theta=0)
   tPrev = micros();
-  Serial.println("Emulador LM358 listo. Escribi velocidad en deg/s (+/-). 0 = parar.");
+  Serial.println("Emulador LM358 listo. Numero = vel (deg/s), o 'P<grados>' = posicion.");
 }
 
 void loop(){
@@ -66,8 +77,7 @@ void loop(){
 
   float verde = Vo + Va*cos(theta);
   float cafe  = Vo + Va*sin(theta);
-  dacWrite(DAC_V, aDac(verde, G_V));
-  dacWrite(DAC_C, aDac(cafe, G_C));
+  sacar(verde, cafe);
 
   static unsigned long tp = 0;
   if(millis() - tp > 200){ tp = millis();

@@ -69,15 +69,16 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
 
 ## Función de transferencia y software
 
-- `out = G·Vdac`, con **G por canal** (`G_V`, `G_C`) → `Vdac = out / G`.
-- El software computa `verde = Vo + Va·cos θ`, `café = Vo + Va·sin θ` (0.49–4.45 V) y escribe
-  `aDac(out, G)` con la G de cada canal. **El centro (Vo) y la amplitud (Va) los pone el software**,
-  así que **resistencias dispares entre canales dan igual amplitud** (círculo, no elipse): la etapa
-  analógica solo es ganancia + buffer, y el software compensa la ganancia de cada una.
-- **Afinar:** el sketch tiene **G por canal** (`G_V`, `G_C`). Medí la **G real** de cada canal
-  leyendo la salida con el caracterizador y ajustá `G_V`/`G_C` hasta que el círculo dé radio ≈ 1.95 /
-  nrad ≈ 1. (Con resistencias iguales en ambos canales, `G_V = G_C`. Si usás trimpot, lo ajustás por
-  hardware.) La ref del DAC nativo es el riel de 3.3 V del ESP (±1-2 %).
+- La etapa (DAC nativo + op-amp) es **lineal por canal**: `salida = k·Vdac + o`. Para sacar un
+  voltaje `D` en el pin, el sketch invierte: **`Vdac = (D − o) / k`**. Eso corrige **ganancia Y
+  centro** — el DAC nativo mete un **offset ~0.13 V** que la ganancia sola no arregla. Resistencias
+  dispares entre canales dan igual amplitud porque cada canal tiene su `k`/`o`.
+- **Calibrar (una vez):** corré el caracterizador con el emulador comandando `Vo=2.47`, `Va=1.98`.
+  Del resumen sacás, por canal, la recta `salida = k·Vdac + o` (dos puntos: pico `cos=±1`). Poné
+  `kV/oV` y `kC/oC` en el sketch. **26-oct:** verde `k=1.381 o=0.131`, café `k=1.386 o=0.115`.
+- **Verificar:** reflasheá y volvé a correr el caracterizador → debe dar **Vo≈2.47, Va≈1.98,
+  radio≈1.95, nrad≈1**. Queda un residuo ~2 % = no-linealidad del DAC nativo; si node 4 es
+  quisquilloso, el **MCP4728** (12-bit) lo limpia. Re-medir k/o si cambiás resistencias o el ESP.
 
 ## Seguridad
 
