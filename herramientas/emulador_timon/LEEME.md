@@ -106,7 +106,8 @@ después**, por el relé, al conector del equipo.
 | `armado_emulador.svg` | Esquemático (bloques + detalle de una etapa + pinout) |
 | `armado_breadboard.svg` | Montaje físico en protoboard (dónde va cada resistencia, zener y jumper) |
 | `caracterizador_timon.ino` | Arduino Uno/Nano: mide Vo/Va por canal, confirma cuadratura (radio normalizado ≈ 1), cuenta vueltas, log CSV. Es el que sacó Vo=2.47 / Va=1.98 |
-| `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC. Velocidad de giro por **serial** (deg/s), sin pote. Salida directa a node 4 (sin relé) |
+| `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC. Por **serial**: número = velocidad (deg/s), o `P<grados>` = ángulo absoluto. Sin pote, sin relé |
+| `rueda_timon.py` | **GUI (tkinter) en la PC:** un timón que rotás con A/D o con el mouse; manda el ángulo al ESP (`P<grados>`). `python rueda_timon.py COM6` |
 
 ## Estado / pendientes
 
