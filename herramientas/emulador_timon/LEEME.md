@@ -98,7 +98,12 @@ Versión **LM358** (lo que hay en C&D). El LM358 **no es rail-to-rail**, así qu
 
 Salida del op-amp → de vuelta al **caracterizador (A0/A1)**. Si ves el **mismo círculo**
 (radio ≈ 1.95, nrad ≈ 1), el emulador reproduce al sensor. Afiná la ganancia ahí. **Recién
-después**, por el relé, al conector del equipo.
+después**, al conector del equipo.
+
+> **VALIDADO 27-oct (banco).** Con la calibración k/o: verde Vo=2.461 Va=1.962, café Vo=2.447
+> Va=1.980 (sensor real 2.47/1.98). Radio ≈ 1.96 parejo, nrad ≈ 1.0 en toda la vuelta. Salida
+> **estable a comando fijo** (timón quieto ~1 s → verde/café ±0.003, sin drift). El emulador
+> reproduce el sensor. Listo para el equipo.
 
 ## Archivos
 
