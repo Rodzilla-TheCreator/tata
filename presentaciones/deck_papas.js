@@ -112,12 +112,67 @@ tarjeta(s, 0.7, 5.5, 11.9, 0.95, false, 'ECE7DA');
 s.addText('El dueño de Montasa ya está al tanto y me dio el visto bueno para seguir.',
   { x: 1.1, y: 5.5, w: 11.1, h: 0.95, fontSize: 15, bold: true, color: TINTA, fontFace: B, margin: 0, valign: 'middle' });
 
-/* ───────── 7 · CIERRE ───────── */
+/* ───────── 7 · NO ES UN PROYECTO CUALQUIERA ───────── */
+s = p.addSlide(); fondo(s, false);
+titulo(s, 'Esto no es un proyecto cualquiera', false, 'Es experiencia de ingeniería que vale en el mercado laboral del mundo');
+tarjeta(s, 0.7, 1.95, 11.9, 1.0, false);
+s.addText('Lo que estoy aprendiendo haciendo esto es exactamente lo que buscan las empresas de ingeniería — en Europa y donde sea.',
+  { x: 1.1, y: 1.95, w: 11.1, h: 1.0, fontSize: 15.5, bold: true, color: TINTA, fontFace: B, margin: 0, valign: 'middle' });
+const sk = [
+  ['Ingeniería inversa de sistemas', 'Leerle y hablarle al bus de una máquina cerrada.'],
+  ['Sistemas embebidos y firmware', 'Programar los microcontroladores que mandan.'],
+  ['Control y automatización', 'Manejar maquinaria pesada con seguridad.'],
+  ['Robótica autónoma', 'Sensores, cámaras y ubicación en el espacio.']];
+sk.forEach((q, i) => {
+  const x = 0.7 + (i % 2) * 6.15, y = 3.2 + Math.floor(i / 2) * 1.25;
+  tarjeta(s, x, y, 5.75, 1.1, false);
+  s.addShape(p.ShapeType.rect, { x, y, w: 0.09, h: 1.1, fill: { color: AZUL } });
+  s.addText(q[0], { x: x + 0.35, y: y + 0.18, w: 5.3, h: 0.4, fontSize: 14, bold: true, color: TINTA, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: x + 0.35, y: y + 0.58, w: 5.3, h: 0.45, fontSize: 12, color: MUT2, fontFace: B, margin: 0 });
+});
+s.addText('Pocos ingenieros recién salidos las tienen — y menos aún las han hecho con sus manos en una máquina real.',
+  { x: 0.7, y: 5.9, w: 11.9, h: 0.5, fontSize: 13, italic: true, color: MUT2, fontFace: B, margin: 0 });
+
+/* ───────── 8 · EL PLAN TIENE RED ───────── */
 s = p.addSlide(); fondo(s, true);
-s.addShape(p.ShapeType.rect, { x: 1.0, y: 2.9, w: 1.6, h: 0.05, fill: { color: HAZ } });
-s.addText('Esto es lo que estoy\nconstruyendo.', { x: 0.95, y: 1.9, w: 11, h: 1.6, fontSize: 36, bold: true, color: HUM, fontFace: H, lineSpacing: 44, margin: 0 });
-s.addText('Toma tiempo porque nadie lo ha hecho antes en estos equipos. Pero ya funciona en mi mesa, y la empresa está detrás.',
-  { x: 1.0, y: 3.9, w: 10.5, h: 1.2, fontSize: 16, color: MUT, fontFace: B, margin: 0, lineSpacing: 24 });
-s.addNotes('Cerrar tranquilo. No prometer fechas. El mensaje: trabajo real, respaldado, en progreso.');
+titulo(s, 'El plan tiene red', true, 'Pase lo que pase con el proyecto, esta experiencia ya me abrió una puerta');
+const red = [
+  ['Si sale', 'Levanto mi empresa, vendo el primer TaTa, consigo el Aula — y sigo construyendo esto acá.', VERDE],
+  ['Si no sale', 'Esta misma experiencia me abre un trabajo de ingeniería en una empresa en Europa.', HAZ],
+  ['De cualquier forma', 'No es una apuesta de todo o nada. Gano experiencia que vale tenga o no éxito el proyecto.', AZUL]];
+red.forEach((q, i) => {
+  const x = 0.7 + i * 4.05, y = 2.2;
+  tarjeta(s, x, y, 3.8, 2.9, true);
+  s.addShape(p.ShapeType.rect, { x, y, w: 3.8, h: 0.12, fill: { color: q[2] } });
+  s.addText(q[0], { x: x + 0.35, y: y + 0.4, w: 3.2, h: 0.5, fontSize: 18, bold: true, color: HUM, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: x + 0.35, y: y + 1.1, w: 3.15, h: 1.6, fontSize: 13, color: MUT, fontFace: B, margin: 0, valign: 'top', lineSpacing: 20 });
+});
+tarjeta(s, 0.7, 5.45, 11.9, 1.0, true, '20242B');
+s.addText('Esto no es alejarme de conseguir trabajo. Es cómo consigo uno — y uno que pocos pueden hacer.',
+  { x: 1.1, y: 5.45, w: 11.1, h: 1.0, fontSize: 16, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
+s.addNotes('Este slide contesta directo la angustia de "conseguia trabajo". La respuesta: esto ES el camino al trabajo, y a uno mejor.');
+
+/* ───────── 9 · POR QUÉ NO NOS ENTENDEMOS ───────── */
+s = p.addSlide(); fondo(s, false);
+titulo(s, 'Por qué a veces no nos entendemos', false);
+tarjeta(s, 0.7, 1.9, 11.9, 1.2, false);
+s.addText('Que no entiendan lo que hago no significa que no tenga sentido. Significa que hablamos lenguajes distintos — y este todavía no lo compartimos.',
+  { x: 1.1, y: 1.9, w: 11.1, h: 1.2, fontSize: 16, bold: true, color: TINTA, fontFace: B, margin: 0, valign: 'middle', lineSpacing: 24 });
+tarjeta(s, 0.7, 3.35, 11.9, 1.3, false);
+s.addText('No soy un genio que lo sabe todo. Ustedes tampoco están equivocados. Es solo un idioma que yo aprendí y ustedes no — como el que no sabe de motores no entiende al mecánico, y no por eso el mecánico está loco.',
+  { x: 1.1, y: 3.35, w: 11.1, h: 1.3, fontSize: 14.5, color: MUT2, fontFace: B, margin: 0, valign: 'middle', lineSpacing: 22 });
+tarjeta(s, 0.7, 4.9, 11.9, 1.55, false, 'ECE7DA');
+s.addText('Lo que a veces se ve como que “me cuesta arrancar” es, en realidad, estar metido de lleno en algo que nadie más aquí está haciendo. Les pido confianza mientras lo cierro. El trabajo habla por mí — y aquí está.',
+  { x: 1.1, y: 4.9, w: 11.1, h: 1.55, fontSize: 15, bold: true, color: TINTA, fontFace: B, margin: 0, valign: 'middle', lineSpacing: 23 });
+s.addNotes('El slide delicado. Puente, no reclamo: valida lo mio sin acusar. La analogia del mecanico aterriza en esta familia. Pedir confianza, no razon.');
+
+/* ───────── 10 · CIERRE ───────── */
+s = p.addSlide(); fondo(s, true);
+s.addShape(p.ShapeType.rect, { x: 1.0, y: 2.75, w: 1.6, h: 0.05, fill: { color: HAZ } });
+s.addText('Esto es lo que estoy\nconstruyendo.', { x: 0.95, y: 1.75, w: 11, h: 1.6, fontSize: 36, bold: true, color: HUM, fontFace: H, lineSpacing: 44, margin: 0 });
+s.addText('Toma tiempo porque nadie lo ha hecho antes en estos equipos. Pero ya funciona en mi mesa, la empresa está detrás, y si no sale, me abre otra puerta.',
+  { x: 1.0, y: 3.75, w: 10.8, h: 1.2, fontSize: 16, color: MUT, fontFace: B, margin: 0, lineSpacing: 24 });
+s.addText('De cualquier forma, no es tiempo perdido.', { x: 1.0, y: 5.0, w: 10.8, h: 0.5, fontSize: 17, bold: true, color: HAZ, fontFace: B, margin: 0 });
+s.addNotes('Cerrar tranquilo. No prometer fechas. El mensaje: trabajo real, respaldado, con red, en progreso.');
 
 p.writeFile({ fileName: 'presentaciones/TaTa_Para_mis_papas.pptx' }).then(() => console.log('deck PAPAS listo'));
