@@ -114,6 +114,7 @@ después**, al conector del equipo.
 | `caracterizador_timon.ino` | Arduino Uno/Nano: mide Vo/Va por canal, confirma cuadratura (radio normalizado ≈ 1), cuenta vueltas, log CSV. Es el que sacó Vo=2.47 / Va=1.98 |
 | `emulador_timon.ino` | ESP32: genera seno/coseno por los 2 DAC. Por **serial**: número = velocidad (deg/s), o `P<grados>` = ángulo absoluto. Sin pote, sin relé |
 | `rueda_timon.py` | **GUI (tkinter) en la PC:** un timón que rotás con A/D o con el mouse; manda el ángulo al ESP (`P<grados>`). `python rueda_timon.py COM6` |
+| `runbook_prueba_equipo.md` | **El día de la prueba en el equipo parado, paso a paso.** Paso 0 (timón real mueve la rueda), gato, la medición de grounds, enchufar el emulador, leer node 4, mover. Y las reglas (sensor real vuelve ante cualquier falla, códigos no se borran todavía) |
 
 ## Estado / pendientes
 
