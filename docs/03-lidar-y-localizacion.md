@@ -7,6 +7,52 @@
 
 ---
 
+# Lo vigente — 29-oct-2026 · la secuencia: odometría + EKF/ArUco ahora, LiDAR tras la formalización
+
+> **Esto NO revierte el 19-oct.** El LiDAR/SLAM **sigue en alcance**, con todo lo de abajo intacto.
+> Lo que se fija acá es el **orden**: qué va primero y qué va después, no qué se queda y qué se cae.
+
+## La decisión
+
+**El siguiente paso de localización es odometría fusionada con ArUco por un filtro de Kalman
+(EKF). Solo cámaras + el bus del equipo — sin LiDAR.** El **LiDAR/SLAM no se descarta: se
+secuencia después de la formalización** del proyecto (presupuesto y aprobación formal). Es el
+paso que sigue, no un requisito de arranque.
+
+Por qué este orden:
+
+- **Lo de ahora es autofinanciado** (el NRE y el cómputo los pone maje; ver `docs/05` y el deck
+  de Omar). El nivel de arranque corre con **cámaras + Jetson 8 GB**, que es justo lo que pide
+  odometría + EKF/ArUco. No hace falta la Jetson de 16 GB ni el L2 todavía.
+- **El LiDAR/SLAM agrega capacidad real** (mapa en vivo, detección de bultos, degradación
+  elegante) **pero también costo y tiempo** (cómputo de 16 GB, el Unitree L2, integración de
+  SLAM). Eso pertenece a **después de formalizar**, cuando haya presupuesto que no salga del
+  bolsillo de maje.
+
+## La forma técnica del siguiente paso — EKF odometría + ArUco
+
+- **Predicción (alta tasa):** odometría por dead-reckoning del propio bus —**velocidad de tracción
+  (nodo 8)** y **ángulo de dirección (nodo 4)**, modelo de bicicleta. Los sensores ya están
+  adentro; se leen, no se montan (`CLAUDE.md`, sensores del bus).
+- **Corrección (cuando hay marca):** pose absoluta de los **ArUco** en las cabeceras de fila,
+  leídos por las cámaras. Mata la deriva de la odometría y resuelve la ambigüedad entre pasillos.
+- **Oclusión de ArUco** (se tapa, se despega, motion blur): el filtro **navega con la odometría**
+  hasta la próxima marca. Degradación elegante **sin** LiDAR — que es justo el trabajo #2 que
+  abajo se le daba al LiDAR, cubierto por el EKF en el nivel de arranque.
+- Esto hace concreto el **«marcadores primero, LiDAR de apoyo»** que ya estaba escrito abajo: el
+  EKF/ArUco es el primero; el LiDAR entra después a sumar mapa en vivo y detección de bultos.
+
+## Qué cambia en la práctica
+
+- El `detector_aruco.py` (laptop, sin Jetson) y la captura de odometría del bus son las dos
+  herramientas a construir ya — las dos corren bloqueado, sin equipo funcional dedicado.
+- La pregunta de degeneración del LiDAR (`analisis/analisis_degeneracion.py`) **espera** a la
+  etapa post-formalización; no bloquea el siguiente paso.
+- No cambia la compra del 19-oct como **plan**: cuando se formalice, L2 + Orin NX 16 GB siguen
+  siendo la elección (ver `docs/05`). Solo se corre en el tiempo.
+
+---
+
 # Lo vigente — 19-oct-2026 · el LiDAR vuelve a navegar: SLAM y mapeo en vivo
 
 > **Esto revierte la decisión del 27-ago** («el LiDAR no navega»), que queda abajo, intacta,

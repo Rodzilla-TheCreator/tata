@@ -204,6 +204,22 @@ s.addText('La misma reparación sirve a la flota y al proyecto. No es un gasto d
   { x: 1.05, y: 5.15, w: 11.2, h: 1.0, fontSize: 15, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
 s.addNotes('El gasto no se lo cargas al proyecto, se lo cargas a recuperar un activo. El proyecto es el bonus.');
 
+/* ───────── 8b · EL CAMINO QUE SIGUE ───────── */
+s = p.addSlide(); fondo(s, true);
+titulo(s, 'El camino que sigue', true, 'El siguiente paso es odometría + Kalman con ArUco. El LiDAR sigue en el plan, después de formalizar');
+const cam = [
+  ['1', 'Odometría', 'Velocidad y ángulo del propio bus del equipo — los sensores ya están adentro. Posición por “cuánto me moví”.', CIAN],
+  ['2', 'Fusión Kalman + ArUco', 'Un filtro combina la odometría con las marcas ArUco de los racks: corrige la deriva y da la posición absoluta. Este es el siguiente paso, con sólo cámaras.', HAZ],
+  ['3', 'LiDAR / SLAM', 'Mapeo en vivo y detección de obstáculos. Sigue en el plan — se suma después de formalizar el proyecto. No se descarta.', VERDE]];
+cam.forEach((q, i) => {
+  const y = 2.0 + i * 1.5;
+  tarjeta(s, 0.65, y, 12, 1.3, true);
+  chip(s, q[0], 1.0, y + 0.44, q[3]);
+  s.addText(q[1], { x: 1.65, y: y + 0.28, w: 3.5, h: 0.5, fontSize: 16, bold: true, color: HUM, fontFace: H, margin: 0 });
+  s.addText(q[2], { x: 5.2, y: y + 0.2, w: 7.2, h: 1.0, fontSize: 12, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
+});
+s.addNotes('El siguiente paso usa solo camaras + el bus: odometria + EKF/ArUco. El LiDAR/SLAM sigue en el plan, se secuencia despues de formalizar. No se descarta.');
+
 /* ───────── 9 · QUIÉN PONE QUÉ ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'Quién pone qué', true, 'Pongo mi plata en lo que es mío. A Montasa le pido recuperar un activo suyo');
@@ -250,7 +266,7 @@ tarjeta(s, 0.65, 4.75, 5.85, 1.1, false);
 stat(s, 1.0, 4.95, 5.0, '− ' + money(900), 'más barato que el plan original', VERDE, false);
 tarjeta(s, 6.8, 4.75, 5.85, 1.1, false);
 stat(s, 7.15, 4.95, 5.0, money(0), 'que gasta Montasa en cómputo', VERDE, false);
-s.addText('El LiDAR no se descarta: pasa a ser expansión opcional. Para el primer nivel, cámaras + Jetson 8 GB alcanzan — y corren por mi cuenta.',
+s.addText('El LiDAR no se descarta: entra después de formalizar. Para el primer nivel (odometría + Kalman/ArUco), cámaras + Jetson 8 GB alcanzan — y corren por mi cuenta.',
   { x: 0.65, y: 6.1, w: 12, h: 0.5, fontSize: 13, bold: true, color: MUT2, fontFace: B, margin: 0 });
 s.addText('Cifras de cotización, por confirmar antes de comprar.',
   { x: 0.65, y: 6.95, w: 12, h: 0.35, fontSize: 10.5, italic: true, color: MUT2, fontFace: B, margin: 0 });
