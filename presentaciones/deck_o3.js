@@ -68,48 +68,6 @@ function db9(s, x, y, title, roles) {
   for (let i = 0; i < 5; i++) pin(s, px0 + i * dx, y + 0.26, i + 1, roles[i + 1]);   // 1..5 arriba
   for (let i = 0; i < 4; i++) pin(s, px0 + 0.26 + i * dx, y + 0.68, i + 6, roles[i + 6]); // 6..9 abajo
 }
-// ─── caja de plano (floorplan) ───
-function fbox(s, x, y, w, h, fill, label, lc, fs) {
-  s.addShape(p.ShapeType.rect, { x, y, w, h, fill: { color: fill }, line: { color: lc || 'B9BEC6', width: 1 } });
-  if (label) s.addText(label, { x, y, w, h, align: 'center', valign: 'middle', fontSize: fs || 9, bold: true, color: '3A3F49', fontFace: B, margin: 0 });
-}
-const RACK = 'DCE0E6', EQUIP = 'E4E7DF', MESA = 'EDE6D7', AISLE = 'FBEFC9', EDRc = 'CDE9F7';
-const CARGA = 'CFC2A0', ORO = '8A6D16';
-
-// ─── montacargas en planta (cuerpo + uñas + mástil) ───
-function forklift(s, x, y, w, h, dir, label, col) {
-  s.addShape(p.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.05, fill: { color: col || 'C6D2DB' }, line: { color: '566270', width: 1.1 } });
-  const fl = 0.34, ft = 0.07, g = Math.min(w, h) * 0.22, F = '566270';
-  if (dir === 'up') { s.addShape(p.ShapeType.rect, { x: x + w / 2 - g - ft, y: y - fl, w: ft, h: fl, fill: { color: F } }); s.addShape(p.ShapeType.rect, { x: x + w / 2 + g, y: y - fl, w: ft, h: fl, fill: { color: F } }); s.addShape(p.ShapeType.rect, { x: x + w / 2 - g - ft, y: y - 0.05, w: 2 * g + 2 * ft, h: 0.05, fill: { color: F } }); }
-  else if (dir === 'down') { s.addShape(p.ShapeType.rect, { x: x + w / 2 - g - ft, y: y + h, w: ft, h: fl, fill: { color: F } }); s.addShape(p.ShapeType.rect, { x: x + w / 2 + g, y: y + h, w: ft, h: fl, fill: { color: F } }); }
-  else if (dir === 'left') { s.addShape(p.ShapeType.rect, { x: x - fl, y: y + h / 2 - g - ft, w: fl, h: ft, fill: { color: F } }); s.addShape(p.ShapeType.rect, { x: x - fl, y: y + h / 2 + g, w: fl, h: ft, fill: { color: F } }); }
-  else if (dir === 'right') { s.addShape(p.ShapeType.rect, { x: x + w, y: y + h / 2 - g - ft, w: fl, h: ft, fill: { color: F } }); s.addShape(p.ShapeType.rect, { x: x + w, y: y + h / 2 + g, w: fl, h: ft, fill: { color: F } }); }
-  if (label) s.addText(label, { x, y, w, h, align: 'center', valign: 'middle', fontSize: 9, bold: true, color: '2A2F39', fontFace: B, margin: 0 });
-}
-// ─── estante vertical multi-nivel con cargas y etiqueta ───
-function rackV(s, x, y, w, h, tag, full) {
-  s.addShape(p.ShapeType.rect, { x, y, w, h, fill: { color: RACK }, line: { color: '8A93A0', width: 1.3 } });
-  const bays = 6, bh = h / bays;
-  for (let i = 1; i < bays; i++) s.addShape(p.ShapeType.line, { x, y: y + i * bh, w, h: 0, line: { color: '9AA3B0', width: 0.8 } });
-  for (let i = 0; i < bays; i++) if (full || i % 2 === 0) s.addShape(p.ShapeType.rect, { x: x + 0.07, y: y + i * bh + 0.06, w: w - 0.14, h: bh - 0.12, fill: { color: CARGA }, line: { color: 'AC9E78', width: 0.4 } });
-  s.addShape(p.ShapeType.roundRect, { x: x + w / 2 - 0.42, y: y - 0.26, w: 0.84, h: 0.26, rectRadius: 0.04, fill: { color: '566270' } });
-  s.addText(tag, { x: x + w / 2 - 0.42, y: y - 0.26, w: 0.84, h: 0.26, align: 'center', valign: 'middle', fontSize: 9.5, bold: true, color: 'FFFFFF', fontFace: B, margin: 0 });
-}
-// ─── cota horizontal / vertical con flechas ───
-function dimH(s, x, y, w, label) {
-  s.addShape(p.ShapeType.line, { x, y, w, h: 0, line: { color: ORO, width: 1.3, beginArrowType: 'triangle', endArrowType: 'triangle' } });
-  s.addText(label, { x, y: y - 0.28, w, h: 0.24, align: 'center', fontSize: 11, bold: true, color: ORO, fontFace: B, margin: 0 });
-}
-function dimV(s, x, y, h, label) {
-  s.addShape(p.ShapeType.line, { x, y, w: 0, h, line: { color: ORO, width: 1.3, beginArrowType: 'triangle', endArrowType: 'triangle' } });
-  s.addText(label, { x: x - 1.02, y: y + h / 2 - 0.14, w: 0.95, h: 0.28, align: 'right', valign: 'middle', fontSize: 11, bold: true, color: ORO, fontFace: B, margin: 0 });
-}
-// ─── marca ArUco en miniatura ───
-function aruco(s, x, y) {
-  const z = 0.15; s.addShape(p.ShapeType.rect, { x, y, w: z, h: z, fill: { color: '111111' } });
-  [[0.03, 0.03], [0.09, 0.03], [0.06, 0.06], [0.03, 0.09], [0.09, 0.09]].forEach(d => s.addShape(p.ShapeType.rect, { x: x + d[0], y: y + d[1], w: 0.027, h: 0.027, fill: { color: 'FFFFFF' } }));
-}
-
 /* ───────── 1 · PORTADA ───────── */
 let s = p.addSlide(); fondo(s, true);
 s.addShape(p.ShapeType.rect, { x: 0.9, y: 2.35, w: 1.5, h: 0.045, fill: { color: HAZ } });
@@ -361,56 +319,21 @@ s.addNotes('Reescrito sin "cuanto me movi". Mismo largo, mas tecnico. El LiDAR s
 
 /* ───────── 14 · EL AULA ───────── */
 s = p.addSlide(); fondo(s, false);
-titulo(s, 'El Aula — el banco de pruebas, dentro del taller', false, 'Mover el rack 4 libera espacio a los mecánicos y deja un pasillo de 3.0 × 6.0 m. Lo sombreado ya se usa y no se toca');
-const USED = 'DCE0D6', RAMP = 'E7DCC8', VERDEd = '2FA866';
-
-// ===== ACTUAL — todo el taller =====
-const ax = 0.65, ay = 2.0, aw = 7.2, ah = 3.55;
-s.addText('Taller hoy', { x: ax, y: ay - 0.3, w: aw, h: 0.3, fontSize: 12.5, bold: true, color: MUT2, fontFace: B, margin: 0 });
-s.addShape(p.ShapeType.rect, { x: ax, y: ay, w: aw, h: ah, fill: { color: 'FFFFFF' }, line: { color: '3A3F49', width: 2.4 } });
-[[ax + 0.12, ay + 0.45, 2.3, 1.15], [ax + 0.12, ay + 1.85, 2.1, 1.45]].forEach(b => {   // espacio en uso, no se toca
-  s.addShape(p.ShapeType.rect, { x: b[0], y: b[1], w: b[2], h: b[3], fill: { color: USED }, line: { color: 'AEB4A6', width: 1 } });
-  s.addText('en uso\nno se toca', { x: b[0], y: b[1], w: b[2], h: b[3], align: 'center', valign: 'middle', fontSize: 9.5, italic: true, color: '6B7266', fontFace: B, margin: 0 });
+titulo(s, 'El Aula — el banco de pruebas', false, 'En una etapa más adelante, dentro del taller');
+const aula = [
+  ['Reconfigurar espacio muerto', 'En el taller hay espacio muerto ocupado por equipamiento que no se usa y por racks. Reorganizándolo se libera un espacio de 3.0 m de ancho × 6.0 m de largo — sin deshacer el taller.', CIAN],
+  ['Un ambiente cerrado y real', 'Es un ambiente cerrado, como el de cualquier almacén de verdad —incluido RETHINK—. Reproduce las condiciones reales donde el equipo va a operar.', HAZ],
+  ['La luz inestable juega a favor', 'La iluminación inestable que tendríamos no es un problema: probar con luz imperfecta hace la visión (ArUco) y la robótica más robustas para el campo.', VERDE]];
+aula.forEach((q, i) => {
+  const y = 1.95 + i * 1.5;
+  tarjeta(s, 0.65, y, 12, 1.3, false);
+  s.addShape(p.ShapeType.rect, { x: 0.65, y, w: 0.09, h: 1.3, fill: { color: q[2] } });
+  s.addText(q[0], { x: 1.0, y: y + 0.2, w: 11.3, h: 0.45, fontSize: 17, bold: true, color: TINTA, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: 1.0, y: y + 0.66, w: 11.3, h: 0.6, fontSize: 13, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
 });
-s.addShape(p.ShapeType.rect, { x: ax + 2.5, y: ay + 2.78, w: 1.3, h: 0.66, fill: { color: RAMP }, line: { color: 'C9B88E', width: 1 } });   // rampa/porton
-s.addText('rampa / portón', { x: ax + 2.5, y: ay + 2.78, w: 1.3, h: 0.66, align: 'center', valign: 'middle', fontSize: 8.5, bold: true, color: '8A6D16', fontFace: B, margin: 0 });
-[[ax + 5.2, ay + 0.26], [ax + 5.56, ay + 0.26], [ax + 5.92, ay + 0.26]].forEach(c => fbox(s, c[0], c[1], 0.3, 0.3, 'E7E9EC', '', 'C8CCD2'));
-forklift(s, ax + 4.15, ay + 0.72, 0.85, 0.48, 'up', '5', EQUIP);
-forklift(s, ax + 5.25, ay + 0.74, 0.76, 0.48, 'up', '6', EQUIP);
-forklift(s, ax + 6.28, ay + 0.42, 0.68, 0.4, 'left', '2', EQUIP);
-forklift(s, ax + 6.28, ay + 1.4, 0.72, 0.4, 'left', '1', EDRc);
-fbox(s, ax + 4.25, ay + 1.55, 0.7, 0.4, MESA, '7');
-fbox(s, ax + 5.2, ay + 1.55, 0.7, 0.4, MESA, '8');
-rackV(s, ax + 6.58, ay + 2.1, 0.48, 1.25, '3');
-rackV(s, ax + 4.4, ay + 2.6, 0.52, 0.85, '4');   // rack 4: en area de mecanicos, es lo que se mueve
-s.addShape(p.ShapeType.roundRect, { x: ax + 4.12, y: ay + 2.35, w: 1.35, h: 1.12, rectRadius: 0.06, fill: { color: 'FFFFFF', transparency: 100 }, line: { color: ROJO, width: 1.6, dashType: 'dash' } });
-s.addText('rack 4 — ocupa área que\nusan los mecánicos', { x: ax + 3.95, y: ay + 1.98, w: 1.7, h: 0.4, align: 'center', fontSize: 8, bold: true, color: ROJO, fontFace: B, margin: 0 });
-
-// ===== PROPUESTA — solo el lado derecho =====
-const qx = 8.15, qy = 2.0, qw = 4.5, qh = 3.55;
-s.addText('Propuesta — lado derecho', { x: qx, y: qy - 0.3, w: qw, h: 0.3, fontSize: 12.5, bold: true, color: TINTA, fontFace: B, margin: 0 });
-s.addShape(p.ShapeType.rect, { x: qx, y: qy, w: qw, h: qh, fill: { color: 'FFFFFF' }, line: { color: '3A3F49', width: 2.4 } });
-const aX = qx + 1.52, aW = 1.4, aY = qy + 0.8, aH = 2.0;   // pasillo (vertical)
-s.addShape(p.ShapeType.rect, { x: aX, y: aY, w: aW, h: aH, fill: { color: AISLE }, line: { color: 'E0C96A', width: 1 } });
-s.addText('Pasillo 0', { x: aX, y: aY + aH / 2 - 0.15, w: aW, h: 0.3, align: 'center', valign: 'middle', fontSize: 10, bold: true, color: ORO, fontFace: B, margin: 0 });
-rackV(s, qx + 0.88, aY, 0.58, aH, '4');
-rackV(s, qx + 3.0, aY, 0.58, aH, '3');
-[0.2, 0.75, 1.3].forEach(d => { aruco(s, aX + 0.03, aY + d); aruco(s, aX + aW - 0.18, aY + d); });
-forklift(s, aX + aW / 2 - 0.38, qy + 0.48, 0.76, 0.38, 'down', '1', EDRc);
-dimH(s, aX, qy + 0.34, aW, '3.0 m');
-s.addShape(p.ShapeType.line, { x: qx + 0.74, y: aY, w: 0, h: aH, line: { color: ORO, width: 1.3, beginArrowType: 'triangle', endArrowType: 'triangle' } });
-s.addText('6.0 m', { x: qx + 0.04, y: aY + aH / 2 - 0.13, w: 0.66, h: 0.26, align: 'center', valign: 'middle', fontSize: 9, bold: true, color: ORO, fontFace: B, margin: 0 });
-forklift(s, qx + 1.0, qy + 3.08, 0.62, 0.36, 'up', '2', EQUIP);
-forklift(s, qx + 3.0, qy + 3.08, 0.62, 0.36, 'up', '6', EQUIP);
-fbox(s, qx + 1.95, qy + 3.12, 0.3, 0.3, 'E7E9EC', '');
-fbox(s, qx + 2.32, qy + 3.12, 0.3, 0.3, 'E7E9EC', '');
-
-// descripcion + leyenda
-tarjeta(s, 0.65, 5.72, 12, 1.2, false);
-s.addText('✓  Mover el rack 4 además libera un área que usan los mecánicos.', { x: 1.0, y: 5.8, w: 11.3, h: 0.3, fontSize: 12, bold: true, color: VERDEd, fontFace: B, margin: 0 });
-s.addText('•  Solo reorganizar estantes para el pasillo de 3.0 × 6.0 m — los racks 3 y 4 siguen accesibles, no se vacían, y todo lo sombreado (espacio en uso) y las mesas se quedan.\n•  Pruebas con el pantógrafo (sin uñas) + un sensor de altura simple y calibrado en las uñas — no viene en el equipo, lo necesitamos, y ya lo resolví al milímetro en Botoni.',
-  { x: 1.0, y: 6.14, w: 11.3, h: 0.75, fontSize: 11, color: MUT2, fontFace: B, margin: 0, valign: 'top', lineSpacing: 14 });
-s.addNotes('Mi orden del dibujo: actual = todo el taller, sombreado = en uso no se toca, rack 4 en area de mecanicos. Propuesta = solo el lado derecho, rack 4 movido flanquea el pasillo y libera a los mecanicos.');
+s.addText('En esta etapa se prueba el ciclo con el pantógrafo (sin uñas) + un sensor de altura calibrado.',
+  { x: 0.65, y: 6.5, w: 12, h: 0.4, fontSize: 11.5, italic: true, color: MUT2, fontFace: B, margin: 0 });
+s.addNotes('Se quito el plano a pedido. El Aula = reconfigurar espacio muerto (equipo no usado + racks) para un espacio 3x6, ambiente cerrado como RETHINK, y la luz inestable ayuda a la robustez.');
 
 /* ───────── 15 · QUIÉN PONE QUÉ ───────── */
 s = p.addSlide(); fondo(s, true);
