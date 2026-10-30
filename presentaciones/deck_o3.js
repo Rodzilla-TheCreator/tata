@@ -1,7 +1,8 @@
 // deck_o3.js — TaTa · Estado actual y pedido para Omar (octubre 2026)
-// Deck de seguimiento: lo logrado, el cambio de plan (mecanico -> EDR) que nos
-// puso on-track, los hitos con fecha, quien financia que (NRE+computo = maje;
-// reparar el MT 122 + salario/confianza = inversion de Montasa), y el pedido.
+// Deck de seguimiento: lo logrado, el cambio de plan (mecanico -> EDR), los hitos
+// con detalle de agosto (investigacion+simulacion) y septiembre (el muro del DB9,
+// con diagrama de pines), el 1-oct como punto de inflexion, el bloqueo (piezas
+// quitadas), el camino que sigue, El Aula, computo por etapas, y el pedido.
 // Reusa el lenguaje visual de deck_o2.js. Genera TaTa_Estado_y_Pedido_Omar.pptx
 const pptx = require('pptxgenjs');
 const p = new pptx();
@@ -23,7 +24,7 @@ function chip(s, n, x, y, col) {
     fontSize: 15, bold: true, color: OSCURO, fontFace: B, margin: 0 });
 }
 function titulo(s, txt, dark, sub) {
-  s.addText(txt, { x: 0.65, y: 0.42, w: W - 1.3, h: 0.85, fontSize: 33, bold: true,
+  s.addText(txt, { x: 0.65, y: 0.42, w: W - 1.3, h: 0.85, fontSize: 32, bold: true,
     color: dark ? HUM : TINTA, fontFace: H, margin: 0 });
   if (sub) s.addText(sub, { x: 0.65, y: 1.22, w: W - 1.3, h: 0.4, fontSize: 13.5,
     color: dark ? MUT : MUT2, fontFace: B, margin: 0 });
@@ -51,6 +52,29 @@ function fila(s, x, y, w, h, cols, dark, head) {
 }
 const money = n => '$' + n.toLocaleString('en-US');
 
+// ─── un pin de DB9 (circulo con numero, coloreado por funcion) ───
+function pin(s, cx, cy, n, role) {
+  const col = role ? role[1] : '2A2F39';
+  s.addShape(p.ShapeType.ellipse, { x: cx, y: cy, w: 0.3, h: 0.3, fill: { color: col }, line: { color: '0B0E12', width: 0.5 } });
+  s.addText(String(n), { x: cx, y: cy, w: 0.3, h: 0.3, align: 'center', valign: 'middle',
+    fontSize: 10, bold: true, color: role ? '0B0E12' : MUT, fontFace: B, margin: 0 });
+}
+// ─── un DB9 esquematico (shell + 9 pines) con roles {n:[label,color]} ───
+function db9(s, x, y, title, roles) {
+  const W9 = 2.95, H9 = 1.15;
+  s.addText(title, { x, y: y - 0.34, w: W9, h: 0.3, align: 'center', fontSize: 11.5, bold: true, color: TINTA, fontFace: B, margin: 0 });
+  s.addShape(p.ShapeType.roundRect, { x, y, w: W9, h: H9, rectRadius: 0.14, fill: { color: '0F1218' }, line: { color: MUT2, width: 1.2 } });
+  const px0 = x + 0.36, dx = 0.52;
+  for (let i = 0; i < 5; i++) pin(s, px0 + i * dx, y + 0.26, i + 1, roles[i + 1]);   // 1..5 arriba
+  for (let i = 0; i < 4; i++) pin(s, px0 + 0.26 + i * dx, y + 0.68, i + 6, roles[i + 6]); // 6..9 abajo
+}
+// ─── caja de plano (floorplan) ───
+function fbox(s, x, y, w, h, fill, label, lc, fs) {
+  s.addShape(p.ShapeType.rect, { x, y, w, h, fill: { color: fill }, line: { color: lc || 'B9BEC6', width: 1 } });
+  if (label) s.addText(label, { x, y, w, h, align: 'center', valign: 'middle', fontSize: fs || 9, bold: true, color: '3A3F49', fontFace: B, margin: 0 });
+}
+const RACK = 'DCE0E6', EQUIP = 'E4E7DF', MESA = 'EDE6D7', AISLE = 'FBEFC9', EDRc = 'CDE9F7';
+
 /* ───────── 1 · PORTADA ───────── */
 let s = p.addSlide(); fondo(s, true);
 s.addShape(p.ShapeType.rect, { x: 0.9, y: 2.35, w: 1.5, h: 0.045, fill: { color: HAZ } });
@@ -60,8 +84,8 @@ s.addText('Tecnología Avanzada de Transporte Autónomo · un proyecto de Montas
 s.addText('Dónde estamos, y lo que\nnecesito para seguir', { x: 0.9, y: 2.6, w: 9.5, h: 1.5,
   fontSize: 32, bold: true, color: HUM, fontFace: H, lineSpacing: 40, margin: 0 });
 const port = [['Teleop', '2/3', 'validado en banco', VERDE],
-              ['Cómputo + NRE', 'lo pongo yo', 'cómputo bajado a ' + money(500), HAZ],
-              ['A Montasa', 'reparar', 'el MT 122', CIAN]];
+              ['Cómputo + NRE', 'lo pongo yo', 'es mi proyecto', HAZ],
+              ['A Montasa', 'un equipo', 'reparar el MT 122', CIAN]];
 port.forEach((q, i) => {
   const x = 0.9 + i * 3.9;
   tarjeta(s, x, 4.55, 3.6, 1.45, true);
@@ -78,16 +102,16 @@ s = p.addSlide(); fondo(s, false);
 titulo(s, 'En una página', false, 'Si sólo lees un slide, que sea este');
 const rex = [
   ['Lo logrado', 'Leí la computadora del montacargas y logré comandar la marcha y la dirección. Probado en banco. Es 2/3 del teleop, y el cambio de plan al EDR nos puso on-track.', VERDE],
-  ['El freno', 'Estoy parado: no hay un equipo funcional dedicado. Al que probaba le quitaron la llanta de dirección, y el pedal de hombre-muerto se lo pusieron a otro equipo.', ROJO],
-  ['Lo que pido', 'Reparar el MT 122 (hoy banco de repuestos) — un activo de Montasa que vuelve a rentar. El NRE y el cómputo los pongo yo.', HAZ]];
+  ['El freno', 'Estoy parado: no hay un equipo funcional dedicado. Le quitaron, para otros equipos, la dirección, la hidráulica del pantógrafo, la cámara y el sensor del pedal — justo lo que necesito para probar.', ROJO],
+  ['Lo que pido', 'Reparar el MT 122 (o, si no, permiso de pruebas reversibles en mantenimiento para la etapa de odometría), y reorganizar estantes para El Aula. El NRE y el cómputo los pongo yo.', HAZ]];
 rex.forEach((r, i) => {
   const y = 1.95 + i * 1.62;
   tarjeta(s, 0.65, y, 12, 1.42, false);
   s.addShape(p.ShapeType.rect, { x: 0.65, y, w: 0.09, h: 1.42, fill: { color: r[2] } });
   s.addText(r[0], { x: 1.0, y: y + 0.18, w: 3.0, h: 0.5, fontSize: 18, bold: true, color: TINTA, fontFace: H, margin: 0 });
-  s.addText(r[1], { x: 4.1, y: y + 0.16, w: 8.3, h: 1.1, fontSize: 13, color: MUT2, fontFace: B, margin: 0, valign: 'middle' });
+  s.addText(r[1], { x: 4.1, y: y + 0.14, w: 8.3, h: 1.15, fontSize: 12.5, color: MUT2, fontFace: B, margin: 0, valign: 'middle' });
 });
-s.addNotes('Las tres cajas son la conversacion entera: algo real ya hecho, un freno que no es mio, y un solo pedido que ademas recupera un activo suyo.');
+s.addNotes('Algo real ya hecho, un freno que no es mio, y un pedido que recupera un activo suyo + reorganizar estantes.');
 
 /* ───────── 3 · LO LOGRADO ───────── */
 s = p.addSlide(); fondo(s, true);
@@ -103,7 +127,7 @@ log.forEach((l, i) => {
   s.addText(l[0], { x: x + 0.35, y: y + 0.25, w: 5.2, h: 0.5, fontSize: 16, bold: true, color: HAZ, fontFace: H, margin: 0 });
   s.addText(l[1], { x: x + 0.35, y: y + 0.82, w: 5.2, h: 1.1, fontSize: 12, color: MUT, fontFace: B, margin: 0, valign: 'top' });
 });
-s.addNotes('El punto para un financiero: esto es NRE, ingenieria que se paga una vez para todo el modelo, no por unidad. Y cero costo efectivo para Montasa.');
+s.addNotes('Esto es NRE, ingenieria que se paga una vez para todo el modelo, no por unidad. Y cero costo efectivo para Montasa.');
 
 /* ───────── 4 · DOS CAMINOS ───────── */
 s = p.addSlide(); fondo(s, false);
@@ -125,20 +149,20 @@ dc.forEach((r, i) => {
 });
 s.addText('Elegimos la arquitectura que convierte meses de fabricación en semanas de ingeniería. Ese fue el acierto que compró el calendario.',
   { x: 0.65, y: 5.7, w: 12, h: 0.6, fontSize: 13.5, bold: true, color: TINTA, fontFace: B, margin: 0 });
-s.addNotes('Anticipar "cambiaron de plan, perdieron tiempo". Al reves: el plan mecanico habria seguido fabricando el primer actuador. El EDR ya tiene 2/3 del teleop.');
+s.addNotes('Anticipar "cambiaron de plan, perdieron tiempo". Al reves: el plan mecanico habria seguido fabricando el primer actuador.');
 
 /* ───────── 5 · LOS HITOS ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'Los hitos que hemos conseguido', true, 'Tres meses desde que se eligió el EDR. On time, on track');
 const hit = [
+  ['Ago', 'Medición de campo, geometría corregida, simuladores y planificador de giro', VERDE],
   ['Ago', 'Se descarta el Baoli y se elige el EDR: cabe en el pasillo y es eléctrico', VERDE],
-  ['Sep', 'Puerto de servicio abierto · el equipo es un Jungheinrich (manual completo en mano)', HUM],
-  ['1–3 Oct', 'El bus interno es CAN — mapeado pin por pin', HUM],
-  ['5 Oct', 'Escucha del bus validada con instrumento propio', HUM],
-  ['14 Oct', 'Transmisión al bus validada (20/20)', HUM],
+  ['Sep', 'Puerto de servicio abierto · el equipo es un Jungheinrich (manual completo)', HUM],
+  ['Sep', 'El muro del DB9: el cable del técnico era RS232 y no servía (ver adelante)', ROJO],
+  ['1 Oct', 'Punto de inflexión: el bus es CAN. Desde acá, volando', HAZ],
+  ['5–14 Oct', 'Escucha del bus y transmisión validadas con instrumento propio (20/20)', HUM],
   ['22 Oct', 'Marcha comandable — probada: el equipo pidió el hombre-muerto', CIAN],
-  ['24 Oct', 'Dirección descifrada: sensor del volante, no CAN', HUM],
-  ['27 Oct', 'Emulador de dirección validado en banco', CIAN],
+  ['24–27 Oct', 'Dirección descifrada (sensor del volante) y emulador validado en banco', CIAN],
   ['Hoy', '2/3 del teleop · el freno es de hardware (equipo), no de ingeniería', HAZ]];
 hit.forEach((q, i) => {
   const x = 0.65 + (i % 3) * 4.05, y = 2.0 + Math.floor(i / 3) * 1.35;
@@ -146,27 +170,107 @@ hit.forEach((q, i) => {
   s.addText(q[0], { x: x + 0.3, y: y + 0.16, w: 3.3, h: 0.35, fontSize: 13, bold: true, color: q[2], fontFace: H, margin: 0 });
   s.addText(q[1], { x: x + 0.3, y: y + 0.52, w: 3.3, h: 0.62, fontSize: 10.5, color: MUT, fontFace: B, margin: 0, valign: 'top' });
 });
-s.addNotes('La linea de tiempo es la prueba de "on track". Dos de los tres canales de mando probados, el bus entero leido, en tres meses.');
+s.addNotes('El 1-oct es el quiebre. Antes: meses de puerto. Despues: en 3 semanas marcha y direccion. Detalle de ago y sep en los dos slides siguientes.');
 
-/* ───────── 6 · POR QUÉ ESTOY PARADO ───────── */
+/* ───────── 6 · AGOSTO: INVESTIGACIÓN Y SIMULACIÓN ───────── */
 s = p.addSlide(); fondo(s, false);
-titulo(s, 'Por qué estoy parado — y no es el software', false, 'El código está. Lo que falta es una máquina que encienda');
-const par = [
-  ['Al equipo de prueba le quitaron la llanta de dirección', 'Sin ella no hay cómo ver el timón girar, que es la prueba que vine a hacer.'],
-  ['El pedal de hombre-muerto se lo pusieron a otro equipo', 'Era la pieza que faltaba para cerrar el teleop. Me lo iban a traer y se reasignó.']];
-par.forEach((q, i) => {
-  const y = 2.1 + i * 1.35;
-  tarjeta(s, 0.65, y, 12, 1.15, false);
-  s.addShape(p.ShapeType.rect, { x: 0.65, y, w: 0.09, h: 1.15, fill: { color: ROJO } });
-  s.addText(q[0], { x: 1.0, y: y + 0.18, w: 11.2, h: 0.5, fontSize: 15.5, bold: true, color: TINTA, fontFace: B, margin: 0 });
-  s.addText(q[1], { x: 1.0, y: y + 0.68, w: 11.2, h: 0.4, fontSize: 12, color: MUT2, fontFace: B, margin: 0 });
+titulo(s, 'Agosto — lo que no se ve: investigación y simulación', false, 'Meses de ingeniería antes de tocar un fierro, para llegar a la máquina sabiendo qué probar');
+const ago = [
+  ['Medición de campo', 'Se corrigió la geometría real del equipo y se confirmó, con el planificador Hybrid A*, que el giro cargado entra en el pasillo de 3.00 m.'],
+  ['Simuladores', 'Visor del sector A con máquina de estados y consola de flota, simulación de la secuencia completa, y arreglos de la simulación física (Isaac Sim).'],
+  ['Análisis de localización', 'Cómo se ubica el equipo: cámaras + ArUco + odometría. Se estudió también dónde el LiDAR degenera y dónde no.'],
+  ['La decisión del EDR', 'Se descarta el Baoli (no cabe, es hidráulico) y se elige el EDR: cabe y es eléctrico. El acierto que ordenó todo lo demás.']];
+ago.forEach((q, i) => {
+  const x = 0.65 + (i % 2) * 6.15, y = 2.0 + Math.floor(i / 2) * 2.2;
+  tarjeta(s, x, y, 5.85, 1.95, false);
+  s.addShape(p.ShapeType.rect, { x, y, w: 5.85, h: 0.1, fill: { color: VERDE } });
+  s.addText(q[0], { x: x + 0.35, y: y + 0.26, w: 5.2, h: 0.45, fontSize: 15, bold: true, color: TINTA, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: x + 0.35, y: y + 0.78, w: 5.2, h: 1.05, fontSize: 12, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
 });
-tarjeta(s, 0.65, 5.15, 12, 1.0, false, '20242B');
-s.addText('El avance ya no depende de más tiempo en la computadora. Depende de un montacargas funcional dedicado al proyecto.',
-  { x: 1.05, y: 5.15, w: 11.2, h: 1.0, fontSize: 15, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
-s.addNotes('Honestidad: no pido tiempo ni plata para programar mas. Pido la maquina. Bloqueo externo, no de ejecucion.');
+s.addNotes('Esto contesta "y que hiciste en agosto". No se gasto nada y se de-riskeo casi todo lo de geometria, giro y localizacion.');
 
-/* ───────── 7 · PEDIDO · MT 122 ───────── */
+/* ───────── 7 · SEPTIEMBRE: EL MURO DEL DB9 ───────── */
+s = p.addSlide(); fondo(s, true);
+titulo(s, 'Septiembre — el muro del DB9', true, 'Un puerto de servicio que no hablaba. Un mes de pared, cero daño al equipo');
+const sep = [
+  ['Un puerto que no respondía', 'El técnico controlaba el equipo por un puerto de servicio (DB9) con una herramienta de concesionario. No respondía. Se investigaron varias hipótesis: serie, CAN, adaptador roto, video.', ROJO],
+  ['Se probó con un fusible de menos', 'El equipo tenía un fusible faltante; se trabajó así un tiempo. Y aun metiéndole cables de diagnóstico que no eran los correctos, por disciplina de seguridad nunca se dañó nada: todo reversible, con paro, sin cortar.', HAZ],
+  ['El cable, confirmado', 'Se confirmó que el cable del técnico era RS232 (serie) — y que ese camino no servía: sus señales no coinciden con el bus real del equipo. El porqué, en el diagrama de pines que sigue.', CIAN]];
+sep.forEach((q, i) => {
+  const y = 2.0 + i * 1.5;
+  tarjeta(s, 0.65, y, 12, 1.3, true);
+  s.addShape(p.ShapeType.rect, { x: 0.65, y, w: 0.1, h: 1.3, fill: { color: q[2] } });
+  s.addText(q[0], { x: 1.05, y: y + 0.18, w: 11.1, h: 0.45, fontSize: 15.5, bold: true, color: HUM, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: 1.05, y: y + 0.6, w: 11.1, h: 0.65, fontSize: 11.5, color: MUT, fontFace: B, margin: 0, valign: 'top' });
+});
+s.addNotes('La historia de septiembre: pared, pero con disciplina. Nunca se cago en el equipo de nadie, aun probando cables que no eran. Y se confirmo que el serie no era.');
+
+/* ───────── 8 · POR QUÉ ESE CABLE NUNCA CONECTÓ (pines) ───────── */
+s = p.addSlide(); fondo(s, false);
+titulo(s, 'Por qué ese cable nunca iba a conectar', false, 'Mismo conector físico (DB9), funciones distintas en cada pin');
+db9(s, 1.5, 2.2, 'Cable del técnico — RS232 (serie)',
+  { 2: ['RXD', CIAN], 3: ['TXD', CIAN], 5: ['GND', MUT2] });
+db9(s, 8.85, 2.2, 'DB9 del equipo — bus CAN',
+  { 3: ['CAN_L', VERDE], 8: ['CAN_H', VERDE], 6: ['+24 V', ROJO] });
+s.addText('Serie: datos (2, 3) + tierra (5)', { x: 1.5, y: 3.55, w: 2.95, h: 0.3, align: 'center', fontSize: 10, color: MUT2, fontFace: B, margin: 0 });
+s.addText('CAN: par diferencial (3 + 8) + 24 V (6)', { x: 8.85, y: 3.55, w: 2.95, h: 0.3, align: 'center', fontSize: 10, color: MUT2, fontFace: B, margin: 0 });
+fila(s, 2.1, 4.05, 9.1, 0.44, [{ t: 'Pin', w: 1.0 }, { t: 'Cable RS232', w: 3.1 }, { t: 'DB9 del equipo (CAN)', w: 3.3 }, { t: '¿Sirve?', w: 1.7, a: 'center' }], false, true);
+const pinrows = [
+  ['3', 'TXD — transmite', 'CAN_L', 'no · otra función'],
+  ['8', 'CTS', 'CAN_H', 'no'],
+  ['5', 'GND — tierra', 'no es tierra', 'no'],
+  ['6', '(sin uso)', '+24 V', '⚠ riesgo'],
+  ['2', 'RXD — recibe', '— (no hay CAN)', 'no']];
+pinrows.forEach((r, i) => {
+  fila(s, 2.1, 4.49 + i * 0.44, 9.1, 0.44, [
+    { t: r[0], w: 1.0, b: true, c: TINTA },
+    { t: r[1], w: 3.1, c: MUT2 },
+    { t: r[2], w: 3.3, c: TINTA, b: true },
+    { t: r[3], w: 1.7, a: 'center', c: r[3][0] === '⚠' ? ROJO : MUT2 }], false);
+});
+s.addText('El cable serie no coincide con ninguna señal del bus, y el CAN necesita el PAR 3+8 juntos — que el serie ni toca. Por eso no conectaba "de manera simple".',
+  { x: 0.65, y: 6.75, w: 12, h: 0.5, fontSize: 12.5, bold: true, color: TINTA, fontFace: B, margin: 0 });
+s.addNotes('El diagrama que pidio maje. Los colores muestran que el MISMO pin tiene funcion distinta en cada lado. Pin 3 = TXD de un lado, CAN_L del otro.');
+
+/* ───────── 9 · 1 DE OCTUBRE: EL PUNTO DE INFLEXIÓN ───────── */
+s = p.addSlide(); fondo(s, true);
+titulo(s, '1 de octubre — el punto de inflexión', true, 'Desde que leímos el bus CAN, volando');
+tarjeta(s, 0.65, 2.0, 12, 1.25, true, PANEL);
+s.addText('Descartado el serie, medimos de nuevo y el puerto resultó ser CAN. Desde que leímos el bus, el trabajo se aceleró muchísimo — de ahí en adelante, volando.',
+  { x: 1.05, y: 2.0, w: 11.2, h: 1.25, fontSize: 15.5, bold: true, color: HUM, fontFace: B, margin: 0, valign: 'middle' });
+const vuelo = [
+  ['Antes', 'Meses descifrando el puerto, contra una pared.', ROJO],
+  ['Después', 'En 3 semanas: bus leído, marcha y dirección comandadas.', VERDE],
+  ['El único freno propio', 'Una semana buscando un transceptor CAN que funcionara (el primero era una unidad mala; el nuevo pasó 20/20).', HAZ]];
+vuelo.forEach((q, i) => {
+  const x = 0.65 + i * 4.05, y = 3.55;
+  tarjeta(s, x, y, 3.8, 2.2, true);
+  s.addShape(p.ShapeType.rect, { x, y, w: 3.8, h: 0.11, fill: { color: q[2] } });
+  s.addText(q[0], { x: x + 0.35, y: y + 0.3, w: 3.1, h: 0.5, fontSize: 16, bold: true, color: HUM, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: x + 0.35, y: y + 0.95, w: 3.15, h: 1.1, fontSize: 12, color: MUT, fontFace: B, margin: 0, valign: 'top' });
+});
+s.addNotes('Reencuadre del "punto de impulso" como punto de inflexion. El mensaje: leer el CAN destrabo todo; desde ahi, velocidad. La unica demora propia fue el transceptor.');
+
+/* ───────── 10 · POR QUÉ ESTOY PARADO ───────── */
+s = p.addSlide(); fondo(s, false);
+titulo(s, 'Por qué estoy parado — todo lo que le quitaron al equipo', false, 'Cada faltante bloquea una prueba de algo que YA está resuelto en banco');
+const quit = [
+  ['Hidráulica del pantógrafo', 'Le quitaron la línea hidráulica de la torre/pantógrafo (para otro equipo). Bloquea probar las funciones del multipiloto que ya descifré: elevar, extender.'],
+  ['Cámara y su cable', 'No tiene la cámara ni su cable. Ese camino ya está descifrado y sé cómo leerlo cuando lo tenga — pero no puedo probarlo.'],
+  ['Sensor del pedal de hombre-muerto', 'El sensor que me iban a dar para empezar a descifrar cómo emularlo se lo pusieron a otro equipo — y el que le faltaba a mi equipo también se fue a otro.'],
+  ['Rodillos de dirección y la llanta directriz', 'Le quitaron los rodillos y la rueda que el timón direcciona. Por eso no puedo probar el emulador del timón que ya está validado en banco.']];
+quit.forEach((q, i) => {
+  const x = 0.65 + (i % 2) * 6.15, y = 2.0 + Math.floor(i / 2) * 2.05;
+  tarjeta(s, x, y, 5.85, 1.8, false);
+  s.addShape(p.ShapeType.rect, { x, y, w: 0.09, h: 1.8, fill: { color: ROJO } });
+  s.addText(q[0], { x: x + 0.3, y: y + 0.2, w: 5.4, h: 0.5, fontSize: 14.5, bold: true, color: TINTA, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: x + 0.3, y: y + 0.72, w: 5.4, h: 1.0, fontSize: 11.5, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
+});
+s.addText('No es que falte ingeniería: falta una máquina completa donde probar lo que ya resolví.',
+  { x: 0.65, y: 6.3, w: 12, h: 0.5, fontSize: 13.5, bold: true, color: TINTA, fontFace: B, margin: 0 });
+s.addNotes('Las 4 piezas que le sacaron, cada una a otro equipo. Todas bloquean PRUEBAS de cosas ya resueltas, no el trabajo de resolverlas.');
+
+/* ───────── 11 · REPARAR EL MT 122 ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'Reparar el MT 122', true, 'Hoy está detenido y se usa como banco de repuestos');
 tarjeta(s, 0.65, 2.0, 12, 1.5, true, PANEL);
@@ -184,9 +288,9 @@ mt.forEach((q, i) => {
 });
 s.addText('El pedido: aprobar la reparación del MT 122 y dejar que Miguel actualice la lista para ordenarla.',
   { x: 0.65, y: 6.1, w: 12, h: 0.5, fontSize: 13.5, bold: true, color: HAZ, fontFace: B, margin: 0 });
-s.addNotes('El argumento es de plata, no de principio: canibalizar sale mas caro y mata un activo que podria rentar.');
+s.addNotes('Canibalizar sale mas caro y mata un activo que podria rentar. Reparar recupera ese activo.');
 
-/* ───────── 8 · DOBLE RETORNO ───────── */
+/* ───────── 12 · DOBLE RETORNO ───────── */
 s = p.addSlide(); fondo(s, false);
 titulo(s, 'El MT 122 reparado paga dos veces', false, 'Un solo gasto de reparación, dos retornos');
 const ret = [
@@ -204,23 +308,73 @@ s.addText('La misma reparación sirve a la flota y al proyecto. No es un gasto d
   { x: 1.05, y: 5.15, w: 11.2, h: 1.0, fontSize: 15, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
 s.addNotes('El gasto no se lo cargas al proyecto, se lo cargas a recuperar un activo. El proyecto es el bonus.');
 
-/* ───────── 8b · EL CAMINO QUE SIGUE ───────── */
+/* ───────── 13 · EL CAMINO QUE SIGUE ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'El camino que sigue', true, 'El siguiente paso es odometría + Kalman con ArUco. El LiDAR sigue en el plan, después de formalizar');
 const cam = [
-  ['1', 'Odometría', 'Velocidad y ángulo del propio bus del equipo — los sensores ya están adentro. Posición por “cuánto me moví”.', CIAN],
-  ['2', 'Fusión Kalman + ArUco', 'Un filtro combina la odometría con las marcas ArUco de los racks: corrige la deriva y da la posición absoluta. Este es el siguiente paso, con sólo cámaras.', HAZ],
-  ['3', 'LiDAR / SLAM', 'Mapeo en vivo y detección de obstáculos. Sigue en el plan — se suma después de formalizar el proyecto. No se descarta.', VERDE]];
+  ['1', 'Odometría', 'El equipo ya reporta velocidad de tracción y ángulo de dirección en su bus. Integrando ambos se estima el desplazamiento: la base de la posición, sin sensores nuevos.', CIAN],
+  ['2', 'Fusión Kalman + ArUco', 'Un filtro de Kalman fusiona esa odometría con la pose de los ArUco en los racks: la odometría da continuidad, el ArUco corrige la deriva y fija la posición absoluta. Siguiente paso, solo cámaras.', HAZ],
+  ['3', 'LiDAR / SLAM', 'Mapeo en vivo del pasillo y detección de obstáculos. Suma robustez y una capa de seguridad. Sigue en el plan; entra después de formalizar, no se descarta.', VERDE]];
 cam.forEach((q, i) => {
   const y = 2.0 + i * 1.5;
   tarjeta(s, 0.65, y, 12, 1.3, true);
   chip(s, q[0], 1.0, y + 0.44, q[3]);
-  s.addText(q[1], { x: 1.65, y: y + 0.28, w: 3.5, h: 0.5, fontSize: 16, bold: true, color: HUM, fontFace: H, margin: 0 });
-  s.addText(q[2], { x: 5.2, y: y + 0.2, w: 7.2, h: 1.0, fontSize: 12, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
+  s.addText(q[1], { x: 1.65, y: y + 0.28, w: 3.3, h: 0.5, fontSize: 16, bold: true, color: HUM, fontFace: H, margin: 0 });
+  s.addText(q[2], { x: 5.0, y: y + 0.16, w: 7.4, h: 1.05, fontSize: 11.5, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
 });
-s.addNotes('El siguiente paso usa solo camaras + el bus: odometria + EKF/ArUco. El LiDAR/SLAM sigue en el plan, se secuencia despues de formalizar. No se descarta.');
+s.addNotes('Reescrito sin "cuanto me movi". Mismo largo, mas tecnico. El LiDAR sigue en el plan, despues de formalizar.');
 
-/* ───────── 9 · QUIÉN PONE QUÉ ───────── */
+/* ───────── 14 · EL AULA ───────── */
+s = p.addSlide(); fondo(s, false);
+titulo(s, 'El Aula — el banco de pruebas, dentro del taller', false, 'No deshace el taller: solo reorganizar estantes para liberar un pasillo de 3.0 × 6.0 m');
+// — ACTUAL (izquierda) —
+s.addText('Hoy', { x: 0.9, y: 1.8, w: 4.6, h: 0.3, fontSize: 12, bold: true, color: MUT2, fontFace: B, margin: 0 });
+s.addShape(p.ShapeType.rect, { x: 0.9, y: 2.12, w: 4.6, h: 3.0, fill: { color: 'FFFFFF' }, line: { color: 'C8CCD2', width: 1.4 } });
+fbox(s, 1.05, 2.28, 1.3, 0.8, RACK, '3');
+fbox(s, 2.5, 2.28, 1.3, 0.8, RACK, '4');
+fbox(s, 4.0, 2.28, 1.3, 0.55, EQUIP, '5');
+fbox(s, 1.05, 3.3, 0.8, 0.7, EQUIP, '2');
+fbox(s, 2.05, 3.35, 0.7, 0.6, EQUIP, '6');
+fbox(s, 3.0, 3.3, 0.7, 0.6, EDRc, '1');
+fbox(s, 3.9, 3.05, 0.6, 0.5, MESA, '7');
+fbox(s, 1.1, 4.2, 0.55, 0.5, MESA, '8');
+fbox(s, 2.0, 4.25, 0.4, 0.4, 'E7E9EC', '');
+fbox(s, 2.6, 4.25, 0.4, 0.4, 'E7E9EC', '');
+fbox(s, 3.3, 4.2, 0.5, 0.5, EQUIP, '');
+s.addText('lleno, sin pasillo libre', { x: 0.9, y: 4.82, w: 4.6, h: 0.3, align: 'center', fontSize: 10, italic: true, color: MUT2, fontFace: B, margin: 0 });
+// — PROPUESTA (derecha) —
+const px = 6.3;
+s.addText('Propuesta', { x: px, y: 1.8, w: 6.0, h: 0.3, fontSize: 12, bold: true, color: TINTA, fontFace: B, margin: 0 });
+s.addShape(p.ShapeType.rect, { x: px, y: 2.12, w: 6.3, h: 3.0, fill: { color: 'FFFFFF' }, line: { color: 'C8CCD2', width: 1.4 } });
+// racks flanqueando, pasillo vertical al centro
+fbox(s, px + 1.7, 2.35, 0.55, 2.4, RACK, '3');
+fbox(s, px + 3.9, 2.35, 0.55, 2.4, RACK, '4');
+s.addShape(p.ShapeType.rect, { x: px + 2.25, y: 2.35, w: 1.65, h: 2.4, fill: { color: AISLE }, line: { color: 'E0C96A', width: 1 } });
+s.addText('Pasillo 0', { x: px + 2.25, y: 2.95, w: 1.65, h: 0.3, align: 'center', fontSize: 11, bold: true, color: '8A6D16', fontFace: B, margin: 0 });
+s.addText('3.0 × 6.0 m', { x: px + 2.25, y: 3.25, w: 1.65, h: 0.3, align: 'center', fontSize: 9.5, color: '8A6D16', fontFace: B, margin: 0 });
+// ArUco en las caras internas
+[2.55, 3.25, 3.95, 4.5].forEach(yy => {
+  s.addShape(p.ShapeType.rect, { x: px + 2.26, y: yy, w: 0.12, h: 0.12, fill: { color: TINTA } });
+  s.addShape(p.ShapeType.rect, { x: px + 3.78, y: yy, w: 0.12, h: 0.12, fill: { color: TINTA } });
+});
+fbox(s, px + 2.52, 4.36, 1.1, 0.32, EDRc, '1 · EDR', 'A7C8DA', 9);
+// equipos y mesas al perimetro
+fbox(s, px + 0.2, 2.35, 1.3, 0.55, EQUIP, '5');
+fbox(s, px + 0.2, 3.05, 0.6, 0.55, EQUIP, '2');
+fbox(s, px + 0.85, 3.05, 0.6, 0.55, EQUIP, '6');
+fbox(s, px + 4.7, 2.35, 1.3, 0.5, MESA, '7');
+fbox(s, px + 4.7, 2.95, 1.3, 0.5, MESA, '8');
+fbox(s, px + 0.2, 3.9, 0.45, 0.4, 'E7E9EC', '');
+fbox(s, px + 0.75, 3.9, 0.45, 0.4, 'E7E9EC', '');
+s.addText('estantes 3 y 4 reorganizados, no vaciados · equipos y mesas se quedan', { x: px, y: 4.82, w: 6.3, h: 0.3, align: 'center', fontSize: 10, italic: true, color: MUT2, fontFace: B, margin: 0 });
+// descripcion
+tarjeta(s, 0.65, 5.45, 12, 1.4, false);
+s.addText('Qué pide El Aula, en concreto:', { x: 1.0, y: 5.55, w: 11.3, h: 0.35, fontSize: 13, bold: true, color: TINTA, fontFace: B, margin: 0 });
+s.addText('•  Solo reorganizar estantes para un pasillo de 3.0 m × 6.0 m — los racks 3 y 4 siguen accesibles, no se vacían. Equipos parados y mesas se quedan donde están.\n•  Pruebas con el pantógrafo (sin uñas) + un sensor de altura simple y calibrado en las uñas — no viene en el equipo, lo necesitamos, y ya lo resolví al milímetro en Botoni.',
+  { x: 1.0, y: 5.95, w: 11.3, h: 0.85, fontSize: 11.5, color: MUT2, fontFace: B, margin: 0, valign: 'top', lineSpacing: 15 });
+s.addNotes('El Aula no es un vergueo: reorganizar estantes para un pasillo 3x6. Pruebas con pantografo sin uñas + sensor de altura calibrado (lo de Botoni).');
+
+/* ───────── 15 · QUIÉN PONE QUÉ ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'Quién pone qué', true, 'Pongo mi plata en lo que es mío. A Montasa le pido recuperar un activo suyo');
 tarjeta(s, 0.65, 2.0, 5.95, 3.7, true);
@@ -245,50 +399,46 @@ s.addText('Lo pone Montasa', { x: 7.2, y: 2.3, w: 5.1, h: 0.5, fontSize: 19, bol
 tarjeta(s, 0.65, 6.0, 12, 0.85, true, PANEL);
 s.addText('No le pido a Montasa que financie mi sueño. Le pido que recupere una máquina suya — y yo pongo todo lo demás.',
   { x: 1.05, y: 6.0, w: 11.2, h: 0.85, fontSize: 14, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
-s.addNotes('Este es el slide que desarma el riesgo para Omar: no se le pide comprar hardware. El NRE y el computo los pone maje. Montasa solo recupera un activo propio.');
+s.addNotes('Desarma el riesgo para Omar: no se le pide comprar hardware. El NRE y el computo los pone maje.');
 
-/* ───────── 10 · PRESUPUESTO DE CÓMPUTO ───────── */
+/* ───────── 16 · CÓMPUTO POR ETAPAS ───────── */
 s = p.addSlide(); fondo(s, false);
-titulo(s, 'El cómputo: lo bajé de ' + money(1400) + ' a ' + money(500) + ' — y lo pago yo', false, 'Con sólo cámaras no hace falta el equipo grande ni el LiDAR');
-fila(s, 0.65, 2.1, 12, 0.5, [{ t: '', w: 4.0 }, { t: 'ANTES', w: 4.0, a: 'left' }, { t: 'AHORA', w: 4.0, a: 'left' }], false, true);
-const bud = [
-  ['Sensor', 'LiDAR 3D (Unitree L2)', '2 cámaras USB'],
-  ['Cómputo', 'Jetson Orin NX · 16 GB', 'Jetson · 8 GB'],
-  ['Costo del paquete', money(1400), money(500)]];
-bud.forEach((r, i) => {
-  const y = 2.6 + i * 0.6, last = i === 2;
-  fila(s, 0.65, y, 12, 0.6, [
-    { t: r[0], w: 4.0, b: true, c: TINTA },
-    { t: r[1], w: 4.0, c: last ? MUT2 : TINTA, b: last },
-    { t: r[2], w: 4.0, c: last ? VERDE : TINTA, b: true }], false);
+titulo(s, 'El cómputo, por etapas — según la inversión de cada una', false, 'Las cámaras no reemplazan al LiDAR: arrancan barato; el LiDAR agrega seguridad, mapeo y robustez');
+const et = [
+  ['Etapa 1 · Odometría + Kalman/ArUco', 'Jetson Orin 8 GB + 2 webcams que ya tengo. La pongo yo. Más difícil (sin la red de seguridad del LiDAR), pero suficiente para localizar y autofinanciada.', CIAN],
+  ['Etapa 2 · LiDAR (tras formalizar)', 'El Unitree L2 que ya definimos. Suma SLAM, mapeo en vivo y detección de obstáculos: robótica más robusta y una capa de seguridad. El L2 no cambia.', VERDE]];
+et.forEach((q, i) => {
+  const x = 0.65 + i * 6.15, y = 2.0;
+  tarjeta(s, x, y, 5.85, 2.5, false);
+  s.addShape(p.ShapeType.rect, { x, y, w: 5.85, h: 0.12, fill: { color: q[2] } });
+  s.addText(q[0], { x: x + 0.35, y: y + 0.32, w: 5.2, h: 0.75, fontSize: 15, bold: true, color: TINTA, fontFace: H, margin: 0 });
+  s.addText(q[1], { x: x + 0.35, y: y + 1.12, w: 5.2, h: 1.25, fontSize: 12, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
 });
-tarjeta(s, 0.65, 4.75, 5.85, 1.1, false);
-stat(s, 1.0, 4.95, 5.0, '− ' + money(900), 'más barato que el plan original', VERDE, false);
-tarjeta(s, 6.8, 4.75, 5.85, 1.1, false);
-stat(s, 7.15, 4.95, 5.0, money(0), 'que gasta Montasa en cómputo', VERDE, false);
-s.addText('El LiDAR no se descarta: entra después de formalizar. Para el primer nivel (odometría + Kalman/ArUco), cámaras + Jetson 8 GB alcanzan — y corren por mi cuenta.',
-  { x: 0.65, y: 6.1, w: 12, h: 0.5, fontSize: 13, bold: true, color: MUT2, fontFace: B, margin: 0 });
-s.addText('Cifras de cotización, por confirmar antes de comprar.',
-  { x: 0.65, y: 6.95, w: 12, h: 0.35, fontSize: 10.5, italic: true, color: MUT2, fontFace: B, margin: 0 });
-s.addNotes('El ahorro es el titular, y el remate es que lo pago yo: cero riesgo de hardware para Montasa. El LiDAR no se descarta, es expansion.');
+tarjeta(s, 0.65, 4.75, 12, 1.0, false, 'F3EEDC');
+s.addText('A decidir: el cómputo del LiDAR — 8 GB vs 16 GB de GPU.', { x: 1.0, y: 4.85, w: 11.3, h: 0.35, fontSize: 13, bold: true, color: TINTA, fontFace: B, margin: 0 });
+s.addText('El L2 no cambia; la pregunta es cuánta GPU para correrlo. (La simulación Isaac Sim es aparte: corre en una PC, no en la Jetson del equipo.)',
+  { x: 1.0, y: 5.2, w: 11.3, h: 0.5, fontSize: 11.5, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
+s.addText('Sin LiDAR es más barato pero se pierde una capa de seguridad y el mapeo. Con LiDAR: más robusto, más seguro — y sigue siendo el plan.',
+  { x: 0.65, y: 6.05, w: 12, h: 0.6, fontSize: 12.5, bold: true, color: MUT2, fontFace: B, margin: 0 });
+s.addNotes('Por etapas, no "camaras reemplazan LiDAR". Etapa 1 autofinanciada 8GB+webcams. Etapa 2 el L2. Pendiente: 8 vs 16 GB para el LiDAR. Isaac Sim es problema de PC, aparte.');
 
-/* ───────── 11 · EL PEDIDO ───────── */
+/* ───────── 17 · EL PEDIDO ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'Lo que necesito de vos', true, 'Nada de esto es un cheque por hardware');
 const ped = [
-  ['1', 'Aprobar reparar el MT 122', 'Que Miguel actualice la lista de repuestos y se ordene. Vuelve a renta y queda de plataforma del proyecto.', VERDE],
-  ['2', 'Que el MT 118 de Agrolibano pase por acá', 'Cuando venga a mantenimiento: probar multipiloto y timón, y empezar a emular el pedal de hombre-muerto.', CIAN],
-  ['3', 'Visto bueno estratégico', 'Que TaTa siga como línea de Montasa. El NRE y el cómputo los pongo yo.', HAZ]];
+  ['1', 'Reparar el MT 122 — o permiso de pruebas', 'Reparar el 122 para tenerlo de plataforma. Si no se puede ya: permiso para pruebas reversibles en equipos de mantenimiento preventivo, solo para la odometría. Nada se corta ni se mueve; van y vuelven igual.', VERDE],
+  ['2', 'Mi propio equipo para la etapa fuerte', 'Pasada la odometría: el 122 para pruebas extensivas de Kalman + ArUco, instalar el cómputo y el LiDAR, diseñar la caja 3D del circuito y formalizar.', CIAN],
+  ['3', 'El Aula — reorganizar estantes', 'Liberar un pasillo de 3 × 6 m reorganizando estantes. No deshace el taller.', HAZ]];
 ped.forEach((q, i) => {
-  const y = 2.0 + i * 1.15;
-  tarjeta(s, 0.65, y, 12, 0.98, true);
-  chip(s, q[0], 1.0, y + 0.28, q[3]);
-  s.addText(q[1], { x: 1.62, y: y + 0.15, w: 4.7, h: 0.55, fontSize: 15, bold: true, color: HUM, fontFace: B, margin: 0, valign: 'middle' });
-  s.addText(q[2], { x: 6.4, y: y + 0.14, w: 6.0, h: 0.72, fontSize: 11, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
+  const y = 1.95 + i * 1.3;
+  tarjeta(s, 0.65, y, 12, 1.15, true);
+  chip(s, q[0], 1.0, y + 0.36, q[3]);
+  s.addText(q[1], { x: 1.62, y: y + 0.16, w: 4.9, h: 0.85, fontSize: 14.5, bold: true, color: HUM, fontFace: B, margin: 0, valign: 'middle' });
+  s.addText(q[2], { x: 6.65, y: y + 0.14, w: 5.75, h: 0.9, fontSize: 10.5, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
 });
-tarjeta(s, 0.65, 5.75, 12, 0.95, true, PANEL);
-s.addText('El software ya está, y el NRE lo pongo yo. Lo único que falta es un equipo que encienda.',
-  { x: 1.05, y: 5.75, w: 11.2, h: 0.95, fontSize: 16, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
-s.addNotes('Cerrar con la frase. Los tres pedidos: uno recupera un activo, otro es logistica de taller, el tercero no cuesta nada. Ninguno es comprar hardware.');
+tarjeta(s, 0.65, 5.9, 12, 0.85, true, PANEL);
+s.addText('El software ya está y el NRE lo pongo yo. Lo que pido es un lugar y un equipo donde probarlo.',
+  { x: 1.05, y: 5.9, w: 11.2, h: 0.85, fontSize: 15.5, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
+s.addNotes('Pedido reestructurado: 122 (o permiso de pruebas reversibles en mantenimiento para odometria), luego equipo propio para la etapa fuerte, y El Aula = reorganizar estantes.');
 
 p.writeFile({ fileName: 'presentaciones/TaTa_Estado_y_Pedido_Omar.pptx' }).then(() => console.log('deck OMAR o3 listo'));
