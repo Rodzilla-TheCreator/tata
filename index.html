@@ -35,6 +35,12 @@ a.card span{font-size:14px;color:var(--mut)}
   color:var(--load);align-self:flex-start;margin-bottom:2px}
 footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
 code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+.hitos{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+a.hito{padding:0;overflow:hidden;gap:0}
+a.hito img{width:100%;height:168px;object-fit:cover;display:block;background:var(--surf2);
+  border-bottom:1px solid var(--line)}
+a.hito .body{padding:13px 16px 16px;display:flex;flex-direction:column;gap:5px}
+a.hito .date{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.12em;color:var(--amber)}
 </style>
 </head>
 <body>
@@ -43,6 +49,63 @@ code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2
     <div class="eyebrow">Montasa &middot; Tecnolog&iacute;a Avanzada de Transporte Aut&oacute;nomo</div>
     <h1>TaTa &middot; visuales</h1>
   </header>
+
+  <section class="grid">
+    <span class="eyebrow">Hitos &middot; del fierro al bus</span>
+    <p>Lo que se fue descubriendo en el equipo, con foto. De septiembre a octubre de 2026.</p>
+
+    <div class="grid hitos">
+      <a class="card hito" href="herramientas/serie/de9_conector.jpg">
+        <img src="herramientas/serie/de9_conector.jpg" alt="Conector DE-9 hembra entre los fusibles del EDR18N2">
+        <div class="body">
+          <span class="date">Sep 2026</span>
+          <h2>El puerto de servicio DB9</h2>
+          <span>Un DE-9 hembra escondido entre los fusibles, por donde el t&eacute;cnico
+          controlaba el equipo. El punto de entrada de toda la investigaci&oacute;n.</span>
+        </div>
+      </a>
+
+      <a class="card hito" href="herramientas/serie/modulo_jungheinrich.jpg">
+        <img src="herramientas/serie/modulo_jungheinrich.jpg" alt="M&oacute;dulo con placa Jungheinrich, F.Nr 51540777">
+        <div class="body">
+          <span class="date">Sep 2026</span>
+          <h2>El equipo es un Jungheinrich</h2>
+          <span>La placa del m&oacute;dulo (<code>F.Nr 51540777</code>) delata el origen: un
+          Jungheinrich con placa de Mitsubishi. Por eso Judit, su herramienta nativa, aplica.</span>
+        </div>
+      </a>
+
+      <a class="card hito" href="herramientas/componentes/placa_datos.jpg">
+        <img src="herramientas/componentes/placa_datos.jpg" alt="Placa de datos: EDR18N2, serie 82824121">
+        <div class="body">
+          <span class="date">Sep 2026</span>
+          <h2>La placa de datos</h2>
+          <span>Modelo <strong>EDR18N2</strong>, serie 82824121. Altura m&aacute;xima de horquilla
+          6858&nbsp;mm y capacidad 1600&nbsp;kg: la ficha dura del equipo objetivo.</span>
+        </div>
+      </a>
+
+      <a class="card hito" href="herramientas/can/tja1050_modulo_nuevo.jpg">
+        <img src="herramientas/can/tja1050_modulo_nuevo.jpg" alt="M&oacute;dulo transceptor CAN TJA1050">
+        <div class="body">
+          <span class="date">Oct 2026</span>
+          <h2>El transceptor CAN que s&iacute; sirvi&oacute;</h2>
+          <span>El m&oacute;dulo TJA1050 nuevo que pas&oacute; <code>prueba_can</code> 20/20. Con &eacute;l
+          pudimos leer el bus del equipo &mdash; el punto de inflexi&oacute;n del proyecto.</span>
+        </div>
+      </a>
+
+      <a class="card hito" href="herramientas/componentes/multipiloto_instalado.jpg">
+        <img src="herramientas/componentes/multipiloto_instalado.jpg" alt="Multipiloto instalado en el EDR18N2">
+        <div class="body">
+          <span class="date">Oct 2026</span>
+          <h2>Multipiloto: marcha comandable</h2>
+          <span>El mando de la marcha. Descifrarlo y emularlo por el bus hizo que el equipo
+          pidiera el pedal de hombre-muerto &mdash; se&ntilde;al de que acept&oacute; la orden como real.</span>
+        </div>
+      </a>
+    </div>
+  </section>
 
   <section class="grid">
     <span class="eyebrow">Clases</span>
