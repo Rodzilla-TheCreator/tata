@@ -14,6 +14,12 @@ pose, la planificación y la simulación se construyen y se validan en **maquin�
 | Archivo | Qué hace |
 |---|---|
 | `detector_aruco.py` | **Detecta ArUco en vivo con una webcam** y mide distancia, corrimiento lateral, yaw y error de reproyección. El par de campo de `analisis/aruco_precision.py` (que da la teoría). Loguea a CSV |
+| `generar_aruco.py` | **Genera las marcas ArUco imprimibles**, en negro, del mismo diccionario que el detector, con **ID conocido** (para mapear cada marca a una ubicación). Round-trip validado: generar → detectar = 8/8 con el ID correcto |
+
+> **Las marcas del RoboMaster S1 NO sirven.** Son marcas de visión **propietarias de DJI**, no
+> ArUco: el detector de OpenCV no las lee. Generá las propias con `generar_aruco.py` e imprimilas
+> en **negro** (el rojo da poco contraste en gris y es frágil con luz mala). Imprimí al 100% y
+> **medí el lado negro con regla** — ese número va en `detector_aruco.py --marca`.
 
 ## El detector, ya
 
