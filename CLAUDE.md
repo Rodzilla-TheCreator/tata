@@ -42,6 +42,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
+| `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). Sigue el EKF odometría+ArUco y el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real** |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
