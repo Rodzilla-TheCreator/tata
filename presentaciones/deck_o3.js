@@ -2,7 +2,7 @@
 // Deck de seguimiento: lo logrado, el cambio de plan (mecanico -> EDR), los hitos
 // con detalle de agosto (investigacion+simulacion) y septiembre (el muro del DB9,
 // con diagrama de pines), el 1-oct como punto de inflexion, el bloqueo (piezas
-// quitadas), el camino que sigue, El Aula, computo por etapas, y el pedido.
+// quitadas), el camino que sigue, El Aula, y el pedido. Sin computo ni LiDAR.
 // Reusa el lenguaje visual de deck_o2.js. Genera TaTa_Estado_y_Pedido_Omar.pptx
 const pptx = require('pptxgenjs');
 const p = new pptx();
@@ -77,7 +77,7 @@ s.addText('Tecnología Avanzada de Transporte Autónomo · un proyecto de Montas
 s.addText('Dónde estamos, y lo que\nnecesito para seguir', { x: 0.9, y: 2.6, w: 9.5, h: 1.5,
   fontSize: 32, bold: true, color: HUM, fontFace: H, lineSpacing: 40, margin: 0 });
 const port = [['Teleop', '2/3', 'validado en banco', VERDE],
-              ['Cómputo + NRE', 'lo pongo yo', 'es mi proyecto', HAZ],
+              ['El NRE', 'lo pongo yo', 'es mi proyecto', HAZ],
               ['A Montasa', 'un equipo', 'reparar el MT 122', CIAN]];
 port.forEach((q, i) => {
   const x = 0.9 + i * 3.9;
@@ -96,7 +96,7 @@ titulo(s, 'En una página', false, 'Si sólo lees un slide, que sea este');
 const rex = [
   ['Lo logrado', 'Leí la computadora del montacargas y logré comandar la marcha y la dirección. Probado en banco. Es 2/3 del teleop, y el cambio de plan al EDR nos puso on-track.', VERDE],
   ['El freno', 'Estoy parado: no hay un equipo funcional dedicado. Le quitaron, para otros equipos, la dirección, la hidráulica del pantógrafo, la cámara y el sensor del pedal — justo lo que necesito para probar.', ROJO],
-  ['Lo que pido', 'Reparar el MT 122 (o, si no, permiso de pruebas reversibles en mantenimiento para la etapa de odometría), y reorganizar estantes para El Aula. El NRE y el cómputo los pongo yo.', HAZ]];
+  ['Lo que pido', 'Reparar el MT 122 (o, si no, permiso de pruebas reversibles en mantenimiento para la etapa de odometría), y reorganizar estantes para El Aula. El NRE lo pongo yo, y el desarrollo corre en una máquina que ya tengo.', HAZ]];
 rex.forEach((r, i) => {
   const y = 1.95 + i * 1.62;
   tarjeta(s, 0.65, y, 12, 1.42, false);
@@ -171,7 +171,7 @@ titulo(s, 'Agosto — lo que no se ve: investigación y simulación', false, 'Me
 const ago = [
   ['Medición de campo', 'Se corrigió la geometría real del equipo y se confirmó, con el planificador Hybrid A*, que el giro cargado entra en el pasillo de 3.00 m.'],
   ['Simuladores', 'Visor del sector A con máquina de estados y consola de flota, simulación de la secuencia completa, y arreglos de la simulación física (Isaac Sim).'],
-  ['Análisis de localización', 'Cómo se ubica el equipo: cámaras + ArUco + odometría. Se estudió también dónde el LiDAR degenera y dónde no.'],
+  ['Análisis de localización', 'Cómo se ubica el equipo: cámaras + ArUco + odometría — el canal de localización que seguimos hoy, y los límites de cada sensor.'],
   ['La decisión del EDR', 'Se descarta el Baoli (no cabe, es hidráulico) y se elige el EDR: cabe y es eléctrico. El acierto que ordenó todo lo demás.']];
 ago.forEach((q, i) => {
   const x = 0.65 + (i % 2) * 6.15, y = 2.0 + Math.floor(i / 2) * 2.2;
@@ -303,11 +303,10 @@ s.addNotes('El gasto no se lo cargas al proyecto, se lo cargas a recuperar un ac
 
 /* ───────── 13 · EL CAMINO QUE SIGUE ───────── */
 s = p.addSlide(); fondo(s, true);
-titulo(s, 'El camino que sigue', true, 'El siguiente paso es odometría + Kalman con ArUco. El LiDAR sigue en el plan, después de formalizar');
+titulo(s, 'El camino que sigue', true, 'Odometría + Kalman con ArUco, corriendo en una PC que ya tengo. Solo cámaras, sin comprar nada');
 const cam = [
   ['1', 'Odometría', 'El equipo ya reporta velocidad de tracción y ángulo de dirección en su bus. Integrando ambos se estima el desplazamiento: la base de la posición, sin sensores nuevos.', CIAN],
-  ['2', 'Fusión Kalman + ArUco', 'Un filtro de Kalman fusiona esa odometría con la pose de los ArUco en los racks: la odometría da continuidad, el ArUco corrige la deriva y fija la posición absoluta. Siguiente paso, solo cámaras.', HAZ],
-  ['3', 'LiDAR / SLAM', 'Mapeo en vivo del pasillo y detección de obstáculos. Suma robustez y una capa de seguridad. Sigue en el plan; entra después de formalizar, no se descarta.', VERDE]];
+  ['2', 'Fusión Kalman + ArUco', 'Un filtro de Kalman fusiona esa odometría con la pose de los ArUco en los racks: la odometría da continuidad, el ArUco corrige la deriva y fija la posición absoluta. Corre en una PC que ya tengo.', HAZ]];
 cam.forEach((q, i) => {
   const y = 2.0 + i * 1.5;
   tarjeta(s, 0.65, y, 12, 1.3, true);
@@ -315,7 +314,7 @@ cam.forEach((q, i) => {
   s.addText(q[1], { x: 1.65, y: y + 0.28, w: 3.3, h: 0.5, fontSize: 16, bold: true, color: HUM, fontFace: H, margin: 0 });
   s.addText(q[2], { x: 5.0, y: y + 0.16, w: 7.4, h: 1.05, fontSize: 11.5, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
 });
-s.addNotes('Reescrito sin "cuanto me movi". Mismo largo, mas tecnico. El LiDAR sigue en el plan, despues de formalizar.');
+s.addNotes('Odometria + Kalman/ArUco, solo camaras, corriendo en maquinon (PC que ya tengo). Sin computo que comprar, sin LiDAR en esta etapa.');
 
 /* ───────── 14 · EL AULA ───────── */
 s = p.addSlide(); fondo(s, false);
@@ -342,7 +341,7 @@ tarjeta(s, 0.65, 2.0, 5.95, 3.7, true);
 s.addShape(p.ShapeType.rect, { x: 0.65, y: 2.0, w: 5.95, h: 0.12, fill: { color: HAZ } });
 s.addText('Lo pongo yo', { x: 1.0, y: 2.3, w: 5.3, h: 0.5, fontSize: 19, bold: true, color: HAZ, fontFace: H, margin: 0 });
 [['NRE / ingeniería', 'Todo lo comprado en C&D: transceptores, el emulador, el ESP32, componentes.'],
- ['El cómputo (la Jetson)', 'También es parte del NRE. Lo cubro yo.'],
+ ['El cerebro de desarrollo', 'Corre en maquinón, una PC que ya tengo. $0 de cómputo para el proyecto.'],
  ['Por qué', 'Es mi idea, mi proyecto, mi sueño. El riesgo de la apuesta es mío.']].forEach((q, i) => {
   const y = 2.95 + i * 0.9;
   s.addText(q[0], { x: 1.0, y, w: 5.3, h: 0.35, fontSize: 13.5, bold: true, color: HUM, fontFace: B, margin: 0 });
@@ -360,35 +359,14 @@ s.addText('Lo pone Montasa', { x: 7.2, y: 2.3, w: 5.1, h: 0.5, fontSize: 19, bol
 tarjeta(s, 0.65, 6.0, 12, 0.85, true, PANEL);
 s.addText('No le pido a Montasa que financie mi sueño. Le pido que recupere una máquina suya — y yo pongo todo lo demás.',
   { x: 1.05, y: 6.0, w: 11.2, h: 0.85, fontSize: 14, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
-s.addNotes('Desarma el riesgo para Omar: no se le pide comprar hardware. El NRE y el computo los pone maje.');
+s.addNotes('Desarma el riesgo para Omar: no se le pide comprar hardware. El NRE lo pone maje y el desarrollo corre en una PC que ya tiene.');
 
-/* ───────── 16 · CÓMPUTO POR ETAPAS ───────── */
-s = p.addSlide(); fondo(s, false);
-titulo(s, 'El cómputo, por etapas — según la inversión de cada una', false, 'Las cámaras no reemplazan al LiDAR: arrancan barato; el LiDAR agrega seguridad, mapeo y robustez');
-const et = [
-  ['Etapa 1 · Odometría + Kalman/ArUco', 'Jetson Orin 8 GB + 2 webcams que ya tengo. La pongo yo. Más difícil (sin la red de seguridad del LiDAR), pero suficiente para localizar y autofinanciada.', CIAN],
-  ['Etapa 2 · LiDAR (tras formalizar)', 'El Unitree L2 que ya definimos. Suma SLAM, mapeo en vivo y detección de obstáculos: robótica más robusta y una capa de seguridad. El L2 no cambia.', VERDE]];
-et.forEach((q, i) => {
-  const x = 0.65 + i * 6.15, y = 2.0;
-  tarjeta(s, x, y, 5.85, 2.5, false);
-  s.addShape(p.ShapeType.rect, { x, y, w: 5.85, h: 0.12, fill: { color: q[2] } });
-  s.addText(q[0], { x: x + 0.35, y: y + 0.32, w: 5.2, h: 0.75, fontSize: 15, bold: true, color: TINTA, fontFace: H, margin: 0 });
-  s.addText(q[1], { x: x + 0.35, y: y + 1.12, w: 5.2, h: 1.25, fontSize: 12, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
-});
-tarjeta(s, 0.65, 4.75, 12, 1.0, false, 'F3EEDC');
-s.addText('A decidir: el cómputo del LiDAR — 8 GB vs 16 GB de GPU.', { x: 1.0, y: 4.85, w: 11.3, h: 0.35, fontSize: 13, bold: true, color: TINTA, fontFace: B, margin: 0 });
-s.addText('El L2 no cambia; la pregunta es cuánta GPU para correrlo. (La simulación Isaac Sim es aparte: corre en una PC, no en la Jetson del equipo.)',
-  { x: 1.0, y: 5.2, w: 11.3, h: 0.5, fontSize: 11.5, color: MUT2, fontFace: B, margin: 0, valign: 'top' });
-s.addText('Sin LiDAR es más barato pero se pierde una capa de seguridad y el mapeo. Con LiDAR: más robusto, más seguro — y sigue siendo el plan.',
-  { x: 0.65, y: 6.05, w: 12, h: 0.6, fontSize: 12.5, bold: true, color: MUT2, fontFace: B, margin: 0 });
-s.addNotes('Por etapas, no "camaras reemplazan LiDAR". Etapa 1 autofinanciada 8GB+webcams. Etapa 2 el L2. Pendiente: 8 vs 16 GB para el LiDAR. Isaac Sim es problema de PC, aparte.');
-
-/* ───────── 17 · EL PEDIDO ───────── */
+/* ───────── 16 · EL PEDIDO ───────── */
 s = p.addSlide(); fondo(s, true);
 titulo(s, 'Lo que necesito de vos', true, 'Nada de esto es un cheque por hardware');
 const ped = [
   ['1', 'Reparar el MT 122 — o permiso de pruebas', 'Reparar el 122 para tenerlo de plataforma. Si no se puede ya: permiso para pruebas reversibles en equipos de mantenimiento preventivo, solo para la odometría. Nada se corta ni se mueve; van y vuelven igual.', VERDE],
-  ['2', 'Mi propio equipo para la etapa fuerte', 'Pasada la odometría: el 122 para pruebas extensivas de Kalman + ArUco, instalar el cómputo y el LiDAR, diseñar la caja 3D del circuito y formalizar.', CIAN],
+  ['2', 'Mi propio equipo para la etapa fuerte', 'Pasada la odometría: el 122 para pruebas extensivas de Kalman + ArUco, diseñar la caja 3D del circuito y formalizar los circuitos.', CIAN],
   ['3', 'El Aula — reorganizar estantes', 'Liberar un pasillo de 3 × 6 m reorganizando estantes. No deshace el taller.', HAZ]];
 ped.forEach((q, i) => {
   const y = 1.95 + i * 1.3;
