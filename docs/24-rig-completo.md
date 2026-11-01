@@ -66,6 +66,47 @@ batería**. Si están unidos, basta una tierra; si no (lo esperado), va el trans
 
 ---
 
+## Aislar el DB9 — el camino discreto (opción 3)
+
+Esquemático: [`herramientas/can/armado_aislado.svg`](../herramientas/can/armado_aislado.svg).
+Aísla el **lado CAN** (digital, fácil), no el timón (analógico, difícil). El ESP se queda con
+**GND = amarillo**; el lado del bus flota al **negativo de batería**. Tres piezas:
+
+1. **Aislador digital de 2 canales** (1 forward + 1 reverse) — cruza TXD y RXD la barrera.
+2. **Transceptor CAN** en el lado del bus — el TJA1050 que ya tenés.
+3. **DC-DC aislado 5 V→5 V** — alimenta el lado del bus flotante. **Es lo que de verdad separa
+   las tierras:** sin él, alimentar el TJA con el 5 V del ESP vuelve a unirlas.
+
+### Cableado (pines)
+
+| Señal | De | A |
+|---|---|---|
+| TXD | ESP GPIO22 → aislador `VIA` (3) | `VOA` (6) → TJA `TXD` (1) |
+| RXD | TJA `RXD` (4) → aislador `VIB` (7) | `VOB` (4) → ESP GPIO21 |
+| +5 V lado ESP | power bank → aislador `VDD1` (1) | y → DC-DC `Vin+` |
+| GND = amarillo | ESP GND → aislador `GND1` (2) | y → DC-DC `Vin−` |
+| +5 V aislado | DC-DC `Vout+` → aislador `VDD2` (8) | y → TJA `VCC` (3) |
+| GND_bus | DC-DC `Vout−` → aislador `GND2` (5) | y → TJA `GND` (2), TJA `S` (8), y **negativo de batería** |
+| CAN | TJA `CANH` (7) → DB9 **pin 8** | TJA `CANL` (6) → DB9 **pin 3** |
+
+Decoupling: 0.1 µF en cada par VCC/GND (VDD1, VDD2, TJA); en el DC-DC, ~1–2.2 µF a la entrada y
+10 µF + 0.1 µF a la salida. **No agregar 120 Ω** (el equipo ya tiene un terminador).
+
+### Qué buscar en C&D
+
+| Qué | Buscar | Alternativa |
+|---|---|---|
+| Aislador digital 2 canales | **`ADuM1201`** (o `ADUM1201ARZ`) | `ISO7721` · o "aislador digital 2 canales" (1 fwd + 1 rev) |
+| DC-DC aislado 5V→5V 1W | **`B0505S`** (o `B0505S-1WR2`) | `IB0505S` · `A0505S` · "convertidor DC-DC aislado 5V 1W" |
+| Transceptor CAN | ya tengo **TJA1050** | `SN65HVD230` (3.3 V → usar DC-DC `B0503S`) · `MCP2551` |
+| Capacitores | 0.1 µF cerámico (×5), 10 µF (×2), 2.2 µF (×1) | — |
+
+> **Atajo si no querés armar el discreto:** un **módulo CAN aislado** ya hecho — buscar
+> **`CTM1051`** / `CTM8251` / "módulo CAN aislado" — trae transceptor + aislador + DC-DC aislado
+> en un solo SIP. Es el ADM3053/opción 3 enlatado.
+
+---
+
 ## Reversibilidad — nada irreversible
 
 Todo **enchufable**, no se corta ni se empalma (regla dura en equipo de cliente, `docs/23`):
