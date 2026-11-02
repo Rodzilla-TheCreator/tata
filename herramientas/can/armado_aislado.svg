@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 660" font-family="Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 700" font-family="Helvetica,Arial,sans-serif">
   <style>
     .box{fill:#f6f8fa;stroke:#333;stroke-width:1.6}
     .chip{fill:#eef3fb;stroke:#2a4b7c;stroke-width:1.6}
@@ -24,7 +24,7 @@
   <!-- barrera -->
   <line x1="505" y1="80" x2="505" y2="610" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="7 6"/>
   <text x="512" y="98" class="xs" fill="#c0392b" font-weight="bold">AISLAMIENTO GALVÁNICO</text>
-  <text x="300" y="98" class="xs" text-anchor="middle" fill="#666">lado ESP · tierra = amarillo</text>
+  <text x="400" y="140" class="xs" text-anchor="middle" fill="#666">lado ESP · tierra = amarillo</text>
   <text x="760" y="98" class="xs" text-anchor="middle" fill="#666">lado bus · tierra = negativo de batería</text>
 
   <!-- ESP32 -->
@@ -96,11 +96,15 @@
   <path d="M413,360 L340,360 L340,287 L215,287" class="rx"/>
   <text x="300" y="353" class="xs" fill="#13a05a">RXD</text>
 
-  <!-- ===== poder lado ESP (rojo) ===== -->
+  <!-- ===== poder lado ESP ===== -->
+  <!-- 5V del power bank: al ESP y al Vin+ del DC-DC. NO al VDD1 -->
   <path d="M120,450 L120,160 L160,160" class="v5a"/>
-  <path d="M160,160 L300,160 L300,218 L413,218" class="v5a"/>
-  <path d="M300,160 L300,520 L400,520" class="v5a"/>
-  <text x="305" y="152" class="xs" fill="#d81e2c">+5V (ESP y Vin+)</text>
+  <path d="M195,520 L400,520" class="v5a"/>
+  <text x="230" y="512" class="xs" fill="#d81e2c">+5V → Vin+</text>
+  <!-- 3V3 del ESP: al VDD1 (corregido 02-nov: antes iba a 5V) -->
+  <text x="209" y="170" class="pin" text-anchor="end" fill="#7b3fb0">3V3</text>
+  <path d="M215,166 L270,166 L270,218 L413,218" stroke="#7b3fb0" stroke-width="2.2" fill="none"/>
+  <text x="276" y="160" class="xs" fill="#7b3fb0" font-weight="bold">+3V3 del ESP → VDD1</text>
   <!-- GND amarillo (negro) -->
   <path d="M120,530 L120,600 L360,600 L360,248 L413,248" class="gnda"/>
   <path d="M360,600 L400,600 L400,548" class="gnda"/>
@@ -128,7 +132,10 @@
   <text x="56" y="100" class="xs"><tspan font-weight="bold">Regla de oro:</tspan> el aislador (ADuM) separa las SEÑALES; el B0505S separa</text>
   <text x="56" y="116" class="xs">la ALIMENTACIÓN. Sin el B0505S, alimentar el TJA con el 5V del ESP vuelve a unir las tierras.</text>
 
+
   <!-- leyenda -->
   <rect x="45" y="628" width="1005" height="26" fill="#f1f3f5" stroke="#ccc"/>
-  <text x="56" y="645" class="xs"><tspan fill="#d81e2c" font-weight="bold">rojo</tspan> +5V ESP · <tspan fill="#111" font-weight="bold">negro</tspan> GND amarillo · <tspan fill="#e8820c" font-weight="bold">naranja</tspan> +5V aislado · <tspan fill="#7a7a7a" font-weight="bold">gris</tspan> GND_bus (neg. batería) · <tspan fill="#1763d6" font-weight="bold">azul</tspan> TXD · <tspan fill="#13a05a" font-weight="bold">verde</tspan> RXD · CANH→8, CANL→3 · NO agregar 120Ω (el equipo ya tiene uno)</text>
+  <text x="56" y="645" class="xs"><tspan fill="#d81e2c" font-weight="bold">rojo</tspan> +5V power bank · <tspan fill="#7b3fb0" font-weight="bold">morado</tspan> +3V3 ESP · <tspan fill="#111" font-weight="bold">negro</tspan> GND amarillo · <tspan fill="#e8820c" font-weight="bold">naranja</tspan> +5V aislado · <tspan fill="#7a7a7a" font-weight="bold">gris</tspan> GND_bus (neg. batería) · <tspan fill="#1763d6" font-weight="bold">azul</tspan> TXD · <tspan fill="#13a05a" font-weight="bold">verde</tspan> RXD · CANH→8, CANL→3 · NO agregar 120Ω (el equipo ya tiene uno)</text>
+  <rect x="45" y="662" width="1005" height="28" fill="#f3ecfa" stroke="#7b3fb0"/>
+  <text x="56" y="680" class="xs" fill="#7b3fb0"><tspan font-weight="bold">VDD1 = 3.3 V del ESP, no 5 V</tspan> (corregido 02-nov): el ESP32 NO tolera 5 V en GPIO21. El ADuM traduce 3.3 ↔ 5 V solo, así que el divisor 1k/2k del armado viejo ya no va.</text>
 </svg>

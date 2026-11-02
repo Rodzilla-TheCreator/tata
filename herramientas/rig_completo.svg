@@ -28,7 +28,9 @@
   <line x1="260" y1="344" x2="320" y2="344" class="net"/>
   <text x="252" y="458" class="pin" text-anchor="end">GPIO25/26  DAC</text>
   <line x1="260" y1="462" x2="320" y2="462" class="net"/>
-  <text x="252" y="576" class="pin" text-anchor="end">GPIO27  latido/WD</text>
+  <text x="252" y="566" class="pin" text-anchor="end">GPIO27  relé</text>
+  <text x="252" y="592" class="pin" text-anchor="end">GPIO32  rearme</text>
+  <text x="252" y="380" class="pin" text-anchor="end" fill="#7b3fb0">3V3 → VDD1</text>
   <line x1="260" y1="580" x2="320" y2="580" class="net"/>
   <line x1="157" y1="645" x2="157" y2="690" class="gnda"/>
   <text x="118" y="706" class="xs">GND = amarillo</text>
@@ -63,27 +65,32 @@
 
   <!-- ===== 3 · WATCHDOG ===== -->
   <rect x="320" y="528" width="330" height="105" rx="6" class="wd"/>
-  <text x="485" y="554" class="sm" text-anchor="middle" font-weight="bold">3 · Watchdog + relé</text>
-  <text x="485" y="574" class="xs" text-anchor="middle">GPIO → transistor → relé en serie con el hombre-presente</text>
-  <text x="485" y="590" class="xs" text-anchor="middle">mientras llega latido, el relé queda cerrado</text>
-  <text x="485" y="618" class="xs" text-anchor="middle" fill="#b23b4a">200 ms sin latido → corta → cae el freno de resorte</text>
+  <text x="485" y="552" class="sm" text-anchor="middle" font-weight="bold">3 · Watchdog = el pie (relé DPDT)</text>
+  <text x="485" y="571" class="xs" text-anchor="middle">GPIO27 → 2N2222 → bobina DPDT · paro de hongo en serie</text>
+  <text x="485" y="587" class="xs" text-anchor="middle">el relé reemplaza los DOS contactos del pedal (NC y NA) — docs/20</text>
+  <text x="485" y="604" class="xs" text-anchor="middle">rearme manual: botón en GPIO32 · LED de estado</text>
+  <text x="485" y="622" class="xs" text-anchor="middle" fill="#b23b4a">200 ms sin latido → suelta → «pedal suelto» → frena</text>
   <line x1="650" y1="580" x2="720" y2="580" class="net"/>
-  <!-- hombre-presente -->
+  <!-- pedal -->
   <rect x="720" y="533" width="135" height="95" rx="6" class="tgt"/>
-  <text x="787" y="565" class="tb" text-anchor="middle">Hombre-presente</text>
-  <text x="787" y="590" class="xs" text-anchor="middle">cortarlo = freno</text>
+  <text x="787" y="560" class="tb" text-anchor="middle">Pedal</text>
+  <text x="787" y="578" class="tb" text-anchor="middle">hombre muerto</text>
+  <text x="787" y="598" class="xs" text-anchor="middle">NC + NA · arnés en Y</text>
+  <text x="787" y="613" class="xs" text-anchor="middle">selector manual/teleop</text>
 
   <!-- detalle del relé (inset) -->
   <rect x="890" y="430" width="265" height="200" rx="6" fill="#fff" stroke="#b23b4a" stroke-width="1.2"/>
-  <text x="902" y="452" class="sm" font-weight="bold" fill="#b23b4a">Detalle del relé (watchdog)</text>
-  <text x="902" y="476" class="xs">GPIO27 ──[R 1k]──▶ base 2N2222</text>
-  <text x="902" y="494" class="xs">(o MOSFET lógico)</text>
-  <text x="902" y="516" class="xs">colector ──▶ bobina del relé</text>
-  <text x="902" y="534" class="xs">diodo volante (1N4148) sobre la bobina</text>
-  <text x="902" y="556" class="xs">bobina a +5 V (o +11 V con relé de 12 V)</text>
-  <text x="902" y="580" class="xs" font-weight="bold">contacto NA en serie con el hombre-presente</text>
-  <text x="902" y="600" class="xs" fill="#b23b4a">a prueba de fallas:</text>
-  <text x="902" y="616" class="xs" fill="#b23b4a">sin corriente = abierto = freno</text>
+  <text x="902" y="450" class="sm" font-weight="bold" fill="#b23b4a">Detalle del pie (watchdog)</text>
+  <text x="902" y="469" class="xs">GPIO27 ─[1k]─▶ base 2N2222, emisor a GND</text>
+  <text x="902" y="484" class="xs">+5V ─ PARO hongo (NC) ─ bobina ─ colector</text>
+  <text x="902" y="499" class="xs">1N4148 en antiparalelo con la bobina</text>
+  <text x="902" y="519" class="xs" font-weight="bold">polo 1: COM–NC ↔ línea NC del pedal</text>
+  <text x="902" y="534" class="xs" font-weight="bold">polo 2: COM–NA ↔ línea NA del pedal</text>
+  <text x="902" y="552" class="xs">sin bobina: NC cerrado · NA abierto = suelto</text>
+  <text x="902" y="567" class="xs">con bobina: NC abierto · NA cerrado = pisado</text>
+  <text x="902" y="587" class="xs">GPIO32 ─ botón rearme ─ GND (pull-up int.)</text>
+  <text x="902" y="606" class="xs" fill="#b23b4a">a prueba de fallas: ESP muerto, paro o</text>
+  <text x="902" y="620" class="xs" fill="#b23b4a">sin latido = bobina sin corriente = suelto</text>
 
   <!-- ===== ALIMENTACION ===== -->
   <rect x="890" y="250" width="265" height="165" rx="4" fill="#f1f3f5" stroke="#bbb"/>
@@ -91,7 +98,7 @@
   <text x="902" y="294" class="xs"><tspan fill="#d81e2c" font-weight="bold">ESP:</tspan> power bank USB 5 V (flota)</text>
   <text x="902" y="314" class="xs"><tspan fill="#e8820c" font-weight="bold">LM358:</tspan> +11 V del blanco (libre al quitar el sensor)</text>
   <text x="902" y="334" class="xs"><tspan font-weight="bold">Lado bus CAN:</tspan> 5 V aislado del B0505S</text>
-  <text x="902" y="354" class="xs"><tspan font-weight="bold">Relé:</tspan> bobina +5 V (o +11 V con relé de 12 V)</text>
+  <text x="902" y="354" class="xs"><tspan font-weight="bold">Relé:</tspan> bobina +5 V del power bank, vía el paro</text>
   <text x="902" y="376" class="xs" fill="#555">Nada de la batería (~40 V) directo a un pin.</text>
   <text x="902" y="398" class="xs" font-weight="bold" fill="#333">1ª prueba: paro en mano, equipo en gato,</text>
   <text x="902" y="412" class="xs" font-weight="bold" fill="#333">hombre-muerto sin puentear hasta mover.</text>

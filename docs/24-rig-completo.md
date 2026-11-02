@@ -65,10 +65,82 @@ micro** (regla dura, `docs/10`), nunca en Linux, que no garantiza tiempo; y el t
 necesitando el ESP. El USB-CAN queda como instrumento de **banco/diagnóstico** en superspeed
 (leer y loguear el bus con `python-can`), no como el rig de operación.
 
-**El watchdog** (nuevo en el rig): GPIO → transistor → relé **en serie con el hombre-presente**.
-Mientras llega el latido del software, el relé queda cerrado; si pasan 200 ms sin latido, corta y
-cae el freno de resorte. **A prueba de fallas** (sin corriente = abierto = freno). Rearme manual.
-Es **supervisión de disponibilidad**, no la capa de seguridad certificada (`docs/10`).
+**El watchdog** (nuevo en el rig): GPIO → transistor → **relé DPDT que hace de pie** sobre los
+dos contactos del pedal (NC y NA, `docs/20` §1). Mientras llega el latido, el relé «pisa»; si
+pasan 200 ms sin latido, suelta, el equipo ve «pedal suelto» y frena. **A prueba de fallas**
+(sin corriente = suelto). Rearme manual. Es **supervisión de disponibilidad**, no la capa de
+seguridad certificada (`docs/10`). Pin por pin, en la sección de abajo.
+
+---
+
+## El circuito del ESP, pin por pin (02-nov-2026)
+
+### Corregido al cerrar el circuito
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| `armado_aislado.svg`: `VDD1` del ADuM1201 a **+5 V** | **`VDD1` a 3.3 V del ESP** | con `VDD1` a 5 V, `VOB` saca 5 V directo a GPIO21 y **el ESP32 no tolera 5 V**. El ADuM corre cada lado a su propio voltaje (2.7–5.5 V), así que traduce 3.3 ↔ 5 sin más piezas: **el divisor 1k/2k del armado viejo sobra** |
+| `rig_completo.svg`: relé con **contacto NA en serie** con el hombre-presente | **relé DPDT que reemplaza los dos contactos** (NC y NA) del pedal | `docs/20` §1: el pedal es un interruptor doble NC+NA, y `0/0` o `1/1` por más de 2000 ms da el evento **`1.06`, que solo se borra reiniciando**. Un NA en serie deja el NC del pedal real cerrado = «suelto» siempre. Ya estaba escrito; el esquema del rig lo ignoró |
+
+### Mapa de pines del ESP32
+
+| GPIO | Va a | Nota |
+|---|---|---|
+| **22** | ADuM1201 `VIA` (3) → TJA `TXD` | TWAI TX |
+| **21** | ADuM1201 `VOB` (4) ← TJA `RXD` | TWAI RX, **3.3 V** gracias a `VDD1` = 3.3 V |
+| **25** | LM358 `IN1+` (3) → verde | DAC 1 |
+| **26** | LM358 `IN2+` (5) → café | DAC 2 |
+| **27** | 1 kΩ → base del 2N2222 | relé del pie. No es pin de arranque: **queda en bajo al bootear** → relé suelto |
+| **32** | botón de rearme a GND | pull-up interno. Pulsado = rearmar |
+| **2** | LED de la placa | estado: fijo = pisando · parpadeo = disparado, esperando rearme |
+| **3V3** | ADuM `VDD1` (1) | unos mA |
+| **5V/VIN** | power bank | también alimenta `Vin+` del B0505S y la bobina del relé |
+| **GND** | **amarillo** | la única tierra del lado ESP |
+
+Libres para después: 33, 34–39 (solo entrada; el sensor de altura de El Aula), 18/19/23 (I²C o
+SPI si entra el MCP4728). **No usar** 0, 12, 15 (arranque) ni 6–11 (flash).
+
+### El pie (watchdog) — circuito
+
+```
++5V ── PARO de hongo (NC) ──┬── bobina del relé DPDT ──┐
+                            └──── 1N4148 (cátodo a +) ─┘
+                                                       │
+GPIO27 ──[1 kΩ]── base 2N2222 · colector ──────────────┘ · emisor ── GND (amarillo)
+
+polo 1:  COM1 ── NC1   ↔ en lugar de la línea NC del pedal
+polo 2:  COM2 ── NA1   ↔ en lugar de la línea NA del pedal
+
+sin bobina:  NC cerrado · NA abierto   = «pedal suelto»   (ESP muerto, paro, sin latido, booteando)
+con bobina:  NC abierto · NA cerrado   = «pedal pisado»
+```
+
+- **El paro de hongo corta la bobina, no la señal.** Es un camino de hardware que no depende del
+  ESP: apretado, el relé cae aunque el firmware esté colgado con el GPIO en alto.
+- Un DPDT mueve los dos polos juntos: la transición `NC→NA` dura milisegundos, lejos de los
+  2000 ms del `1.06`.
+- **Rearme manual en el firmware:** al dispararse, el relé queda suelto aunque vuelva el latido,
+  hasta que alguien aprieta GPIO32 **y** hay latido fresco. Nunca se re-pisa solo.
+- El relé va en el **arnés en Y con selector manual/teleop** (`docs/21` §3.4): en manual, el pedal
+  real pasa directo y el equipo queda de fábrica. No se corta nada.
+
+### Lo que falta medir para cerrar el relé — 5 min en el equipo
+
+| Qué | Por qué |
+|---|---|
+| **Voltaje entre los contactos del pedal**, llave ON, pedal suelto y pisado | define el voltaje nominal de los contactos. Si conmuta los ~40 V de batería, el relé tiene que aguantar **≥ 60 V DC**; si es una entrada lógica del controlador, cualquier relé de señal sirve |
+| **Corriente** por el contacto (amperímetro en serie, o V/R) | casi seguro mA (entrada de controlador), pero se mide |
+| Par NC y par NA con el óhmetro, batería fuera | `docs/21` §3.2: ya estaba en la lista |
+
+Hasta medirlo, el relé que se compra es un **DPDT de bobina 5 V con contactos de señal** (tipo
+HK19F-DC5V, G2RL-2-5V o similar) **y se confirma el voltaje de contacto antes de enchufarlo**.
+
+### Detalle a saber del timón
+
+Al **resetear** el ESP, los DAC caen a 0 V → la salida queda en ≈ `o` (0.13 V), **fuera del
+círculo** → node 4 lo lee como falla y deshabilita la dirección. Es seguro (no gira), pero **la
+falla del nodo 4 no se borra todavía** (`docs/23`). En banco no importa; en el equipo, no
+resetear el ESP con el emulador conectado.
 
 **El MCP2515 no entra:** es un controlador CAN por SPI (el ESP32 ya trae el suyo, el TWAI) y
 **no es aislado**. Tampoco el TJA1050/MCP2551 pelados. La única vía aislada es el camino discreto
@@ -88,7 +160,10 @@ de abajo, o el módulo CTM1051 enlatado.
 | B | LM358 (DIP) | a **+11 V** del blanco; no rail-to-rail |
 | B | 2×10k, 2×5.1k, 2×100 Ω, 2× zener 5.1 V | ganancia + clamp (`emulador_timon/LEEME.md`) |
 | B | Power bank USB 5 V | flota |
-| Integrado | ADM3053 / CA-IS3050G | **transceptor CAN aislado** (etapa 2) |
+| Integrado | ADuM1201 + B0505S (o CTM1051) | **CAN aislado** discreto, con el TJA1050 que ya hay |
+| Pie | relé **DPDT** bobina 5 V, 2N2222, 1 kΩ, 1N4148 | voltaje de contacto **se confirma midiendo** el pedal |
+| Pie | paro de hongo NC, botón NA (rearme) | el paro corta la bobina |
+| Pie | par de conectores del pedal + selector manual/teleop | arnés en Y, nada cortado (`docs/21` §3.3–3.4) |
 
 ---
 
