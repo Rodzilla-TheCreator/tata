@@ -243,6 +243,11 @@ para el TWAI que ya está validado. El TJA1050 queda para escuchar y para el ban
 | **Waveshare 2-CH CAN HAT aislado** | aislado de verdad, DC-DC integrado, **jumper de 120 Ω**, jumper 3.3/5 V, borneras, probablemente en Amazon Prime | es para Raspberry Pi y usa **MCP2515 por SPI**: hay que reescribir el firmware del TWAI (validado 20/20 y en el equipo el 22-oct) a SPI | **respaldo**, solo si fallan las dos |
 | Camino discreto (ADuM1201 + B0505S + TJA1050) | — | hay que armarlo | **solo si no llega nada** (piezas en C&D: 6N137 ubicado) |
 
+> **Decidido 02-nov (maje): `TD301DCANH3` por LCSC, ×3, envío exprés a Wellington.**
+> Descartados por precio: la placa `EVAL-ADM3053EBZ` de Mouser (~$100, hace lo mismo que el
+> módulo de ~$4) y el `PCAN-USB` aislado (~$300; queda para capturar el bus completo cuando haya
+> un equipo que se mueva). Mouser no tiene el `TD301`. En Wellington no hay tienda de componentes.
+
 **La terminación.** Nada de lo de arriba se elige por traer 120 Ω: hoy el bus mide **120 Ω** y el
 manual pide **60** (falta un terminador, `CLAUDE.md` 03-oct). Con un 120 nuestro quedaría en 60.
 **No se decide por la ficha: se mide.** Llave OFF, rig conectado, óhmetro CANH↔CANL:
