@@ -53,10 +53,10 @@ a{color:var(--amber)}
   <h1>Clases</h1>
 </header>
 
-<p>Cinco clases en secuencia. Cada una profundiza en un &aacute;rea y produce algo que el proyecto
-necesita. No son ejercicios de juguete: las 1, 2 y 4 son sobre c&oacute;digo que ya corre en este
-repositorio, y la 3 es el n&uacute;cleo de localizaci&oacute;n, construido y validado en sint&eacute;tico
-el 2-nov &mdash; contado por lo que fall&oacute; en el camino.</p>
+<p>Seis clases en secuencia. Cada una profundiza en un &aacute;rea y produce algo que el proyecto
+necesita. No son ejercicios de juguete: las 1, 2 y 5 son sobre c&oacute;digo que ya corre en este
+repositorio, y la 3 y la 4 son el n&uacute;cleo del software &mdash; localizaci&oacute;n y coordinaci&oacute;n,
+construidos y validados el 2-nov &mdash; contados por lo que fall&oacute; en el camino.</p>
 
 <div class="box">
   <h2>Por qué la odometría va primero</h2>
@@ -115,16 +115,26 @@ el 2-nov &mdash; contado por lo que fall&oacute; en el camino.</p>
     sobreconfiado es peor que uno impreciso &mdash; y los errores sistem&aacute;ticos no son ruido.</p>
   </a>
 
+  <a class="card" href="fsm.html">
+    <span class="tag">Lista &middot; interactiva</span>
+    <div class="head"><span class="n">04</span><h2>FSM de coordinaci&oacute;n &mdash; dos equipos, un trasbordo</h2></div>
+    <p>La otra mitad del software (<code>percepcion/fsm_estados.py</code>): estados de espera de verdad,
+    reserva sin deadlock y deshacer en orden ante un paro con el pant&oacute;grafo afuera. Provoc&aacute;s la
+    carrera, el deadlock de <code>gen_fsm.py:40</code> y el paro con tus manos.</p>
+    <p style="margin-top:6px"><b style="color:var(--amber)">La lecci&oacute;n:</b> para romper un deadlock
+    se mata una de las cuatro condiciones &mdash; y una prueba que no puede fallar esconde bugs.</p>
+  </a>
+
   <div class="card off">
     <span class="tag no">Sin construir</span>
-    <div class="head"><span class="n">04</span><h2>Hybrid A*</h2></div>
+    <div class="head"><span class="n">05</span><h2>Hybrid A*</h2></div>
     <p>Por qu&eacute; se discretiza (x, y, θ), qu&eacute; son las primitivas, y si la
     heur&iacute;stica de <code>planificador_giro.py</code> es admisible o no.</p>
   </div>
 
   <div class="card off">
     <span class="tag no">Sin construir</span>
-    <div class="head"><span class="n">05</span><h2>Cerrar el lazo</h2></div>
+    <div class="head"><span class="n">06</span><h2>Cerrar el lazo</h2></div>
     <p>Planificar, seguir y localizar, todo junto en Gazebo.</p>
   </div>
 
