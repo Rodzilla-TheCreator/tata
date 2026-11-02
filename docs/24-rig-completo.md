@@ -245,6 +245,22 @@ para el TWAI que ya está validado. El TJA1050 queda para escuchar y para el ban
 | **Waveshare 2-CH CAN HAT aislado** | aislado de verdad, DC-DC integrado, **jumper de 120 Ω**, jumper 3.3/5 V, borneras, probablemente en Amazon Prime | es para Raspberry Pi y usa **MCP2515 por SPI**: hay que reescribir el firmware del TWAI (validado 20/20 y en el equipo el 22-oct) a SPI | **respaldo**, solo si fallan las dos |
 | Camino discreto (ADuM1201 + B0505S + TJA1050) | — | hay que armarlo | **solo si no llega nada** (piezas en C&D: 6N137 ubicado) |
 
+> **COMPRADO 02-nov (Amazon, a Wellington, llega sáb 7-nov; viaja a Honduras el 11):**
+>
+> | Qué | Cant. | Precio | Para qué |
+> |---|---|---|---|
+> | HiLetgo ADuM1201 (módulo CJMCU) | 2 | $8.49 | aislador del camino armado |
+> | Bridgold B0505S-1WR3 (K-CUT) | 2 | $7.99 | DC-DC aislado del camino armado |
+> | DSD TECH SH-C30G (CANable 1.0 Pro aislado) | 1 | $19.99 | USB-CAN aislado para la laptop (capturar el bus sin perder tramas). Respaldo del rig: el truco del STM32 en reset y el ESP a TX/RX del transceptor |
+>
+> **El rig va por el camino armado:** ADuM1201 + B0505S + el TJA1050 que ya hay, cableado según
+> `armado_aislado.svg` (canales corregidos el 02-nov). **El `TD301DCANH3` NO se compró:** el envío
+> de LCSC a tiempo costaba $40 por un módulo de $8. Lo de abajo queda como el camino que se evaluó.
+>
+> Al llegar: salida del B0505S **4.75–5.25 V** con el TJA de carga (no es regulado; el ADuM
+> aguanta 5.5); óhmetro GND1↔GND2 **abierto**; `prueba_can.ino` con su control; en el equipo,
+> CANH↔CANL ≈ 60 Ω.
+
 > **Decidido 02-nov (maje): `TD301DCANH3` por LCSC, ×3, envío exprés a Wellington.**
 > Descartados por precio: la placa `EVAL-ADM3053EBZ` de Mouser (~$100, hace lo mismo que el
 > módulo de ~$4) y el `PCAN-USB` aislado (~$300; queda para capturar el bus completo cuando haya
