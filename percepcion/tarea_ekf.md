@@ -69,3 +69,8 @@ Imprimí los tres resultados (ArUco on / off / con oclusión) y dejá la figura.
 - No es capturar odometría real del bus (eso necesita un equipo que se mueva — después).
 - No es el LiDAR/SLAM (fuera de alcance por ahora).
 - No es Isaac Sim (ese es el lazo cerrado más rico, paso posterior en maquinón).
+
+
+---
+
+**HECHO 02-nov-2026 en la i3.** Pasa los tres criterios en 31/31 semillas, con control. Resultado y lo que cambió respecto del encargo (el estado lleva sesgos; la colocación de marcas no es ruido blanco): `percepcion/LEEME.md`, sección «EKF odometría + ArUco».

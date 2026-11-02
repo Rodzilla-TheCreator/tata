@@ -49,3 +49,35 @@ python percepcion/detector_aruco.py --calib calib.npz --log corrida.csv
 
 El montacargas vuelve a hacer falta al final: para **capturar la odometría real** del bus y para
 las pruebas de movimiento. No para construir nada de lo de arriba.
+
+
+## EKF odometría + ArUco — hecho y validado en sintético (02-nov-2026, en la i3)
+
+`odometria.py` · `ekf.py` · `sim_sintetico.py` · figura `ekf_sintetico.png`. Solo numpy +
+matplotlib, portable. Encargo original: `tarea_ekf.md`.
+
+```
+py percepcion/sim_sintetico.py      # ~15 s en la i3; termina con RESULTADO: PASA / FALLA
+```
+
+| Corrida | Resultado (semilla 0) | 30 semillas más |
+|---|---|---|
+| A · ArUco encendido | lateral RMS **0.63 cm**, máx 1.54 cm (requisito ±4.5) · rumbo RMS 0.20° | 30/30 |
+| B · solo odometría (**control**) | 18 cm al tercio → **77 cm** al final; deriva visible | 30/30 |
+| C · oclusión de 5 s | 0 marcas aceptadas · σ lateral 0.49 → 2.36 cm · error dentro de 3σ · se reengancha (0.69 cm) | 30/30 |
+
+**Control del control:** el mismo test con la estimación de sesgos apagada (la v1) da A 0/31 y
+C 0/31. El test detecta el bug que tuvo.
+
+**Lo que se aprendió armándolo (decía / es / qué lo tumbó):**
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| estado `[x, y, θ]` (el encargo) | **`[x, y, θ, b, s]`**: sesgo de dirección y escala de velocidad. La pose de afuera sigue siendo `[x, y, θ]` | un sesgo de dirección deriva el rumbo **linealmente**; ruido aleatorio crece como √t. Tras 5 s de oclusión la v1 decía σθ 0.23° con 1.75° reales, rechazaba toda marca y **no se reenganchaba nunca** (183 rechazos). Con b y s estimados: +0.50° estimado vs +0.50° real |
+| error de colocación de la marca = ruido de medición | es el **mismo en cada vista**: `ColocacionMarcas` le baja el peso a cada vista repetida | sumado como ruido blanco, 20 vistas de una marca mal puesta contaban como 20 marcas: 5.6σ de error en la oclusión; con colocación perfecta, 0.55σ |
+| control de oclusión: «error > máximo de la corrida A» | cero marcas + σ que crece + error dentro de 3σ + reenganche | con el sesgo estimado el filtro bueno deriva 1–3 cm en 5 s; el máximo de A cae en el giro. El criterio viejo medía otra cosa |
+
+**Supuestos marcados en `sim_sintetico.py`** (no son de campo): sesgos de odometría, montaje y
+alcance de las cámaras, una marca por bahía, colocación σ 1 cm. **Pendiente para datos reales:**
+verificar los signos de `lateral` y `yaw` de `pose_desde_marca` contra `detector_aruco.py` con una
+marca real, y capturar odometría del bus con el equipo andando (nodo 8 velocidad, nodo 4 ángulo).
