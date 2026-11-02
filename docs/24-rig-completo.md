@@ -247,6 +247,17 @@ para el TWAI que ya está validado. El TJA1050 queda para escuchar y para el ban
 > Descartados por precio: la placa `EVAL-ADM3053EBZ` de Mouser (~$100, hace lo mismo que el
 > módulo de ~$4) y el `PCAN-USB` aislado (~$300; queda para capturar el bus completo cuando haya
 > un equipo que se mueva). Mouser no tiene el `TD301`. En Wellington no hay tienda de componentes.
+>
+> **Lo demás del mismo pedido a LCSC** (el envío exprés ya está pagado):
+>
+> | Prioridad | Qué | Cant. | Por qué |
+> |---|---|---|---|
+> | **sí** | **PhotoMOS 1 Form A + 1 Form B, DIP8** (Panasonic serie GU; candidatos `AQW610`/`AQW614`, confirmar 1a1b en la hoja de datos) | 3 | **el pie que sirve sin importar cómo salga el pedal.** Sin corriente: A abierto, B cerrado = «suelto» (a prueba de fallas por física). Sin bobina, sin rebote; el GPIO27 enciende los dos LED con una resistencia, sin transistor. Sirve si el pedal es contacto seco y casi siempre si es salida de transistor. El paro de hongo va en serie con los LED |
+> | recomendado | **`URB4805YMD-6WR3`** (Mornsun): DC-DC **aislado** 18–75 V → 5 V 1.2 A | 2 | para alimentar el rig de la batería (39–48 V) y **jubilar el power bank**. Aislado: el ESP sigue con GND = amarillo. Con fusible a la entrada. No se consigue en C&D |
+> | opcional | **`MCP6002-I/P`** (o `MCP602`), op-amp rail-to-rail DIP8 | 4 | el timón a 5 V sin el tap de +11 V del blanco ni el zener (`emulador_timon/LEEME.md`). El LM358 ya está validado; esto es mejora, no bloqueo |
+>
+> **No se pide todavía:** conectores del pedal y del timón (no se conoce el modelo hasta el martes),
+> relés mecánicos (C&D), `MCP4728` (en LCSC es chip suelto para soldar).
 
 **La terminación.** Nada de lo de arriba se elige por traer 120 Ω: hoy el bus mide **120 Ω** y el
 manual pide **60** (falta un terminador, `CLAUDE.md` 03-oct). Con un 120 nuestro quedaría en 60.
