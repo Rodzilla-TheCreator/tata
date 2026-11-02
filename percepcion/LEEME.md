@@ -87,3 +87,37 @@ error lateral máximo da mediana 1.9 cm, p90 4.6 cm, máximo 7.0 cm, y **pasa lo
 semillas** (dentro de su 3σ: el filtro lo sabe). Con estos supuestos de odometría, **5 m sin marcas
 es demasiado** para la bahía. Es la respuesta parcial a la clase 2 (separación máxima entre ArUcos);
 el número firme sale con odometría real del bus. La clase interactiva: `clases/ekf.html`.
+
+
+## FSM de coordinación A/B — reserva, deadlock y falla (02-nov-2026, en la i3)
+
+`fsm_estados.py` · `reserva.py` · `fsm_falla.py` · `sim_coordinacion.py`. Python puro, sin
+dependencias. Encargo: `tarea_fsm.md`. No toca `sim-web/` (integrar es después).
+
+```
+py percepcion/sim_coordinacion.py     # ~2 s; termina con RESULTADO: PASA / FALLA
+```
+
+| Prueba | Con lo bueno | Control |
+|---|---|---|
+| 1 · carrera por la última posición de trasbordo, mismo tick | gana uno solo (A); B queda en `ESPERA_TRASBORDO`; 0 choques | `GestorTonto`: los dos la creen suya; sin cámara, **1 cubo chocado** |
+| 2 · deadlock de `sec/gen_fsm.py:40` (un trasbordo, dos PASE cruzados) | progresa: 4 tareas, todo en casa | reserva tardía: **deadlock en el tick 128** — B con el cubo de A en las uñas frente a un trasbordo lleno con **su propio** cubo |
+| 3 · PARO con el pantógrafo afuera en altura | `FALLA` congelada → rearme → `DESHACE_TOMA → RETRAE → RETROCEDE → TRANSITO → PARADA`, todo en 0, nunca baja con el pantógrafo afuera; en TOMA el cubo no se suelta a ciegas | falla ingenua: cede el control con **0.41 m afuera a 2.76 m**, y al rearmar retoma EXTIENDE desde la mitad |
+| 4 · operación al azar, 20 semillas × 3000 ticks | 0 deadlocks, 0 choques, 62 tareas/corrida (y 0/200 en 4 configuraciones más) | tardía: deadlock 20/20 · tonto: choques 19/20 |
+
+**La regla anti-deadlock:** reservar destino + origen **todo o nada, antes de tocar el cubo**,
+en orden total (huecos antes que trasbordo). Mata retener-y-esperar (nunca se espera con algo en
+las uñas) y la espera circular. Las uñas son un recurso más: el deadlock real de la línea 40 es
+ese. Por qué no timeout: quitarle la reserva a quien ya tiene el cubo lo deja sin dónde soltarlo.
+
+**Lo que se aprendió (decía / es / qué lo tumbó):**
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| el selector toma la primera tarea por prioridad | toma la primera que **se puede hacer** (destino libre); si ninguna, espera la de más prioridad | con el rack lleno, A esperaba para siempre un hueco para su TRASBORDO teniendo 2 PEDIDOS que lo habrían liberado: inanición por prioridad (1–3 de 20 corridas «bloqueadas» con la política buena) |
+| «de una espera solo se sale con el recurso reservado» (encargo) | con las uñas vacías la espera vuelve a correr el selector; con el cubo en las uñas, al pie de la letra | sin eso, A espera trasbordo para un PASE y lo que lo llena es un cubo SUYO que solo él puede sacar |
+| prueba 4 con racks vacíos | inventario inicial revuelto (el día uno) | con racks vacíos B nunca tiene un cubo ajeno: no hay PASE cruzado y **los dos controles pasaban** — la prueba no discriminaba |
+| (reporte) | el estado del perdedor se lee en el tick de la carrera; el deshacer se registra al empezar cada paso | el primer reporte decía `ESPERA_PEDIDO` (lo leía 400 ticks después) y escondía `DESHACE_TOMA` (dura un tick) |
+
+**Supuestos:** ticks ≈ DUR del simulador / 0.5 s; mundo chico (1–2 trasbordos, 6 huecos por
+sector, niveles a 1.38 m); la cámara verifica el hueco antes de extender (`verificar_hueco`).

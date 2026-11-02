@@ -44,7 +44,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
-| `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control):** `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real** |
+| `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control)**, y la **FSM de coordinación A/B** (reserva, deadlock, falla; `sim_coordinacion.py`): `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real** |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
@@ -679,11 +679,15 @@ de falla** — sin eso el equipo queda bloqueado y se acaba el día.
 
 ### 3 · Estados de bloqueo y deadlock en la FSM
 
+> **Hecho en modelo de referencia (02-nov-2026, `percepcion/fsm_estados.py`, `reserva.py`, `sim_coordinacion.py`):** estados de espera de verdad, reserva todo-o-nada antes de tocar el cubo, y la prueba que intenta romperla (carrera, deadlock de la línea 40, operación al azar) con sus controles. Falta integrarlo a `sim-web/` y al fierro. Lo de abajo queda como el planteo original.
+
 Hoy `LIBRE` hace de comodín. Faltan `ESPERA_TRASBORDO`, `ESPERA_HUECO`, `ESPERA_PEDIDO` como
 estados de verdad, y un **protocolo de reserva** con una prueba que intente romperlo: si A y
 B reservan la última posición de trasbordo a la vez, hoy nada lo impide.
 
 ### 4 · Estados de falla y reanudación
+
+> **Hecho en modelo de referencia (02-nov-2026, `percepcion/fsm_falla.py`):** EXTIENDE/TOMA/RETRAE no reanudables; el deshacer va en orden (deshace la micro-toma, retrae, retrocede, baja) y la FSM no cede el control antes. PARO, ARUCO_PERDIDO y HUECO_OCUPADO probados. Falta integrarlo.
 
 Qué pasa si el ArUco no se ve, si el hueco estaba ocupado, si entra un paro a mitad de una
 extensión. Hay pasos que **no se pueden reanudar a la mitad** — pantógrafo extendido en

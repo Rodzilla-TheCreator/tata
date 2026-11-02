@@ -108,3 +108,8 @@ Cada prueba tiene que **poder fallar**. Imprimí el resultado de las tres:
 - No es tocar el simulador web ni el fierro (integración = después).
 - No es la planificación de trayectoria (ya está en `analisis/planificador_giro.py`).
 - No es el EKF (ese es `percepcion/tarea_ekf.md`). Esta FSM **consume** la pose, no la calcula.
+
+
+---
+
+**HECHO 02-nov-2026 en la i3.** Las tres pruebas y sus controles pasan, más una cuarta de operación al azar que discrimina (tardía: deadlock 20/20; tonto: choques 19/20; buena: 0/0). Resultados y lo que cambió respecto del encargo (selector «primera que se puede», espera con uñas vacías re-evalúa): `percepcion/LEEME.md`, sección «FSM de coordinación A/B».
