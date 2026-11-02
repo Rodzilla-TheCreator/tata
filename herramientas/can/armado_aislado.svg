@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 700" font-family="Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 710" font-family="Helvetica,Arial,sans-serif">
   <style>
     .box{fill:#f6f8fa;stroke:#333;stroke-width:1.6}
     .chip{fill:#eef3fb;stroke:#2a4b7c;stroke-width:1.6}
@@ -42,14 +42,14 @@
   <text x="505" y="193" class="xs" text-anchor="middle">(o ISO7721)</text>
   <!-- left pins -->
   <text x="423" y="222" class="pin">1 VDD1</text>
-  <text x="423" y="250" class="pin">2 GND1</text>
-  <text x="423" y="300" class="pin">3 VIA</text>
-  <text x="423" y="360" class="pin">4 VOB</text>
+  <text x="423" y="250" class="pin">4 GND1</text>
+  <text x="423" y="300" class="pin">3 VIB</text>
+  <text x="423" y="360" class="pin">2 VOA</text>
   <!-- right pins -->
   <text x="587" y="222" class="pin" text-anchor="end">VDD2 8</text>
   <text x="587" y="250" class="pin" text-anchor="end">GND2 5</text>
-  <text x="587" y="300" class="pin" text-anchor="end">VOA 6</text>
-  <text x="587" y="360" class="pin" text-anchor="end">VIB 7</text>
+  <text x="587" y="300" class="pin" text-anchor="end">VOB 6</text>
+  <text x="587" y="360" class="pin" text-anchor="end">VIA 7</text>
 
   <!-- TJA1050 -->
   <rect x="690" y="150" width="175" height="250" rx="5" class="box"/>
@@ -136,6 +136,7 @@
   <!-- leyenda -->
   <rect x="45" y="628" width="1005" height="26" fill="#f1f3f5" stroke="#ccc"/>
   <text x="56" y="645" class="xs"><tspan fill="#d81e2c" font-weight="bold">rojo</tspan> +5V power bank · <tspan fill="#7b3fb0" font-weight="bold">morado</tspan> +3V3 ESP · <tspan fill="#111" font-weight="bold">negro</tspan> GND amarillo · <tspan fill="#e8820c" font-weight="bold">naranja</tspan> +5V aislado · <tspan fill="#7a7a7a" font-weight="bold">gris</tspan> GND_bus (neg. batería) · <tspan fill="#1763d6" font-weight="bold">azul</tspan> TXD · <tspan fill="#13a05a" font-weight="bold">verde</tspan> RXD · CANH→8, CANL→3 · NO agregar 120Ω (el equipo ya tiene uno)</text>
-  <rect x="45" y="662" width="1005" height="28" fill="#f3ecfa" stroke="#7b3fb0"/>
+  <rect x="45" y="662" width="1005" height="42" fill="#f3ecfa" stroke="#7b3fb0"/>
   <text x="56" y="680" class="xs" fill="#7b3fb0"><tspan font-weight="bold">VDD1 = 3.3 V del ESP, no 5 V</tspan> (corregido 02-nov): el ESP32 NO tolera 5 V en GPIO21. El ADuM traduce 3.3 ↔ 5 V solo, así que el divisor 1k/2k del armado viejo ya no va.</text>
+  <text x="56" y="696" class="xs" fill="#b23b4a"><tspan font-weight="bold">Pines del ADuM1201 corregidos (02-nov):</tspan> TX va por el canal B (VIB 3 → VOB 6) y RX por el canal A (VIA 7 → VOA 2). La versión anterior tenía los canales al revés.</text>
 </svg>

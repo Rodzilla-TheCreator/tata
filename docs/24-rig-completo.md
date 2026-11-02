@@ -86,8 +86,8 @@ seguridad certificada (`docs/10`). Pin por pin, en la sección de abajo.
 
 | GPIO | Va a | Nota |
 |---|---|---|
-| **22** | ADuM1201 `VIA` (3) → TJA `TXD` | TWAI TX |
-| **21** | ADuM1201 `VOB` (4) ← TJA `RXD` | TWAI RX, **3.3 V** gracias a `VDD1` = 3.3 V |
+| **22** | ADuM1201 `VIB` (3) → `VOB` (6) → TJA `TXD` | TWAI TX |
+| **21** | ADuM1201 `VOA` (2) ← `VIA` (7) ← TJA `RXD` | TWAI RX, **3.3 V** gracias a `VDD1` = 3.3 V |
 | **25** | LM358 `IN1+` (3) → verde | DAC 1 |
 | **26** | LM358 `IN2+` (5) → café | DAC 2 |
 | **27** | 1 kΩ → base del 2N2222 | relé del pie. No es pin de arranque: **queda en bajo al bootear** → relé suelto |
@@ -215,10 +215,12 @@ Aísla el **lado CAN** (digital, fácil), no el timón (analógico, difícil). E
 
 | Señal | De | A |
 |---|---|---|
-| TXD | ESP GPIO22 → aislador `VIA` (3) | `VOA` (6) → TJA `TXD` (1) |
-| RXD | TJA `RXD` (4) → aislador `VIB` (7) | `VOB` (4) → ESP GPIO21 |
+| TXD | ESP GPIO22 → aislador `VIB` (3) | `VOB` (6) → TJA `TXD` (1) |
+| RXD | TJA `RXD` (4) → aislador `VIA` (7) | `VOA` (2) → ESP GPIO21 |
+
+> **Corregido 02-nov:** la tabla tenía los canales del ADuM1201 al revés (TX por `VIA→VOA`). En el ADuM1201 el canal **B** va del lado 1 al 2 y el **A** del 2 al 1 (pines 2 `VOA`, 3 `VIB`, 6 `VOB`, 7 `VIA`). Cableado así, dos salidas quedaban enfrentadas.
 | +5 V lado ESP | power bank → aislador `VDD1` (1) | y → DC-DC `Vin+` |
-| GND = amarillo | ESP GND → aislador `GND1` (2) | y → DC-DC `Vin−` |
+| GND = amarillo | ESP GND → aislador `GND1` (4) | y → DC-DC `Vin−` |
 | +5 V aislado | DC-DC `Vout+` → aislador `VDD2` (8) | y → TJA `VCC` (3) |
 | GND_bus | DC-DC `Vout−` → aislador `GND2` (5) | y → TJA `GND` (2), TJA `S` (8), y **negativo de batería** |
 | CAN | TJA `CANH` (7) → DB9 **pin 8** | TJA `CANL` (6) → DB9 **pin 3** |
