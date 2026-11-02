@@ -11,6 +11,7 @@ Uso:
     python generar_aruco.py --ids 0-7 --lado-cm 15
     python generar_aruco.py --diccionario 5x5_100 --ids 0,1,2,10 --lado-cm 20
     python generar_aruco.py --ids 0-5 --hoja              # además una hoja de contacto
+    python generar_aruco.py --ids 0-3 --carta             # un PDF tamaño carta por marca
 
 Cada marca sale como PNG con zona blanca alrededor (imprescindible) y un rótulo
 con ID, diccionario y tamaño. Imprimí "a tamaño real" (100 %, sin ajustar a página).
@@ -71,6 +72,40 @@ def hacer_marca(adict, mid, lado_px, dict_name, lado_cm):
     return canvas
 
 
+def pdf_carta(path, adict, mid, dict_name, lado_cm, dpi=300):
+    """Una marca por hoja CARTA (8.5 x 11 in), PDF a tamaño real, con regla de 10 cm para
+    comprobar la escala de impresión. Requiere Pillow."""
+    from PIL import Image, ImageDraw, ImageFont
+    W, H = int(8.5 * dpi), int(11 * dpi)
+    lado_px = int(round(lado_cm / 2.54 * dpi))
+    if lado_px > W - 2 * int(0.5 * dpi):
+        sys.exit(f"{lado_cm} cm no cabe en carta con margen")
+    pag = Image.new("L", (W, H), 255)
+    marca = Image.fromarray(cv2.aruco.generateImageMarker(adict, mid, lado_px))
+    x0, y0 = (W - lado_px) // 2, int(1.3 * dpi)
+    pag.paste(marca, (x0, y0))
+    d = ImageDraw.Draw(pag)
+    try:
+        f1 = ImageFont.truetype("DejaVuSans-Bold.ttf", int(0.32 * dpi))
+        f2 = ImageFont.truetype("DejaVuSans.ttf", int(0.13 * dpi))
+    except OSError:
+        f1 = f2 = ImageFont.load_default()
+    d.text((W // 2, int(0.6 * dpi)), f"ArUco ID {mid}", fill=0, font=f1, anchor="mm")
+    y = y0 + lado_px + int(0.45 * dpi)
+    d.text((W // 2, y), f"{dict_name}  ·  lado negro {lado_cm:g} cm  ·  TaTa", fill=0, font=f2, anchor="mm")
+    # regla de 10 cm: si no mide 10.0 cm impresa, la escala está mal
+    reg = int(round(10 / 2.54 * dpi)); ry = y + int(0.55 * dpi); rx = (W - reg) // 2
+    d.line([(rx, ry), (rx + reg, ry)], fill=0, width=6)
+    for k in range(11):
+        xx = rx + round(k * reg / 10); hh = int(0.12 * dpi) if k % 5 == 0 else int(0.06 * dpi)
+        d.line([(xx, ry - hh), (xx, ry)], fill=0, width=4)
+    d.text((W // 2, ry + int(0.3 * dpi)),
+           "regla de 10 cm: imprimir al 100 %, sin ajustar a página. Medir el cuadro negro.",
+           fill=0, font=f2, anchor="mm")
+    pag.save(path, "PDF", resolution=dpi)
+    return pag
+
+
 def main():
     ap = argparse.ArgumentParser(description="Genera marcas ArUco imprimibles (TaTa)")
     ap.add_argument("--diccionario", default="4x4_50", choices=list(DICCIONARIOS))
@@ -79,6 +114,7 @@ def main():
     ap.add_argument("--dpi", type=int, default=300)
     ap.add_argument("--out", default="marcas", help="carpeta de salida")
     ap.add_argument("--hoja", action="store_true", help="además una hoja de contacto con todas")
+    ap.add_argument("--carta", action="store_true", help="en vez de PNG: un PDF carta por marca, a tamaño real")
     a = ap.parse_args()
 
     if not hasattr(cv2.aruco, "generateImageMarker"):
@@ -94,6 +130,12 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     lado_px = int(round(a.lado_cm / 2.54 * a.dpi))
     hechas = []
+    if a.carta:
+        for mid in ids:
+            path = os.path.join(a.out, f"aruco_{a.diccionario}_id{mid}_{a.lado_cm:g}cm_carta.pdf")
+            pdf_carta(path, adict, mid, a.diccionario, a.lado_cm, a.dpi)
+            print("escrita:", path)
+        return
     for mid in ids:
         img = hacer_marca(adict, mid, lado_px, a.diccionario, a.lado_cm)
         path = os.path.join(a.out, f"marca_{a.diccionario}_{mid:02d}.png")
