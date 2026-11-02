@@ -50,6 +50,32 @@ batería**. Si están unidos, basta una tierra; si no (lo esperado), va el trans
 
 ---
 
+## El rig integrado — un solo ESP (decidido 02-nov-2026)
+
+Esquema del sistema: [`herramientas/rig_completo.svg`](../herramientas/rig_completo.svg).
+
+**Decisión:** un **solo ESP32** es el cerebro del rig, con **GND = amarillo**, haciendo las tres
+cosas — **CAN** (por el transceptor **aislado**), **timón** (DAC → LM358) y **watchdog**
+(GPIO → relé). El aislamiento del CAN es lo que habilita esa única tierra: el lado del bus flota
+al negativo de batería y nunca toca el amarillo.
+
+**Por qué NO un USB-CAN a la laptop.** Se consideró reemplazar el ESP por un adaptador USB-CAN
+aislado enchufado a la laptop. **Se descartó:** el **watchdog de 200 ms tiene que vivir en un
+micro** (regla dura, `docs/10`), nunca en Linux, que no garantiza tiempo; y el timón sigue
+necesitando el ESP. El USB-CAN queda como instrumento de **banco/diagnóstico** en superspeed
+(leer y loguear el bus con `python-can`), no como el rig de operación.
+
+**El watchdog** (nuevo en el rig): GPIO → transistor → relé **en serie con el hombre-presente**.
+Mientras llega el latido del software, el relé queda cerrado; si pasan 200 ms sin latido, corta y
+cae el freno de resorte. **A prueba de fallas** (sin corriente = abierto = freno). Rearme manual.
+Es **supervisión de disponibilidad**, no la capa de seguridad certificada (`docs/10`).
+
+**El MCP2515 no entra:** es un controlador CAN por SPI (el ESP32 ya trae el suyo, el TWAI) y
+**no es aislado**. Tampoco el TJA1050/MCP2551 pelados. La única vía aislada es el camino discreto
+de abajo, o el módulo CTM1051 enlatado.
+
+---
+
 ## BOM del rig
 
 | Mitad | Pieza | Nota |

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 790" font-family="Helvetica,Arial,sans-serif">
+  <style>
+    .box{fill:#f6f8fa;stroke:#333;stroke-width:1.6}
+    .esp{fill:#eef3fb;stroke:#2a4b7c;stroke-width:1.8}
+    .can{fill:#eef7ee;stroke:#2f7d32;stroke-width:1.6}
+    .tim{fill:#f6efe7;stroke:#8a5a2b;stroke-width:1.6}
+    .wd{fill:#fdeef0;stroke:#b23b4a;stroke-width:1.6}
+    .tgt{fill:#eef1f4;stroke:#555;stroke-width:1.4}
+    .tb{font-size:15px;font-weight:bold;fill:#111}
+    .sm{font-size:12px;fill:#222}
+    .xs{font-size:10.5px;fill:#555}
+    .pin{font-size:10px;fill:#1763d6;font-weight:bold}
+    .net{stroke:#1763d6;stroke-width:2;fill:none}
+    .gnda{stroke:#111;stroke-width:2;fill:none}
+    .dot{fill:#222}
+  </style>
+
+  <text x="24" y="28" class="tb" font-size="19">El rig completo — un ESP32, GND = amarillo:  CAN aislado + timón + watchdog</text>
+  <text x="24" y="48" class="sm">El aislamiento del CAN deja que un solo ESP (tierra = amarillo del timón) hable el bus SIN unir las dos tierras. El watchdog vive en el ESP, nunca en la laptop.</text>
+
+  <!-- ESP32 -->
+  <rect x="55" y="250" width="205" height="395" rx="6" class="esp"/>
+  <text x="157" y="284" class="tb" text-anchor="middle" fill="#2a4b7c">ESP32</text>
+  <text x="157" y="304" class="xs" text-anchor="middle">GND = amarillo</text>
+  <text x="157" y="320" class="xs" text-anchor="middle">cuenta el watchdog (200 ms)</text>
+  <text x="63" y="268" class="xs" fill="#d81e2c">5V ← power bank</text>
+  <text x="252" y="340" class="pin" text-anchor="end">GPIO22/21  TWAI</text>
+  <line x1="260" y1="344" x2="320" y2="344" class="net"/>
+  <text x="252" y="458" class="pin" text-anchor="end">GPIO25/26  DAC</text>
+  <line x1="260" y1="462" x2="320" y2="462" class="net"/>
+  <text x="252" y="576" class="pin" text-anchor="end">GPIO27  latido/WD</text>
+  <line x1="260" y1="580" x2="320" y2="580" class="net"/>
+  <line x1="157" y1="645" x2="157" y2="690" class="gnda"/>
+  <text x="118" y="706" class="xs">GND = amarillo</text>
+
+  <!-- ===== 1 · CAN AISLADO ===== -->
+  <rect x="320" y="292" width="330" height="105" rx="6" class="can"/>
+  <text x="485" y="318" class="sm" text-anchor="middle" font-weight="bold">1 · CAN aislado</text>
+  <text x="485" y="338" class="xs" text-anchor="middle">ADuM1201 + TJA1050 + DC-DC B0505S</text>
+  <text x="485" y="354" class="xs" text-anchor="middle">detalle: herramientas/can/armado_aislado.svg</text>
+  <text x="330" y="386" class="xs">lado ESP (amarillo)</text>
+  <line x1="575" y1="292" x2="575" y2="397" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="581" y="386" class="xs" fill="#c0392b" font-weight="bold">barrera</text>
+  <line x1="650" y1="344" x2="720" y2="344" class="net"/>
+  <!-- DB9 -->
+  <rect x="720" y="297" width="135" height="100" rx="6" class="tgt"/>
+  <text x="787" y="325" class="tb" text-anchor="middle">DB9 → bus</text>
+  <text x="787" y="348" class="xs" text-anchor="middle">CANH → pin 8 · CANL → pin 3</text>
+  <text x="787" y="372" class="xs" text-anchor="middle" fill="#8a5a2b">tierra = negativo de batería</text>
+
+  <!-- ===== 2 · TIMON ===== -->
+  <rect x="320" y="410" width="330" height="105" rx="6" class="tim"/>
+  <text x="485" y="436" class="sm" text-anchor="middle" font-weight="bold">2 · Timón (dirección)</text>
+  <text x="485" y="456" class="xs" text-anchor="middle">LM358 @ +11 V (blanco) · DAC25/26 → verde/café</text>
+  <text x="485" y="472" class="xs" text-anchor="middle">detalle: herramientas/emulador_timon/armado_emulador.svg</text>
+  <text x="485" y="500" class="xs" text-anchor="middle" fill="#e8820c">+11 V del blanco · GND = amarillo</text>
+  <line x1="650" y1="462" x2="720" y2="462" class="net"/>
+  <!-- conector nodo 4 -->
+  <rect x="720" y="415" width="135" height="95" rx="6" class="tgt"/>
+  <text x="787" y="443" class="tb" text-anchor="middle">Sensor nodo 4</text>
+  <text x="787" y="466" class="xs" text-anchor="middle">dirección</text>
+  <text x="787" y="488" class="xs" text-anchor="middle">verde · café · amarillo</text>
+
+  <!-- ===== 3 · WATCHDOG ===== -->
+  <rect x="320" y="528" width="330" height="105" rx="6" class="wd"/>
+  <text x="485" y="554" class="sm" text-anchor="middle" font-weight="bold">3 · Watchdog + relé</text>
+  <text x="485" y="574" class="xs" text-anchor="middle">GPIO → transistor → relé en serie con el hombre-presente</text>
+  <text x="485" y="590" class="xs" text-anchor="middle">mientras llega latido, el relé queda cerrado</text>
+  <text x="485" y="618" class="xs" text-anchor="middle" fill="#b23b4a">200 ms sin latido → corta → cae el freno de resorte</text>
+  <line x1="650" y1="580" x2="720" y2="580" class="net"/>
+  <!-- hombre-presente -->
+  <rect x="720" y="533" width="135" height="95" rx="6" class="tgt"/>
+  <text x="787" y="565" class="tb" text-anchor="middle">Hombre-presente</text>
+  <text x="787" y="590" class="xs" text-anchor="middle">cortarlo = freno</text>
+
+  <!-- detalle del relé (inset) -->
+  <rect x="890" y="430" width="265" height="200" rx="6" fill="#fff" stroke="#b23b4a" stroke-width="1.2"/>
+  <text x="902" y="452" class="sm" font-weight="bold" fill="#b23b4a">Detalle del relé (watchdog)</text>
+  <text x="902" y="476" class="xs">GPIO27 ──[R 1k]──▶ base 2N2222</text>
+  <text x="902" y="494" class="xs">(o MOSFET lógico)</text>
+  <text x="902" y="516" class="xs">colector ──▶ bobina del relé</text>
+  <text x="902" y="534" class="xs">diodo volante (1N4148) sobre la bobina</text>
+  <text x="902" y="556" class="xs">bobina a +5 V (o +11 V con relé de 12 V)</text>
+  <text x="902" y="580" class="xs" font-weight="bold">contacto NA en serie con el hombre-presente</text>
+  <text x="902" y="600" class="xs" fill="#b23b4a">a prueba de fallas:</text>
+  <text x="902" y="616" class="xs" fill="#b23b4a">sin corriente = abierto = freno</text>
+
+  <!-- ===== ALIMENTACION ===== -->
+  <rect x="890" y="250" width="265" height="165" rx="4" fill="#f1f3f5" stroke="#bbb"/>
+  <text x="902" y="272" class="sm" font-weight="bold">Alimentación</text>
+  <text x="902" y="294" class="xs"><tspan fill="#d81e2c" font-weight="bold">ESP:</tspan> power bank USB 5 V (flota)</text>
+  <text x="902" y="314" class="xs"><tspan fill="#e8820c" font-weight="bold">LM358:</tspan> +11 V del blanco (libre al quitar el sensor)</text>
+  <text x="902" y="334" class="xs"><tspan font-weight="bold">Lado bus CAN:</tspan> 5 V aislado del B0505S</text>
+  <text x="902" y="354" class="xs"><tspan font-weight="bold">Relé:</tspan> bobina +5 V (o +11 V con relé de 12 V)</text>
+  <text x="902" y="376" class="xs" fill="#555">Nada de la batería (~40 V) directo a un pin.</text>
+  <text x="902" y="398" class="xs" font-weight="bold" fill="#333">1ª prueba: paro en mano, equipo en gato,</text>
+  <text x="902" y="412" class="xs" font-weight="bold" fill="#333">hombre-muerto sin puentear hasta mover.</text>
+
+  <!-- ===== NOTA DE TIERRAS ===== -->
+  <rect x="55" y="662" width="1100" height="86" rx="4" fill="#fffbe6" stroke="#d9c76a"/>
+  <text x="67" y="684" class="sm" font-weight="bold">Las tierras — la clave del rig:</text>
+  <text x="67" y="704" class="xs">· UNA sola tierra = <tspan font-weight="bold">amarillo</tspan> para TODO: ESP, LM358 (V−), bobina del relé y la referencia del timón.</text>
+  <text x="67" y="721" class="xs">· El ÚNICO punto aislado es el <tspan font-weight="bold">lado del bus CAN</tspan>: flota al negativo de batería gracias al ADuM1201 + B0505S. Por eso un solo ESP con GND=amarillo puede hablar CAN.</text>
+  <text x="67" y="738" class="xs" fill="#8a5a2b">· El MCP2515 no entra: es controlador SPI (el ESP ya trae TWAI) y NO es aislado. Tampoco el TJA1050/MCP2551 pelados.</text>
+
+  <!-- leyenda -->
+  <rect x="55" y="756" width="1100" height="24" fill="#f1f3f5" stroke="#ccc"/>
+  <text x="67" y="772" class="xs"><tspan fill="#d81e2c" font-weight="bold">rojo</tspan> +5V · <tspan fill="#e8820c" font-weight="bold">naranja</tspan> +11V · <tspan fill="#111" font-weight="bold">negro</tspan> GND=amarillo · <tspan fill="#1763d6" font-weight="bold">azul</tspan> señal · barrera = aislamiento galvánico (solo en el CAN) · detalles por bloque en los SVG de can/ y emulador_timon/</text>
+</svg>
