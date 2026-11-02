@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clase 3 · EKF con ArUcos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#E4E9ED;--surf:#F6F8F9;--surf2:#DCE3E8;--ink:#111B23;--mut:#5A6C79;
+  --line:#B9C6CF;--amber:#B4720C;--load:#136F69;--blue:#1F6FEB;--red:#C0392B;--green:#2E7D32}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;--mut:#7D91A2;
+  --line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--blue:#58A6FF;--red:#E5534B;--green:#5CC46A}}
+:root[data-theme="dark"]{--bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;
+  --mut:#7D91A2;--line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--blue:#58A6FF;--red:#E5534B;--green:#5CC46A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 22px 80px;display:flex;flex-direction:column;gap:30px}
+h1{font-weight:900;font-size:clamp(26px,4.4vw,38px);margin:0;letter-spacing:-.02em;line-height:1.06}
+.eyebrow{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut)}
+p{margin:0;max-width:70ch;color:var(--mut)}
+h2{font-weight:700;font-size:17px;margin:0 0 4px;letter-spacing:-.01em;color:var(--ink)}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:16px;
+  display:flex;flex-direction:column;gap:12px;min-width:0}
+canvas{width:100%;height:auto;display:block;background:var(--surf2);border-radius:2px;
+  border:1px solid var(--line)}
+.eq{font:400 12.5px/1.75 "IBM Plex Mono",monospace;background:var(--surf2);
+  border-radius:2px;padding:10px 12px;white-space:pre-wrap;color:var(--ink);
+  border-left:2px solid var(--amber);overflow-x:auto}
+.eq b{color:var(--amber);font-weight:600}
+.tag{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--load)}
+.verdict{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--amber);
+  border-radius:3px;padding:16px 18px;display:flex;flex-direction:column;gap:9px}
+.verdict p{color:var(--ink)}
+button{font:600 12px "IBM Plex Mono",monospace;background:var(--surf2);color:var(--ink);
+  border:1px solid var(--line);border-radius:2px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--amber)}
+button.on{border-color:var(--amber);color:var(--amber)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.sw{display:flex;flex-wrap:wrap;gap:8px 18px;font:600 12px "IBM Plex Mono",monospace;color:var(--ink)}
+.sw label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.sw input{accent-color:var(--amber)}
+.row{display:flex;align-items:center;gap:10px;font:600 12px/1 "IBM Plex Mono",monospace}
+.row input[type=range]{flex:1;accent-color:var(--amber);min-width:0}
+.row output,.row span{color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.st{background:var(--surf2);border-radius:2px;padding:9px 11px}
+.st b{display:block;font:600 18px/1.2 "IBM Plex Mono",monospace;color:var(--ink)}
+.st span{font:600 10px/1.3 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.st.bad b{color:var(--red)} .st.good b{color:var(--green)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+td{color:var(--ink)}
+.scroll{overflow-x:auto}
+code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+a{color:var(--amber)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font:600 11px "IBM Plex Mono",monospace;color:var(--mut)}
+.leg i{display:inline-block;width:14px;height:3px;margin-right:5px;vertical-align:middle}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
+ol{margin:0;padding-left:20px;color:var(--ink);font-size:14.5px} li{margin:5px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">TaTa &middot; Clase 3</div>
+  <h1>EKF con ArUcos &mdash; lo que fall&oacute; y lo que funcion&oacute;</h1>
+</header>
+
+<p>El EKF del proyecto se construy&oacute; el 2-nov-2026 en la i3 (<code>percepcion/ekf.py</code>). Pas&oacute;
+la prueba al cuarto intento. Esta clase reproduce los cuatro intentos en el navegador &mdash; mismo
+modelo, mismos n&uacute;meros &mdash; para que veas fallar cada versi&oacute;n con tus ojos y
+entiendas por qu&eacute; la que qued&oacute; funciona.</p>
+
+<div class="verdict">
+  <h2>La idea en tres l&iacute;neas</h2>
+  <p><b>Predecir</b> con la odometr&iacute;a (velocidad y &aacute;ngulo del bus, el modelo de bicicleta
+  de la clase 1). Es continua pero <b>deriva</b>.</p>
+  <p><b>Corregir</b> con cada ArUco que ven las c&aacute;maras: una marca de posici&oacute;n conocida
+  da la pose absoluta. Es exacta pero <b>intermitente</b>.</p>
+  <p>El Kalman pesa las dos seg&uacute;n <b>cu&aacute;nto cree saber</b> (la covarianza P). Toda esta
+  clase es sobre una sola cosa: <b>qu&eacute; pasa cuando el filtro se cree m&aacute;s preciso de lo que
+  es</b>.</p>
+</div>
+
+<div class="panel">
+  <div><div class="tag">Simulador &middot; el mismo de sim_sintetico.py</div>
+  <h2>Elegí una versión y dale play</h2></div>
+  <div class="btns" id="presets">
+    <button data-p="v1">1 · v1: estado [x, y, θ]</button>
+    <button data-p="v2">2 · v2: + sesgos, colocación como ruido</button>
+    <button data-p="final">3 · final</button>
+    <button data-p="ctrl">4 · control: sin ArUco</button>
+  </div>
+  <div class="sw">
+    <label><input type="checkbox" id="kAruco" checked> ArUco</label>
+    <label><input type="checkbox" id="kOcl" checked> oclusión x = 6–11 m</label>
+    <label><input type="checkbox" id="kSesgo" checked> estimar sesgos (b, s)</label>
+    <label><input type="checkbox" id="kColoc" checked> colocación correlacionada</label>
+    <label><input type="checkbox" id="kOdo" checked> mostrar solo-odometría</label>
+  </div>
+  <div class="row"><span>semilla</span><input id="seed" type="range" min="0" max="30" step="1" value="18"><output id="oseed"></output></div>
+  <canvas id="cMap" width="1000" height="250"></canvas>
+  <div class="leg">
+    <span><i style="background:var(--ink)"></i>verdad</span>
+    <span><i style="background:var(--blue)"></i>EKF</span>
+    <span><i style="background:var(--red)"></i>solo odometría</span>
+    <span><i style="background:var(--amber)"></i>elipse 3σ (×25)</span>
+    <span><i style="background:var(--green)"></i>marca aceptada ahora</span>
+  </div>
+  <canvas id="cErr" width="1000" height="250"></canvas>
+  <div class="leg">
+    <span><i style="background:var(--blue)"></i>error lateral real</span>
+    <span><i style="background:var(--amber);opacity:.5"></i>±3σ que el filtro CREE tener</span>
+    <span><i style="background:var(--mut)"></i>requisito ±4.5 cm</span>
+    <span><i style="background:var(--red)"></i>marca rechazada por la compuerta</span>
+  </div>
+  <div class="row"><button id="play">▶ play</button><input id="tt" type="range" min="0" max="1000" value="1000"><output id="ott"></output></div>
+  <div class="stats" id="stats"></div>
+  <div class="eq" id="explica"></div>
+</div>
+
+<div class="panel">
+  <h2>Lo que falló, en el orden en que pasó</h2>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>Síntoma</th><th>El dato que lo mostró</th><th>La causa</th><th>El arreglo</th></tr>
+    <tr><td>1</td><td>Tras 5 s de oclusión el filtro <b>nunca se vuelve a enganchar</b>: 45 cm de error al final</td>
+      <td>al salir de la oclusión decía σ<sub>y</sub> 1.5 cm y σ<sub>θ</sub> 0.23°; el error real era 8 cm y 1.75°. 183 marcas rechazadas</td>
+      <td>un sesgo de dirección (+0.5°) hace derivar el rumbo <b>linealmente</b>. El ruido de proceso aleatorio crece como <b>√t</b>. Ninguna Q fija cubre una deriva lineal</td>
+      <td>meter el sesgo <code>b</code> y la escala <code>s</code> al estado. El filtro los aprende mientras ve marcas (+0.50° estimado vs +0.50° real)</td></tr>
+    <tr><td>2</td><td>Criterio de oclusión falla en 9 de 30 semillas, <b>aunque el filtro anda bien</b></td>
+      <td>en las 9: cero marcas en la oclusión, σ crece, reengancha. Lo que fallaba era «error en la oclusión &gt; máximo de la corrida A»</td>
+      <td>el criterio comparaba contra el máximo de toda la corrida, que cae en el giro. Con el sesgo estimado el filtro bueno deriva solo 1–3 cm</td>
+      <td>se probó «&gt; 2× A en el mismo tramo» y <b>tampoco medía nada</b> (umbral a ojo). Se cambió por lo que de verdad prueba que navegó a ciegas: 0 marcas, σ crece, error dentro de 3σ</td></tr>
+    <tr><td>3</td><td>3 de 30 semillas: error lateral <b>4–5.6σ</b> durante la oclusión</td>
+      <td>control: las mismas semillas con colocación perfecta de marcas → 0.55–1.7σ</td>
+      <td>el error de colocación de una marca es <b>el mismo en cada vista</b>. Sumado como ruido blanco, 20 vistas de una marca mal puesta cuentan como 20 marcas independientes</td>
+      <td><code>ColocacionMarcas</code>: la k-ésima vista seguida de la misma marca carga k veces la varianza de colocación</td></tr>
+  </table></div>
+</div>
+
+<div class="panel">
+  <h2>Lo que funcionó</h2>
+  <div class="scroll"><table>
+    <tr><th>Qué</th><th>Por qué importa</th></tr>
+    <tr><td><b>El control B</b>: la misma corrida sin ArUco</td><td>Si apagar el ArUco no hiciera derivar, la prueba no probaría nada. Derivó 77 cm. Es la regla del repo: si la prueba no puede fallar, no midió nada</td></tr>
+    <tr><td><b>El control del control</b>: correr la v1 contra la prueba final</td><td>La prueba final atrapa el bug original en 31 de 31 semillas. Demuestra que la prueba sabe ver ese error</td></tr>
+    <tr><td><b>Error dentro de 3σ</b> (consistencia)</td><td>Es el chequeo que destapó el problema 3. Un filtro tiene que estar bien Y saber cuánto sabe; si no, rechaza lo que lo salvaría</td></tr>
+    <tr><td><b>Números aleatorios comunes</b>: A, B y C con el mismo ruido de odometría</td><td>Las diferencias entre corridas son del filtro, no de la suerte</td></tr>
+    <tr><td><b>30 semillas</b>, no una</td><td>Con una sola semilla todo «pasaba». Los problemas 2 y 3 solo aparecieron en 9 y 3 de 30</td></tr>
+    <tr><td><b>Q desde las entradas</b>: Q = G·M·Gᵀ</td><td>La incertidumbre crece con lo que el equipo de verdad se mueve. Quieto, no crece</td></tr>
+    <tr><td><b>R de la pose por Jacobiano</b> (<code>R_pose</code>)</td><td>Un error de 2° en el ángulo de la marca, a 1 m, mueve la posición 3.5 cm: el efecto palanca. Sin el Jacobiano eso no aparece</td></tr>
+    <tr><td><b>Compuerta de Mahalanobis + reapertura</b></td><td>La compuerta rechaza marcas imposibles. La reapertura es la red: si 10 marcas seguidas contradicen al filtro, el perdido es el filtro</td></tr>
+    <tr><td><b>Forma de Joseph</b> en la actualización</td><td>P sigue simétrica y positiva aunque los números sean chicos. Detalle, pero rompe filtros reales</td></tr>
+  </table></div>
+</div>
+
+<div class="verdict">
+  <h2>Lo que la prueba dejó como dato: consistente no es lo mismo que preciso</h2>
+  <p>Con la versión final, en la oclusión de 5 m el error lateral máximo da mediana <b>1.9 cm</b>,
+  pero en <b>4 de 31 semillas pasa los 4.5 cm</b> del requisito (máximo 7 cm). El filtro lo sabe
+  —el error queda dentro de su 3σ— pero saberlo no lo arregla.</p>
+  <p>Traducido: <b>5 m sin ver una marca es demasiado</b> para la tolerancia de la bahía, con
+  estos supuestos de odometría. Es la respuesta parcial a la pregunta de la clase 2 (cuánto se puede
+  caminar entre ArUcos). El número firme sale cuando haya odometría real del bus.</p>
+</div>
+
+<div class="verdict">
+  <h2>Las tres lecciones que se llevan a otro proyecto</h2>
+  <p><b>1. Un filtro sobreconfiado es peor que uno impreciso.</b> El impreciso acepta la marca que lo
+  corrige. El sobreconfiado la rechaza y se pierde para siempre. Los dos bugs reales fueron de
+  confianza, no de matemática.</p>
+  <p><b>2. Los errores sistemáticos no son ruido.</b> Un sesgo crece lineal; un error de colocación
+  se repite en cada vista. Si se modelan como ruido blanco, el filtro se miente. Se estiman (sesgo)
+  o se descorrelacionan (colocación).</p>
+  <p><b>3. No mover el umbral hasta que pase.</b> Dos veces el criterio de oclusión estuvo mal. Lo
+  correcto no fue ajustarlo: fue preguntarse qué afirmación quería probar y medir eso.</p>
+</div>
+
+<div class="panel">
+  <h2>Para hacer</h2>
+  <ol>
+    <li>En el simulador: preset 1, semilla 18. Mirá el momento en que sale de la oclusión (las rayas rojas). ¿Por qué
+      la banda ámbar es tan angosta mientras el error azul se va? Esa distancia es el bug.</li>
+    <li>Preset 3 y apagá <b>colocación correlacionada</b>. Buscá semillas donde el azul se sale de la
+      banda en la oclusión (probá 5, 11, 29: llegan a 6–8σ). Volvé a prenderla y mirá cómo vuelve adentro.</li>
+    <li>Leé <code>EKF.predict</code> en <code>percepcion/ekf.py</code> y derivá a mano la columna de F
+      que corresponde a <code>b</code>. ¿Por qué tiene el signo opuesto a la de δ?</li>
+    <li><b>Lo que falta para datos reales:</b> verificar los signos de <code>lateral</code> y
+      <code>yaw</code> de <code>pose_desde_marca</code> con una marca de verdad frente a
+      <code>detector_aruco.py</code>. Están definidos a mano, en 2D.</li>
+  </ol>
+</div>
+
+<footer>
+  Clase 3 de la <a href="index.html">secuencia</a> &middot;
+  el código real: <code>percepcion/ekf.py</code>, <code>percepcion/sim_sintetico.py</code>
+  (<code>py percepcion/sim_sintetico.py</code> → PASA / FALLA) &middot; resultados en
+  <code>percepcion/LEEME.md</code>
+</footer>
+
+</div>
+
+<script>
+// ═══ el mismo modelo que percepcion/ (odometria.py, ekf.py, sim_sintetico.py) ═══════════
+const DEG=Math.PI/180, WB=1.562, DT=0.02, HALF=1.5, PASO=2.35, REQ=0.045;
+const SIGM=[0.02,0.005,2*DEG], SIGC=0.01, PCAM=0.10, OCL=[6,11];
+const CAMS=[[0,0.55,Math.PI/2],[0,-0.55,-Math.PI/2]];
+const wrap=a=>{a=(a+Math.PI)%(2*Math.PI); if(a<0)a+=2*Math.PI; return a-Math.PI;};
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0,v=0;while(!u)u=r();v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const avanzar=(p,v,d,dt)=>{const ds=v*dt,dth=-(ds/WB)*Math.tan(d),m=p[2]+dth/2;
+  return[p[0]+ds*Math.cos(m),p[1]+ds*Math.sin(m),p[2]+dth];};
+// matrices chicas
+const Z=(n,m)=>Array.from({length:n},()=>Array(m).fill(0));
+const I=n=>{const A=Z(n,n);for(let i=0;i<n;i++)A[i][i]=1;return A;};
+const T=A=>A[0].map((_,j)=>A.map(r=>r[j]));
+const mul=(A,B)=>A.map(r=>B[0].map((_,j)=>r.reduce((s,a,k)=>s+a*B[k][j],0)));
+const add=(A,B)=>A.map((r,i)=>r.map((a,j)=>a+B[i][j]));
+function inv3(m){const[a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2];
+  const A=e*i-f*h,B=-(d*i-f*g),C=d*h-e*g,det=a*A+b*B+c*C;
+  return[[A,-(b*i-c*h),b*f-c*e],[B,a*i-c*g,-(a*f-c*d)],[C,-(a*h-b*g),a*e-b*d]].map(r=>r.map(x=>x/det));}
+const rot=(a,v)=>[Math.cos(a)*v[0]-Math.sin(a)*v[1],Math.sin(a)*v[0]+Math.cos(a)*v[1]];
+
+function mapa(){const m=[];for(let x=0;x<24;x+=PASO){m.push([x,HALF,-Math.PI/2]);m.push([x+PASO/2,-HALF,Math.PI/2]);}return m;}
+function poseDesde(mk,dist,lat,yaw,mo){const cth=mk[2]-Math.PI-yaw;const r=rot(cth,[dist,-lat]);
+  const cp=[mk[0]-r[0],mk[1]-r[1]];const th=cth-mo[2];const q=rot(th,[mo[0],mo[1]]);return[cp[0]-q[0],cp[1]-q[1],wrap(th)];}
+function vista(p,mk,mo){const cth=p[2]+mo[2];const q=rot(p[2],[mo[0],mo[1]]);const cp=[p[0]+q[0],p[1]+q[1]];
+  const r=rot(-cth,[mk[0]-cp[0],mk[1]-cp[1]]);return[r[0],-r[1],wrap(mk[2]-Math.PI-cth)];}
+function Rpose(mk,m0,mo){const f0=poseDesde(mk,...m0,mo),J=Z(3,3),h=1e-6;
+  for(let i=0;i<3;i++){const m=m0.slice();m[i]+=h;const f=poseDesde(mk,...m,mo);
+    const d=[f[0]-f0[0],f[1]-f0[1],wrap(f[2]-f0[2])];for(let k=0;k<3;k++)J[k][i]=d[k]/h;}
+  const Rm=[[SIGM[0]**2,0,0],[0,SIGM[1]**2,0],[0,0,SIGM[2]**2]];return mul(mul(J,Rm),T(J));}
+
+function trayectoria(){const u=[];let p=[0,0,0],v=0;
+  while(p[0]<16){v=Math.min(1,v+0.5*DT);u.push([v,0]);p=avanzar(p,v,0,DT);}
+  while(v>0.4){v=Math.max(0.4,v-0.5*DT);u.push([v,0]);p=avanzar(p,v,0,DT);}
+  const d=-60*DEG;while(p[2]<Math.PI/2){u.push([v,d]);p=avanzar(p,v,d,DT);}
+  while(v>0){v=Math.max(0,v-0.5*DT);u.push([v,0]);p=avanzar(p,v,0,DT);}
+  for(let i=0;i<50;i++)u.push([0,0]);return u;}
+const U=trayectoria();
+
+class EKF{
+  constructor(sesgo){this.x=[0.05,-0.03,1*DEG,0,1];this.P=Z(5,5);
+    this.P[0][0]=this.P[1][1]=0.01;this.P[2][2]=(3*DEG)**2;
+    this.P[3][3]=sesgo?(1*DEG)**2:0;this.P[4][4]=sesgo?0.05**2:0;
+    this.qb=sesgo?(0.01*DEG)**2:0;this.qs=sesgo?1e-8:0;
+    this.svr=sesgo?0.01:0.03;this.sd=sesgo?0.5*DEG:1*DEG;   // la v1 tenía Q un poco más ancha
+    this.reabre=sesgo;                        // la v1 no tenía reapertura: llegó con la v2
+    this.rech=0;this.seg=0;this.reap=0;}
+  predict(v,d,dt){const[x,y,th,b,s]=this.x,de=d-b,t=Math.tan(de),ds=s*v*dt,dth=-(ds/WB)*t,
+    m=th+dth/2,c=Math.cos(m),sn=Math.sin(m),a1=-t/WB,a2=-(ds/WB)*(1+t*t);
+    const fila=(dds,ddth)=>[dds*c-ds*sn*0.5*ddth,dds*sn+ds*c*0.5*ddth,ddth];
+    const F=I(5);F[0][2]=-ds*sn;F[1][2]=ds*c;
+    const cb=fila(0,-a2),cs=fila(v*dt,a1*v*dt);for(let i=0;i<3;i++){F[i][3]=cb[i];F[i][4]=cs[i];}
+    const G=Z(5,2),gv=fila(s*dt,a1*s*dt),gd=fila(0,a2);for(let i=0;i<3;i++){G[i][0]=gv[i];G[i][1]=gd[i];}
+    const mov=Math.abs(v)>1e-3,sv=mov?this.svr*Math.abs(v)+0.01:0;
+    const Q=mul(mul(G,[[sv*sv,0],[0,mov?this.sd**2:0]]),T(G));Q[3][3]+=this.qb*dt;Q[4][4]+=this.qs*dt;
+    const np=avanzar([x,y,th],s*v,de,dt);this.x=[np[0],np[1],wrap(np[2]),b,s];
+    this.P=add(mul(mul(F,this.P),T(F)),Q);}
+  update(z,R){const nu=[z[0]-this.x[0],z[1]-this.x[1],wrap(z[2]-this.x[2])];
+    const S=add(this.P.slice(0,3).map(r=>r.slice(0,3)),R),Si=inv3(S);
+    const d2=nu.reduce((a,ni,i)=>a+ni*Si[i].reduce((b,sij,j)=>b+sij*nu[j],0),0);
+    if(d2>11.345){this.rech++;this.seg++;if(this.reabre&&this.seg>=10){this.P[0][0]+=0.25;this.P[1][1]+=0.25;this.P[2][2]+=(10*DEG)**2;this.seg=0;this.reap++;}return false;}
+    this.seg=0;const PH=this.P.map(r=>r.slice(0,3)),K=mul(PH,Si);
+    for(let i=0;i<5;i++)this.x[i]+=K[i].reduce((a,k,j)=>a+k*nu[j],0);this.x[2]=wrap(this.x[2]);
+    const KH=Z(5,5);for(let i=0;i<5;i++)for(let j=0;j<3;j++)KH[i][j]=K[i][j];
+    const IK=add(I(5),KH.map(r=>r.map(v=>-v)));
+    this.P=add(mul(mul(IK,this.P),T(IK)),mul(mul(K,R),T(K)));return true;}}
+
+function correr(seed,o){const r=rng(seed*7919+1),rm=rng(seed*7919+2),rc=rng(seed*7919+3);
+  const real=mapa(),creido=real.map(m=>[m[0]+gauss(rc)*SIGC,m[1]+gauss(rc)*SIGC,m[2]]);
+  const f=new EKF(o.sesgo),veces={},ult={};let p=[0,0,0],t=0,prox=0;const out=[];
+  for(const[v,d]of U){p=avanzar(p,v,d,DT);
+    const vm=v*1.02+(v>0?gauss(r)*0.02:0),dm=d+0.5*DEG+gauss(r)*0.5*DEG;
+    f.predict(vm,dm,DT);t+=DT;const ok=[],no=[];
+    if(o.aruco&&t>=prox){prox+=PCAM;const tap=o.ocl&&p[0]>=OCL[0]&&p[0]<=OCL[1];
+      if(!tap)real.forEach((mk,k)=>CAMS.forEach(mo=>{const[di,la,ya]=vista(p,mk,mo);
+        if(!(di>0.3&&di<3&&Math.abs(Math.atan2(la,di))<50*DEG&&Math.abs(ya)<50*DEG))return;
+        const m=[di+gauss(rm)*SIGM[0],la+gauss(rm)*SIGM[1],ya+gauss(rm)*SIGM[2]];
+        const z=poseDesde(creido[k],...m,mo),R=Rpose(creido[k],m,mo);
+        let kk=1;if(o.coloc){if(t-(ult[k]??-1e9)>2)veces[k]=0;veces[k]=(veces[k]||0)+1;ult[k]=t;kk=veces[k];}
+        R[0][0]+=SIGC*SIGC*kk;R[1][1]+=SIGC*SIGC*kk;
+        (f.update(z,R)?ok:no).push(k);}));}
+    const e=f.x,dx=e[0]-p[0],dy=e[1]-p[1],n=[-Math.sin(p[2]),Math.cos(p[2])];
+    const sl=Math.sqrt(n[0]*n[0]*f.P[0][0]+2*n[0]*n[1]*f.P[0][1]+n[1]*n[1]*f.P[1][1]);
+    out.push({t,p,e:e.slice(0,3),lat:n[0]*dx+n[1]*dy,sl,P:[[f.P[0][0],f.P[0][1]],[f.P[1][0],f.P[1][1]]],ok,no,
+      rech:f.rech,reap:f.reap,b:f.x[3],s:f.x[4]});}
+  return out;}
+
+// ═══ dibujo ══════════════════════════════════════════════════════════════════════════
+const el=id=>document.getElementById(id), css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+let RUN=null,ODO=null,MAP=mapa(),k=0,playing=false;
+const cM=el('cMap'),gM=cM.getContext('2d'),cE=el('cErr'),gE=cE.getContext('2d');
+const X0=-0.5,X1=19.5,Y0=-1.9,Y1=2.0,sx=x=>(x-X0)/(X1-X0)*cM.width,sy=y=>cM.height-(y-Y0)/(Y1-Y0)*cM.height;
+
+function opciones(){return{aruco:el('kAruco').checked,ocl:el('kOcl').checked,sesgo:el('kSesgo').checked,coloc:el('kColoc').checked};}
+function recalcular(){const o=opciones(),s=+el('seed').value;el('oseed').textContent=s;
+  RUN=correr(s,o);ODO=correr(s,{...o,aruco:false});k=Math.min(k,RUN.length-1);dibujar();}
+function linea(g,pts,col,w,dash){g.strokeStyle=col;g.lineWidth=w;g.setLineDash(dash||[]);g.beginPath();
+  pts.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.stroke();g.setLineDash([]);}
+
+function dibujar(){if(!RUN)return;const o=opciones(),cur=RUN[k];
+  // mapa
+  gM.clearRect(0,0,cM.width,cM.height);
+  gM.fillStyle=css('--surf');gM.fillRect(0,sy(HALF),cM.width,sy(-HALF)-sy(HALF));
+  if(o.ocl&&o.aruco){gM.fillStyle=css('--amber');gM.globalAlpha=.13;gM.fillRect(sx(OCL[0]),0,sx(OCL[1])-sx(OCL[0]),cM.height);gM.globalAlpha=1;}
+  MAP.forEach((m,i)=>{gM.fillStyle=cur.ok.includes(i)?css('--green'):css('--mut');gM.fillRect(sx(m[0])-4,sy(m[1])-4,8,8);});
+  linea(gM,RUN.map(r=>[sx(r.p[0]),sy(r.p[1])]),css('--ink'),2.4);
+  if(el('kOdo').checked)linea(gM,ODO.slice(0,k+1).map(r=>[sx(r.e[0]),sy(r.e[1])]),css('--red'),1.6,[6,4]);
+  linea(gM,RUN.slice(0,k+1).map(r=>[sx(r.e[0]),sy(r.e[1])]),css('--blue'),1.8);
+  // elipse 3σ exagerada ×25
+  const P=cur.P,a=P[0][0],b=P[0][1],c=P[1][1],tr=(a+c)/2,dt=Math.sqrt(((a-c)/2)**2+b*b);
+  const l1=tr+dt,l2=Math.max(tr-dt,0),ang=0.5*Math.atan2(2*b,a-c),E=25*3,px=(X1-X0)/cM.width;
+  gM.save();gM.translate(sx(cur.e[0]),sy(cur.e[1]));gM.rotate(-ang);gM.strokeStyle=css('--amber');gM.lineWidth=2;
+  gM.beginPath();gM.ellipse(0,0,Math.max(E*Math.sqrt(l1)/px,2),Math.max(E*Math.sqrt(l2)/px,2),0,0,2*Math.PI);gM.stroke();gM.restore();
+  gM.fillStyle=css('--blue');gM.beginPath();gM.arc(sx(cur.e[0]),sy(cur.e[1]),4,0,2*Math.PI);gM.fill();
+  gM.font='600 12px IBM Plex Mono, monospace';gM.fillStyle=css('--mut');
+  gM.fillText('x a lo largo del pasillo →  (20 m)',10,cM.height-8);
+  // error lateral
+  const W=cE.width,H=cE.height,Tm=RUN[RUN.length-1].t,LIM=0.15,ex=t=>t/Tm*W,ey=v=>H/2-v/LIM*(H/2-10);
+  gE.clearRect(0,0,W,H);
+  if(o.ocl&&o.aruco){const ia=RUN.findIndex(r=>r.p[0]>=OCL[0]),ib=RUN.findIndex(r=>r.p[0]>OCL[1]);
+    gE.fillStyle=css('--amber');gE.globalAlpha=.13;gE.fillRect(ex(RUN[ia].t),0,ex(RUN[ib].t)-ex(RUN[ia].t),H);gE.globalAlpha=1;}
+  gE.fillStyle=css('--amber');gE.globalAlpha=.28;gE.beginPath();
+  RUN.slice(0,k+1).forEach((r,i)=>i?gE.lineTo(ex(r.t),ey(Math.min(3*r.sl,LIM))):gE.moveTo(ex(r.t),ey(Math.min(3*r.sl,LIM))));
+  for(let i=k;i>=0;i--)gE.lineTo(ex(RUN[i].t),ey(-Math.min(3*RUN[i].sl,LIM)));gE.fill();gE.globalAlpha=1;
+  [REQ,-REQ].forEach(v=>linea(gE,[[0,ey(v)],[W,ey(v)]],css('--mut'),1,[3,4]));
+  linea(gE,[[0,ey(0)],[W,ey(0)]],css('--line'),1);
+  linea(gE,RUN.slice(0,k+1).map(r=>[ex(r.t),ey(Math.max(-LIM,Math.min(LIM,r.lat)))]),css('--blue'),1.8);
+  gE.fillStyle=css('--red');RUN.slice(0,k+1).forEach(r=>{if(r.no.length)gE.fillRect(ex(r.t)-1,H-12,2,10);});
+  gE.fillStyle=css('--mut');gE.font='600 12px IBM Plex Mono, monospace';
+  gE.fillText('+15 cm',6,16);gE.fillText('−15 cm',6,H-16);gE.fillText('tiempo →',W-80,H/2-6);
+  el('ott').textContent=cur.t.toFixed(1)+' s';el('tt').value=Math.round(k/(RUN.length-1)*1000);
+  stats(o);}
+
+function stats(o){const R=RUN.slice(0,k+1).filter(r=>r.t>2),cur=RUN[k];
+  const rms=R.length?Math.sqrt(R.reduce((a,r)=>a+r.lat*r.lat,0)/R.length):0,mx=R.reduce((a,r)=>Math.max(a,Math.abs(r.lat)),0);
+  const fuera=R.filter(r=>Math.abs(r.lat)>3*r.sl+0.01).length,pf=R.length?100*fuera/R.length:0;
+  const box=(v,t,cl)=>`<div class="st ${cl||''}"><b>${v}</b><span>${t}</span></div>`;
+  el('stats').innerHTML=box((100*Math.abs(cur.lat)).toFixed(1)+' cm','error lateral ahora',Math.abs(cur.lat)>REQ?'bad':'good')+
+    box((100*3*cur.sl).toFixed(1)+' cm','3σ que el filtro cree',Math.abs(cur.lat)>3*cur.sl+0.01?'bad':'')+
+    box((100*rms).toFixed(2)+' / '+(100*mx).toFixed(1),'RMS / máx lateral (cm)',mx>REQ?'bad':'good')+
+    box(pf.toFixed(0)+' %','tiempo fuera de 3σ',pf>1?'bad':'good')+
+    box(cur.rech,'marcas rechazadas',cur.rech>20?'bad':'')+
+    box((cur.b/DEG).toFixed(2)+'°','sesgo dirección est. (real +0.50°)',o.sesgo?'':'')+
+    box(cur.reap,'reaperturas','');
+  let t='';
+  if(!o.aruco)t='CONTROL B · sin ArUco. La odometría con sesgo deriva sin cota: <b>esto es lo que el EKF tiene que impedir</b>. Si esta curva no se fuera, la prueba no probaría nada.';
+  else if(!o.sesgo)t='v1 · estado [x, y, θ]. En la oclusión el error azul crece LINEAL (es el sesgo de +0.5°) pero la banda ámbar crece como √t. Al salir, las marcas caen fuera de la banda → la compuerta las rechaza (rayas rojas) → <b>el filtro no se vuelve a enganchar</b>. Así era la v1: sin reapertura, perdida para siempre.';
+  else if(!o.coloc)t='v2 · con sesgos, pero la colocación de la marca como ruido blanco. Casi siempre anda; en algunas semillas (5, 11, 29) el error se sale de la banda en la oclusión: el filtro aprendió de más de marcas mal puestas vistas 20 veces. <b>Mirá «tiempo fuera de 3σ»</b>.';
+  else t='FINAL · sesgos estimados + colocación correlacionada. El error queda dentro de la banda, la banda se abre en la oclusión (sabe que va a ciegas) y al reaparecer la marca el filtro se reengancha en una corrección.';
+  el('explica').innerHTML=t;}
+
+// ═══ controles ═══════════════════════════════════════════════════════════════════════
+const PRE={v1:{kAruco:1,kOcl:1,kSesgo:0,kColoc:0,seed:18},v2:{kAruco:1,kOcl:1,kSesgo:1,kColoc:0,seed:18},
+  final:{kAruco:1,kOcl:1,kSesgo:1,kColoc:1,seed:18},ctrl:{kAruco:0,kOcl:0,kSesgo:1,kColoc:1,seed:0}};
+document.querySelectorAll('#presets button').forEach(b=>b.onclick=()=>{const p=PRE[b.dataset.p];
+  ['kAruco','kOcl','kSesgo','kColoc'].forEach(id=>el(id).checked=!!p[id]);el('seed').value=p.seed;
+  document.querySelectorAll('#presets button').forEach(x=>x.classList.toggle('on',x===b));
+  k=0;recalcular();playing=true;el('play').textContent='❚❚ pausa';});
+['kAruco','kOcl','kSesgo','kColoc'].forEach(id=>el(id).onchange=()=>{document.querySelectorAll('#presets button').forEach(x=>x.classList.remove('on'));recalcular();});
+el('kOdo').onchange=dibujar;el('seed').oninput=recalcular;
+el('tt').oninput=e=>{k=Math.round(e.target.value/1000*(RUN.length-1));playing=false;el('play').textContent='▶ play';dibujar();};
+el('play').onclick=()=>{if(k>=RUN.length-1)k=0;playing=!playing;el('play').textContent=playing?'❚❚ pausa':'▶ play';};
+function loop(){if(playing&&RUN){k=Math.min(RUN.length-1,k+4);if(k>=RUN.length-1){playing=false;el('play').textContent='▶ play';}dibujar();}requestAnimationFrame(loop);}
+document.querySelector('[data-p=final]').classList.add('on');
+el('kSesgo').checked=true;el('kColoc').checked=true;recalcular();k=RUN.length-1;dibujar();requestAnimationFrame(loop);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',dibujar);
+</script>
+</body>
+</html>

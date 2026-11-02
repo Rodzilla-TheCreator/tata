@@ -81,3 +81,9 @@ C 0/31. El test detecta el bug que tuvo.
 alcance de las cámaras, una marca por bahía, colocación σ 1 cm. **Pendiente para datos reales:**
 verificar los signos de `lateral` y `yaw` de `pose_desde_marca` contra `detector_aruco.py` con una
 marca real, y capturar odometría del bus con el equipo andando (nodo 8 velocidad, nodo 4 ángulo).
+
+**Dato que dejó la prueba — consistente no es lo mismo que preciso:** en la oclusión de 5 m el
+error lateral máximo da mediana 1.9 cm, p90 4.6 cm, máximo 7.0 cm, y **pasa los 4.5 cm en 4 de 31
+semillas** (dentro de su 3σ: el filtro lo sabe). Con estos supuestos de odometría, **5 m sin marcas
+es demasiado** para la bahía. Es la respuesta parcial a la clase 2 (separación máxima entre ArUcos);
+el número firme sale con odometría real del bus. La clase interactiva: `clases/ekf.html`.
