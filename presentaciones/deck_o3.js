@@ -2,7 +2,8 @@
 // Deck de seguimiento: lo logrado, el cambio de plan (mecanico -> EDR), los hitos
 // con detalle de agosto (investigacion+simulacion) y septiembre (el muro del DB9,
 // con diagrama de pines), el 1-oct como punto de inflexion, el bloqueo (piezas
-// quitadas), el camino que sigue, El Aula, y el pedido. Sin computo ni LiDAR.
+// quitadas), el camino que sigue, lo que me toca (formalizar e integrar), cualquier
+// equipo sin dejar huella (docs/25), El Aula, y el pedido. Sin computo ni LiDAR.
 // Reusa el lenguaje visual de deck_o2.js. Genera TaTa_Estado_y_Pedido_Omar.pptx
 const pptx = require('pptxgenjs');
 const p = new pptx();
@@ -315,6 +316,64 @@ cam.forEach((q, i) => {
   s.addText(q[2], { x: 5.0, y: y + 0.16, w: 7.4, h: 1.05, fontSize: 11.5, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
 });
 s.addNotes('Odometria + Kalman/ArUco, solo camaras, corriendo en maquinon (PC que ya tengo). Sin computo que comprar, sin LiDAR en esta etapa.');
+
+/* ───────── 13b · LO QUE ME TOCA: FORMALIZAR E INTEGRAR ───────── */
+s = p.addSlide(); fondo(s, false);
+titulo(s, 'Lo que me toca — formalizar e integrar', false, 'Las dos mitades del mando ya funcionan por separado. Ahora van juntas, en orden, y nada se mueve hasta el final');
+const toca = [
+  ['1', 'Arnés DB9 + ESP32 + timón, en una caja', 'Un solo cerebro para marcha y dirección. El lado del bus va aislado, porque el timón y el bus usan tierras distintas. Todo enchufable.', CIAN],
+  ['2', 'Calibrar las cámaras', 'El lente de cada cámara (tablero de ajedrez), dónde va montada en el equipo, y los ArUco impresos para los racks.', CIAN],
+  ['3', 'La cadena de paro', 'Watchdog de 200 ms + hongo físico en serie. Es lo único que falta antes de que algo se mueva.', ROJO],
+  ['4', 'Probar todo el mando, quieto', 'Cada orden del multipiloto debe devolver su aviso de pedal, y el timón emulado debe verse en el bus. Cero movimiento.', HAZ],
+  ['5', 'Leer la odometría del bus', 'Velocidad de tracción y ángulo de dirección: lo que necesita el Kalman.', HAZ],
+  ['6', 'El pedal, al final', 'El sensor o el puente del taller, solo con la cadena de paro probada. Primera prueba con movimiento: rueda en el aire, paro en mano.', VERDE]];
+toca.forEach((q, i) => {
+  const y = 1.85 + i * 0.7;
+  tarjeta(s, 0.65, y, 12, 0.6, false);
+  s.addShape(p.ShapeType.rect, { x: 0.65, y, w: 0.09, h: 0.6, fill: { color: q[3] } });
+  chip(s, q[0], 0.95, y + 0.09, q[3]);
+  s.addText(q[1], { x: 1.55, y, w: 4.0, h: 0.6, fontSize: 13, bold: true, color: TINTA, fontFace: H, margin: 0, valign: 'middle' });
+  s.addText(q[2], { x: 5.6, y, w: 6.85, h: 0.6, fontSize: 11, color: MUT2, fontFace: B, margin: 0, valign: 'middle' });
+});
+tarjeta(s, 0.65, 6.15, 12, 0.95, false, '20242B');
+s.addText('Sin el pedal, el equipo se niega a moverse. Esa falta la uso a mi favor: pruebo toda la cadena de mando con cero riesgo de que arranque solo. El pedal vuelve cuando la cadena de paro esté construida y probada.',
+  { x: 1.05, y: 6.15, w: 11.2, h: 0.95, fontSize: 13, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
+s.addNotes('Respaldo: sin el sensor del pedal el Master rechaza marcha, elevacion y descenso con E190x (22-oct), y girando el volante real sin pedal no se movio nada. Al MT 122 ademas le falta la rueda directriz. El timon emulado se valida viendo el 0x284 (lo que el nodo 4 lee del volante) y que no salgan los eventos 1.54-1.56. Detalle: docs/24 y docs/25.');
+
+/* ───────── 13c · CUALQUIER EQUIPO, SIN DEJAR HUELLA ───────── */
+s = p.addSlide(); fondo(s, true);
+titulo(s, 'Cualquier equipo, sin dejar huella', true, 'Prestado, de cliente o en mantenimiento: entra y sale igual que llegó');
+tarjeta(s, 0.65, 1.85, 5.95, 4.15, true);
+s.addShape(p.ShapeType.rect, { x: 0.65, y: 1.85, w: 5.95, h: 0.1, fill: { color: CIAN } });
+s.addText('El DB9 se adapta a cada equipo', { x: 0.95, y: 2.05, w: 5.4, h: 0.45, fontSize: 16, bold: true, color: CIAN, fontFace: H, margin: 0 });
+s.addText('El cableado del DB9 puede cambiar de un equipo a otro. Lo que no cambia en esta familia es el bus: CANopen. Para leer un equipo nuevo:',
+  { x: 0.95, y: 2.5, w: 5.4, h: 0.65, fontSize: 11, color: MUT, fontFace: B, margin: 0, valign: 'top' });
+[['Medir', 'Llave apagada, óhmetro: el par con 60–120 Ω es CAN alto y bajo; la tierra es la que da continuidad al negativo de batería.'],
+ ['Confirmar', 'Llave encendida: alto y bajo cerca de 2.5 V contra el negativo.'],
+ ['Repinear', 'Mover tres cables en la bornera del DB9 macho. Cinco minutos.'],
+ ['Escuchar', 'Solo escucha, cero errores: ya leo sus sensores.']].forEach((q, i) => {
+  const y = 3.2 + i * 0.68;
+  chip(s, i + 1, 0.95, y + 0.03, CIAN);
+  s.addText(q[0], { x: 1.5, y, w: 1.25, h: 0.5, fontSize: 12.5, bold: true, color: HUM, fontFace: B, margin: 0, valign: 'middle' });
+  s.addText(q[1], { x: 2.75, y, w: 3.7, h: 0.6, fontSize: 10, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
+});
+tarjeta(s, 6.85, 1.85, 5.8, 4.15, true);
+s.addShape(p.ShapeType.rect, { x: 6.85, y: 1.85, w: 5.8, h: 0.1, fill: { color: HAZ } });
+s.addText('Cómo trabajo en un equipo ajeno', { x: 7.15, y: 2.05, w: 5.3, h: 0.45, fontSize: 16, bold: true, color: HAZ, fontFace: H, margin: 0 });
+[['Antes', 'Foto de cada conector y prueba de que el equipo funciona. Es contra lo que se restituye.', MUT],
+ ['Siempre', 'Todo por conectores: no se corta, no se empalma, no se perfora. Las piezas originales quedan a la mano.', MUT],
+ ['1 · Escuchar', 'Solo lectura. El equipo no se entera.', VERDE],
+ ['2 · Mandar, quieto', 'Con autorización. Pedal sin puentear: nada se mueve.', HAZ],
+ ['3 · Movimiento', 'Solo en nuestro equipo o con permiso explícito. Rueda en el aire, paro en mano.', ROJO],
+ ['Salida', 'Conectores originales, fotos comparadas, sin códigos activos. Igual que llegó.', MUT]].forEach((q, i) => {
+  const y = 2.6 + i * 0.56;
+  s.addText(q[0], { x: 7.15, y, w: 1.75, h: 0.5, fontSize: 11.5, bold: true, color: q[2] === MUT ? HUM : q[2], fontFace: B, margin: 0, valign: 'middle' });
+  s.addText(q[1], { x: 8.9, y, w: 3.6, h: 0.52, fontSize: 9.8, color: MUT, fontFace: B, margin: 0, valign: 'middle' });
+});
+tarjeta(s, 0.65, 6.2, 12, 0.85, true, PANEL);
+s.addText('Ningún cambio irreversible. Eso es lo que me da permiso de tocar un equipo, y lo que garantiza que vuelve al cliente igual que llegó.',
+  { x: 1.05, y: 6.2, w: 11.2, h: 0.85, fontSize: 14, bold: true, color: HAZ, fontFace: B, margin: 0, valign: 'middle' });
+s.addNotes('"Esta familia" = Jungheinrich ETR / EDR (el manual dice CANopen a 250k). En otras marcas no esta garantizado: se mide igual, y si no es CAN se ve en el paso 2. Saber que byte es que sensor en un equipo nuevo pide ademas una sesion corta guiada. El riesgo real en equipo de cliente: hoy no podemos borrar codigos (licencia de Judit vencida); por eso el timon no se prueba en equipo ajeno hasta saber como se borra su falla. Detalle: docs/25 y docs/23.');
 
 /* ───────── 14 · EL AULA ───────── */
 s = p.addSlide(); fondo(s, false);
