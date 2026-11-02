@@ -1,0 +1,385 @@
+# Pendientes del puerto — cierre del 30-sep-2026
+
+Lo vigente arriba. El detalle de cada cosa está en `serie/tabla_fusibles_de9.md`,
+`manuales_scribd.md` y `docs/16`.
+
+## ▶ SIGUIENTE PASO (13-oct-2026, para la i3) — ¿el TJA1050 era lento o le faltaba terminador?
+
+Todo el razonamiento en **`docs/22-busqueda-transceptor-can.md`**. Resumen: el módulo TJA1050
+**no tiene terminador** (CANH↔CANL apagado: solo lee en escala de 2 MΩ; maje le quitó `R3`).
+Sin terminador, al soltar el bus la línea se descarga por cientos de kΩ → los **~15 µs** que
+midió `retardo`. **Hipótesis:** el chip está sano. El equipo tiene **un solo** 120 Ω (DB9 3↔8),
+así que la mesa con **una sola** 120 Ω es la réplica exacta.
+
+Soldadura ya revisada (13-oct): VCC–GND ≈ 1570 Ω, RX–GND ≈ 1600 Ω, nada pita. Sin puentes.
+
+> **MEDIDO 13-oct, en la mesa, con 120 Ω exactos (100 + 10 + 10 en serie, DB9 8↔3):**
+> `retardo` (RX = GPIO 21, TX = GPIO 22, VCC del TJA desde VIN = 4.7 V): **bajada 0.36 µs,
+> subida 15.8 µs**, 500/500. **Igual que con 100 Ω y sin terminador el 05-oct.** Pasos 1–3 de
+> abajo: hechos. La hipótesis del terminador queda tumbada con el mismo valor del equipo.
+> **Siguiente: el mismo `retardo` con el TJA a 5.0 V firmes** (fuente aparte, GND común).
+>
+> **MEDIDO 13-oct, con 5.0 V de fuente aparte y GND común, mismo 120 Ω:** bajada 0.36 µs,
+> **subida 16.8 µs**. Tampoco es la alimentación. Queda: **chip malo/clon**, o algo de la
+> placa del módulo en la **pata 1 (TXD)** — mediciones l y n sin hacer (pata 1 ↔ pin TX del
+> conector; pata 1 ↔ GND, USB desconectado). **Para escuchar el módulo sirve; para transmitir,
+> otro transceptor** (MCP2515 de C&D, SN65HVD230 o CANable).
+>
+> **CERRADO 13-oct:** l (pata 1 ↔ pin TX del conector) = **1.0 Ω**, directo; n (pata 1 ↔ GND)
+> = **abierto**. La placa no tiene nada en la TXD. **El transmisor lento es el chip** (clon o
+> dañado). Probado y descartado: terminador (0 / 100 / 120 Ω), alimentación (4.7 / 5.0 V),
+> conversor de nivel, componentes de la placa en TXD. **Este TJA1050 queda solo para escuchar.**
+
+> **CONFIRMADO 14-oct — control con chip nuevo:** TJA1050 nuevo de C&D, soldado y puesto en
+> el MISMO circuito del viejo (mismos cables, divisor 1k/2k a GPIO 21, TX en GPIO 22, terminación: R3 = 121 Ω
+> del propio módulo, sin los 100+10+10 de banco; 5 V), mismo `retardo_rx21`: **baja 0.36 µs, sube 0.42 µs, 500 muestras, 0 fallas**.
+> El viejo en ese armado: sube 15.8–16.8 µs. **Era el chip.** El nuevo sirve para transmitir.
+> `prueba_can` 14-oct: 20/20 con el nuevo; control (TX a GPIO 25 al aire) 0 recibidas. Validado.
+>
+> **ANTES DE LLEVAR EL CABLE AL EQUIPO (14-oct):**
+> - En el ESP32 quedó cargado `escucha_rx21` (LISTEN_ONLY, RX 21). En la mesa: silencio, 0 errores
+> - **El TJA nuevo trae su terminador puesto** (`R3` = 121). Al viejo se le quitó. El bus
+>   del equipo tiene UN solo 120 Ω: con el nuevo conectado quedaría en 60 Ω. Es la
+>   terminación estándar, pero **es agregar un terminador y se decide antes**. Opciones:
+>   desoldar `R3`, o escuchar con el TJA viejo (validado en el equipo el 06-oct)
+>   **Resuelto 14-oct:** el manual pide 60 Ω ± 10% (págs. 181G–182G). Se escucha con el nuevo
+>   + R3. Ver `can/LEEME.md`, sección de la terminación
+> `diagnostico/mcp_prueba/` queda listo para el MCP2515 (SPI por conversor, CS 5 / SCK 18 /
+> SI 23 / SO 19, cristal a leer).
+
+> **Dato en tensión (13-oct, otra sesión):** la hipótesis «faltaba terminador» **ya se probó
+> el 05-oct y no se cumplió** (`can/LEEME.md`, sección 02 al 06-oct): `retardo` dio **15.3 µs
+> CON la 100 Ω entre CANH y CANL** (h/i ≈ 100 Ω medidos en los pines del módulo) y **15.3 µs
+> SIN terminación**. El receptor solo, con otro nodo simulado: **0.24 µs**. Lo lento es el
+> **transmisor**. El paso 1–2 de abajo puede repetirse como control, pero **lo que no se probó
+> nunca es el paso 3 con 5.0 V firmes** (hoy VCC = 4.7 V, la hoja pide 4.75–5.25 V). Ese es el
+> que decide entre «chip sano mal alimentado» y «chip malo / clon».
+
+```
+□ 0. OJO PINES: en campo el divisor de RX quedó en GPIO 21 (copia con RX=21, TX=22).
+     retardo.ino usa TX=21 / RX=22. Ver dónde está HOY el divisor y ajustar los #define.
+     El TX del módulo tiene que ir al otro GPIO (en el equipo iba al aire)
+□ 1. Resistencia 120 Ω en la bornera CANH/CANL, bien apretada
+□ 2. Apagado: CANH↔CANL → ~120 Ω. Si no, no hace contacto: arreglar antes de seguir
+□ 3. can/diagnostico/retardo → subida < 1 µs = chip sano
+     · si sigue ~15 µs: TJA a 5.0 V firmes (cargador USB/fuente), medir VCC en la prueba, repetir
+     · si sigue: chip malo → MCP2515 (C&D, L230) o Waveshare
+□ 4. Si pasó: can/prueba_can.ino → 20/20 a 250k
+     control: desconectar el cable de RX → 0 recibidas
+□ 5. Anotar resultados en docs/22 (tabla de estado) y en can/LEEME.md
+```
+
+**Lo que NO se hace:** llevar el TJA al equipo a transmitir para «ver si anda». Si la hipótesis
+falla, ensucia el bus real. Y aunque pase en la mesa, transmitir en el equipo es el peldaño 5:
+multipiloto real desenchufado, lo de **la pantalla que no prende sin multipiloto** resuelto
+primero (`componentes/LEEME.md`, 07-oct), el chino al lado y la escucha corriendo en paralelo.
+
+**En paralelo, sin depender de esto:**
+- Continuidad entre los 11 pines del **multipiloto de repuesto** (el puente de la pantalla)
+- Períodos del `0x182` y del `702 05` en el log del 06-oct → reemplazar los supuestos de
+  `can/banco_imitador/` (20 ms / 500 ms). Subir el log con `git add -f` si hace falta
+- Comprar el **MCP2515** de C&D (uno). El ELM327 de Montasa **no se desarma**
+- Transceptor suelto: `can/donde_conseguir.md`
+
+## ✅ 06-oct-2026 12:05 · EL MULTIPILOTO, DESCIFRADO
+
+Diccionario de `0x182` y la conversación de arranque en **`can/multipiloto.md`**. Grabado con
+el guion con temporizador (`py grabar_can.py COM6 921600 multipiloto_tiempo`).
+Siguiente: decidir ruta A (servo) o B (imitar el nodo 2 por el bus) con esto en la mano;
+y un formato de grabación que no pierda tramas.
+
+## ✅ 06-oct-2026 11:34 · SE OYE EL BUS
+
+`escucha_can.ino` en el equipo: **38 identificadores, ~3000 tramas en 28 s, 0 errores RX.**
+Log: `can/logs/escucha_equipo_20261006-113136.log`.
+
+- **El DB9 es el bus CANopen a 250k**: CANH = pin 8, CANL = pin 3 (con los cables al revés:
+  0 tramas, 0 errores). GND al pin 2: funciona, sin errores
+- Nodos vistos: **1 Master** (heartbeat `701` = 05, operacional), 2 y 10 Multipiloto, **3
+  Display** (con SDO `603`/`583`), **4/5/6 Dirección**, **7 Elevación** (+ una EMCY `087`),
+  **8 Tracción**, **30** (`19E`…`49E`: hay un nodo 30 transmitiendo PDOs — ¿el KD Medi CO
+  250K?), SYNC `080`
+- **En campo el divisor quedó en el GPIO 21**: se cargó una copia con RX = 21, TX = 22 (sin
+  conectar). El repo sigue con RX = 22 como el plano
+- **Falla del instrumento:** `perdidas 14532` — imprimir cada trama a 115200 no da abasto.
+  Hay que imprimir solo el resumen o subir la velocidad del puerto
+- **El USB se cayó 3 veces** al mover cables. Vigilar
+- Pista sin confirmar: `188`/`187` traen `52 0E`/`51 0E` = 3666 — ¿batería en 10 mV (36.7 V)?
+- `grabar_can.py`: graba sin límite, se reconecta solo y muestra en pantalla
+
+## ▶ SIGUIENTE PASO — la primera escucha en el equipo (06-oct-2026, para el próximo chat)
+
+**Estado:** la cadena ESP32 + TJA1050 está **validada para escuchar** (ver `can/LEEME.md`,
+sección 02 al 06-oct). `escucha_can.ino` **ya está cargado** en el ESP32. El plano vigente es
+`can/armado_escucha.svg`. maje sale al equipo con este cable.
+
+**Revisar en la mesa (USB desconectado, Ω):**
+```
+pin 6 del DB9 macho ↔ cualquier cable nuestro   → ABIERTO
+pin 3 ↔ pin 8                                   → decenas de kΩ, nunca ~100/120
+pin 8 ↔ CANH del módulo · pin 3 ↔ CANL          → ~0
+TX del módulo ↔ GPIO 21                         → ABIERTO
+```
+
+**En el equipo:**
+1. Laptop a **batería**. Llave en **OFF**. DB9: solo **8 (CANH) y 3 (CANL)**, **sin GND**,
+   sin terminador, cables ≤ 30 cm
+2. USB del ESP32 a la i3 (aparece como **COM6**, CP210x)
+3. Grabar 10 min (abrir el puerto reinicia el ESP32: arranca de cero con el barrido
+   250k / 500k / 125k):
+   ```python
+   import serial, time
+   s = serial.Serial("COM6", 115200, timeout=0.5)
+   f = open("escucha_equipo.log", "w", encoding="utf-8"); t = time.time()
+   while time.time() - t < 600:
+       d = s.read(8192)
+       if d: f.write(d.decode("utf-8", "replace")); f.flush()
+   ```
+4. Paro de emergencia **arriba**, llave a **ON**. 30 s quieto → un **ciclo de llave** →
+   menú de servicio → **Diagnose** (el display pide valores por el bus: deberían verse SDO
+   `0x6xx` / `0x5xx`)
+
+5. **Si a 250k entran tramas: el diccionario del multipiloto** (paso 2.0 de `docs/21`).
+   Con la escucha corriendo, **un mando por vez**, anotando la **hora del reloj de la i3**
+   de cada uno, y **10 s quieto** entre mando y mando:
+   palanca adelante despacio y vuelta · atrás y vuelta · cada botón de la empuñadura,
+   apretar y soltar. Eso, cruzado con el log, dice **qué ID y qué bytes** son de cada mando
+6. Foto de la **etiqueta de la batería** (¿36 o 48 V nominales? el pin 8 midió 39.2 V)
+
+**Cómo leer el resultado:**
+
+| Sale | Qué significa | Qué sigue |
+|---|---|---|
+| tramas a 250k, pocos errores | el bus se oye. **Primer objetivo cumplido** | identificar nodos con la tabla de `manuales_scribd.md` (1 master, 3 display, 4 dirección, 7 elevación, 8 tracción…) |
+| 0 tramas y **0 errores** | no llega señal | masa: **negativo de batería** con un cable aparte al GND del ESP32 (nunca del pin 2, 5, 6 ni 9). Después, CANH/CANL invertidos |
+| 0 tramas y **muchos errores** | llega señal, no se decodifica | otra velocidad, o CANH/CANL invertidos (en listen-only cambiarlos no daña nada) |
+| tramas con errores altos | ramal o terminación | cables más cortos; recién ahí evaluar 120 Ω en el DB9 (decisión de maje) |
+
+**Lo que NO se hace:** transmitir, conectar los pines 5, 6 o 9, agregar terminador sin
+decidirlo, cargar `prueba_can.ino` con el cable en el equipo (ese SÍ transmite).
+
+**Datos de hoy que el próximo chat necesita:**
+- El multipiloto **no trae terminador** (H–L abierto). El 120 Ω del bus está en otro lado
+- `arduino-cli` de la i3: `C:/Users/Rodz/AppData/Local/Programs/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe`,
+  placa `esp32:esp32:esp32` (core 3.3.11). Si COM6 da «Access denied», está abierto el
+  monitor serie del IDE. Si la carga falla con «No serial data received», apretar BOOT
+
+## Dónde quedó
+
+- **El DB9 probablemente es CAN, no serie.** El pinout del conector de servicio
+  `X200` de Jungheinrich (sacado de un ECR) cuadra con lo medido: pin 6 = +24 V por el
+  fusible 4F15, pin 5 = GND conmutado (abierto con batería fuera). CAN_L en el 3,
+  CAN_H en el 8, tierra del bus en el 2. **Es hipótesis: la tabla es de otro modelo.**
+- Eso explica el silencio del FTDI, el eco deformado y el «no tiene tierra».
+- **El menú de servicio del display funciona** (Settings → Settings + P-arriba → PIN).
+  *Diagnose* muestra sensores en vivo. El PIN no se anota en el repo.
+- Códigos activos: `E2325.01` temp. aceite, `E2320.01` sensor de presión A,
+  `E2504.01/.02` salidas del control hidráulico, `E0106.01/.02` hombre muerto (pedal),
+  `E0106.16` sin documentar.
+- Fusibles: **5 A temporales en 4F15 y 6F9** (van 2 A). **10 A en 5F3, 3F11 y 4F10**
+  (van 2 A según el manual; 3F11 es el control de dirección).
+
+### Medido el 04-oct-2026 en el DB9 hembra del equipo
+
+**Pin 3 ↔ pin 8 = 120 Ω.** Es una terminación CAN entre los pines que la tabla del `X200`
+asigna a CAN_LOW (3) y CAN_HIGH (8). La hipótesis X200 pasa de «pinout de otro modelo» a
+**medida en este equipo**. 120 y no 60: desde el puerto se ve un solo terminador (¿ramal?
+¿bus con una sola terminación?) — anotado, sin elegir.
+
+Consecuencia: **el cable de escucha no lleva terminador**. La 100 Ω es solo de banco.
+
+### La cadena CAN en banco — 02/03-oct
+
+- Sin conversor de nivel: TX directo (el TJA1050 acepta 2.0 V como alto) y RX por divisor 1k/2k
+- El lazo funciona: self-test **10/10 a 25k**, 8/10 a 50k, 0/10 desde 100k
+- Medido con el contador de ciclos: **bajada TX→RX 0.36 µs, subida ~15 µs**, igual con o sin
+  terminación y con o sin conversor. A 250k el bit dura 4 µs: así no transmite
+- El chip dice `TJA1050 NXP SX XJ D406`, pin S en 0 V (modo normal). Según la hoja de NXP el
+  RXD empuja activo hacia arriba: 15 µs está fuera de lo que el chip debería hacer
+- Pendiente: mediciones l–p (¿algo del módulo en las patas 1 o 4?) o cambiar a SN65HVD230
+- Bug corregido en `prueba_can.ino`: faltaba `tx.self = 1` (Self Reception Request)
+- La prueba de «lazo de pines» con TX pegado en bajo NO vale: el TJA1050 suelta el bus a los
+  250–750 µs (time-out de dominante). Se mide con pulsos cortos
+
+### La cadena queda validada PARA ESCUCHAR — 05-oct-2026
+
+- **Control: el ESP32 solo.** GPIO21 → GPIO22 con un cable: 0.16 µs los dos flancos. La
+  medición y el ESP32 están bien; los ~15 µs de subida los pone el módulo
+- **Control positivo, el receptor.** GPIO25/26 → 100 Ω → CANH/CANL simulan otro nodo, con
+  el TX del TJA1050 quieto: reposo RX = 1, dominante RX = 0, **bajada 0.40 µs, subida
+  0.24 µs**, 500/500. El receptor sirve a 250k; lo lento es solo el transmisor del módulo
+- **Control negativo.** `escucha_can.ino` en la mesa, sin bus: 5 min, **0 tramas, 0 errores**
+- `prueba_can.ino` (self-test) **no va a pasar con este módulo**: necesita su transmisor.
+  Eso ya no bloquea, porque en el equipo no se transmite
+- **En el equipo, el TX del TJA1050 va SIN CONECTAR.** Su pull-up interno lo deja en
+  recesivo: el módulo físicamente no puede transmitir, haga lo que haga el software
+- Cadena final, **sin conversor de nivel**: RX por divisor 1k/2k a GPIO22, VCC desde VIN
+  (4.7 V, apenas bajo el mínimo de 4.75 V de la hoja — anotado)
+
+## Banco, en la i3 — antes de ir al equipo
+
+```
+□ 1. 100–120 Ω TEMPORAL entre CANH y CANL en la protoboard (sin soldar) — solo banco
+□ 2. prueba_can.ino corrida 1  → ECO COMPLETO 20/20
+       30-sep sin terminador: 0/20 y 135 errores RX. Sospecha: el terminador
+□ 3. prueba_can.ino corrida 2, sin el cable RX (LV2 → GPIO22) → CERO RECIBIDAS
+□ 4. QUITAR el 120 Ω temporal
+□ 5. Re-soldar el DB9 macho:  CANH → 8 · CANL → 3 · nada en 2, 5, 6, 9
+       (06-oct: el 2 va VACÍO en la primera escucha — no está confirmado como masa. Ver can/LEEME.md)
+       Hoy está como CiA-303 (CANH 7, CANL 2). ⚠ Si el GND quedó en el pin 6,
+       NO se conecta al equipo: ahí hay +24 V
+□ 6. Cargar escucha_can.ino (LISTEN_ONLY, compila con esp32 3.3.11)
+```
+
+## En el montacargas
+
+```
+□ A. (1 min, recomendado antes de enchufar) confirmar X200:
+       batería fuera:  pin 3 ↔ pin 8  ≈ 60 Ω
+       llave ON, negra al pin 2:  pin 3 y 8 ≈ 2.5 V · pin 9 ≈ 12 V
+□ B. escucha_can.ino — laptop a BATERÍA, conectar con llave OFF,
+       después llave ON y paro arriba:
+       · 60 s quieto · un ciclo de llave OFF→ON grabado desde el arranque
+□ C. Con la escucha corriendo, entrar a Diagnose en el display:
+       ¿aparece tráfico SDO (0x600/0x580) cuando el display pide valores?
+□ D. STEER → Diagnose + escucha, girando el timón tope a tope, en video:
+       · valores de los sensores de ángulo · qué PDO cambia
+       · contar vueltas tope a tope (el simulador usa 2.6; fábrica 5.5)
+□ D2. LATENCIA, con el mismo log de D (escucha_can.ino imprime marca de tiempo):
+       mover la palanca de un golpe y el timón de un golpe, y medir en el log
+       cuánto pasa entre la trama del mando (multipiloto, nodo 2) y la primera
+       trama del controlador que responde (tracción 8/9, dirección 4).
+       Ese número es el retardo de la cadena DEL OPERADOR. Si lo mandamos por el
+       mismo camino, no puede ser más lento que eso. Comparar contra los 200 ms
+□ E. Fotos de TODAS las pantallas de Diagnose y Parameter, solo leer.
+       Buscar: relación de dirección, P1/P2/P3, retardo de freno
+□ F. Buscar el conector del CanCode (12 pines, Mini-Mate-N-Lok) junto a la llave. Foto
+□ G. Foto del conector del módulo KD Medi CO 250K (51540777): ¿puesto?
+□ H. Cuando lleguen: fusibles de 2 A en 4F15, 6F9, 5F3, 3F11, 4F10 — con el chino
+```
+
+□ I. Si el DB9 no llega al bus: escuchar en el conector del MAESTRO 1U16
+       (ver herramientas/componentes/). El bus pasa sí o sí por ahí.
+       Sin cortar ni pinchar aislante: puntas de retro-sondeo por detrás del conector.
+       Cómo encontrar el par CAN sin esquema:
+         · batería fuera, escala 200 Ω: el par que da ≈ 60 Ω entre sí
+         · llave ON, contra batería −: los dos ≈ 2.5 V en reposo;
+           con tráfico, CANH promedia algo arriba y CANL algo abajo
+       Alternativa más chica, si existe: el conector del CanCode junto a la llave (F)
+
+## El DB9 no maneja — 02-oct-2026
+
+El equipo **no viene preparado para teleop**. El DB9 es de **servicio**: leer sensores,
+leer y cambiar parámetros. **Nunca se vio que sirva para manejar**, y no hay que esperarlo.
+
+| | El DB9 / el bus | El teleop |
+|---|---|---|
+| Qué da | **ver**: sensores, mandos del operador, latencias, parámetros | **mandar**: velocidad, sentido, timón, hidráulica |
+| Por dónde | el conector de servicio (o una toma del bus) | **los mandos del operador**, reemplazados: multipiloto, timón, pedal |
+| Quién lo construye | ya existe | **nosotros** |
+
+Aunque el DB9 resulte ser CAN, mandar desde ahí no sirve: el multipiloto real sigue en el
+bus mandando lo suyo, y dos nodos diciendo cosas distintas es una falla. El mando se mete
+**donde está el mando**: en el conector del multipiloto (peldaño 5) o en sus botones (ruta B).
+
+## El camino seguro hacia el maestro — escalera, un peldaño a la vez
+
+Corrige lo que se dijo el 02-oct («escribirle por el bus, no»). Era demasiado amplio:
+**Judit hace exactamente eso**, por el bus, y es la herramienta de fábrica. El camino seguro
+no es no tocarlo: es tocarlo **en orden y con respaldo**.
+
+| # | Peldaño | Qué arriesga | Se vuelve atrás |
+|---|---|---|---|
+| 1 | **Escuchar** el bus (LISTEN_ONLY) | nada | no hace falta |
+| 2 | **Leer** por SDO (pedir objetos, sin escribir), como nodo 30 | carga mínima del bus | no cambia nada |
+| 3 | **Respaldo**: leer y guardar TODOS los parámetros `0x2xxx` del maestro | nada | es el seguro de los que siguen |
+| 4 | **Escribir UN parámetro documentado** (p. ej. `0x2414`, vueltas del timón), leerlo de vuelta, y **devolverlo** al valor del respaldo | una falla si el valor no cuadra | sí, con el respaldo |
+| 5 | **Reemplazar el multipiloto** (nodo 2): desenchufarlo y que nuestro nodo mande sus mismas tramas. El maestro sigue aplicando sus propios límites | lo que mande nuestro nodo | sí, se vuelve a enchufar el original |
+| 6 | APM+ (nodo 31), la interfaz de automatización oficial | — | — |
+
+El 5 es el teleop por el bus **sin cortar un cable**: se cambia un conector por otro.
+
+Condiciones para pasar del 2 en adelante:
+- en el equipo de **Las Palmas**, que está fuera de operación. **Nunca en uno de RETHINK**
+- **con el chino** al lado, y sabiendo **cómo se borran los códigos de falla**
+- **con el respaldo del paso 3 guardado en el repo** antes de escribir nada
+- un solo cambio por vez, y se lee de vuelta antes de seguir
+- nunca los menús `STD-PARAMETER` ni `CONFIGURATION`, ni *Save* en el display
+
+**No se hace:** abrir el 1U16 · reflashear firmware · FTDI al DB9 (mete tensión en CAN_L) · mover hidráulica (falta sensor,
+riesgo de aceite) · *Save* en Parameter · entrar a STD-PARAMETER o CONFIGURATION.
+
+## Fuera del equipo
+
+```
+□ MCF vía Montasa, serie 82824121: sección 002 «Electrical» 07.15 del ETR 335D
+   + esquemas 99515375 / 99520170 / 99520663.  Alternativa: revendedor, 25 USD
+□ Scribd: ETR335D Spare Parts Catalog 82822585 · ETR345A (teoría de operación, 13 p.)
+□ De la Mitsubishi Publication List: todas las filas EDR18N2 / ESR20N2 / ESR23N2
+□ Chino: ¿qué se sacó después del 18-sep? ¿también un sensor de presión (E2320)?
+□ 02-oct, CONTESTADO: el chino usaba el cable FTDI en los EDR18N2. El DB9 sirve para
+   LEER sensores, no para manejar. Hipótesis que lo une todo (docs/21): el DB9 dependía
+   del módulo de acceso 6U10 (X680/X681, «24V for JUDIT», fusible 4F15), y se canibalizó
+   entre el 18 y el 30 de septiembre. → Buscar el 6U10 y sus conectores
+□ (viejo) Chino: ¿en QUÉ EDR18N2 usaba el cable FTDI? ¿En este (serie 82824121) o en otros?
+   Si fue en otros, ese equipo es el CONTROL: misma medición que acá
+   (pin 3↔8, pin 2↔7, foto de la tarjeta de fusibles y de su etiqueta, número de serie).
+   Si allá el DB9 es serie y acá es CAN, la diferencia es de configuración o revisión
+   del equipo, no de la tarjeta: la tarjeta es pasiva, solo une el DB9 con el mazo.
+□ Reporte a Miguel: listo en Documents\TaTa\Reporte_EDR18N2_2026-09-30.docx, sin enviar
+```
+
+## 14-oct · APM+: no presente y desactivado (ABIERTO), y el orden de la ruta B
+
+- **APM+ (nodo 31): no está.** En los 11 logs del 06-oct, **cero tramas** de `0x71F`, `0x19F`,
+  `0x29F`… Latidos fijos solo de 701, 702, 703; boot-ups de 704, 707, 708, 71E. El manual lo
+  nombra en la tabla de nodos y en eventos de **paro de emergencia** (`1.26`–`1.27`): es un
+  módulo opcional. **Corregido el mismo día (maje): NO se descarta.** Evento `8 06` n:
+  «mensaje de arranque de un componente opcional que está configurado como no presente» →
+  «liberar/activar … nodo por parámetro». **Los opcionales se activan por parámetro**; uno
+  desactivado no recibe nada del Master, igual que el 31. Si se conecta, el Master lo detecta.
+  Para saber si el firmware lo soporta, de barato a caro: (1) menú de servicio, buscar opción
+  APM / PLC / automatización junto a ISM y CanCode, solo mirar; (2) con `sdo_lee`, leer `0x1F81` del Master (paso 2 de abajo); (3) mandar `71F 00` al equipo y ver si sale `8 06 31` (eso YA ES TRANSMITIR, último)
+- **Dato en tensión:** el Master tiene interfaces serie, una llamada **«interfaz PLC COM4»**
+  (evento `6 87 4`; COM2/COM3 son radio y logística). No se sabe dónde está físicamente. Puede
+  tener que ver con el cable FTDI serie que el chino usaba
+- **Por qué no puede ser un nodo «solo recibe»:** todo nodo CANopen manda boot-up al arrancar,
+  y el Master le habla a los que tiene configurados. Arranque del 06-oct (3 arranques):
+  lee `0x1000` de 2, 4, 7, 8, 30 · NMT start a 2, 3, 4, 7, 8, 30 **y 28** · boot-ups de 1, 2, 4,
+  7, 8, 30. **Al 31 nunca le habla.** Nodos que transmiten: 1, 2, 3, 4, 5, 6, 7, 8, 10, 30 (10
+  nodos, 53 identificadores; no 29)
+- **Nodo 28 (CanCode): el Master lo arranca y nunca contesta.** Lo espera y no está, o no
+  responde. El manual lo nombra junto al interruptor de llave y el ISM («Verifique el interruptor
+  de llave / ISM / CANCODE», eventos `3 02`): **probablemente un acceso por código**, la alternativa a la
+  llave. Cuadra con el pin 6 del DB9 colgando del `4F15` «autorización de acceso». Se confirma
+  con `sdo_lee` (`esperados 1`: ¿el 28 está marcado como obligatorio u opcional?)
+- **El pedal que le falta al equipo va primero en el equipo** (sin él no se prueba nada que se
+  mueva, y es el watchdog). El manual habla de «pedal doble» (mat. 51297587) y de un **pedal
+  de freno ANALÓGICO de dos canales** (eventos `1.10`/`1.11`, V1 + V2 ≈ 5 V). **Antes que nada:
+  cuál de los dos pedales falta y qué espera su conector** (llave ON, voltaje de cada pin;
+  contactos → relé DPDT, analógico → 2 canales de DAC). Mejor fuente: el EDR del taller del chino
+- **El multipiloto va en paralelo, en banco**, con el repuesto que maje tiene en casa:
+  1. continuidad de los 11 pines sin alimentar (puentes y si el bus entra y sale: 2↔4, 3↔5)
+  2. alimentarlo a ~39 V (pin 8 +, pin 7 −) y escuchar: ¿`702 00` y latido? Si sí, **funciona**
+  3. con el TJA nuevo, mandarle `000 01 02` (NMT start, solo en banco): ¿empieza a mandar `0x182`?
+- **Para hacerse pasar por el nodo 2 algo tiene que quedar donde iba** (la pantalla no prende
+  sin él, 07-oct). Opción más simple: **dejar el multipiloto real enchufado y cortar solo su par
+  CAN en un arnés**, nuestro nodo en su lugar. Se decide después de la continuidad del punto 1
+
+### Averiguar el APM+ nosotros (14-oct) — `can/sdo_lee/`
+
+Si Judit (nodo 30) cambia parámetros por SDO, un nodo nuestro también puede — **si** el Master
+no pide acceso, **si** se encuentra el objeto, y **si** el firmware conoce el 31. Activarlo sin
+APM+ presente probablemente dé `8 02 31` y bloquee el equipo hasta revertir: **leer y guardar
+el valor original antes de escribir nada.**
+
+| Paso | Qué | Esperado | Si no |
+|---|---|---|---|
+| 0 | banco: `id 2` al multipiloto de repuesto alimentado a ~39 V | `1000` = `…` como en el equipo (`43 00 10 00 …`) | el sketch está mal, no se va al equipo |
+| 1 | equipo: `id 1` (Master). **Control:** `id 31` | Master contesta; 31 SIN RESPUESTA | Master no contesta → pide acceso / no acepta SDO de cualquiera |
+| 2 | `esperados 1` → `0x1F81` (CiA 302: nodos que espera el Master) | marcados 2, 3, 4, 7, 8, 28, 30; 31 sin marcar | «objeto no existe» → `barre 1 2000 5FFF` (solo lecturas) |
+| 3 | escribir el bit del 31, ciclo de llave, mirar | el Master le habla al 31 (`61F`, `000 01 1F`) | revertir al valor guardado |
+
+`sdo_lee.ino` **solo lee**: no hay comandos 0x2x en el archivo. Antes de transmitir escucha 3 s
+y no transmite si no hay bus sano a 250k. **Pasos 1–2 son la primera transmisión al equipo**
+(ACK + pedidos de lectura): decisión de maje, no automática. El paso 3 va en otro sketch.

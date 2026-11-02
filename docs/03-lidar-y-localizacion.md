@@ -7,7 +7,145 @@
 
 ---
 
-# Lo vigente
+# Lo vigente — 29-oct-2026 · la secuencia: odometría + EKF/ArUco ahora, LiDAR tras la formalización
+
+> **Esto NO revierte el 19-oct.** El LiDAR/SLAM **sigue en alcance**, con todo lo de abajo intacto.
+> Lo que se fija acá es el **orden**: qué va primero y qué va después, no qué se queda y qué se cae.
+
+## La decisión
+
+**El siguiente paso de localización es odometría fusionada con ArUco por un filtro de Kalman
+(EKF). Solo cámaras + el bus del equipo — sin LiDAR.** El **LiDAR/SLAM no se descarta: se
+secuencia después de la formalización** del proyecto (presupuesto y aprobación formal). Es el
+paso que sigue, no un requisito de arranque.
+
+Por qué este orden:
+
+- **Lo de ahora es autofinanciado** (el NRE y el cómputo los pone maje; ver `docs/05` y el deck
+  de Omar). El nivel de arranque corre con **cámaras + Jetson 8 GB**, que es justo lo que pide
+  odometría + EKF/ArUco. No hace falta la Jetson de 16 GB ni el L2 todavía.
+- **El LiDAR/SLAM agrega capacidad real** (mapa en vivo, detección de bultos, degradación
+  elegante) **pero también costo y tiempo** (cómputo de 16 GB, el Unitree L2, integración de
+  SLAM). Eso pertenece a **después de formalizar**, cuando haya presupuesto que no salga del
+  bolsillo de maje.
+
+## La forma técnica del siguiente paso — EKF odometría + ArUco
+
+- **Predicción (alta tasa):** odometría por dead-reckoning del propio bus —**velocidad de tracción
+  (nodo 8)** y **ángulo de dirección (nodo 4)**, modelo de bicicleta. Los sensores ya están
+  adentro; se leen, no se montan (`CLAUDE.md`, sensores del bus).
+- **Corrección (cuando hay marca):** pose absoluta de los **ArUco** en las cabeceras de fila,
+  leídos por las cámaras. Mata la deriva de la odometría y resuelve la ambigüedad entre pasillos.
+- **Oclusión de ArUco** (se tapa, se despega, motion blur): el filtro **navega con la odometría**
+  hasta la próxima marca. Degradación elegante **sin** LiDAR — que es justo el trabajo #2 que
+  abajo se le daba al LiDAR, cubierto por el EKF en el nivel de arranque.
+- Esto hace concreto el **«marcadores primero, LiDAR de apoyo»** que ya estaba escrito abajo: el
+  EKF/ArUco es el primero; el LiDAR entra después a sumar mapa en vivo y detección de bultos.
+
+## Qué cambia en la práctica
+
+- El `detector_aruco.py` (laptop, sin Jetson) y la captura de odometría del bus son las dos
+  herramientas a construir ya — las dos corren bloqueado, sin equipo funcional dedicado.
+- La pregunta de degeneración del LiDAR (`analisis/analisis_degeneracion.py`) **espera** a la
+  etapa post-formalización; no bloquea el siguiente paso.
+- No cambia la compra del 19-oct como **plan**: cuando se formalice, L2 + Orin NX 16 GB siguen
+  siendo la elección (ver `docs/05`). Solo se corre en el tiempo.
+
+---
+
+# Lo vigente — 19-oct-2026 · el LiDAR vuelve a navegar: SLAM y mapeo en vivo
+
+> **Esto revierte la decisión del 27-ago** («el LiDAR no navega»), que queda abajo, intacta,
+> como parte del camino. No se borra, y no todo lo de aquel día se cae —lo de las dos cámaras
+> con ArUco sigue en pie. Lo que cambia es que **el LiDAR deja de ser solo detector de bultos**.
+
+## La decisión
+
+**El LiDAR 3D vuelve al alcance como sensor de navegación: SLAM / mapeo en tiempo real.**
+No reemplaza necesariamente a las cámaras con ArUco —por ahora **suma**, no resta. Qué pesa
+más en el filtro de pose, o si una capa respalda a la otra, queda abierto (abajo).
+
+Tres hechos de maje que lo mueven:
+
+- **El ambiente es cerrado, y se va a cerrar más** —la meta es que no entren humanos al pasillo
+  de operación. Eso cambia el cálculo de seguridad y abarata depender de un mapa en vivo.
+- **El LiDAR va montado sobre la jaula de seguridad del techo del EDR**, no al nivel del chasis.
+- **SLAM ya se hizo en Botoni sobre una Jetson de 2 GB, y no fue fácil.** La experiencia manda:
+  8 GB «podría no alcanzar», así que el cómputo sube a **16 GB**.
+
+## Qué lo cambió — decía / es / qué lo tumbó
+
+| Decía (27-ago) | Es (19-oct) | Qué lo tumbó |
+|---|---|---|
+| El LiDAR no navega; solo ve lo que no debería estar | **El LiDAR hace SLAM / mapeo en vivo**, además de ver bultos | Decisión de maje: sí se va a hacer SLAM, con el LiDAR para mapeo en tiempo real |
+| El almacén no cambia de forma, no hay nada que mapear | El pasillo **sí cambia** día a día (bultos, tambores, la rejilla, IBC fuera de línea), y un mapa en vivo lo absorbe mejor que un mapa fijo + detección de bultos | El mismo argumento de `IMG_0208/0209/0212` que ya estaba escrito, leído al revés |
+| Comprar un LiDAR **2D**, ~10 m, sin intensidad | Comprar un **3D**: Unitree L2, 360°×96° | El 3D vuelve a hacer falta porque el LiDAR vuelve a localizar |
+| «LiDAR montado tan alto que solo ve por encima de la estructura» = caso singular, a evitar | **Va montado alto a propósito** (techo de la jaula) | El 96° vertical del L2 mitiga el riesgo: ve hacia abajo lo suficiente para no quedarse sin caras perpendiculares. **Pero el riesgo no desaparece** (abajo) |
+
+## La compra — decidida 19-oct
+
+| Pieza | Elegido | ~USD | Por qué |
+|---|---|---|---|
+| **LiDAR 3D** | **Unitree L2** · 360°×96° | **$419** oficial (~$478 con aranceles) | El 96° vertical le gana al 59° del Mid-360 para montaje en el techo: desde arriba, 59° dejan un cono ciego grande hacia el piso del pasillo y la base de los racks —justo lo que hay que ver de cerca. Rango 30 m @90%, 15 m @10%; punto ciego 0.05 m; 2 cm; 230 g |
+| **Cómputo** | **Jetson Orin NX 16 GB** | **~$999** módulo (subió de $599 en 2026); dev kit armado ~$1,480 | 16 GB por la lección de Botoni (SLAM en 2 GB fue durísimo; 8 GB podría no alcanzar). Orin y no Raspberry: CUDA + Isaac ROS, el ecosistema de SLAM con GPU |
+| **Fuente** | DC-DC 39–55 V → 19 V | ~$40 | El equipo **no es de 24 V**: el pin 8 del multipiloto dio 38–48 V (ver `herramientas/componentes/LEEME.md`). Todo lo que se monte aguanta tensión de batería |
+
+### El presupuesto no cuadra en $1,500 — y hay que decirlo
+
+El presupuesto de **$1,500** se fijó **antes** de que NVIDIA subiera el Orin NX 16 GB de $599 a
+~$999 (julio 2026). Con el precio nuevo:
+
+```
+Unitree L2                        ~$450   (oficial $419, algo más con aranceles)
+Orin NX 16 GB armado (módulo +    ~$1,250 (módulo $999 + carrier + SSD + fuente)
+  carrier + SSD)
+DC-DC 39–55 V                     ~$40
+                                  ───────
+subtotal antes de importar        ~$1,740   ← ya pasa los $1,500
+```
+
+Y falta la importación a Honduras encima. **Realista: ~$1,900–2,000 puesto en el taller.**
+Dos salidas, y es decisión de maje:
+
+1. **Subir el presupuesto a ~$2,000.** Es lo que maje ya anticipó que Omar aprobaría sin
+   pensarlo para la etapa de autonomía.
+2. **Bajar a Jetson Orin Nano Super 8 GB** (~$249–399 el dev kit): L2 + Nano + fuente entra
+   bajo $1,000 con holgura, pero maje ya juzgó 8 GB marginal para SLAM. Queda como plan B si el
+   presupuesto no se mueve.
+
+**Lo decidido sigue siendo L2 + Orin NX 16 GB.** Lo que se corrige es el número: no son $1,500,
+son ~$2,000.
+
+## La tensión que esto reactiva: la degeneración vuelve a la mesa
+
+Mientras el LiDAR no localizaba, `analisis/analisis_degeneracion.py` estaba archivado. **Si el
+LiDAR vuelve a navegar, su pregunta vuelve a ser real:** un pasillo largo y uniforme degenera el
+emparejado de escaneos —la matriz de información se vuelve singular a lo largo del eje. Y el
+montaje en el techo de la jaula es exactamente el caso que el propio análisis marcó como peligroso
+(«LiDAR montado tan alto que solo ve por encima de la estructura»).
+
+El 96° vertical del L2 es la razón técnica por la que el montaje alto no mata el SLAM: desde el
+techo, 96° todavía alcanzan las caras de los racks y el piso, que son las features perpendiculares
+que restringen el eje longitudinal. **Pero es hipótesis, no medición.** Hay que correr
+`analisis_degeneracion.py` otra vez con la altura real de montaje y el FOV del L2 antes de darlo
+por bueno. Sale del archivo.
+
+## Lo que queda abierto con la reversión
+
+- **¿SLAM reemplaza o complementa el ArUco?** Sin decidir. Lo prudente: ArUco sigue siendo la
+  referencia absoluta sin deriva, SLAM da el mapa en vivo y la robustez cuando el ArUco se ocluye.
+- **La altura exacta de montaje en la jaula**, que además fija el resultado de la degeneración.
+- **Cómo se sella el pasillo a humanos.** Es lo que cambia el cálculo de seguridad; es diseño de
+  la celda, no del sensor, y toca a `docs/04`.
+- Correr `analisis_degeneracion.py` con L2 + altura de jaula.
+
+---
+
+# Lo que estuvo vigente del 27-ago al 19-oct — el LiDAR como detector, no navegador
+
+> **Superado el 19-oct-2026** por la sección de arriba: el LiDAR vuelve a navegar. Lo de las
+> **dos cámaras con ArUco sigue vigente**; lo que ya no manda es «el LiDAR no localiza» y la
+> recomendación de comprar un 2D. Se conserva íntegro.
 
 *Decidido el 27-ago-2026.*
 
@@ -80,6 +218,18 @@ controlador USB: MJPEG o buses separados.
 
 La tercera cámara —la de uña, que viene de fábrica— es la del ajuste final en la bahía. Antes
 de contar con ella hay que saber **qué señal se le puede sacar**; ver `docs/11`.
+
+> **Resuelto 23-oct-2026 (maje reparó el cable de la cámara de otro EDR):** el cable es
+> **coaxial, end-to-end, sin componentes** (ni resistencias ni activos en el medio). El conector
+> es combo-D con **un contacto coaxial central + 2 pines poblados** (de 4 alrededor): el coax
+> lleva el **video analógico compuesto** (NTSC/PAL) y los 2 pines son **alimentación + tierra**
+> de la cámara (fusible `6F9`). No va por CAN (el bus a 250 kbaud no lleva video).
+>
+> **Consecuencia —la cámara de fábrica es trivial de usar:** un **T-tap pasivo en el coax**
+> (splitter de video 75 Ω o tap de alta impedancia, para no degradarle la imagen al display) →
+> una **capturadora USB de video compuesto** (~$10–20) → stream estándar al cómputo, listo para
+> ArUco. El feed de fábrica al display sigue intacto en paralelo. **No hace falta montar cámara
+> propia en la uña.** Confirmar en campo que la capturadora engancha (verifica que es compuesto).
 
 ## Lo que hicimos en Botoni, verificado en el código
 
@@ -174,7 +324,8 @@ deriva longitudinal en pasillos largos, que es otro problema.
 - **La altura de montaje del LiDAR.** Se mide en campo.
 - **Cuántos ArUco, a qué separación y a qué altura.** Botoni fijó los suyos mirando la cámara
   en muchos ángulos hasta decidir. Acá toca repetir ese ejercicio con la geometría del EDR.
-- **Qué señal sale de la cámara de uña de fábrica.** `docs/11`.
+- ~~**Qué señal sale de la cámara de uña de fábrica.**~~ **Resuelto 23-oct:** video analógico
+  compuesto por coaxial, se toma con T-tap + capturadora USB (ver arriba, sección de cámara).
 - **Si hay zona clasificada** en el área de mixers. Cambia sensor, precio y proveedor por
   completo. Es pregunta para el cliente.
 

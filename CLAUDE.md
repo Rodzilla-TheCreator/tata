@@ -9,18 +9,42 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 |---|---|
 | `docs/01-hallazgos-rethink.md` | Lo que encontramos en el almacén del cliente |
 | `docs/02-maquina-y-geometria.md` | El EDR18N2 y si cabe el giro en 3 m |
-| `docs/03-lidar-y-localizacion.md` | **Localizan las cámaras con ArUco. El LiDAR no navega** |
+| `docs/03-lidar-y-localizacion.md` | Localizan las cámaras con ArUco. **19-oct: el LiDAR vuelve a navegar (SLAM); se compra Unitree L2 + Orin NX 16 GB** |
 | `docs/04-seguridad-y-normativa.md` | Por qué la capa de seguridad va aparte |
 | `docs/05-producto-y-negocio.md` | Escala de madurez, costos, retorno |
 | `docs/06-simuladores.md` | Los dos simuladores y cómo se usan |
 | `docs/07-estado-y-siguientes-pasos.md` | Qué falta, en orden, con puertas de decisión |
 | `docs/08-setup-git-agente.md` | Cómo dejar la máquina lista para empujar y cómo trabajar con git |
 | `docs/09-briefing-secuencia.md` | La simulación de secuencia: qué es y qué falta |
-| `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección |
+| `docs/10-intervencion-electrica.md` | Los tres planes de intervención: freno, tracción, dirección. **Y el watchdog de 200 ms** |
 | `docs/11-plan-de-diagnostico.md` | **La visita de medición. Va ANTES del doc 10** |
 | `docs/12-medicion-de-la-sombra.md` | **Una hora con flexómetro y papel. Cierra el bloqueo 1** |
 | `docs/13-timeline-antes-de-la-semana.md` | **Todo lo que va antes, por dependencia. El bloque 0 corre desde hoy** |
 | `docs/14-maquinas-y-entorno.md` | **i3, maquinon y superspeed: cómo están armadas y las trampas** |
+| `docs/15-viaje-al-taller.md` | **El plan del viaje, la placa de datos y todo lo del puerto de servicio** |
+| `docs/16-manual-de-servicio.md` | **El manual de servicio: el equipo es un Jungheinrich, el bus es CANopen, y existe el APM+** |
+| `docs/17-hito-teleop.md` | **El plan de acción del hito del teleop, por bloques. El bloque 1 se puede empezar hoy** |
+| `docs/18-runbook-de-campo.md` | **El día del puerto, paso a paso, para seguirlo con la máquina enfrente. Windows/i3** |
+| `docs/19-control-teleop.md` | **El control del teleop: cualquier control sirve, qué funciones y en qué orden, y las reglas del mando** |
+| `docs/20-simular-mandos.md` | **Cómo simular pedal, timón y multipiloto sin que el equipo lo note: las reglas de plausibilidad del manual, y arneses enchufables** |
+| `docs/21-gameplan-intervencion.md` | **El gameplan en cuatro secciones: leer sensores, multipiloto (primero, en el banco con el repuesto), pedal y timón. Y lo que dijo el chino el 02-oct** |
+| `docs/24-rig-completo.md` | **El rig completo: DB9 (CAN) + timón en un solo rig, para probar marcha y dirección en un equipo que funcione.** Las dos mitades ya validadas por separado; acá se juntan. El tema de las dos tierras (amarillo aislado): primera prueba con dos rigs independientes; integrado con transceptor CAN aislado. BOM, cableado, orden de prueba. **Se arma y valida en el banco YA, sin montacargas.** **02-nov: el rig integrado es UN solo ESP** (CAN aislado + timón + watchdog, GND=amarillo); el USB-CAN a la laptop se descartó porque el watchdog va en el micro. Esquema del sistema en `herramientas/rig_completo.svg` |
+| `docs/23-runbook-mt118.md` | **El protocolo del MT 118 (Agrolibano, equipo de CLIENTE) durante su mantenimiento preventivo.** Todo enchufable y reversible. Track A (multipiloto/marcha) sí en el 118; Track B (timón) solo si se resuelve cómo borrar la falla del nodo 4 — si no, va al 122. El riesgo real es la falla enganchada que no se puede borrar |
+| `docs/25-protocolo-equipo-ajeno.md` | **Cómo trabajar en cualquier equipo ajeno (prestado, de cliente, en mantenimiento): nada irreversible.** El DB9 se adapta a cada equipo (medir, confirmar, repinear la bornera, escuchar). Tres niveles: escuchar · mandar quieto (pedal sin puentear) · movimiento (solo con cadena de paro). Generaliza `docs/23` |
+| `docs/22-busqueda-transceptor-can.md` | **La búsqueda del transceptor para transmitir al bus.** **Resuelto 14-oct:** el TJA1050 viejo era una unidad mala; el nuevo (misma marca) sube en 0.42 µs y pasa `prueba_can` 20/20 con control. MCP2515 de C&D en mano, sin probar |
+
+| Carpeta | Qué contiene |
+|---|---|
+| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **El fusible que falta alimentaba el pin 6 del DE-9**; se puso el 30-sep y **no era la causa**: **ningún pin del DB9 tiene tierra** (ver la sección del 30-sep en el `.md`). Tarjeta **Littelfuse 852-023**, y una **placa Jungheinrich en el fierro** (`F.Nr 51540777`, `KD Medi CO 250K Jr.`). `manual_fusibles_p14*.jpg` es la tabla del manual: **el pin 6 cuelga del `4F15`, «autorización de acceso», 2 A**, y hay **tres posiciones de 2 A con fusible de 10 A** |
+| `herramientas/manual_operacion/` | **El índice del manual impreso de operador** (`04.17 US_ES`, familia ESR N2). `indice.md` lo transcribe y dice qué páginas fotografiar: **101–109, acceso sin llave**, que es de donde cuelga el pin 6 del DB9 |
+| `herramientas/pendientes.md` | **Dónde quedó el puerto y qué falta, en banco y en el equipo. Empezar por acá** |
+| `herramientas/componentes/` | **Dónde está cada controlador**, del manual de servicio. El cerebro es el **Maestro `1U16`**, nodo 1; los sensores van a su controlador y la pantalla los pide por el bus |
+| `herramientas/can/` | **La cadena de escucha CAN.** **Leer `LEEME.md` primero.** Plano vigente: **`armado_escucha.svg`** (sin conversor, TX al aire, CANH→8, CANL→3, sin GND). Los SVG viejos están superados: **el pin 6 es +24 V, no tierra**. `escucha_can.ino` escucha en LISTEN_ONLY; **validada para escuchar el 05-oct** con `diagnostico/`. `prueba_can.ino` **pasa 20/20 con el TJA nuevo (14-oct)**; el viejo queda solo para escuchar. **Pines: TX 22, RX 21.** `sdo_lee/` lee objetos por SDO (solo lectura, todavía sin probar en banco). **El manual pide 60 Ω en el bus; el equipo tiene 120.** `armado_aislado.svg` es el CAN **aislado** (ADuM1201 + TJA1050 + DC-DC B0505S) para correr CAN y timón con una sola tierra; ver `docs/24` |
+| `herramientas/emulador_timon/` | **El emulador del sensor del volante (dirección).** La dirección NO es CAN: se comanda emulando el sensor **seno/coseno** (`Vo=2.47`, `Va=1.98`, círculo, absoluto). Circuito, BOM y sketches (caracterizador + emulador ESP32). **Leer `LEEME.md`.** Ver `docs/21` §4 |
+| `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
+| `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
+| `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
+| `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control)**, y la **FSM de coordinación A/B** (reserva, deadlock, falla; `sim_coordinacion.py`): `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real** |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
@@ -43,15 +67,39 @@ Velocidad de trabajo **7.9 km/h**, no los 12 de catálogo. Sobre de velocidad: *
 **Se dice ArUco.** No "marcadores", no "etiquetas", no "AprilTag". Es el término del proyecto
 y viene de Botoni, donde el equipo definió cuáles y dónde iban.
 
-**El LiDAR no navega.** Localizan **dos cámaras USB con ArUco** más la odometría. Al LiDAR le
-queda un solo trabajo — ver lo que no debería estar ahí — y no es redundancia: el mapa acierta
-con los racks y se equivoca todos los días con lo que hay en el pasillo. Detalle en `docs/03`.
+**Se dice DB9**, y cuando importa, **DB9 macho** o **DB9 hembra**. En el montacargas es
+hembra; el cable de Judit es macho. `DE-9` es el nombre formal (la letra del medio es el
+tamaño de carcasa, no el género) pero acá no se usa, y **DB9 no es un error a corregir**.
+
+**Localizan dos cámaras USB con ArUco más la odometría** — eso sigue firme. ~~El LiDAR no
+navega~~ **revertido el 19-oct-2026: el LiDAR 3D vuelve al alcance para SLAM / mapeo en vivo**
+(no reemplaza al ArUco, suma). El ambiente es cerrado y se va a sellar a humanos, y el LiDAR va
+sobre la jaula del techo. Se compra **Unitree L2 (360°×96°) + Jetson Orin NX 16 GB**. Reactiva
+la pregunta de degeneración de `analisis/analisis_degeneracion.py`. Detalle y la reversión
+completa (decía/es/qué lo tumbó) en `docs/03`.
 
 **La seguridad va aparte por norma**, no por recorte. ISO 3691-4 exige que la capa
 certificada esté aislada de la navegación.
 
 **Nunca llamar "freno automático" a nada en hardware de nivel Ingenio.** Es asistencia de
 frenado en modo demostración, teleoperado con un dedo sobre un paro físico.
+
+**El watchdog de 200 ms lo cuenta el ESP32, nunca la Jetson.** Linux no garantiza tiempo. Si
+pasan 200 ms sin latido, el ESP32 corta el hombre-presente y cae el freno de resorte. El rearme
+es **manual**. Y **no es la capa de seguridad certificada** — es supervisión de disponibilidad.
+Detalle en `docs/10`.
+
+**Dónde se trabaja: el taller Las Palmas de Montasa, sobre un EDR18N2 que está fuera de
+operación.** Montasa no pierde dinero prestándolo — ya estaba en cero. Eso baja el costo de
+equivocarse, pero **no cambia las reglas cuando se toque el equipo del cliente.**
+
+**El Aula** es el laboratorio que se va a construir ahí — un pasillo con estantes, dentro del
+taller. El nombre honra al mismo maestro que le da nombre al proyecto. **Va después del hito
+del teleop**, no antes.
+
+**Pasillo 0** es el pasillo de adentro de El Aula, y es **variable de operación**: los sectores
+reales del cliente son A y B, y este es el que va antes. Nada entra al pasillo A sin haber
+pasado el Pasillo 0.
 
 **Piezas y ingeniería son cosas distintas.** El NRE es descubrir qué señal es cada cable, y
 eso se paga una vez para todo el modelo, no por unidad.
@@ -193,7 +241,368 @@ y racks eran atravesables**. No afectaba al LiDAR RTX, que traza geometría de r
 
 ---
 
-## Qué se construyó en esta sesión
+## Corregido y aprendido — 18-sep-2026 · el taller y el puerto
+
+Sesión larga. Dos frentes: se **midió la sombra** en un EDR parado en el taller de
+Montasa Las Palmas, y se abrió el **puerto de servicio DE-9**. Manda sobre lo anterior.
+
+### La sombra, medida — Las Palmas
+
+Se midió **un solo lado** y se asumió simetría. No se pudo mover el equipo ni marcar el
+piso. Estaciones tomadas desde el culo hacia la torre.
+
+| Cota | Decía (repo) | Se midió | Veredicto |
+|---|---|---|---|
+| `W_RESTO` ancho del capó | 1.065 | **1.065** | confirmado |
+| escalón capó → patas | 0.25 | **0.25** | confirmado |
+| `L_ANCHO` largo del tramo ancho | 0.20 | **0.48** | **desmentido**, más del doble |
+| `W_MAX` ancho pata a pata | 1.315 | *no se midió* | sigue siendo del repo, nunca verificado |
+
+**Lo que ancla toda la escala lateral es `W_MAX`, y sigue sin medirse.** Con un solo lado
+medido, la simetría da forma pero no da ancho. Esa medida es la número uno del próximo viaje.
+
+**Cota dura que salió de la ficha más el ancho:**
+
+```
+XPIV < sqrt(Wa² − (W/2)²) = sqrt(1.797² − 0.6575²) = 1.6724 m
+```
+
+Si `XPIV` fuera mayor, la esquina trasera quedaría más lejos del centro de giro que el propio
+radio de ficha. Imposible, igual que el 1.91 que se tumbó en agosto.
+
+**Y hay una contradicción viva, sin resolver:** la rueda de carga cayó en la estación 282; con
+`WB = 1.562` eso implica `XPIV = 1.862`, que viola la cota de arriba. Una de tres está mal:
+el `Wa = 1.797` de ficha, la identificación de esa rueda, o la alineación de la cinta.
+**No se resolvió. Es la pregunta que va con flexómetro al próximo viaje.**
+
+### El giro, con la silueta medida
+
+Se corrió `analisis/planificador_giro.py` con el `L_ANCHO = 0.48` medido, barriendo `XPIV`
+entre 1.30 y 1.60 para cubrir la incertidumbre:
+
+| | Resultado |
+|---|---|
+| Ventana de carriles para 90° | **75–150 cm, estable en todo el rango de `XPIV`** |
+
+**La forma domina al pivote.** Eso baja la urgencia del bloqueo 1 *para factibilidad* — el
+giro entra sea cual sea el `XPIV` dentro del rango. No la baja para **control fino**: el
+controlador sí necesita el número real.
+
+**El 180° en el pasillo:**
+
+| Caso | Ancho barrido | ¿Entra en 3.00 m? |
+|---|---|---|
+| Solo chasis, peor caso | 2.31 m | sí, 69 cm de sobra |
+| Chasis **+ uñas**, a 75°/105° | 3.14 m | **no, faltan 14 cm** |
+
+Lo que lo mata es el **largo**, no el ancho de las uñas. Conclusión: el 180° en pasillo **no
+es confiable, y tampoco hace falta** — el reach truck maneja igual en ambos sentidos.
+
+> **Defecto conocido, anotado y NO corregido:** `silueta()` en `planificador_giro.py`
+> **no modela las uñas**. Abarca ~2.02 m (culo a cara de torre) cuando el equipo real mide
+> 2.91 m con uñas. Por eso sus resultados de 90° y 180° son **solo chasis**. El 3.14 de
+> arriba se calculó aparte, por geometría directa, no con el planificador.
+
+---
+
+## El puerto de servicio DE-9
+
+El chino encontró un **DE-9 hembra en la tabla de fusibles** del EDR. Dice que por ahí
+controlaba el equipo con **Judit**: veía sensores y movía parámetros. Se le venció la licencia.
+Ese es el camino que se tomó.
+
+### Medido, con multímetro, en el equipo
+
+```
+Óhmetro, apagado, sin adaptador:
+  pin 2 ↔ pin 7   ABIERTO       → no es un bus CAN *terminado*
+
+Voltímetro DC, encendido, negra a chasis, sin adaptador:
+  1, 4, 5, 7, 9   0 V firme
+  6               +0.1 V   flotante
+  8               −0.1 V   flotante
+  2               −5 a −12 V     VARIABLE
+  3               −14.6 V estable, luego −5 a −9 V   VARIABLE
+```
+
+**Pines 2 y 3 vivos, a niveles RS-232, con actividad.** Un puerto muerto no transmite. Es la
+evidencia más fuerte que ha producido cualquier punto de entrada en esta investigación.
+
+> **Corregido el 01-oct-2026:** el razonamiento de abajo sobre el 2↔7 está mal. Los
+> terminadores están en las puntas del bus: en cualquier punto de un bus CAN terminado,
+> CANH↔CANL da ≈ 60 Ω. El 2↔7 abierto **sí** decía que ahí no hay CAN. Y el **pin 6 no es
+> masa: es +24 V por el `4F15`** (medido 30-sep). Ver `herramientas/can/LEEME.md`.
+
+**Por qué no es CAN:** por el **−14.6 V**, no por el 2↔7 abierto. Un stub de diagnóstico
+normalmente **no lleva terminador**, así que el 2↔7 abierto no descarta nada. CAN diferencial
+nunca llega a −14.6 V. *(Esto corrige un razonamiento previo de esta misma sesión.)*
+
+**Por qué el multímetro da valores variables:** un multímetro DC promedia. Una línea que está
+transmitiendo tiene su promedio corrido hacia cero desde el nivel de marca (−5 a −15 V).
+El −14.6 V estable es la línea **en reposo**; el −5/−9 V es la misma línea **hablando**.
+
+### Descartado, y por qué
+
+| Hipótesis | Qué la tumbó |
+|---|---|
+| Bus CAN terminado | −14.6 V en pin 3 |
+| Adaptador roto (CH340) | **loopback 37/37 perfecto** en banco. Está bueno |
+| VGA / video | 9 pines en 2 filas (5+4), no 15 en 3 |
+
+### La causa del silencio, y cómo se arregló
+
+El cable USB-serie es **DTE**. El puerto del equipo, si es de servicio, también es **DTE**.
+DTE↔DTE **directo no habla**: TX contra TX, RX contra RX. Hace falta un **null-modem**, que
+cruza 2↔3.
+
+Se compró. **Al null-modem le falta el pin 9 del lado macho — no importa**: el pin 9 es RI,
+no se usa en este enlace.
+
+### Lo que NUNCA se probó de verdad, en el equipo
+
+- Cualquier velocidad **arriba de 14400**
+- Cualquier encuadre que **no sea 8N1**
+
+El barrido de `escucha_edr.ino` cubre 9 velocidades × 6 encuadres = **54 combinaciones**,
+~3 min por pasada. Eso es lo que va al próximo viaje.
+
+### El cable de fábrica que apareció en el taller
+
+Un cable ethernet-a-DB9, 4 conductores, mapeo por continuidad:
+
+```
+amarillo → pin 6      café   → pin 9
+naranja  → pin 2      rojo   → pin 7
+```
+
+Eso es **exactamente el pinout CiA-303 de CAN sobre DE-9** (2=CAN_L, 6=GND, 7=CAN_H, 9=V+).
+**Su procedencia no está confirmada** — puede no ser de esta máquina. Es dato en tensión con
+lo medido, **no una conclusión**. Se conserva. Si mañana el DE-9 resulta ser CAN después de
+todo, este cable es la pista que lo anticipó.
+
+### El cable de solo-escucha — especificación correcta
+
+Para escuchar sin transmitir nunca:
+
+```
+equipo pin 3  →  adaptador pin 2      (su TX a nuestro RX)
+equipo pin 5  →  adaptador pin 5      (tierra de señal)
+adaptador pin 3   SIN CONECTAR        (nuestro TX al aire)
+```
+
+Una versión anterior decía "solo pines 2 y 5" — **está mal**, eso deja nuestro RX contra su RX.
+
+### Judit, y de dónde salen los manuales
+
+**Judit = JETI JUDIT**, herramienta de concesionario **Jungheinrich**, que entra por la
+**Incado Box** con cable de 9 pines. Parece contradicción con una máquina Mitsubishi, y no lo
+es: **MCFA distribuye Mitsubishi, Cat y Jungheinrich**. El chino tenía Judit legítimamente.
+*(Esto le dio la razón al chino contra una objeción mía. Ver la regla de abajo.)*
+
+| Manual | Qué es | Cómo se consigue |
+|---|---|---|
+| O&M ESR20N2 · ESR23N2 · **EDR18N2**, 01/2022 | operador | MCF Parts Client vía Montasa |
+| **WENBM8550-01** | taller: códigos de falla y parámetros | igual, y es el que de verdad sirve |
+
+**Pendientes los dos.** Ninguno se ha conseguido.
+
+### ¿Es el DE-9 el puerto correcto?
+
+**Sí, hasta donde se sabe.** Lo sostienen: actividad RS-232 real en 2 y 3; el testimonio del
+chino; Judit entrando por 9 pines; y su ubicación en la tabla de fusibles, colgado del bus de
+control y no de un periférico.
+
+**La única sombra:** el único conector de servicio Mitsubishi/Cat documentado públicamente es
+el **GSE**, un plug **cuadrado** bajo el portavasos — y eso en montacargas de combustión, no en
+reach trucks. Ningún documento público muestra un DE-9 en un ESR/EDR.
+
+**Lo que lo cierra, barato, con los paneles ya abiertos:** seguir **a dónde va el mazo del
+DE-9**. El arnés es **TE 1-965484-1** (AMP Timer, automotriz wire-to-device). Si llega al
+controlador de tracción, el DE-9 es el puerto de servicio y se acabó. Si llega solo al
+tablero, es un puerto de display y el bus bueno está más adentro. Candidatos de reserva, en
+orden: detrás del display; el puerto propio del controlador de tracción (ZAPI o Curtis, cada
+uno con su consola); el puerto del cargador.
+
+### Reglas del puerto — no negociables
+
+- **La primera visita solo se escucha. Nunca se transmite.**
+- **Jumper fuera antes de conectar al equipo.** Puentear pin 2 con pin 3 en el equipo es
+  cortocircuitar dos líneas manejadas por el controlador.
+- No se corta ni un cable. Es equipo de un cliente en un taller ajeno. **Nada irreversible.**
+
+### RESUELTO — 25-sep-2026 · el cable apareció y el chino lo confirmó
+
+Apareció en una caja del taller un **cable DB9 macho → USB, chip FTDI**, capuchón delgado.
+Se le mandó foto al chino por WhatsApp y contestó: **«si ese es»**.
+
+**Es el cable que usaba con Judit. No había caja de por medio.** Su memoria era literal —
+«del montacargas directo al USB de la compu»— y yo construí encima una teoría entera de una
+Incado Box perdida que nunca existió. Las Incado ni siquiera tienen RJ45.
+
+### Lo que esto reconcilia
+
+Durante semanas hubo dos evidencias que se contradecían: el **−14.6 V** que dice serie, y el
+**nodo 30 «PC de servicio»** del manual, que dice CANopen. Con el cable confirmado, la lectura
+que las deja a las dos en pie:
+
+> **El DE-9 del equipo es un puerto SERIE.** Adentro hay una pasarela que traduce a CANopen.
+> Judit habla serie con esa pasarela; la pasarela aparece en el bus como el **nodo 30**.
+
+Con eso encajan todas las mediciones, sin descartar ninguna:
+
+| Medición | Antes era | Ahora |
+|---|---|---|
+| −14.6 V en pin 3 | «raro, contradice el manual» | **es RS-232 en reposo. Correcto** |
+| actividad en pines 2 y 3 | evidencia suelta | **es el par TX/RX del enlace serie** |
+| pin 2 ↔ 7 **abierto** | «difícil de explicar si es CAN» | **no es CAN. Por eso está abierto** |
+| nodo 30 = PC de servicio | «el puerto tiene que ser CAN» | **es cómo aparece la pasarela en el bus** |
+
+**Ninguna medición estaba mal. El modelo estaba mal.** Otra vez.
+
+### Qué cambia en la práctica
+
+- **El camino es SERIE, no CAN.** El instrumento es **`escucha_edr.py`** en la laptop: el
+  cable va directo al USB y el ESP32 sale del camino. El sketch queda de respaldo
+- **No lleva null-modem.** El chino lo enchufaba directo y funcionaba. Se prueba así primero;
+  el null-modem solo si no sale nada
+- **Se levanta el techo de 14400.** El CH340 topaba ahí; un FT232 llega a 3 Mbaud. Las 54
+  combinaciones del barrido se pueden correr completas por primera vez
+- **El capuchón entra en la ranura** del DE-9, que está hundido entre fusibles. El DB9 de
+  bornera probablemente no
+- **La cadena CAN (ESP32 + TJA1050) no se tira.** Queda como segundo instrumento y para el
+  bus interno, si algún día se llega al APM+
+
+### El cable RJ45, cerrado
+
+**No era el de Judit.** Es un cable **CANopen genérico**: CiA-303 define pinout de CAN tanto
+sobre DE-9 como sobre RJ45, y este tiene las dos puntas del mismo estándar. Se vende de
+estante. Su presencia en el taller no prueba nada del montacargas. Se archiva.
+
+---
+
+## RESUELTO — 03-oct-2026 · el DB9 es CAN, y se sabe qué pin es qué
+
+Medido por maje en el equipo, llave OFF, óhmetro. **Manda sobre todo lo de arriba del DB9.**
+
+| DB9 hembra | Ficha del multipiloto | Señal |
+|---|---|---|
+| **8** | **2** | **CAN_H** |
+| **3** | **3** | **CAN_L** |
+| — | **7** | **negativo de batería** (continuidad) |
+| — | **8** | **+39.2 V, tensión de batería** — el equipo **no es de 24 V de batería** |
+
+- DB9 3 ↔ 8 ≈ **120 Ω**; DB9 ↔ multipiloto 0.1–0.2 Ω por hilo: **el mismo bus**
+- **Un solo terminador** (120, no 60): falta uno, probablemente en algo canibalizado
+- **La carcasa del DB9 no es masa.** La masa se toma del negativo de batería
+- El pinout `X200` dejó de ser hipótesis en los pines 3 y 8
+- **En tensión, sin resolver:** el chino usaba un cable FTDI serie en los EDR18N2
+
+Detalle en `herramientas/can/LEEME.md` y `herramientas/componentes/LEEME.md`.
+
+---
+
+## El instrumento, validado antes de viajar
+
+Primer instrumento de todo este hilo que se verificó **antes** de usarlo en el equipo.
+
+**Cadena:** ESP32-WROOM → módulo **T132 (SP3232)** → null-modem → DB9. El SP3232 se alimenta a
+**3.3 V, nunca 5 V**: su swing RS-232 sigue al VCC. UART2 en **GPIO16 (RX) / GPIO17 (TX)** para
+dejar libre el USB.
+
+| Prueba | Resultado |
+|---|---|
+| `prueba_cadena.ino`, 6 casos (1200/9600/38400/115200 8N1, más 9600 8E1 y 7E1) | **6 de 6 eco perfecto** |
+| Control de falsación: se quita el puente | **SIN ECO en los 6** |
+
+Los dos controles pasaron. La cadena mide lo que dice medir.
+
+### Herramientas nuevas en el repo
+
+| Archivo | Qué hace |
+|---|---|
+| `herramientas/serie/prueba_cadena.ino` | valida la cadena ESP32+T132 contra sí misma, con auto-reintento RX/TX cruzados |
+| `herramientas/serie/escucha_edr.ino` | barrido pasivo 9 bauds × 6 encuadres. Tiene `MODO_FIJO` para clavar una combinación |
+| `herramientas/serie/probador.py` | banco tkinter azul retro para calificar un cable USB-serie: velocidad, paridad, loopback |
+| `herramientas/serie/escucha_edr.py` | **el instrumento del cable FTDI.** Barrido de 54, `--fijo`, y `--estimulo` con guion de acciones marcadas a mano. Solo lee y deja DTR/RTS en bajo. Validado contra un pty con control de falsación |
+| `herramientas/serie/lineas_edr.py` | levanta DTR/RTS por fases y escucha. Pone tensión en los pines 4 y 7 |
+| `herramientas/serie/saludo_edr.py` | **transmite** saludos y lecturas CiA 309-3, nunca escrituras. `--seco`, `--banco`, y separa eco deformado de respuesta |
+
+> **Defecto conocido de `probador.py`:** el veredicto «ESTE SIRVE» solo exige velocidad y
+> paridad, y ninguna de esas dos toca los pines del DB9. Un cable puede aprobar y fallar
+> loopback completo — **pasó exactamente eso** con el CH340 de reemplazo. **Solo el loopback
+> prueba que el conector pasa datos.** Arreglar el veredicto o leerlo con esa advertencia.
+
+
+## El manual de servicio — 18-sep-2026
+
+Apareció el **manual de servicio Jungheinrich completo**, 259 páginas, traducido a máquina por
+Google. Está en `herramientas/`. **Todo el detalle en `docs/16`.** Lo que manda desde ya:
+
+**El EDR18N2 es un Jungheinrich ETR 335d/340/345 con placa de Mitsubishi.** La portada dice
+ESR20N2/ESR23N2/EDR18N2 y el cuerpo habla de ETR. Son la misma máquina. Por eso el chino tenía
+Judit: **es la herramienta nativa del equipo**, no una prestada de otra marca. Y por eso toda la
+documentación Jungheinrich de la familia ETR aplica.
+
+**El bus es CANopen a 250 kbaud.** Tabla «Sistemas de BUS utilizados», sin ambigüedad.
+
+**El «PC de servicio» es el nodo CAN 30.** Judit habla CANopen, no serie.
+
+**Existe el nodo 31, APM+, «Interfaz de automatización (PLC)».** El fabricante reservó un ID de
+nodo para que algo externo maneje el equipo por el bus. **Eso no estaba en ningún supuesto del
+proyecto** — todo `docs/10` se escribió asumiendo que la única entrada era cortar cables. No es
+una solución todavía: hay que confirmar si está implementado acá y si su protocolo se puede
+obtener. Pero la pregunta dejó de ser especulación y **tiene nombre**.
+
+**Los parámetros vienen con su índice del diccionario de objetos CANopen** (`0x2100`, `0x2414`,
+…), que es exactamente lo que un maestro CANopen necesita para leerlos y escribirlos por SDO.
+
+### Lo que desmiente
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| El control Obed: **2.6 vueltas** de volante tope a tope | parámetro `0x2414`, fábrica **5.5**, rango 4–8 | El simulador tiene el timón **más del doble de rápido** que el real. Verificar contando a mano |
+| Los 7.9 km/h de campo contradicen los 12 de catálogo | **no se contradicen.** 7.9 ≈ programa 1 (fábrica 9), 12.9 = programa 3 | `0x2108`/`0x2128` |
+| Cargado y vacío se mueven igual | **solo en geometría de giro.** La velocidad se recorta por **presión hidráulica** entre 44 y 116 bar | Parámetros de desarrollo |
+| «Es imposible que sea CAN» (por el −14.6 V) | **abierto otra vez** | El PC de servicio es nodo CANopen |
+
+### La tensión con el DE-9, y la medición que la resuelve
+
+El manual dice CANopen. La medición dijo −14.6 V, que CAN no da. **No se resuelve adivinando ni
+tirando una de las dos.** La hipótesis más barata: **el chasis no es el negativo de batería**, y
+todo lo medido con la punta negra a chasis está corrido.
+
+**Va antes que cualquier otra cosa en el equipo, y son cinco minutos:**
+
+```
+1.  negativo de batería  ↔  chasis        ¿mismo punto, o hay voltaje entre ellos?
+2.  pin 6  ↔  negativo de batería
+3.  pin 3  ↔  negativo de batería         ← el −14.6 V, bien referido
+4.  pin 2 y pin 7  ↔  negativo de batería ← CAN_L y CAN_H en reposo ≈ 2.5 V
+```
+
+Si 2 y 7 dan ~2.5 V contra el negativo de batería, **es CAN y se acabó la duda.**
+
+Y el **cable ethernet-a-DB9 del taller sube de categoría**: mapeaba a pines 2/6/7/9, que es
+**CiA-303 exacto**. Con el bus confirmado como CANopen, ahora parece justo lo que aparenta ser.
+
+**Si resulta CAN, el ESP32 solo no basta:** hace falta un transceptor (SN65HVD230 con TWAI, o
+MCP2515). Se pone en **modo listen-only**, que no manda ni los bits de reconocimiento. La regla
+no cambia: **solo se escucha**.
+
+### Lo que el manual no trae
+
+**Los esquemas eléctricos no están.** Solo su número de dibujo. **Pedir el `99515375`**
+(eléctrico) y el `99520170` (hidráulico) por Montasa. Sin el 99515375 no se sabe qué es cada
+pin del DE-9, y esa es la pregunta abierta más cara del proyecto.
+
+**Y `b1`, el ancho entre patas, tampoco:** es **opción de pedido**, de 838 a 1524 mm en pasos de
+media pulgada. Dos cosas se ganan igual: el **1.315 del repo es un valor válido de tabla**
+(51.75" = 1314.45 mm), y los valores son **discretos**, así que al medir basta con acercarse y
+ajustar al valor de tabla. El camino limpio es el **número de serie por MCF Parts Client**.
+
+---
+
+## Qué se construyó — sesiones de agosto
 
 | Qué | Dónde |
 |---|---|
@@ -226,31 +635,59 @@ un cuello, es no haber medido.
 
 ## Lo que falta, en orden
 
-### 1 · Las tres medidas de la silueta ← bloquea todo lo demás
+### 1 · Lo que falta de la silueta ← ya no bloquea la factibilidad
 
-`XPIV` sigue **derivado del radio de ficha, no medido**, y la silueta es hipótesis. Cada vez
-que cambia una suposición, la ventana de carriles se mueve entera. Con flexómetro:
+**Bajó de prioridad.** El barrido de `XPIV` entre 1.30 y 1.60 dejó la ventana de carriles
+quieta en 75–150 cm: el giro entra sea cual sea el valor. Sigue haciendo falta para **control
+fino**, no para saber si se puede.
 
-1. Culo → centro de las ruedas de carga
-2. Ancho del capó trasero en su punto más ancho
-3. Dónde está el punto de 1.315 medido desde el culo, cuánto dura, y el radio de la esquina
+Queda por medir, con flexómetro:
 
-Y una de operación que vale igual: **tiza en el piso donde el operador para de verdad, cinco
-veces.** Esa dispersión es literalmente el requisito de precisión que el kit debe superar.
+1. **`W_MAX`, ancho pata a pata.** Nunca se midió. Ancla toda la escala lateral
+2. **`XPIV`**, culo → centro de las ruedas de carga, **con plomada** para el culo. Y resolver
+   la contradicción: la rueda en la estación 282 implica 1.862, que viola la cota de 1.6724
+3. La dispersión de parada: **tiza en el piso donde el operador para de verdad, cinco veces.**
+   Esa dispersión es literalmente el requisito de precisión que el kit debe superar
 
-### 2 · La visita de diagnóstico
+Y en el planificador: **modelar las uñas en `silueta()`**, que hoy no existen.
+
+### 2 · El puerto de servicio ← esto es lo urgente
+
+El plan completo está en `docs/15`, actualizado por `docs/16`. Falta el viaje:
+
+- **Primero: las cuatro mediciones contra el negativo de batería.** Deciden si el puerto es CAN
+  y por lo tanto qué instrumento sirve. Cinco minutos, antes que nada más
+- Seguir **a dónde va el mazo del DE-9**. Es lo que decide si es el puerto o no
+- Preguntarle al chino por el **APM+**, por nombre. ¿Lo conoce? ¿Judit lo muestra? ¿Lo trae?
+- Contar a mano las **vueltas de volante tope a tope**. Corrige el 2.6 del control Obed
+- Sacar el **número de serie** de la placa, y pedir la configuración por MCF Parts Client
+- Las **tres pasadas de escucha** con `escucha_edr.ino`. Nunca se probó arriba de 14400 ni
+  fuera de 8N1
+- Buscar físicamente **otro conector** con los paneles abiertos. Foto de cada uno
+- Pines **5 y 6 a chasis**, que quedó pendiente
+- Conseguir **WENBM8550-01** por MCF Parts Client vía Montasa
+
+### 2b · La visita de diagnóstico al cliente
 
 `docs/11`, doce preguntas. No se corta ni un cable. La herramienta que decide si sirve son
 las **puntas de retro-sondeo**. La pregunta que todos olvidan es **cómo se borran los códigos
 de falla** — sin eso el equipo queda bloqueado y se acaba el día.
 
+> **Si el puerto habla, el `docs/10` se abarata entero.** La retroalimentación de velocidad,
+> ángulo de dirección y altura que hoy se planea sacar cortando cables de Hall podría salir
+> leída del bus, sin tocar un solo conductor.
+
 ### 3 · Estados de bloqueo y deadlock en la FSM
+
+> **Hecho en modelo de referencia (02-nov-2026, `percepcion/fsm_estados.py`, `reserva.py`, `sim_coordinacion.py`):** estados de espera de verdad, reserva todo-o-nada antes de tocar el cubo, y la prueba que intenta romperla (carrera, deadlock de la línea 40, operación al azar) con sus controles. Falta integrarlo a `sim-web/` y al fierro. Lo de abajo queda como el planteo original.
 
 Hoy `LIBRE` hace de comodín. Faltan `ESPERA_TRASBORDO`, `ESPERA_HUECO`, `ESPERA_PEDIDO` como
 estados de verdad, y un **protocolo de reserva** con una prueba que intente romperlo: si A y
 B reservan la última posición de trasbordo a la vez, hoy nada lo impide.
 
 ### 4 · Estados de falla y reanudación
+
+> **Hecho en modelo de referencia (02-nov-2026, `percepcion/fsm_falla.py`):** EXTIENDE/TOMA/RETRAE no reanudables; el deshacer va en orden (deshace la micro-toma, retrae, retrocede, baja) y la FSM no cede el control antes. PARO, ARUCO_PERDIDO y HUECO_OCUPADO probados. Falta integrarlo.
 
 Qué pasa si el ArUco no se ve, si el hueco estaba ocupado, si entra un paro a mitad de una
 extensión. Hay pasos que **no se pueden reanudar a la mitad** — pantógrafo extendido en
@@ -273,6 +710,12 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
 - La canaleta de drenaje con rejilla que cruza el pasillo (foto IMG_0208) no está en ningún
   modelo. Para un humano es un bache; para navegación autónoma es un salto de rueda y una
   discontinuidad de odometría.
+- `analisis/planificador_giro.py` → `silueta()` **no modela las uñas**. Sus números de 90° y
+  180° son solo chasis. Detallado arriba.
+- `herramientas/serie/probador.py` da «ESTE SIRVE» sin exigir loopback. Detallado arriba.
+- El menú de servicio del display (`Settings → Menu → lift / drive / steer`) se encontró pero
+  **no se documentó cómo se entra ni qué hay adentro**. Vale fotos si sobra tiempo; no es la
+  prioridad, el conector sí.
 
 ---
 
@@ -301,6 +744,31 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
   problema resolvía allá** y si ese problema existe acá. El caso ya pagado está más arriba,
   en el planificador: en Botoni girar en el sitio hacía trivial la planificación, y acá esa
   suposición no existe.
+- **Un dato nuevo no revienta el modelo.** Cuando algo no calza, lo primero es el bloqueo
+  obvio, no «todo lo que sabía ya no vale». Pasó con el cable ethernet-a-DB9: un mapeo raro
+  de procedencia no confirmada no borra un voltaje medido. Se guarda como **dato en tensión**
+  y se sigue con lo que sí se sabe. *Only a Sith deals in absolutes.*
+- **Verificar antes de contradecir a quien lo hizo con las manos.** Se objetó que Judit no
+  podía aplicar a un Mitsubishi. El chino tenía razón: MCFA distribuye las tres marcas. Quien
+  operó el equipo tiene evidencia que ningún catálogo tiene.
+- **Y el testimonio se verifica midiendo, en paralelo, no después.** El chino confirmó el
+  cable FTDI serie dos veces — la segunda el 02-oct, **cuando la ruta serie ya se había
+  agotado** — y el DB9 de este equipo resultó ser CAN (03-oct). No se sabe si recordó mal, si
+  sus EDR18N2 estaban configurados distinto, o si el módulo que alimentaba esa ruta se
+  canibalizó acá; sigue **en tensión**. La lección no es desconfiar de él: es que **una
+  medición pasiva no compite con el testimonio, lo acompaña**. Frente a un conector
+  desconocido, antes de cualquier hipótesis:
+  1. **matriz completa en ohmios con la batería fuera** (en un DB9, 36 pares, cinco minutos;
+     no tiene riesgo y no depende de ninguna teoría — habría mostrado el 120 Ω entre 3 y 8)
+  2. **voltajes contra el negativo de batería**, llave en ON
+  3. recién ahí las hipótesis, y conectar instrumentos activos
+- **Verificar antes de decir que algo no existe.** Antes de afirmar que un archivo no está en
+  el repo: `git fetch`. Se declaró inexistente un `docs/14` que sí estaba.
+- **Consultar el CLI y los docs antes de adivinar.** Cuatro adivinanzas seguidas sobre Remote
+  Control costaron más que `claude rc --help`.
+- **Validar el instrumento antes de viajar.** Toda medición trae su control de falsación: si
+  la prueba no puede fallar, no midió nada. El eco 6/6 solo vale porque quitar el puente dio
+  SIN ECO.
 - **Este proyecto no arranca resuelto.** Tratar a Botoni como una solución que solo hay que
   comprar y adaptar convierte la adaptación en el trabajo más caro del proyecto, y encima
   invisible en el presupuesto. Es el supuesto que infla o desinfla el nivel Piloto de
@@ -308,7 +776,7 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
 
 ## Quién es quién
 
-**El equipo TaTa es maje, y nadie más — por ahora.** Todo lo que sigue son personas reales
+**El equipo TaTa es maje, más el Chino en lo mecánico y eléctrico.** Todo lo que sigue son personas reales
 con relaciones reales al proyecto, pero **ninguna de ellas está en el equipo**. Escribir o
 hablar como si lo estuvieran infla el proyecto y compromete tiempo ajeno que nadie prometió.
 
@@ -321,6 +789,14 @@ hablar como si lo estuvieran infla el proyecto y compromete tiempo ajeno que nad
   qué. Se le llama y se le pregunta. No se importa su stack
 - **Marcelo** — localización y alineación en Botoni. Su matemática es adaptable y señala
   dónde están los problemas y dónde las soluciones. Igual que Pato: consultable, no copiable
+
+**Equipo de ingeniería — asignado a maje:**
+
+- **el Chino** — técnico, mecánico y sub-jefe de taller bajo Miguel, pero opera y comanda.
+  **Asignado a maje**: se le puede llamar en cualquier momento. Tiene un EDR en su taller, así
+  que sirve para ir a ver la máquina antes del diagnóstico. Traduce lo mecánico del montacargas
+  y apoya en lo eléctrico y electrónico. **Va a la visita de diagnóstico de `docs/11`.**
+  Es apodo, así se presenta él y así se le dice.
 
 **Montasa:**
 

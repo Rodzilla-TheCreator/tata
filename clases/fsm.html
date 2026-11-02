@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clase 4 · FSM de coordinación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#E4E9ED;--surf:#F6F8F9;--surf2:#DCE3E8;--ink:#111B23;--mut:#5A6C79;
+  --line:#B9C6CF;--amber:#B4720C;--load:#136F69;--blue:#1F6FEB;--red:#C0392B;--green:#2E7D32}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;--mut:#7D91A2;
+  --line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--blue:#58A6FF;--red:#E5534B;--green:#5CC46A}}
+:root[data-theme="dark"]{--bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;
+  --mut:#7D91A2;--line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--blue:#58A6FF;--red:#E5534B;--green:#5CC46A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 22px 80px;display:flex;flex-direction:column;gap:30px}
+h1{font-weight:900;font-size:clamp(26px,4.4vw,38px);margin:0;letter-spacing:-.02em;line-height:1.06}
+.eyebrow{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+p{margin:0;max-width:70ch;color:var(--mut)}
+h2{font-weight:700;font-size:17px;margin:0 0 4px;letter-spacing:-.01em;color:var(--ink)}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:16px;
+  display:flex;flex-direction:column;gap:12px;min-width:0}
+canvas{width:100%;height:auto;display:block;background:var(--surf2);border-radius:2px;border:1px solid var(--line)}
+.eq{font:400 12.5px/1.75 "IBM Plex Mono",monospace;background:var(--surf2);border-radius:2px;padding:10px 12px;
+  white-space:pre-wrap;color:var(--ink);border-left:2px solid var(--amber);overflow-x:auto}
+.eq b{color:var(--amber);font-weight:600}
+.tag{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--load)}
+.verdict{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--amber);
+  border-radius:3px;padding:16px 18px;display:flex;flex-direction:column;gap:9px}
+.verdict p{color:var(--ink)}
+button{font:600 12px "IBM Plex Mono",monospace;background:var(--surf2);color:var(--ink);
+  border:1px solid var(--line);border-radius:2px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--amber)} button.on{border-color:var(--amber);color:var(--amber)}
+button.paro{border-color:var(--red);color:var(--red)}
+button:disabled{opacity:.4;cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.sw{display:flex;flex-wrap:wrap;gap:8px 18px;font:600 12px "IBM Plex Mono",monospace;color:var(--ink)}
+.sw label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.sw input{accent-color:var(--amber)}
+.row{display:flex;align-items:center;gap:10px;font:600 12px/1 "IBM Plex Mono",monospace;flex-wrap:wrap}
+.row input[type=range]{flex:1;accent-color:var(--amber);min-width:120px}
+.row span,.row output{color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.st{background:var(--surf2);border-radius:2px;padding:9px 11px}
+.st b{display:block;font:600 18px/1.2 "IBM Plex Mono",monospace;color:var(--ink)}
+.st span{font:600 10px/1.3 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.st.bad b{color:var(--red)} .st.good b{color:var(--green)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+td{color:var(--ink)} .scroll{overflow-x:auto}
+code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+a{color:var(--amber)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font:600 11px "IBM Plex Mono",monospace;color:var(--mut)}
+.leg i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:2px}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
+ol{margin:0;padding-left:20px;color:var(--ink);font-size:14.5px} li{margin:5px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">TaTa &middot; Clase 4</div>
+  <h1>FSM de coordinación &mdash; dos equipos, un trasbordo</h1>
+</header>
+
+<p>El EKF dice <b>dónde estoy</b>. Esta máquina de estados dice <b>qué hago y cuándo puedo hacerlo
+sin chocar con el otro equipo</b>. Se construyó el 2-nov-2026 en la i3 (<code>percepcion/fsm_estados.py</code>,
+<code>reserva.py</code>, <code>fsm_falla.py</code>). El simulador de abajo es la misma lógica, para que
+provoques cada falla con tus manos.</p>
+
+<div class="verdict">
+  <h2>El problema en tres líneas</h2>
+  <p>A y B trabajan en dos sectores y comparten el <b>trasbordo del fondo</b>: ahí se dejan los cubos
+  que son del otro (PASE) y se recogen los propios (TRASBORDO).</p>
+  <p>Un recurso compartido trae dos peligros: <b>carrera</b> (los dos deciden usar el último lugar a la
+  vez) y <b>deadlock</b> (cada uno espera algo que tiene el otro, y nadie avanza).</p>
+  <p>Y un tercero que no es de coordinación: un <b>paro con el pantógrafo afuera en altura</b>. Ese paso
+  no se puede retomar a la mitad.</p>
+</div>
+
+<div class="panel">
+  <div><div class="tag">Simulador &middot; el mismo de sim_coordinacion.py</div>
+  <h2>Elegí un escenario y dale play</h2></div>
+  <div class="btns" id="presets">
+    <button data-p="carrera">1 · carrera</button>
+    <button data-p="deadlock">2 · deadlock</button>
+    <button data-p="paro">3 · paro en altura</button>
+    <button data-p="operacion">4 · operación al azar</button>
+  </div>
+  <div class="sw">
+    <label><input type="radio" name="pol" value="ordenada" checked> reserva todo-o-nada antes de tocar</label>
+    <label><input type="radio" name="pol" value="tardia"> reserva tardía (control)</label>
+  </div>
+  <div class="sw">
+    <label><input type="checkbox" id="kGestor" checked> gestor de reservas (apagado = tonto)</label>
+    <label><input type="checkbox" id="kCam" checked> cámara verifica el hueco</label>
+    <label><input type="checkbox" id="kFalla" checked> deshacer en orden (apagado = falla ingenua)</label>
+    <label><input type="checkbox" id="kSel" checked> selector «primera que se puede»</label>
+  </div>
+  <canvas id="cW" width="1000" height="380"></canvas>
+  <div class="leg">
+    <span><i style="background:var(--amber)"></i>cubo de A</span>
+    <span><i style="background:var(--load)"></i>cubo de B</span>
+    <span><i style="background:var(--mut)"></i>ocupado por otra cosa</span>
+    <span><i style="border:2px solid var(--amber)"></i>reservado por A</span>
+    <span><i style="border:2px solid var(--load)"></i>reservado por B</span>
+    <span><i style="border:2px solid var(--red)"></i>los dos lo creen suyo</span>
+  </div>
+  <canvas id="cT" width="1000" height="110"></canvas>
+  <div class="leg">
+    <span><i style="background:var(--blue)"></i>moviéndose</span>
+    <span><i style="background:var(--amber)"></i>esperando</span>
+    <span><i style="background:var(--mut)"></i>sin trabajo</span>
+    <span><i style="background:var(--red)"></i>falla / deshaciendo</span>
+  </div>
+  <div class="row">
+    <button id="play">▶ play</button><button id="paso">+1 tick</button>
+    <button id="bParo" class="paro">PARO a A</button><button id="bRearme">rearme</button>
+    <span>velocidad</span><input id="vel" type="range" min="1" max="20" value="6">
+    <span>semilla</span><input id="seed" type="range" min="0" max="19" value="0" style="max-width:140px"><output id="oseed"></output>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="eq" id="explica"></div>
+</div>
+
+<div class="panel">
+  <h2>Por qué la regla rompe el deadlock — las cuatro condiciones de Coffman</h2>
+  <p>Un deadlock necesita las <b>cuatro a la vez</b>. Basta con matar una. La regla mata dos.</p>
+  <div class="scroll"><table>
+    <tr><th>Condición</th><th>Qué es acá</th><th>¿La regla la mata?</th></tr>
+    <tr><td>Exclusión mutua</td><td>un lugar del trasbordo tiene un cubo o ninguno</td><td>no — es física</td></tr>
+    <tr><td><b>Retener y esperar</b></td><td>tener un cubo en las uñas y esperar dónde soltarlo</td><td><b>sí</b>: se reserva destino + origen <b>antes de tocar el cubo</b>, todo o nada. Si no consigue todo, espera con las uñas vacías</td></tr>
+    <tr><td>No expropiación</td><td>no se le puede quitar el cubo a quien lo tiene</td><td>no — y a propósito: quitarle la reserva a quien ya carga lo deja sin dónde soltar</td></tr>
+    <tr><td><b>Espera circular</b></td><td>A espera a B que espera a A</td><td><b>sí</b>: se pide siempre en el mismo orden (huecos antes que trasbordo). Queda de defensa si algún día la reserva se reparte por radio</td></tr>
+  </table></div>
+  <p style="color:var(--ink)"><b>Las uñas son un recurso.</b> El deadlock real de este sistema no es «A tiene el
+  hueco, B tiene el trasbordo»: es un equipo con el cubo del otro en las uñas, frente a un trasbordo lleno con
+  <b>su propio</b> cubo, que solo él puede sacar. Es la línea 40 de <code>sec/gen_fsm.py</code>, escrita a mano
+  hace meses: <i>«trasbordo lleno → A se bloquea»</i>.</p>
+</div>
+
+<div class="panel">
+  <h2>Lo que falló, en el orden en que pasó</h2>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>Síntoma</th><th>El dato que lo mostró</th><th>La causa</th><th>El arreglo</th></tr>
+    <tr><td>1</td><td>En la carrera, el perdedor aparecía en <code>ESPERA_PEDIDO</code>, no en <code>ESPERA_TRASBORDO</code></td>
+      <td>leído en el tick 0: B sí estaba en <code>ESPERA_TRASBORDO</code></td>
+      <td>el reporte leía el estado 400 ticks después, cuando B ya había terminado</td>
+      <td>leer el estado en el instante que la prueba afirma. <b>Bug del reporte, no de la FSM</b></td></tr>
+    <tr><td>2</td><td>El paro en TOMA no mostraba <code>DESHACE_TOMA</code></td>
+      <td>en el tick 70 la altura ya había vuelto a 2.76 m antes de retraer</td>
+      <td>el paso dura un tick y el historial guarda el estado al <b>final</b> del tick</td>
+      <td>registrar cada paso del deshacer al <b>empezar</b></td></tr>
+    <tr><td>3</td><td>La prueba de operación al azar <b>pasaba con los dos controles</b></td>
+      <td>tardía 0/20 deadlocks, tonto 0/20 choques: no distinguía nada</td>
+      <td>con los racks vacíos, B nunca tiene un cubo de A: no hay PASE cruzado, ni carrera ni deadlock posibles</td>
+      <td>arrancar con el <b>inventario revuelto</b>, como el día uno. Ahí tardía cae 20/20 y tonto choca 19/20</td></tr>
+    <tr><td>4</td><td>Con la prueba ya buena, la política <b>buena</b> se «bloqueaba» en 1–3 de 20</td>
+      <td>rack de A lleno, A esperando hueco para su TRASBORDO, con 2 PEDIDOS pendientes</td>
+      <td><b>inanición por prioridad</b>: el selector elegía la primera tarea aunque fuera imposible, y nunca llegaba al PEDIDO que habría liberado el hueco</td>
+      <td>el selector elige la primera que <b>se puede hacer</b>; si ninguna, espera la de más prioridad. 0/200 después</td></tr>
+  </table></div>
+  <p style="color:var(--ink)">Los fallos 1 y 2 eran del instrumento, no del sistema. El 3 era una prueba que
+  no podía fallar. El 4 es el único bug real — y <b>solo apareció cuando arreglamos el 3</b>.</p>
+</div>
+
+<div class="panel">
+  <h2>Lo que funcionó</h2>
+  <div class="scroll"><table>
+    <tr><th>Qué</th><th>Por qué importa</th></tr>
+    <tr><td><b>Un control por prueba</b>: gestor tonto, reserva tardía, falla ingenua</td><td>Cada uno produce exactamente la falla que la regla dice evitar. Si el control no falla, la prueba no probó nada (y así se encontró el fallo 3)</td></tr>
+    <tr><td><b>La prueba avisa sola</b> si un control no falló</td><td>«OJO: la prueba no discrimina» está escrito en el código, no en la memoria de quien la corre</td></tr>
+    <tr><td><b>Detectar el deadlock por falta de progreso</b></td><td>No hace falta saber de antemano qué ciclo se va a formar: si nadie cambia en N ticks y alguien está esperando o cargando, está trabado</td></tr>
+    <tr><td><b>Esperas de verdad</b> en vez de <code>LIBRE</code></td><td><code>ESPERA_HUECO</code> y <code>ESPERA_TRASBORDO</code> dicen QUÉ falta. Con <code>LIBRE</code> de comodín, el deadlock y el «no hay trabajo» se ven igual</td></tr>
+    <tr><td><b>Deshacer con orden fijo</b> y con la altura quieta mientras el pantógrafo esté afuera</td><td>El orden no se decide en el momento de la falla, que es cuando peor se piensa</td></tr>
+    <tr><td><b>La espera con uñas vacías re-evalúa</b></td><td>Sin retener nada, cambiar de tarea no rompe ninguna exclusión — y evita esperar un trasbordo lleno con un cubo propio</td></tr>
+  </table></div>
+</div>
+
+<div class="verdict">
+  <h2>Las tres lecciones que se llevan a otro proyecto</h2>
+  <p><b>1. Para romper un deadlock, matá una de las cuatro condiciones — y elegí cuál con la física.</b>
+  Acá «retener y esperar» era la barata: basta con no tocar el cubo antes de tener dónde dejarlo.</p>
+  <p><b>2. Prioridad estricta + tarea imposible = inanición.</b> «Gana el primero que se cumple» tiene que
+  significar «el primero que se puede hacer», no «el primero de la lista».</p>
+  <p><b>3. Una prueba que no puede fallar esconde bugs.</b> El único bug real apareció recién cuando la prueba
+  aprendió a fallar.</p>
+</div>
+
+<div class="panel">
+  <h2>Para hacer</h2>
+  <ol>
+    <li>Escenario 2 con <b>reserva tardía</b>. Pausá cuando B se trabe. ¿Qué tiene B en las uñas y qué hay en T0?
+      Explicá con esas dos cosas por qué nadie puede avanzar.</li>
+    <li>Escenario 1 con el gestor apagado y la cámara prendida: ¿hay choque? ¿Por qué la cámara lo salva, y por
+      qué igual no alcanza para producción? (Pista: ¿qué ve la cámara cuando los dos llegan al mismo tiempo?)</li>
+    <li>Escenario 3: dale PARO a A en TOMA y rearmá. Mirá en qué orden cambian la altura y el pantógrafo.
+      Después apagá «deshacer en orden» y repetí.</li>
+    <li>Escenario 4, semilla 0, apagá <b>«selector primera que se puede»</b>. Cerca del tick 366 uno se queda
+      esperando hueco para su TRASBORDO con 2 pedidos pendientes (en esa semilla es B). Con el selector viejo se
+      traban 7 de 20 semillas; con el nuevo, ninguna.</li>
+  </ol>
+</div>
+
+<footer>
+  Clase 4 de la <a href="index.html">secuencia</a> &middot; el código real: <code>percepcion/fsm_estados.py</code>,
+  <code>reserva.py</code>, <code>fsm_falla.py</code>, <code>sim_coordinacion.py</code>
+  (<code>py percepcion/sim_coordinacion.py</code> → PASA / FALLA) &middot; resultados en <code>percepcion/LEEME.md</code>
+</footer>
+
+</div>
+
+<script>
+// ═══ la misma FSM que percepcion/ (fsm_estados.py, reserva.py, fsm_falla.py) ═════════════
+const PASOS=['CARRIL','RECTA','GIRO','ELEVA','APROXIMA','EXTIENDE','TOMA','RETRAE','RETROCEDE','DESGIRA','TRANSITO'];
+const NO_REAN=new Set(['EXTIENDE','TOMA','RETRAE']), EN_BAHIA=new Set(PASOS.slice(4,9));
+const ESPERAS=['ESPERA_PEDIDO','ESPERA_HUECO','ESPERA_TRASBORDO'];
+const EXT=0.61,SUBE=0.12,BAJA=0.04,VEL=0.25,NIVEL=1.38;
+const TK={CARRIL:2,RECTA:5,GIRO:6,APROXIMA:2,EXTIENDE:3,TOMA:2,RETRAE:3,RETROCEDE:2,DESGIRA:5,TRANSITO:2,DESHACE_TOMA:2};
+const hacia=(x,o,p)=>Math.abs(o-x)<=p?o:(o>x?x+p:x-p);
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+class Gestor{
+  constructor(tipos,tonto){this.tipos=tipos;this.tonto=tonto;this.d={};for(const k in tipos)this.d[k]=null;}
+  orden(r){return[this.tipos[r]==='trasbordo'?1:0,r];}
+  reservar(e,r){if(this.tonto)return true;const a=this.d[r];if(a===null||a===e){this.d[r]=e;return true;}return false;}
+  reservarTodo(e,rs){if(this.tonto)return true;const tom=[];
+    const ord=[...new Set(rs)].sort((x,y)=>{const a=this.orden(x),b=this.orden(y);return a[0]-b[0]||(a[1]<b[1]?-1:a[1]>b[1]?1:0);});
+    for(const r of ord){const ya=this.d[r]===e;if(!this.reservar(e,r)){tom.forEach(t=>this.liberar(e,t));return false;}if(!ya)tom.push(r);}return true;}
+  liberar(e,r){if(!this.tonto&&this.d[r]===e)this.d[r]=null;}
+  liberarTodo(e){if(this.tonto)return;for(const k in this.d)if(this.d[k]===e)this.d[k]=null;}
+  libre(e,r){return this.tonto||this.d[r]===null||this.d[r]===e;}
+  de(r){return this.tonto?null:this.d[r];}
+}
+const espera=td=>td==='trasbordo'?'ESPERA_TRASBORDO':td==='hueco'?'ESPERA_HUECO':'ESPERA_PEDIDO';
+
+class Equipo{
+  constructor(n,o){this.n=n;this.pol=o.pol;this.fallaOk=o.falla;this.cam=o.cam;this.selOk=o.sel;
+    this.est='LIBRE';this.pt=0;this.fase=null;this.tarea=null;this.carga=null;this.ext=0;this.alt=0;this.alt0=null;
+    this.res=new Set();this.pedidos=0;this.hechas=0;this.modo=null;this.cola=[];this.alTerminar=null;this.antes=null;this.hist=[];this.logD=[];}
+  cand(m,g){const mi=this.n,out=[],ids=Object.keys(m.s).sort(),ok=id=>g.libre(mi,id);
+    for(const id of ids){const s=m.s[id];if(s.tipo==='trasbordo'&&s.cubo===mi&&ok(id)){out.push({tipo:'TRASBORDO',o:id,td:'hueco',d:null});break;}}
+    if(this.pedidos>0)for(const id of ids){const s=m.s[id];if(s.tipo==='hueco'&&s.sec===mi&&s.cubo===mi&&ok(id)){out.push({tipo:'PEDIDO',o:id,td:'salida',d:null});break;}}
+    if(mi==='A')for(const id of ids){const s=m.s[id];if(s.tipo==='entrada'&&(s.cubo==='A'||s.cubo==='B')&&ok(id)){out.push({tipo:'ENTRADA',o:id,td:s.cubo===mi?'hueco':'trasbordo',d:null});break;}}
+    for(const id of ids){const s=m.s[id];if(s.tipo==='hueco'&&s.sec===mi&&(s.cubo==='A'||s.cubo==='B')&&s.cubo!==mi&&ok(id)){out.push({tipo:'PASE',o:id,td:'trasbordo',d:null});break;}}
+    return out;}
+  elegir(m,g){const c=this.cand(m,g);if(this.selOk)for(const t of c)if(this.destino(m,g,t.td))return t;return c[0]||null;}
+  destino(m,g,td){for(const id of Object.keys(m.s).sort()){const s=m.s[id];
+    if(s.tipo!==td||s.cubo!==null||!g.libre(this.n,id))continue;if((td==='hueco'||td==='salida')&&s.sec!==this.n)continue;return id;}return null;}
+  tick(t,m,g){if(this.est==='FALLA'||this.est==='PARADA'){}else if(this.modo==='deshacer')this.deshacerPaso();
+    else if(this.est==='LIBRE'||ESPERAS.includes(this.est))this.decidir(m,g);else this.paso(t,m,g);
+    this.hist.push([t,this.est,this.ext,this.alt,this.modo]);}
+  arrancar(f){this.fase=f;this.est='CARRIL';this.pt=0;}
+  decidir(m,g){
+    if(this.carga===null){
+      if(this.tarea===null||ESPERAS.includes(this.est))this.tarea=this.elegir(m,g);
+      if(!this.tarea){this.est='ESPERA_PEDIDO';return;}
+      if(this.pol==='ordenada'){const d=this.destino(m,g,this.tarea.td);
+        if(d&&g.reservarTodo(this.n,[d,this.tarea.o])){this.tarea.d=d;this.res=new Set([d,this.tarea.o]);this.arrancar('ORIGEN');}
+        else this.est=espera(this.tarea.td);}
+      else{if(g.reservar(this.n,this.tarea.o)){this.res=new Set([this.tarea.o]);this.arrancar('ORIGEN');}else this.est='ESPERA_PEDIDO';}
+    }else{const d=this.destino(m,g,this.tarea.td);
+      if(d&&g.reservar(this.n,d)){this.tarea.d=d;this.res.add(d);this.arrancar('DESTINO');}else this.est=espera(this.tarea.td);}}
+  obj(m){const id=this.fase==='ORIGEN'?this.tarea.o:this.tarea.d;return[id,m.s[id]];}
+  paso(t,m,g){const e=this.est;this.pt++;const[id,s]=this.obj(m);let listo;
+    if(e==='ELEVA'){this.alt=hacia(this.alt,s.alt,VEL);listo=Math.abs(this.alt-s.alt)<1e-9;}
+    else if(e==='APROXIMA'){listo=this.pt>=TK[e];if(listo&&this.fase==='DESTINO'&&this.cam&&s.cubo!==null){this.evento('HUECO_OCUPADO',m,g);return;}}
+    else if(e==='EXTIENDE'){this.ext=Math.min(EXT,this.ext+EXT/TK[e]);listo=this.ext>=EXT-1e-9;}
+    else if(e==='TOMA'){if(this.pt===1)this.alt0=this.alt;const d=this.fase==='ORIGEN'?SUBE:-BAJA;
+      this.alt=this.alt0+d*Math.min(1,this.pt/TK[e]);listo=this.pt>=TK[e];
+      if(listo){if(this.fase==='ORIGEN'){this.carga=s.cubo;s.cubo=null;}else{if(s.cubo!==null)m.choques.push([t,id,this.n]);s.cubo=this.carga;this.carga=null;}this.alt0=null;}}
+    else if(e==='RETRAE'){this.ext=Math.max(0,this.ext-EXT/TK[e]);listo=this.ext<=1e-9;}
+    else if(e==='TRANSITO'){this.alt=hacia(this.alt,0,VEL);listo=this.alt<=1e-9&&this.pt>=TK[e];}
+    else listo=this.pt>=TK[e];
+    if(!listo)return;const i=PASOS.indexOf(e);
+    if(i<PASOS.length-1){this.est=PASOS[i+1];this.pt=0;}
+    else if(this.fase==='ORIGEN'){if(this.pol==='ordenada')this.arrancar('DESTINO');else this.est='LIBRE';}
+    else{if(this.tarea.tipo==='PEDIDO')this.pedidos--;g.liberarTodo(this.n);this.res=new Set();this.tarea=null;this.fase=null;this.hechas++;this.est='LIBRE';}}
+  evento(tipo,m,g){
+    if(tipo==='PARO'){this.antes=[this.est,this.pt];this.est=this.fallaOk?'FALLA':'PARADA';}
+    else if(tipo==='HUECO_OCUPADO'){const id=this.tarea.d;g.liberar(this.n,id);this.res.delete(id);this.tarea.d=null;this.empezar(this.est,'OTRO_DESTINO');}}
+  rearme(){if(!this.antes)return;const[est,pt]=this.antes;this.antes=null;
+    if(!this.fallaOk){this.est=est;this.pt=pt;return;}this.empezar(est,'PARADA');}
+  plan(est){const p=[];if(est==='TOMA'&&this.alt0!==null&&Math.abs(this.alt-this.alt0)>1e-9)p.push('DESHACE_TOMA');
+    if(this.ext>1e-9)p.push('RETRAE');if(EN_BAHIA.has(est))p.push('RETROCEDE');if(this.alt>1e-9)p.push('TRANSITO');return p;}
+  empezar(est,fin){this.cola=this.plan(est);this.alTerminar=fin;if(!this.cola.length){this.fin();return;}
+    this.modo='deshacer';this.est=this.cola.shift();this.pt=0;this.logD.push(this.est);}
+  deshacerPaso(){const e=this.est;this.pt++;let listo;
+    if(e==='DESHACE_TOMA'){this.alt=hacia(this.alt,this.alt0,SUBE/TK.TOMA);listo=Math.abs(this.alt-this.alt0)<1e-9;}
+    else if(e==='RETRAE'){this.ext=Math.max(0,this.ext-EXT/TK[e]);listo=this.ext<=1e-9;}
+    else if(e==='TRANSITO'){this.alt=hacia(this.alt,0,VEL);listo=this.alt<=1e-9;}
+    else listo=this.pt>=TK[e];
+    if(listo){if(this.cola.length){this.est=this.cola.shift();this.pt=0;this.logD.push(this.est);}else this.fin();}}
+  fin(){this.modo=null;this.alt0=null;if(this.alTerminar==='PARADA')this.est='PARADA';else this.est=espera(this.tarea.td);}
+  seguro(){return this.ext<=1e-9&&this.alt<=1e-9;}
+}
+
+// ═══ escenarios ═════════════════════════════════════════════════════════════════════
+function mundo(tras,ha,hb,entrada){const s={};
+  tras.forEach((c,i)=>s['T'+i]={tipo:'trasbordo',sec:null,alt:0,cubo:c});
+  ha.forEach((c,i)=>s['HA'+i]={tipo:'hueco',sec:'A',alt:(i%4)*NIVEL,cubo:c});
+  hb.forEach((c,i)=>s['HB'+i]={tipo:'hueco',sec:'B',alt:(i%4)*NIVEL,cubo:c});
+  if(entrada){s.E={tipo:'entrada',sec:'A',alt:0,cubo:null};s.SA={tipo:'salida',sec:'A',alt:0,cubo:null};s.SB={tipo:'salida',sec:'B',alt:0,cubo:null};}
+  return{s,choques:[]};}
+let S=null;
+function opciones(){return{pol:document.querySelector('input[name=pol]:checked').value,gestor:el('kGestor').checked,
+  cam:el('kCam').checked,falla:el('kFalla').checked,sel:el('kSel').checked};}
+function armar(esc){const o=opciones(),seed=+el('seed').value;let m,eqs,viv=null,ventana=60;
+  if(esc==='carrera'){m=mundo(['?',null],['B',null],['A',null]);eqs=['A','B'];}
+  else if(esc==='deadlock'){m=mundo([null],['B',null],['A',null]);eqs=['A','B'];}
+  else if(esc==='paro'){m={s:{T0:{tipo:'trasbordo',sec:null,alt:0,cubo:'A'},HA0:{tipo:'hueco',sec:'A',alt:2*NIVEL,cubo:null}},choques:[]};eqs=['A'];}
+  else{const r=rng(seed*977+5),ini=()=>Array.from({length:6},()=>r()<0.8?(r()<.5?'A':'B'):null);
+    m=mundo([null],ini(),ini(),true);eqs=['A','B'];ventana=200;
+    viv=(t,m,g,E)=>{if(m.s.E.cubo===null&&g.de('E')===null&&r()<.03)m.s.E.cubo=r()<.5?'A':'B';
+      for(const sal of['SA','SB'])if(m.s[sal].cubo!==null&&g.de(sal)===null)m.s[sal].cubo=null;
+      if(r()<.02){const e=E[r()<.5?0:Math.min(1,E.length-1)];if(e.pedidos<2)e.pedidos++;}};}
+  const tipos={};for(const k in m.s)tipos[k]=m.s[k].tipo;const g=new Gestor(tipos,!o.gestor);
+  S={esc,m,g,E:eqs.map(n=>new Equipo(n,o)),viv,ventana,t:0,firma:null,quieto:0,deadlock:null,dobles:new Set(),tl:[]};
+  el('bParo').disabled=esc!=='paro';el('bRearme').disabled=esc!=='paro';dibujar();}
+function un_tick(){if(!S)return;const{m,g,E}=S;
+  for(const e of E)e.tick(S.t,m,g);if(S.viv)S.viv(S.t,m,g,E);
+  const vis={};for(const e of E)for(const r of e.res){if(vis[r]&&vis[r]!==e.n)S.dobles.add(r);vis[r]=e.n;}
+  const f=JSON.stringify(E.map(e=>[e.est,e.pt,e.carga,e.modo]));
+  const esp=E.some(e=>e.carga!==null||e.est==='ESPERA_HUECO'||e.est==='ESPERA_TRASBORDO');
+  S.quieto=(f===S.firma&&esp)?S.quieto+1:0;S.firma=f;if(S.quieto>=S.ventana&&S.deadlock===null)S.deadlock=S.t;
+  S.tl.push(E.map(e=>cat(e)));S.t++;}
+function cat(e){if(e.est==='FALLA'||e.modo==='deshacer'||(e.est==='PARADA'&&!e.seguro()))return'f';
+  if(e.est==='ESPERA_PEDIDO'||e.est==='LIBRE'||e.est==='PARADA')return'i';if(ESPERAS.includes(e.est))return'w';return'm';}
+
+// ═══ dibujo ═════════════════════════════════════════════════════════════════════════
+const el=id=>document.getElementById(id),css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const cW=el('cW'),gW=cW.getContext('2d'),cT=el('cT'),gT=cT.getContext('2d');
+function pos(id){const sl=S.m.s[id];const B=320,H=62;
+  if(sl.tipo==='hueco'){const i=+id.slice(2),bay=Math.floor(i/4),lv=i%4;const x0=sl.sec==='A'?40:700;return[x0+bay*125,B-lv*H];}
+  if(sl.tipo==='trasbordo'){const i=+id.slice(1);return[440+i*70,B];}
+  if(id==='E')return[300,B];if(id==='SA')return[300,B-2*H];if(id==='SB')return[585,B-2*H];return[500,40];}
+function dibujar(){if(!S)return;const W=cW.width,Hh=cW.height,g=gW;g.clearRect(0,0,W,Hh);
+  const col={A:css('--amber'),B:css('--load'),'?':css('--mut')};
+  g.font='600 13px IBM Plex Mono, monospace';g.fillStyle=css('--mut');
+  g.fillText('RACK A',40,22);g.fillText('RACK B',700,22);g.fillText('TRASBORDO',440,250);
+  for(const id of Object.keys(S.m.s)){const[x,y]=pos(id),sl=S.m.s[id],w=100,h=46;
+    g.fillStyle=css('--surf');g.fillRect(x,y-h,w,h);
+    g.strokeStyle=css('--line');g.lineWidth=1;g.strokeRect(x,y-h,w,h);
+    const due=S.E.filter(e=>e.res.has(id)).map(e=>e.n);
+    if(due.length){g.lineWidth=3.5;g.strokeStyle=due.length>1?css('--red'):col[due[0]];g.strokeRect(x+2,y-h+2,w-4,h-4);}
+    if(sl.cubo){g.fillStyle=col[sl.cubo];g.fillRect(x+30,y-h+8,40,30);g.fillStyle=css('--surf');g.fillText(sl.cubo,x+46,y-h+28);}
+    g.fillStyle=css('--mut');g.fillText(id+(sl.tipo==='hueco'?' · '+sl.alt.toFixed(1)+'m':sl.tipo==='trasbordo'?'':' · '+sl.tipo),x+4,y+14);}
+  // equipos
+  S.E.forEach((e,k)=>{const base=e.n==='A'?[210,40]:[560,40];let[x,y]=base;
+    if(e.tarea&&e.fase&&!ESPERAS.includes(e.est)&&e.est!=='LIBRE'){const id=e.fase==='ORIGEN'?e.tarea.o:(e.tarea.d||e.tarea.o);if(S.m.s[id]){const p=pos(id);x=p[0]+(S.m.s[id].sec==='B'?-215:110);if(S.m.s[id].tipo==='trasbordo')x=p[0]-50;y=40;}}
+    const BW=200,BH=46;x=Math.max(10,Math.min(W-BW-40,x));
+    g.fillStyle=col[e.n];g.globalAlpha=.18;g.fillRect(x,y,BW,BH);g.globalAlpha=1;g.strokeStyle=col[e.n];g.lineWidth=2;g.strokeRect(x,y,BW,BH);
+    g.font='600 14px IBM Plex Mono, monospace';g.fillStyle=css('--ink');g.fillText(e.n+' · '+e.est,x+6,y+19);
+    g.font='600 12px IBM Plex Mono, monospace';g.fillStyle=css('--mut');g.fillText('altura '+e.alt.toFixed(2)+' · pant '+e.ext.toFixed(2),x+6,y+38);
+    if(e.carga){g.fillStyle=col[e.carga];g.fillRect(x+BW+6,y+8,28,30);g.fillStyle=css('--surf');g.fillText(e.carga,x+BW+16,y+28);}
+    if(e.est==='FALLA'||(e.est==='PARADA'&&!e.seguro())){g.strokeStyle=css('--red');g.lineWidth=3;g.strokeRect(x-3,y-3,BW+6,BH+6);}});
+  // línea de tiempo
+  const T=gT;T.clearRect(0,0,cT.width,cT.height);const n=S.tl.length,wpx=cT.width/Math.max(n,120);
+  const cc={m:css('--blue'),w:css('--amber'),i:css('--mut'),f:css('--red')};
+  S.E.forEach((e,k)=>{T.fillStyle=css('--mut');T.font='600 12px IBM Plex Mono, monospace';T.fillText(e.n,4,30+k*45);
+    for(let i=0;i<n;i++){T.fillStyle=cc[S.tl[i][k]];T.fillRect(20+i*wpx*(cT.width-24)/cT.width,14+k*45,Math.max(wpx,1),26);}});
+  stats();}
+function stats(){const box=(v,t,c)=>`<div class="st ${c||''}"><b>${v}</b><span>${t}</span></div>`;
+  const hechas=S.E.reduce((a,e)=>a+e.hechas,0);let h=box(S.t,'tick')+box(hechas,'tareas hechas',hechas?'good':'')+
+    box(S.m.choques.length,'cubos chocados',S.m.choques.length?'bad':'good')+
+    box(S.dobles.size?[...S.dobles].join(','):'—','lugares que dos creyeron suyos',S.dobles.size?'bad':'good')+
+    box(S.deadlock!==null?'tick '+S.deadlock:'no','deadlock detectado',S.deadlock!==null?'bad':'good');
+  if(S.esc==='paro'){const A=S.E[0];h+=box(A.seguro()?'sí':'NO','seguro (pant 0, uñas abajo)',A.seguro()?'good':'bad')+box(A.logD.join(' → ')||'—','deshacer');}
+  el('stats').innerHTML=h;
+  const o=opciones();let t='';
+  if(S.esc==='carrera')t=!o.gestor?'CONTROL: gestor tonto. Los dos reservan T1 en el mismo tick y los dos <b>creen que es suyo</b> (borde rojo). Con la cámara apagada los cubos chocan; con la cámara prendida el segundo ve el lugar ocupado y busca otro — salva el choque, no la carrera.':
+    'Los dos piden T1 en el mismo tick. El gestor es atómico: <b>gana uno solo</b>, el otro queda en ESPERA_TRASBORDO con las uñas vacías.';
+  else if(S.esc==='deadlock')t=o.pol==='tardia'?'CONTROL: reserva tardía. Los dos recogen antes de tener dónde dejar. El primero llena T0; el segundo llega con el cubo del otro en las uñas y T0 tiene <b>su propio</b> cubo, que solo él puede sacar. Nadie avanza.':
+    'Reserva todo-o-nada antes de tocar. Solo uno sale a recoger; el otro espera con las uñas vacías, y cuando T0 se llena con un cubo suyo, cambia de tarea y lo saca. Todos los cubos llegan a casa.';
+  else if(S.esc==='paro')t=!o.falla?'CONTROL: falla ingenua. Al PARO cede el control como esté — con el pantógrafo afuera en altura — y al rearmar retoma desde la mitad.':
+    'Dale PARO cuando A esté en EXTIENDE o TOMA (fase DESTINO, a 2.76 m). Queda congelada en FALLA. Al rearmar deshace en orden: la micro-toma, retrae, retrocede, y recién ahí baja.';
+  else t=(o.pol==='tardia'?'CONTROL tardía: se traba enseguida. ':!o.gestor?'CONTROL tonto: mirá los bordes rojos y los choques. ':!o.sel?'Selector viejo: con el rack lleno, A puede quedar esperando hueco para siempre teniendo pedidos que lo liberarían. ':'La buena: ')+'Inventario revuelto al 80 %, un solo trasbordo, entradas y pedidos al azar.';
+  el('explica').innerHTML=t;el('oseed').textContent=el('seed').value;}
+
+// ═══ controles ═════════════════════════════════════════════════════════════════════
+let ESC='carrera',playing=false,acc=0;
+const PRE={carrera:{pol:'ordenada',kGestor:1,kCam:0},deadlock:{pol:'ordenada'},paro:{},operacion:{}};
+function base(){document.querySelector('input[name=pol][value=ordenada]').checked=true;['kGestor','kCam','kFalla','kSel'].forEach(i=>el(i).checked=true);}
+document.querySelectorAll('#presets button').forEach(b=>b.onclick=()=>{ESC=b.dataset.p;base();const p=PRE[ESC];
+  if(p.pol)document.querySelector(`input[name=pol][value=${p.pol}]`).checked=true;if('kCam'in p)el('kCam').checked=!!p.kCam;
+  document.querySelectorAll('#presets button').forEach(x=>x.classList.toggle('on',x===b));armar(ESC);playing=true;el('play').textContent='❚❚ pausa';});
+document.querySelectorAll('input[name=pol],#kGestor,#kCam,#kFalla,#kSel').forEach(i=>i.onchange=()=>armar(ESC));
+el('seed').oninput=()=>{if(ESC==='operacion')armar(ESC);else stats();};
+el('play').onclick=()=>{playing=!playing;el('play').textContent=playing?'❚❚ pausa':'▶ play';};
+el('paso').onclick=()=>{playing=false;el('play').textContent='▶ play';un_tick();dibujar();};
+el('bParo').onclick=()=>{S.E[0].evento('PARO');dibujar();};
+el('bRearme').onclick=()=>{S.E[0].rearme();dibujar();};
+function loop(){if(playing&&S){acc+=+el('vel').value/20;while(acc>=1){un_tick();acc--;}dibujar();
+  if(S.t>4000||(S.deadlock!==null&&S.t>S.deadlock+30)){playing=false;el('play').textContent='▶ play';}}requestAnimationFrame(loop);}
+document.querySelector('[data-p=carrera]').classList.add('on');base();el('kCam').checked=false;armar('carrera');requestAnimationFrame(loop);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',dibujar);
+</script>
+</body>
+</html>

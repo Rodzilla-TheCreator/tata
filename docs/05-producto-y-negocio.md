@@ -35,6 +35,24 @@ Tres líneas concretas donde la máquina ya trae la función:
 
 Y frena solo al soltar, así que no hay actuador de freno hasta el nivel Flota.
 
+## El cómputo y el LiDAR de navegación — compra decidida 19-oct-2026
+
+Aparte de la placa de intercepción de $270, la etapa de autonomía (Piloto en adelante) lleva su
+propio cómputo y su LiDAR. **El razonamiento completo —y la reversión de alcance que lo motiva
+(el LiDAR vuelve a hacer SLAM)— está en `docs/03`.** Para la BOM:
+
+| Pieza | Elegido | ~USD |
+|---|---|---|
+| LiDAR 3D | Unitree L2 (360°×96°) | $419 oficial (~$478 con aranceles) |
+| Cómputo | Jetson Orin NX 16 GB | ~$999 módulo / ~$1,480 dev kit armado |
+| Fuente | DC-DC 39–55 V → 19 V | ~$40 |
+
+**Ojo con el presupuesto:** se había fijado en $1,500, pero NVIDIA subió el Orin NX 16 GB de
+$599 a ~$999 en julio 2026. Con eso, L2 + Orin NX 16 GB + fuente dan **~$1,740 antes de
+importar**, ~$1,900–2,000 puesto en Honduras. O sube el presupuesto a ~$2,000 (lo que maje
+anticipó que Omar aprobaría), o baja el cómputo a un Orin Nano Super 8 GB como plan B. El detalle
+y las dos salidas, en `docs/03`.
+
 ## Piezas vs ingeniería: no mezclarlas
 
 Error que hubo que corregir: se estaban cobrando como hardware cosas que eran ingeniería.

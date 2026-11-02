@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 710" font-family="Helvetica,Arial,sans-serif">
+  <style>
+    .box{fill:#f6f8fa;stroke:#333;stroke-width:1.6}
+    .chip{fill:#eef3fb;stroke:#2a4b7c;stroke-width:1.6}
+    .dcdc{fill:#f6efe7;stroke:#8a5a2b;stroke-width:1.6}
+    .tb{font-size:15px;font-weight:bold;fill:#111}
+    .sm{font-size:11.5px;fill:#333}
+    .xs{font-size:10px;fill:#555}
+    .pin{font-size:10px;fill:#1763d6;font-weight:bold}
+    .v5a{stroke:#d81e2c;stroke-width:2.2;fill:none}      /* +5V lado ESP (amarillo) */
+    .gnda{stroke:#111;stroke-width:2.2;fill:none}        /* GND = amarillo */
+    .v5b{stroke:#e8820c;stroke-width:2.2;fill:none}      /* +5V aislado (bus) */
+    .gndb{stroke:#7a7a7a;stroke-width:2.2;fill:none}     /* GND_bus = neg bateria */
+    .tx{stroke:#1763d6;stroke-width:2;fill:none}
+    .rx{stroke:#13a05a;stroke-width:2;fill:none}
+    .canh{stroke:#1a9e1a;stroke-width:2.4;fill:none}
+    .canl{stroke:#8a5a2b;stroke-width:2.4;fill:none}
+    .dot{fill:#222}
+  </style>
+
+  <text x="24" y="28" class="tb" font-size="18">CAN aislado — camino discreto (opción 3): aislador digital + transceptor + DC-DC aislado</text>
+  <text x="24" y="47" class="sm">Deja el GND del ESP = amarillo (timón) mientras el lado del bus flota al negativo de batería. Las dos tierras NUNCA se tocan.</text>
+
+  <!-- barrera -->
+  <line x1="505" y1="80" x2="505" y2="610" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="7 6"/>
+  <text x="512" y="98" class="xs" fill="#c0392b" font-weight="bold">AISLAMIENTO GALVÁNICO</text>
+  <text x="400" y="140" class="xs" text-anchor="middle" fill="#666">lado ESP · tierra = amarillo</text>
+  <text x="760" y="98" class="xs" text-anchor="middle" fill="#666">lado bus · tierra = negativo de batería</text>
+
+  <!-- ESP32 -->
+  <rect x="40" y="150" width="175" height="215" rx="5" class="chip"/>
+  <text x="127" y="178" class="tb" text-anchor="middle" fill="#2a4b7c">ESP32</text>
+  <text x="127" y="196" class="xs" text-anchor="middle">TWAI · GND = amarillo</text>
+  <text x="209" y="231" class="pin" text-anchor="end">GPIO22 TXD</text>
+  <text x="209" y="291" class="pin" text-anchor="end">GPIO21 RXD</text>
+  <text x="48" y="168" class="xs">5V</text>
+  <text x="48" y="360" class="xs">GND</text>
+
+  <!-- ADuM1201 -->
+  <rect x="415" y="150" width="180" height="250" rx="5" class="chip"/>
+  <text x="505" y="176" class="tb" text-anchor="middle" fill="#2a4b7c">ADuM1201</text>
+  <text x="505" y="193" class="xs" text-anchor="middle">(o ISO7721)</text>
+  <!-- left pins -->
+  <text x="423" y="222" class="pin">1 VDD1</text>
+  <text x="423" y="250" class="pin">4 GND1</text>
+  <text x="423" y="300" class="pin">3 VIB</text>
+  <text x="423" y="360" class="pin">2 VOA</text>
+  <!-- right pins -->
+  <text x="587" y="222" class="pin" text-anchor="end">VDD2 8</text>
+  <text x="587" y="250" class="pin" text-anchor="end">GND2 5</text>
+  <text x="587" y="300" class="pin" text-anchor="end">VOB 6</text>
+  <text x="587" y="360" class="pin" text-anchor="end">VIA 7</text>
+
+  <!-- TJA1050 -->
+  <rect x="690" y="150" width="175" height="250" rx="5" class="box"/>
+  <text x="777" y="176" class="tb" text-anchor="middle">TJA1050</text>
+  <text x="777" y="193" class="xs" text-anchor="middle">(el que ya tenés)</text>
+  <text x="698" y="222" class="pin">1 TXD</text>
+  <text x="698" y="250" class="pin">4 RXD</text>
+  <text x="698" y="300" class="pin">3 VCC</text>
+  <text x="698" y="330" class="pin">2 GND</text>
+  <text x="698" y="360" class="pin">8 S→GND</text>
+  <text x="857" y="250" class="pin" text-anchor="end">CANH 7</text>
+  <text x="857" y="300" class="pin" text-anchor="end">CANL 6</text>
+
+  <!-- DB9 -->
+  <rect x="930" y="200" width="120" height="150" rx="5" class="box"/>
+  <text x="990" y="226" class="tb" text-anchor="middle">DB9</text>
+  <text x="990" y="243" class="xs" text-anchor="middle">→ bus</text>
+  <circle cx="930" cy="250" r="3" class="dot"/><text x="938" y="254" class="xs">pin 8 CANH</text>
+  <circle cx="930" cy="300" r="3" class="dot"/><text x="938" y="304" class="xs">pin 3 CANL</text>
+
+  <!-- B0505S -->
+  <rect x="400" y="450" width="210" height="120" rx="5" class="dcdc"/>
+  <text x="505" y="478" class="tb" text-anchor="middle" fill="#8a5a2b">B0505S</text>
+  <text x="505" y="495" class="xs" text-anchor="middle">DC-DC aislado 5V→5V 1W</text>
+  <text x="408" y="525" class="pin">Vin+</text>
+  <text x="408" y="553" class="pin">Vin−</text>
+  <text x="602" y="525" class="pin" text-anchor="end">Vout+</text>
+  <text x="602" y="553" class="pin" text-anchor="end">Vout−</text>
+  <text x="505" y="590" class="xs" text-anchor="middle" fill="#8a5a2b">esto es lo que separa las dos tierras</text>
+
+  <!-- power bank -->
+  <rect x="45" y="450" width="150" height="80" rx="5" class="box"/>
+  <text x="120" y="483" class="sm" text-anchor="middle">POWER</text>
+  <text x="120" y="500" class="sm" text-anchor="middle">BANK 5V</text>
+
+  <!-- ===== señales ===== -->
+  <!-- TXD: ESP -> VIA -> (barrera) -> VOA -> TJA TXD -->
+  <path d="M215,227 L300,227 L300,300 L413,300" class="tx"/>
+  <circle cx="413" cy="300" r="2.6" class="dot"/>
+  <path d="M597,300 L640,300 L640,218 L688,218" class="tx"/>
+  <text x="300" y="220" class="xs" fill="#1763d6">TXD</text>
+  <!-- RXD: TJA RXD -> VIB -> (barrera) -> VOB -> ESP RXD -->
+  <path d="M688,246 L660,246 L660,360 L597,360" class="rx"/>
+  <path d="M413,360 L340,360 L340,287 L215,287" class="rx"/>
+  <text x="300" y="353" class="xs" fill="#13a05a">RXD</text>
+
+  <!-- ===== poder lado ESP ===== -->
+  <!-- 5V del power bank: al ESP y al Vin+ del DC-DC. NO al VDD1 -->
+  <path d="M120,450 L120,160 L160,160" class="v5a"/>
+  <path d="M195,520 L400,520" class="v5a"/>
+  <text x="230" y="512" class="xs" fill="#d81e2c">+5V → Vin+</text>
+  <!-- 3V3 del ESP: al VDD1 (corregido 02-nov: antes iba a 5V) -->
+  <text x="209" y="170" class="pin" text-anchor="end" fill="#7b3fb0">3V3</text>
+  <path d="M215,166 L270,166 L270,218 L413,218" stroke="#7b3fb0" stroke-width="2.2" fill="none"/>
+  <text x="276" y="160" class="xs" fill="#7b3fb0" font-weight="bold">+3V3 del ESP → VDD1</text>
+  <!-- GND amarillo (negro) -->
+  <path d="M120,530 L120,600 L360,600 L360,248 L413,248" class="gnda"/>
+  <path d="M360,600 L400,600 L400,548" class="gnda"/>
+  <text x="150" y="615" class="xs">GND = amarillo (ESP, GND1, Vin−)</text>
+
+  <!-- ===== poder lado bus (naranja / gris) ===== -->
+  <!-- Vout+ -> VDD2 y TJA VCC -->
+  <path d="M610,520 L660,520 L660,430 L630,430 L630,218 L597,218" class="v5b"/>
+  <path d="M630,300 L688,300" class="v5b"/>
+  <text x="632" y="430" class="xs" fill="#e8820c">+5V aislado</text>
+  <!-- Vout- (GND_bus) -> GND2, TJA GND, TJA S, y DB9/neg bateria -->
+  <path d="M610,548 L675,548 L675,330 L688,330" class="gndb"/>
+  <path d="M675,360 L688,360" class="gndb"/>
+  <path d="M675,250 L597,250" class="gndb" transform="translate(0,0)"/>
+  <path d="M675,548 L900,548 L900,340 L930,340" class="gndb"/>
+  <circle cx="930" cy="340" r="3" class="dot"/><text x="905" y="334" class="xs" text-anchor="end">GND_bus</text>
+  <text x="700" y="565" class="xs" fill="#555">GND_bus = negativo de batería (ficha multipiloto pin 7)</text>
+
+  <!-- CANH / CANL -->
+  <path d="M865,250 L930,250" class="canh"/>
+  <path d="M865,300 L930,300" class="canl"/>
+
+  <!-- nota -->
+  <rect x="45" y="80" width="430" height="46" fill="#fffbe6" stroke="#d9c76a"/>
+  <text x="56" y="100" class="xs"><tspan font-weight="bold">Regla de oro:</tspan> el aislador (ADuM) separa las SEÑALES; el B0505S separa</text>
+  <text x="56" y="116" class="xs">la ALIMENTACIÓN. Sin el B0505S, alimentar el TJA con el 5V del ESP vuelve a unir las tierras.</text>
+
+
+  <!-- leyenda -->
+  <rect x="45" y="628" width="1005" height="26" fill="#f1f3f5" stroke="#ccc"/>
+  <text x="56" y="645" class="xs"><tspan fill="#d81e2c" font-weight="bold">rojo</tspan> +5V power bank · <tspan fill="#7b3fb0" font-weight="bold">morado</tspan> +3V3 ESP · <tspan fill="#111" font-weight="bold">negro</tspan> GND amarillo · <tspan fill="#e8820c" font-weight="bold">naranja</tspan> +5V aislado · <tspan fill="#7a7a7a" font-weight="bold">gris</tspan> GND_bus (neg. batería) · <tspan fill="#1763d6" font-weight="bold">azul</tspan> TXD · <tspan fill="#13a05a" font-weight="bold">verde</tspan> RXD · CANH→8, CANL→3 · NO agregar 120Ω (el equipo ya tiene uno)</text>
+  <rect x="45" y="662" width="1005" height="42" fill="#f3ecfa" stroke="#7b3fb0"/>
+  <text x="56" y="680" class="xs" fill="#7b3fb0"><tspan font-weight="bold">VDD1 = 3.3 V del ESP, no 5 V</tspan> (corregido 02-nov): el ESP32 NO tolera 5 V en GPIO21. El ADuM traduce 3.3 ↔ 5 V solo, así que el divisor 1k/2k del armado viejo ya no va.</text>
+  <text x="56" y="696" class="xs" fill="#b23b4a"><tspan font-weight="bold">Pines del ADuM1201 corregidos (02-nov):</tspan> TX va por el canal B (VIB 3 → VOB 6) y RX por el canal A (VIA 7 → VOA 2). La versión anterior tenía los canales al revés.</text>
+</svg>
