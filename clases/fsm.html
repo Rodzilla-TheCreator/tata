@@ -341,7 +341,7 @@ const cW=el('cW'),gW=cW.getContext('2d'),cT=el('cT'),gT=cT.getContext('2d');
 function pos(id){const sl=S.m.s[id];const B=320,H=62;
   if(sl.tipo==='hueco'){const i=+id.slice(2),bay=Math.floor(i/4),lv=i%4;const x0=sl.sec==='A'?40:700;return[x0+bay*125,B-lv*H];}
   if(sl.tipo==='trasbordo'){const i=+id.slice(1);return[440+i*70,B];}
-  if(id==='E')return[300,B];if(id==='SA')return[300,B-2*H];if(id==='SB')return[640,B-2*H];return[500,40];}
+  if(id==='E')return[300,B];if(id==='SA')return[300,B-2*H];if(id==='SB')return[585,B-2*H];return[500,40];}
 function dibujar(){if(!S)return;const W=cW.width,Hh=cW.height,g=gW;g.clearRect(0,0,W,Hh);
   const col={A:css('--amber'),B:css('--load'),'?':css('--mut')};
   g.font='600 13px IBM Plex Mono, monospace';g.fillStyle=css('--mut');
