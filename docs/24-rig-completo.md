@@ -135,6 +135,39 @@ con bobina:  NC abierto · NA cerrado   = «pedal pisado»
 Hasta medirlo, el relé que se compra es un **DPDT de bobina 5 V con contactos de señal** (tipo
 HK19F-DC5V, G2RL-2-5V o similar) **y se confirma el voltaje de contacto antes de enchufarlo**.
 
+### El pedal es infrarrojo — dato en tensión (02-nov)
+
+Los mecánicos dicen que el pedal que se quitó está «roto del infrarrojo, no detecta», y que lo
+van a dejar en el equipo de maje en Las Palmas. **Si es infrarrojo, no es un interruptor
+mecánico**: es un sensor óptico con salidas **electrónicas** (transistor). `docs/20` dedujo
+«NC + NA» del evento `1.06` (*interruptor de seguridad*), que dice cómo lo **lee** el
+controlador, no cómo está **hecho** el pedal. Las dos cosas pueden ser ciertas a la vez: un
+sensor óptico con dos salidas complementarias se ve igual que un NC + NA.
+
+| Si las salidas resultan… | El pie es… |
+|---|---|
+| contacto seco, o transistor que conecta a + o a − sin importar la corriente | el **DPDT** de arriba sirve tal cual |
+| transistor que el controlador lee con cierta corriente o voltaje | dos **transistores u optoacopladores** (6N137/TLP281 ya ubicados en C&D) en vez del relé. El watchdog no cambia: el GPIO27 sigue mandando y el paro sigue cortando la alimentación de la salida |
+
+**Que esté roto no importa: no lo vamos a usar, lo vamos a emular.** Lo que da es el
+**conector macho y hembra** para el arnés en Y (`docs/21` §3.3), la **foto** y el **número de
+parte** (el manual dice `51297587`).
+
+**El relé no se compra hasta medir el pedal.** De todas formas se consigue en C&D.
+
+Martes, con el pedal enfrente, **nada se alimenta en banco sin saber el voltaje**:
+
+```
+□ foto de frente del conector y de la etiqueta; número de parte
+□ batería fuera, óhmetro entre todos los pines, pisado y suelto
+     si NADA cambia al pisar → es electrónico (no hay contacto que medir apagado)
+□ ¿cuántos hilos? 3 = alimentación + GND + 1 salida · 4 = dos salidas (NC/NA electrónico)
+□ en el equipo, llave ON, pedal conectado: voltaje de cada pin contra negativo de batería,
+     pisado y suelto (con retro-sondeo, sin desconectar)
+□ si está roto «del infrarrojo»: igual se mide la alimentación que le llega; eso es lo que hay
+     que darle al emulador
+```
+
 ### Detalle a saber del timón
 
 Al **resetear** el ESP, los DAC caen a 0 V → la salida queda en ≈ `o` (0.13 V), **fuera del
@@ -192,6 +225,29 @@ Aísla el **lado CAN** (digital, fácil), no el timón (analógico, difícil). E
 
 Decoupling: 0.1 µF en cada par VCC/GND (VDD1, VDD2, TJA); en el DC-DC, ~1–2.2 µF a la entrada y
 10 µF + 0.1 µF a la salida. **No agregar 120 Ω** (el equipo ya tiene un terminador).
+
+### Pedido a Miami — antes del 11-nov-2026
+
+Lo que no hay en C&D sale por Amazon a Miami. Tiene que llegar antes del regreso del 11-nov, así
+que **se pide a más tardar el miércoles 5**, con entrega garantizada. Se piden **los dos caminos**
+porque son baratos y las publicaciones son de vendedores sin marca: si uno no llega o viene malo,
+queda el otro.
+
+| Prioridad | Qué | Cant. | Para qué |
+|---|---|---|---|
+| **1** | **`TD301DCANH3`** (Mornsun/VISOM): transceptor CAN aislado **todo en uno**, lógica **3.3 V** | 2 | trae aislador + DC-DC + transceptor. Reemplaza los tres chips del camino discreto. **Tiene que ser el `H3` (3.3 V)**: el `TD501…` es de 5 V y metería 5 V en GPIO21 |
+| **2** | **`ADuM1201`**, módulo (breakout) | 2 | camino discreto, con el TJA1050 que ya hay. A 250 kbaud sirve cualquier grado, incluido el `A` de 1 Mbps |
+| **2** | **`B0505S-1WR3`**, DC-DC aislado 5→5 V 1 W | 3 | el que separa las tierras del camino discreto. El `-1WR3` aguanta cortos; el `B0505S` viejo, no |
+| opcional | `MCP4728`, DAC de 4 canales I²C | 1 | para quitar el residuo de ~2 % del DAC nativo del timón, si el nodo 4 resulta quisquilloso |
+
+**No sirve, aunque salga en la búsqueda:** el **Waveshare ESP32-S3-CAN-2CH**. Tiene el CAN
+aislado y bien hecho, pero el **ESP32-S3 no tiene DAC**, y el timón usa los DAC de GPIO25/26. Lo
+mismo para cualquier placa con S3, C3 o C6: el rig es un **ESP32 clásico (WROOM)**.
+
+**Al llegar el `TD301DCANH3`:** pinout y consumo **contra la hoja de datos de Mornsun**, no contra
+la foto de Amazon. Si consume más de ~100 mA a 3.3 V, no se cuelga del regulador del ESP; va con
+su propio regulador desde el power bank. Su tierra del lado del bus (`CANG`) va al **negativo de
+batería**, igual que `GND_bus` en `armado_aislado.svg`.
 
 ### Qué buscar en C&D
 
