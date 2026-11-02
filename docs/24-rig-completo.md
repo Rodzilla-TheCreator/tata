@@ -238,8 +238,8 @@ para el TWAI que ya está validado. El TJA1050 queda para escuchar y para el ban
 
 | Opción | Qué trae | Lo malo | Veredicto |
 |---|---|---|---|
-| **MikroE CAN Isolator Click** (`MIKROE-2627`, chip ADM3053) | placa completa: aislamiento + DC-DC + transceptor en un chip, jumper **3.3/5 V**, sale por **DB9 macho**. Va por TX/RX como el TJA | ~$47. **Stock escaso**: DigiKey mostraba 1 unidad y 4 semanas de entrega; MikroE y SparkFun, agotado o retirado. Su DB9 es **CiA-303** (CANH 7, CANL 2): **no** calza con el del equipo (CANH 8, CANL 3), va con el cable repineado de `docs/25`. Terminación: **no confirmada** | **1ª opción si hay stock hoy** |
-| **`TD301DCANH3`** (Mornsun/VISOM) | módulo encapsulado con las tres cosas adentro, **3.3 V**. No se arma: son 4 cables del lado del ESP y 3 del lado del bus | es un bloque con patas, sin bornera ni conector. Vendedores sin marca en Amazon (uno sin stock); LCSC lo tiene pero tarda | **2ª opción**, o pedir las dos |
+| ~~**MikroE CAN Isolator Click**~~ (`MIKROE-2627`) | placa completa con DB9 macho | su DB9 es CiA-303 y no calza con el del equipo: haría falta adaptador igual. Stock escaso | **descartado (maje, 02-nov):** si igual hay que poner el DB9, basta el transceptor solo |
+| **`TD301DCANH3`** (Mornsun/VISOM) | módulo encapsulado con las tres cosas adentro, **3.3 V**. No se arma: son 4 cables del lado del ESP y 3 del lado del bus | es un bloque con patas, sin bornera ni conector: **el DB9 macho se lo ponemos nosotros** (bornera, repineado a 8/3). Vendedores sin marca en Amazon (uno sin stock); LCSC lo tiene pero tarda | **EL PEDIDO: ×2** (uno de repuesto) |
 | **Waveshare 2-CH CAN HAT aislado** | aislado de verdad, DC-DC integrado, **jumper de 120 Ω**, jumper 3.3/5 V, borneras, probablemente en Amazon Prime | es para Raspberry Pi y usa **MCP2515 por SPI**: hay que reescribir el firmware del TWAI (validado 20/20 y en el equipo el 22-oct) a SPI | **respaldo**, solo si fallan las dos |
 | Camino discreto (ADuM1201 + B0505S + TJA1050) | — | hay que armarlo | **solo si no llega nada** (piezas en C&D: 6N137 ubicado) |
 
