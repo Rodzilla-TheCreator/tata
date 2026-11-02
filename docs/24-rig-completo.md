@@ -228,23 +228,46 @@ Decoupling: 0.1 µF en cada par VCC/GND (VDD1, VDD2, TJA); en el DC-DC, ~1–2.2
 
 ### Pedido a Miami — antes del 11-nov-2026
 
-Lo que no hay en C&D sale por Amazon a Miami. Tiene que llegar antes del regreso del 11-nov, así
-que **se pide a más tardar el miércoles 5**, con entrega garantizada. Se piden **los dos caminos**
-porque son baratos y las publicaciones son de vendedores sin marca: si uno no llega o viene malo,
-queda el otro.
+**Criterio (maje, 02-nov): se pide el módulo ENTERO, no piezas para armar.** Armar es solo si
+es la única opción. Tiene que llegar a Miami antes del 11-nov: **pedir a más tardar el
+miércoles 5**, con entrega garantizada.
 
-| Prioridad | Qué | Cant. | Para qué |
+Lo que hace falta es una sola pieza que traiga las tres cosas: **aislamiento de señal + DC-DC
+aislado + transceptor**, con lógica **3.3 V** (el ESP no tolera 5 V en GPIO21) y entrada TX/RX
+para el TWAI que ya está validado. El TJA1050 queda para escuchar y para el banco.
+
+| Opción | Qué trae | Lo malo | Veredicto |
 |---|---|---|---|
-| **1** | **`TD301DCANH3`** (Mornsun/VISOM): transceptor CAN aislado **todo en uno**, lógica **3.3 V** | 2 | trae aislador + DC-DC + transceptor. Reemplaza los tres chips del camino discreto. **Tiene que ser el `H3` (3.3 V)**: el `TD501…` es de 5 V y metería 5 V en GPIO21 |
-| **2** | **`ADuM1201`**, módulo (breakout) | 2 | camino discreto, con el TJA1050 que ya hay. A 250 kbaud sirve cualquier grado, incluido el `A` de 1 Mbps |
-| **2** | **`B0505S-1WR3`**, DC-DC aislado 5→5 V 1 W | 3 | el que separa las tierras del camino discreto. El `-1WR3` aguanta cortos; el `B0505S` viejo, no |
-| opcional | `MCP4728`, DAC de 4 canales I²C | 1 | para quitar el residuo de ~2 % del DAC nativo del timón, si el nodo 4 resulta quisquilloso |
+| **MikroE CAN Isolator Click** (`MIKROE-2627`, chip ADM3053) | placa completa: aislamiento + DC-DC + transceptor en un chip, jumper **3.3/5 V**, sale por **DB9 macho**. Va por TX/RX como el TJA | ~$47. **Stock escaso**: DigiKey mostraba 1 unidad y 4 semanas de entrega; MikroE y SparkFun, agotado o retirado. Su DB9 es **CiA-303** (CANH 7, CANL 2): **no** calza con el del equipo (CANH 8, CANL 3), va con el cable repineado de `docs/25`. Terminación: **no confirmada** | **1ª opción si hay stock hoy** |
+| **`TD301DCANH3`** (Mornsun/VISOM) | módulo encapsulado con las tres cosas adentro, **3.3 V**. No se arma: son 4 cables del lado del ESP y 3 del lado del bus | es un bloque con patas, sin bornera ni conector. Vendedores sin marca en Amazon (uno sin stock); LCSC lo tiene pero tarda | **2ª opción**, o pedir las dos |
+| **Waveshare 2-CH CAN HAT aislado** | aislado de verdad, DC-DC integrado, **jumper de 120 Ω**, jumper 3.3/5 V, borneras, probablemente en Amazon Prime | es para Raspberry Pi y usa **MCP2515 por SPI**: hay que reescribir el firmware del TWAI (validado 20/20 y en el equipo el 22-oct) a SPI | **respaldo**, solo si fallan las dos |
+| Camino discreto (ADuM1201 + B0505S + TJA1050) | — | hay que armarlo | **solo si no llega nada** (piezas en C&D: 6N137 ubicado) |
+
+**La terminación.** Nada de lo de arriba se elige por traer 120 Ω: hoy el bus mide **120 Ω** y el
+manual pide **60** (falta un terminador, `CLAUDE.md` 03-oct). Con un 120 nuestro quedaría en 60.
+**No se decide por la ficha: se mide.** Llave OFF, rig conectado, óhmetro CANH↔CANL:
+**≈ 60 Ω** está bien; **≈ 40 Ω** son tres terminadores y sobra el nuestro. (Esto matiza el «no
+agregar 120 Ω» de arriba, que se escribió sin contar el terminador que falta.)
+
+**El reductor de voltaje no entra.** Los módulos aislados se alimentan del lado del ESP, y el
+lado del bus se alimenta solo por el DC-DC interno. El DROK no puede con los ~40 V de batería.
+
+<details><summary>Primera versión de esta lista (02-nov, mañana), reemplazada</summary>
+
+Pedía los dos caminos en piezas: `TD301DCANH3` ×2 como prioridad 1, y `ADuM1201` ×2 +
+`B0505S-1WR3` ×3 como prioridad 2, para armar. **Qué la tumbó:** maje no quiere armar si se puede
+comprar entero.
+</details>
+
+| Opcional, en el mismo pedido | Para qué |
+|---|---|
+| `MCP4728`, DAC de 4 canales I²C, ×1 | quitar el residuo de ~2 % del DAC nativo del timón, si el nodo 4 resulta quisquilloso |
 
 **No sirve, aunque salga en la búsqueda:** el **Waveshare ESP32-S3-CAN-2CH**. Tiene el CAN
 aislado y bien hecho, pero el **ESP32-S3 no tiene DAC**, y el timón usa los DAC de GPIO25/26. Lo
 mismo para cualquier placa con S3, C3 o C6: el rig es un **ESP32 clásico (WROOM)**.
 
-**Al llegar el `TD301DCANH3`:** pinout y consumo **contra la hoja de datos de Mornsun**, no contra
+**Al llegar el módulo:** pinout y consumo **contra la hoja de datos de Mornsun**, no contra
 la foto de Amazon. Si consume más de ~100 mA a 3.3 V, no se cuelga del regulador del ESP; va con
 su propio regulador desde el power bank. Su tierra del lado del bus (`CANG`) va al **negativo de
 batería**, igual que `GND_bus` en `armado_aislado.svg`.
