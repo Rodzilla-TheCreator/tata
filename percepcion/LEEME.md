@@ -121,3 +121,14 @@ ese. Por qué no timeout: quitarle la reserva a quien ya tiene el cubo lo deja s
 
 **Supuestos:** ticks ≈ DUR del simulador / 0.5 s; mundo chico (1–2 trasbordos, 6 huecos por
 sector, niveles a 1.38 m); la cámara verifica el hueco antes de extender (`verificar_hueco`).
+
+
+## Imprimir y calibrar (02-nov-2026)
+
+- `marcas/aruco_4x4_50_id{0..3}_15cm_carta.pdf`: cuatro ArUco de 15 cm, una por hoja carta, con regla de 10 cm. Validado: cada PDF rasterizado se detecta con su ID y 15.01 cm; página en blanco, nada.
+- `marcas/tablero_9x6_22mm_carta.pdf` + `calibrar_camara.py`: el tablero y el script que guarda el `calib.npz` de `detector_aruco.py --calib`. Validado en sintético con dos cámaras distintas (fx 600 y 900): recupera cada una a < 0.1 %.
+
+```
+python percepcion/calibrar_camara.py --cuadro-mm 22      # el cuadro MEDIDO con regla
+python percepcion/detector_aruco.py --calib calib.npz --marca 0.15
+```
