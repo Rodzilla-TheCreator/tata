@@ -132,3 +132,67 @@ sector, niveles a 1.38 m); la cámara verifica el hueco antes de extender (`veri
 python percepcion/calibrar_camara.py --cuadro-mm 22      # el cuadro MEDIDO con regla
 python percepcion/detector_aruco.py --calib calib.npz --marca 0.15
 ```
+
+
+## Primera prueba con cámara real — 03-nov-2026, en superspeed
+
+Primera corrida de `detector_aruco.py` y `calibrar_camara.py` contra hardware de verdad (antes
+todo estaba validado solo en sintético). Cámara **Logitech C920** (`/dev/video4`, índice 4 de
+dos detectadas; la otra es una USB2.0 FHD genérica en índice 0). `python3-opencv` del sistema
+es 4.5.4 (sin `ArucoDetector`); se armó `.venv` con `opencv-contrib-python` 5.0.0 — necesario en
+cualquier máquina nueva antes de correr nada de esta carpeta.
+
+**Calibración** (tablero 9×6, cuadro medido 22.0 mm):
+
+| Intento | Vistas | RMS | Veredicto |
+|---|---|---|---|
+| 1 | 15 | 3.873 px | **malo** — poca variedad de pose, `cx` corrido 75 px del centro esperado |
+| 2 | 15 | 0.724 px | aceptable (no <0.5 ideal, pero `fx≈fy` 623.4/623.5 y `cx,cy` cerca del centro) |
+
+`calib.npz` final: fx 623.4 · fy 623.5 · cx 349.1 · cy 252.4 · FOV horizontal 54.3°. La primera
+corrida se repitió variando más la distancia, la inclinación (~30-45°) y cubriendo las cuatro
+esquinas del cuadro — ahí bajó el RMS.
+
+**Detección y escala**, marca de 15.00 cm (medida con regla, coincide con el nominal), a 1.00 m
+real (medida con cinta): el detector reportó **1.00 m exacto**.
+
+**Control de falsación** (misma marca, sin moverla de 1.00 m real):
+
+| Variante | Predicho | Medido |
+|---|---|---|
+| sin `--calib` (FOV sintético 70°, más ancho que el real 54.3° → foco más corto) | ~0.73 m | **0.73 m** |
+| con `--calib`, `--marca 0.30` (el doble del real) | ~2.00 m | **1.99 m** |
+
+Los dos controles cambiaron en la dirección predicha. La prueba mide lo que dice medir.
+
+**Signos para el EKF — prueba de 3 pasos, marca a ~1 m, cámara C920 fija:**
+
+| Paso | Maniobra | `lateral_m` / `yaw_deg` medido |
+|---|---|---|
+| 1 | marca a la derecha de la cámara | lateral **+0.288** |
+| 2 | marca a la izquierda | lateral **−0.446** |
+| 3 | marca girada sobre su eje vertical, borde derecho (visto desde la cámara) alejándose, bisagra en el borde izquierdo | yaw **−42.4°** |
+
+**Lateral: coincide** con la convención documentada ("+ a la derecha") en `detector_aruco.py` y
+`ekf.py`. No se tocó.
+
+**Yaw: NO coincidía.** `pose_desde_marca`/`marca_vista_desde` (antes del fix) predicen **+α**
+para la maniobra del paso 3 (borde derecho alejándose); el detector real da **−42.4°**. Se
+corrigió el signo en `percepcion/ekf.py`:
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| `cam_th = mth − π − yaw` (en `pose_desde_marca`) | `cam_th = mth − π + yaw` | la maniobra del paso 3 da yaw negativo en el detector real; con el signo viejo la fórmula pedía positivo para ese mismo giro |
+| `yaw = mth − π − cam_th` (en `marca_vista_desde`) | `yaw = π + cam_th − mth` | es la misma corrección, por el lado inverso — las dos funciones son álgebra inversa entre sí |
+| `sim_sintetico.py` iba a agarrar este bug | **no lo agarra, y no podía**: genera la medición sintética con `marca_vista_desde` y la consume con `pose_desde_marca`/EKF — cualquier convención consistente entre las dos pasa el sintético aunque esté al revés respecto del detector real | por eso el encargo pedía explícitamente este chequeo contra hardware antes de confiar en el EKF con datos de verdad |
+
+`lateral` no se tocó porque la medición real confirmó que ya estaba bien.
+
+Tras el fix, `sim_sintetico.py` sigue dando **PASA** (A 30/30, B 30/30, C 30/30 — mismos números
+que antes, porque el sintético es autoconsistente respecto del signo: lo que cambia es que ahora
+esa convención interna coincide con la realidad, no solo consigo misma).
+
+**Pendiente:** esto corrige el signo de la fórmula geométrica 2D. Falta repetir una prueba
+equivalente con **dos** cámaras montadas en el equipo real (el `montaje` de cada una) para
+confirmar que `cth` (ángulo de montaje) también se combina con el signo correcto — hoy solo se
+probó con la cámara haciendo de "equipo" directamente (`montaje` trivial).

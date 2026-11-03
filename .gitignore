@@ -6,3 +6,6 @@ capturas/
 *.log
 node_modules/
 sec/giro.json
+.venv/
+calib.npz
+percepcion/corridas/

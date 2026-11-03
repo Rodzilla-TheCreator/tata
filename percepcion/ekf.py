@@ -133,8 +133,14 @@ class EKF:
 # respecto de mirarla de frente). Con el mapa (id → x, y, θ de la normal de la marca, que
 # apunta hacia el pasillo) y el montaje de la cámara en el equipo se deduce la pose.
 #
-# OJO: los signos de lateral y yaw están definidos acá, en 2D. Hay que verificarlos contra
-# detector_aruco.py con una marca real en el banco antes de usarlo con datos de verdad.
+# Verificado contra marca real (03-nov-2026, C920, calib.npz, ver percepcion/LEEME.md):
+# lateral SÍ coincidía (+derecha, −izquierda). yaw NO: la fórmula daba +α girando la marca de
+# forma que su borde derecho (visto desde la cámara) se aleja (bisagra en el borde izquierdo),
+# y el detector real, para ese mismo giro, da −42.4°. Signo de yaw CORREGIDO acá (cam_th usa
+# +yaw, no −yaw; yaw queda π + cam_th − mth, no mth − π − cam_th). Round-trip interno seguía
+# pasando con el signo viejo —por eso sim_sintetico.py no lo agarró— porque pose_desde_marca y
+# marca_vista_desde son álgebra inversa entre sí: cualquier convención consistente entre las dos
+# pasa el synthetic aunque esté al revés respecto del detector real.
 
 def _rot(a):
     c, s = math.cos(a), math.sin(a)
@@ -146,7 +152,7 @@ def pose_desde_marca(marca, dist, lateral, yaw, montaje):
     (respecto del eje de carga). Devuelve la pose (x, y, θ) del equipo."""
     mx, my, mth = marca
     cx, cy, cth = montaje
-    cam_th = mth - math.pi - yaw                       # yaw = 0 → la marca mira de frente a la cámara
+    cam_th = mth - math.pi + yaw                       # yaw = 0 → la marca mira de frente a la cámara
     cam_p = np.array([mx, my]) - _rot(cam_th) @ np.array([dist, -lateral])
     th = cam_th - cth
     p = cam_p - _rot(th) @ np.array([cx, cy])
@@ -161,7 +167,7 @@ def marca_vista_desde(pose, marca, montaje):
     cam_p = np.array([x, y]) + _rot(th) @ np.array([cx, cy])
     rel = _rot(-cam_th) @ (np.array(marca[:2]) - cam_p)
     dist, lateral = rel[0], -rel[1]
-    yaw = envolver(marca[2] - math.pi - cam_th)
+    yaw = envolver(math.pi + cam_th - marca[2])
     return dist, lateral, yaw
 
 
