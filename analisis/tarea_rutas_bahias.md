@@ -7,7 +7,7 @@
 > - **Punta de uña a 0–5 cm de la cara, no a 8–15:** sobran 10 cm entre culo y punta.
 > - **La `a` se entra con las uñas hacia adentro, la `b` hacia la descarga.**
 > - **Caso de maje:** sí, va de reversa. A la 5 3 Rb, 6.1 m sin cambios de sentido; a la 5 3 Ra,
->   11.5 m con 2.
+>   12.1 m con 2.
 > - **La FSM con direcciones pasa** las 4 pruebas viejas y la del caso de maje.
 
 **Para la sesión que corre en i3.** Autocontenido. Corre en i3, **sin montacargas**: Python

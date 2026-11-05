@@ -1,8 +1,22 @@
 # Rutas entre bahías — resultados (05-nov-2026, en la i3)
 
 Encargo: `tarea_rutas_bahias.md`. Código: `bahias.py` (direcciones `x y s`), `planificador_rutas.py`
-(Hybrid A* con uñas). Todo sale de `py analisis/planificador_rutas.py` (~17 min en la i3), que escribe
+(Hybrid A* con uñas). Todo sale de `py analisis/planificador_rutas.py` (~5 min en la i3), que escribe
 `rutas_tabla.json` (lo lee la FSM) y `ruta_3L_5R.png`.
+
+> **Rehecho el mismo 05-nov (tarea de visibilidad).** La primera versión **pegaba piezas con
+> saltos escondidos**. El traslado cerraba con una recta sobre el rumbo que traía, con hasta 2–3°
+> de error, y `unir()` arrancaba la pieza siguiente desde su pose exacta. Reproducidas de forma
+> continua, las rutas llegaban corridas de 17 cm (mediana) a **1.28 m** (`barrido_7Lb`).
+>
+> **Ahora el traslado cierra exacto:**
+> - una curva en S de dos arcos (Newton sobre la cinemática exacta) más una recta;
+> - si la meta viene inclinada, un arco final en forma cerrada;
+> - `unir()` falla si hay un salto, y cada ruta reporta `salto_max_m`. El máximo hoy es **8e-6 m**.
+>
+> **Los números de abajo son los nuevos.** Cambiaron poco en las idas, y más en las rutas que dan
+> la vuelta en la zona: **la vuelta pasa a costar 3 cambios de sentido**. Lo que no cambió: el
+> ancho a rumbo, la asimetría a/b, los controles y los barridos de XPIV y de profundidad.
 
 ```
 py analisis/bahias.py                 # direcciones → pose objetivo y altura
@@ -45,6 +59,7 @@ culo redondeado baja el ancho a rumbo. El modelo lo tiene en ángulo recto.
 | El 180° no entra (chasis + uñas, 3.14 m a 75°), el 90° sí | **Los dos fallan dentro del pasillo**: es la misma franja de rumbos. Lo que separa al 90° del 180° es que el 90° termina en una bahía y usa su luz | el ancho a rumbo no depende del camino |
 | La punta de uña a 8–15 cm de la cara, como `meta()` de `almacen-nuevo/` | **0–5 cm** (meta 3). De frente al rack, el equipo mide 2.90 de culo a punta y sobran **10 cm en total**; con 5 cm de holgura en el culo, a la punta le quedan 5 | `bahias.GAP_OBJ` |
 | Solo chasis, peor caso 2.31 m | **2.48 m** con `L_ANCHO = 0.48` medido y las patas delante de la torre | la silueta del 318 con el dato del 18-sep |
+| Las rutas compuestas son continuas (primera versión de este archivo) | **Tenían saltos escondidos entre piezas: hasta 1.28 m.** Ahora el cierre es exacto y el salto máximo es 8e-6 m | reproducir las primitivas de forma continua para la visibilidad: las llegadas no caían en el hueco. `saltos()` y el `assert` de `unir()` lo vigilan |
 | Entrar a una bahía es lo mismo venga de donde venga | **Depende de la posición y del rumbo de viaje.** A la `a` (pegada al poste del lado de la descarga) solo se entra y se sale con las **uñas hacia adentro**; a la `b`, solo con las **uñas hacia la descarga**; por el **centro** de la bahía, en los dos sentidos | las uñas necesitan la luz a mitad del giro y el poste de al lado se la quita. Simétrico: la `b` es el espejo de la `a` |
 
 ## Caso 1 · el de maje: frente a 3L, uñas hacia la descarga; el cubo de 5R (N3) a la descarga
@@ -57,7 +72,7 @@ traslado en reversa, con el culo primero. Lo que cambia todo es **cuál de los d
 | Hueco | Ida (vacío) | Vuelta a la descarga (con el IBC) | Total |
 |---|---|---|---|
 | **5 3 Rb** | **6.1 m · 0 cambios · 11 s**: un solo tramo en reversa; se corre al carril de giro (85 cm del rack L) y gira 90° metiendo las uñas a la 5R | **14.5 m · 0 cambios · 17 s**: sale girando con las uñas hacia la descarga y va de frente | **20.6 m · 28 s** |
-| **5 3 Ra** | **11.5 m · 2 cambios · 24 s**: entra en reversa al **centro** de la 5R (8.2 m, ½ vuelta), sale de frente girando hacia adentro, y entra en reversa a la `a` | **20.2 m · 2 cambios · 29 s**: sale con las uñas hacia adentro (la `a` no deja otra), va en reversa hasta la zona, da la vuelta ahí y llega de frente | **31.7 m · 53 s** |
+| **5 3 Ra** | **12.1 m · 2 cambios · 26 s**: entra en reversa al **centro** de la 5R (8.2 m), sale de frente girando hacia adentro, y entra en reversa a la `a` | **19.9 m · 4 cambios · 27 s**: sale con las uñas hacia adentro (la `a` no deja otra), va en reversa hasta la zona, da la vuelta ahí (2 cambios) y llega de frente | **32.0 m · 52 s** |
 
 Arriba van los vertical de la tabla de `CLAUDE.md`: ELEVA a 3.947 m, unos **7.2 s** a 0.55 m/s
 (SUPUESTO). Después EXTIENDE, TOMA +6 cm, RETRAE y TRANSITO: bajar de 4.007 m, unos **7.3 s**.
@@ -72,16 +87,17 @@ Pose de arranque (0, 0, 0°). Siete bahías por lado (SUPUESTO, del DXF). El lad
 
 | Bahía | Llega a `a` | Llega a `b` | Sale de `a` | Sale de `b` |
 |---|---|---|---|---|
-| 1 | 4.5 m · 1 cambio · 8 s | 8.2 m · 1 · 19 s, **vuelta en la zona** | solo **al fondo** (1 cambio) | solo **a la descarga** (0) |
-| 2 | 11.3 · 1 · 16 s | 10.6 · 1 · 20 s, vuelta en la zona | solo al fondo (0) | solo a la descarga (0) |
-| 3 | 13.8 · 1 · 17 s | 13.1 · 1 · 22 s, vuelta en la zona | ídem | ídem |
-| 4 | 16.1 · 1 · 19 s | 15.6 · 1 · 24 s, vuelta en la zona | ídem | ídem |
-| 5 | 18.7 · 1 · 21 s | 18.1 · 1 · 26 s, vuelta en la zona | ídem | ídem |
-| 6 | 21.2 · 1 · 23 s | 20.5 · 1 · 27 s, vuelta en la zona | ídem | ídem |
-| 7 | 23.7 · 1 · 24 s | 23.0 · 1 · 28 s, vuelta en la zona | ídem | ídem |
+| 1 | 4.5 m · 1 cambio · 8 s | 9.4 m · 3 · 17 s, **vuelta en la zona** | solo **al fondo** (1 cambio) | solo **a la descarga** (0) |
+| 2 | 11.3 · 1 · 16 s | 10.2 · 3 · 18 s, vuelta en la zona | solo al fondo (0) | solo a la descarga (0) |
+| 3 | 13.8 · 1 · 17 s | 12.7 · 3 · 19 s, vuelta en la zona | ídem | ídem |
+| 4 | 16.1 · 1 · 19 s | 15.1 · 3 · 21 s, vuelta en la zona | ídem | ídem |
+| 5 | 18.7 · 1 · 21 s | 17.6 · 3 · 23 s, vuelta en la zona | ídem | ídem |
+| 6 | 21.2 · 1 · 23 s | 20.1 · 3 · 25 s, vuelta en la zona | ídem | ídem |
+| 7 | 23.7 · 1 · 24 s | 22.5 · 3 · 26 s, vuelta en la zona | ídem | ídem |
 
 Las 28 llegan. Las salidas de la `a` hacia la descarga y de la `b` hacia el fondo **no existen**
-con `PROF_BAHIA = 0.20`. La vuelta en la zona cuesta unos **7 s**.
+con `PROF_BAHIA = 0.20`. La vuelta en la zona cuesta **2 cambios de sentido** y unos **2–4 s** más
+que ir directo a la `a` de la misma bahía.
 
 ## Caso 3 · el 180°
 
@@ -89,7 +105,7 @@ con `PROF_BAHIA = 0.20`. La vuelta en la zona cuesta unos **7 s**.
 |---|---|
 | 180° dentro del pasillo, **con uñas** | **no existe**: franja de 56–89.5° fuera de 2.90 m; la búsqueda agota 15 000 expansiones |
 | 180° dentro del pasillo, sin uñas (control) | sí: 1.2 m, 1 cambio. El chasis solo cabe a todo rumbo (máx. 2.48 m) |
-| **Dos 90° por el centro de una bahía** (`4 Lc`) | **sí: 7.8 m, 2 cambios, 17 s**. Entra en reversa con las uñas hacia adentro, sale de frente con las uñas hacia la descarga. Cambia el sentido de viaje sin 180° |
+| **Dos 90° por el centro de una bahía** (`4 Lc`) | **sí: 7.8 m, 2 cambios, 18 s**. Entra en reversa con las uñas hacia adentro, sale de frente con las uñas hacia la descarga. Cambia el sentido de viaje sin 180° |
 
 ## Controles de falsación
 
@@ -126,13 +142,13 @@ de este número, que no está medido.**
 `py percepcion/sim_coordinacion.py` corre las 4 pruebas **dos veces**: con la tabla fija (los
 números de `clases/fsm.html` no se movieron: deadlock en el tick 128, 62 tareas por corrida) y con
 direcciones de bahía, donde las duraciones salen de `rutas_tabla.json`. Con direcciones también
-pasan las cuatro: deadlock tardío en el tick 175, 19/20 en la operación al azar, tonto con choques en
+pasan las cuatro: deadlock tardío en el tick 164, 19/20 en la operación al azar, tonto con choques en
 19/20 y la buena en 0/0. La quinta es el caso de maje: las 22 etapas en orden, el cubo en la descarga,
 la vuelta en la ida a la Ra y no a la Rb, y el tiempo de movimiento:
 
 | | FSM | Planificador parando entre maniobras | Planificador sin parar |
 |---|---|---|---|
-| 5 3 Ra | 62 s | 52 s | 53 s |
+| 5 3 Ra | 60 s | 54 s | 52 s |
 | 5 3 Rb | 34 s | 31 s | 28 s |
 
 La prueba 5 al principio **fallaba** (69 s y 40 s). Había dos causas:
@@ -141,7 +157,7 @@ La prueba 5 al principio **fallaba** (69 s y 40 s). Había dos causas:
    continuo. Ahora se compara contra el planificador parado entre las mismas maniobras, con el
    mismo ±25 %, sin mover el umbral.
 
-Lo que queda (+10 a +19 %) es redondeo a ticks y los pasos de 1 tick. **Parar entre pasos es lo que
+Lo que queda (+10 a +11 %) es redondeo a ticks y los pasos de 1 tick. **Parar entre pasos es lo que
 cuesta la FSM por pasos:** hasta un 20 % contra el movimiento continuo.
 
 ## SUPUESTOS (todos parámetro)

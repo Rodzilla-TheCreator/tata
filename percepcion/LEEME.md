@@ -103,7 +103,7 @@ py percepcion/sim_coordinacion.py     # ~17 s en la i3; termina con RESULTADO: P
 > la de `clases/fsm.html` y no se movió, y con huecos `x y s` + `a`/`b`. En el segundo modo
 > CARRIL, RECTA, GIRO, RETROCEDE, DESGIRA, ELEVA y TRANSITO duran lo que dice
 > `analisis/rutas_tabla.json`, y el equipo lleva su x, su carril y su rumbo de viaje.
-> - **Resultados con direcciones:** pasan las cuatro. Deadlock tardío en el tick 175; operación al
+> - **Resultados con direcciones:** pasan las cuatro. Deadlock tardío en el tick 164; operación al
 >   azar: buena 0/0, tardía 19/20, tonto con choques en 19/20.
 > - **La quinta es el caso de maje** (3L → 5 3 Ra / Rb → descarga): las 22 etapas en orden, la
 >   vuelta solo donde la da el planificador, y el tiempo a ±25 % del planificador parando entre

@@ -217,9 +217,15 @@ class MetaPose:
         self.x, self.y, self.th = x, y, th
         self.tol_xy, self.tol_th, self.recta, self.eje = tol_xy, tol_th, recta, eje
 
+    def a_la_linea(self, p):
+        """Distancia de p a la LÍNEA de la meta (por (x, y) con rumbo θ). Para un traslado es lo
+        que cuenta: la meta puede venir inclinada unos grados (la tolerancia de una salida) y a
+        16 m eso son 70 cm de diferencia con |y − y_meta| (corregido 05-nov)."""
+        return abs(-(p[0] - self.x) * math.sin(self.th) + (p[1] - self.y) * math.cos(self.th))
+
     def h(self, p):
         if self.eje == 'x':                 # traslado: el largo en x lo cierra la recta final
-            return abs(p[1] - self.y) + 0.33 * abs(angdif(p[2], self.th))
+            return self.a_la_linea(p) + 0.33 * abs(angdif(p[2], self.th))
         return math.hypot(p[0] - self.x, p[1] - self.y) + 0.33 * abs(angdif(p[2], self.th))
 
     @property
@@ -231,7 +237,7 @@ class MetaPose:
             return False
         if self.eje == 'y':                 # de frente a un rack: x fija, y se cierra en recta
             return abs(p[0] - self.x) <= self.tol_xy and (self.recta or abs(p[1] - self.y) <= self.tol_xy)
-        return abs(p[1] - self.y) <= self.tol_xy and (self.recta or abs(p[0] - self.x) <= self.tol_xy)
+        return self.a_la_linea(p) <= self.tol_xy and (self.recta or abs(p[0] - self.x) <= self.tol_xy)
 
     def dentro(self, p):
         return self.cerca(p) and math.hypot(p[0] - self.x, p[1] - self.y) <= self.tol_xy
@@ -274,14 +280,45 @@ def planificar(p0, meta, eq, mundo, max_exp=60000, peso=1.5, costo_cambio=COSTO_
                          round((p[2] % (2 * math.pi)) / math.radians(3)) % 120, sg)
     Q = [(peso * meta.h(p0), 0.0, 0, p0, 0)]
     info = {0: (p0, None, None)}                 # id → (pose, padre, primitiva que llevó ahí)
+    cierres = {}                                 # id de nodo final → (id del que cierra, cierre)
+    mejor, desde = None, None                    # el cierre más barato visto y en qué expansión
+
+    def terminar(n):
+        n0, ac = cierres[n]
+        prims, poses = _reconstruir(info, n0)
+        for pr, q in ac:
+            prims.append(pr); poses.append(q)
+        return dict(ok=True, prims=prims, poses=poses, expansiones=len(visto))
+
     visto, cnt = {}, 1
     while Q:
         f, g, nid, p, sg = heapq.heappop(Q)
+        if nid in cierres:                       # el cierre más barato salió de la cola: listo
+            return terminar(nid)
+        # si el único cierre que hay invierte el sentido, no se espera para siempre uno que no:
+        # 3000 expansiones más y se queda con el mejor (en la zona abierta la cola es un llano)
+        if mejor is not None and len(visto) - desde > 3000:
+            return terminar(mejor[1])
         k = key(p, sg)
         if k in visto:
             continue
         visto[k] = g
-        if meta.cerca(p):
+        if meta.cerca(p) and getattr(meta, 'eje', None) == 'x':
+            # traslado: se cierra EXACTO (curva en S de dos arcos + recta), no con una recta sobre
+            # el rumbo que trae (ver _acomodar: así quedaban saltos de hasta 1.3 m entre piezas).
+            # El cierre entra a la cola con su costo (y el del cambio de sentido, si invierte): sale
+            # el más barato, no el primero que se encontró. El largo del cierre no entra al orden: la
+            # recta final termina en la misma x para todos, así que g + cierre es casi constante
+            ac = _acomodar(p, sg, meta, eq, mundo)
+            if ac is not None:
+                c = costo_cambio if sg != 0 and ac[0][0][0] != sg else 0.0
+                cierres[cnt] = (nid, ac)
+                if mejor is None or g + c < mejor[0]:
+                    mejor = (g + c, cnt)
+                    desde = desde if desde is not None else len(visto)
+                heapq.heappush(Q, (g + c, g + c, cnt, ac[-1][1], 0))
+                cnt += 1
+        elif meta.cerca(p):
             if meta.dentro(p):                   # ya está: no se agrega un tramo de 1 cm
                 prims, poses = _reconstruir(info, nid)
                 return dict(ok=True, prims=prims, poses=poses, expansiones=len(visto))
@@ -296,6 +333,8 @@ def planificar(p0, meta, eq, mundo, max_exp=60000, peso=1.5, costo_cambio=COSTO_
                     poses.append(final)
                     return dict(ok=True, prims=prims, poses=poses, expansiones=len(visto))
         if len(visto) > max_exp:
+            if mejor is not None:
+                return terminar(mejor[1])
             break
         for (s2, fr), q in eq.sucesores(p, mundo):
             cambio = sg != 0 and s2 != sg
@@ -318,6 +357,91 @@ def _cerrar(p, d, eq, mundo, max_d, paso=0.02):
         if not eq.libre_en(q, mundo):
             return None
     return q
+
+
+def _arco(p, sg, largo, d, n=10):
+    q = p
+    for _ in range(n):
+        q = step(q, sg * largo / n, d)
+    return q
+
+
+def _acomodar(p, sg, meta, eq, mundo):
+    """Cierre EXACTO de un traslado: dos arcos de largo ℓ (dirección δ1, δ2 resueltas por Newton
+    con la cinemática exacta) que dejan lateral 0 y rumbo exacto sobre la línea de la meta, y una
+    recta hasta su x. Devuelve [((sentido, frac, ds), pose), …] o None si no entra o choca.
+
+    Corregido 05-nov: la primera versión cerraba con una recta sobre el rumbo que traía, que
+    tenía hasta 2–3° de error; en 20 m de pasillo eso son decenas de cm, y unir() pegaba la pieza
+    siguiente desde SU pose exacta: el salto quedaba escondido. Se vio al reproducir las rutas de
+    forma continua para tarea_visibilidad.md: llegadas corridas de 17 cm (mediana) a 1.28 m."""
+    th = meta.th
+    u, n = (math.cos(th), math.sin(th)), (-math.sin(th), math.cos(th))
+    falta = (meta.x - p[0]) * u[0] + (meta.y - p[1]) * u[1]          # a lo largo de la línea de la meta
+    sgn = 1 if falta * math.cos(p[2] - th) > 0 else -1               # hacia la meta; si no es el que
+    dmx = eq.dmax                                                    # traía, cuenta como cambio de sentido
+
+    def err(q):
+        return ((q[0] - meta.x) * n[0] + (q[1] - meta.y) * n[1], angdif(q[2], th))
+
+    if abs(err(p)[0]) < 1e-4 and abs(err(p)[1]) < 1e-5:
+        arcos = []
+        q = p
+    else:
+        arcos = None
+        for largo in [l for l in (1.0, 0.6, 0.3, 0.15) if 2 * l <= abs(falta)]:
+            d = np.zeros(2)
+            for _ in range(12):
+                q = _arco(_arco(p, sgn, largo, d[0]), sgn, largo, d[1])
+                e = np.array(err(q))
+                if abs(e[0]) < 1e-5 and abs(e[1]) < 1e-6:
+                    break
+                J = np.zeros((2, 2))
+                for i in range(2):
+                    dd = d.copy(); dd[i] += 1e-6
+                    qq = _arco(_arco(p, sgn, largo, dd[0]), sgn, largo, dd[1])
+                    J[:, i] = (np.array(err(qq)) - e) / 1e-6
+                try:
+                    d = d - np.linalg.solve(J, e)
+                except np.linalg.LinAlgError:
+                    break
+            if abs(e[0]) < 1e-4 and abs(e[1]) < 1e-5 and np.all(np.abs(d) <= dmx):
+                q1 = _arco(p, sgn, largo, d[0])
+                arcos = [((sgn, d[0] / dmx, largo), q1), ((sgn, d[1] / dmx, largo), q)]
+                break
+        if arcos is None:
+            return None
+    # la recta final, en el sentido que trae
+    resto = ((meta.x - q[0]) * u[0] + (meta.y - q[1]) * u[1]) * (1 if math.cos(q[2] - th) > 0 else -1)
+    if resto * sgn < -1e-6 or abs(resto) > meta.max_cierre:
+        return None
+    out = list(arcos)
+    if abs(resto) > 1e-6:
+        out.append(((sgn, 0.0, abs(resto)), step(q, resto, 0.0)))
+    # choque a lo largo de todo el cierre
+    prev = p
+    for (sg_, fr, ds), q_fin in out:
+        m = max(1, int(math.ceil(ds / 0.02)))
+        r = prev
+        for _ in range(m):
+            r = step(r, sg_ * ds / m, fr * dmx)
+            if not eq.libre_en(r, mundo):
+                return None
+        prev = r
+    return [(pr, q_fin) for pr, q_fin in out]
+
+
+def saltos(res, dm=None):
+    """Mayor salto entre poses consecutivas que NO se explica por la primitiva entre ellas
+    (control de continuidad: reproducir las primitivas tiene que dar las poses)."""
+    peor = 0.0
+    for (sg, fr, ds), a, b in zip(res['prims'], res['poses'], res['poses'][1:]):
+        m = max(1, int(math.ceil(ds / 0.02)))
+        q = a
+        for _ in range(m):
+            q = step(q, sg * ds / m, fr * (dm or dmax(B.XPIV)))
+        peor = max(peor, math.hypot(q[0] - b[0], q[1] - b[1]))
+    return peor
 
 
 def _reconstruir(info, nid):
@@ -373,10 +497,16 @@ def invertir(res):
 
 
 def unir(*partes):
+    """Concatena piezas. Una pieza tiene que arrancar donde terminó la anterior: si no, falla
+    (antes del 05-nov esto se pegaba en silencio — ver _acomodar)."""
     prims, poses = [], []
     for r in partes:
         if not r or not r['prims']:
             continue
+        if poses:
+            a, b = poses[-1], r['poses'][0]
+            assert math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-3 and abs(angdif(a[2], b[2])) < 1e-3, \
+                f"salto entre piezas: {a} → {b}"
         prims += r['prims']
         poses += r['poses'] if not poses else r['poses'][1:]
     return dict(ok=True, prims=prims, poses=poses, expansiones=sum(r['expansiones'] for r in partes if r))
@@ -435,12 +565,33 @@ class Planificador:
     def traslado(self, p0, p1, cargado=False):
         if abs(angdif(p0[2], p1[2])) > math.radians(10):
             return dict(ok=False, motivo='rumbos opuestos', expansiones=0)
-        if abs(p0[1] - p1[1]) < 0.02 and abs(angdif(p0[2], p1[2])) < math.radians(1):
-            d = (p1[0] - p0[0]) / math.cos(p0[2])           # misma línea: recta pura
-            q = _cerrar(p0, d, self.eq[cargado], self.mundo(), 100.0)
-            if q is not None:
-                return dict(ok=True, prims=[(1 if d > 0 else -1, 0.0, abs(d))] if abs(d) > 1e-6 else [],
-                            poses=[p0, q] if abs(d) > 1e-6 else [p0], expansiones=0)
+        th_eje = familia(p1[2])
+        if abs(angdif(p1[2], th_eje)) > 1e-6:
+            # la meta viene inclinada (la tolerancia de 3° de una salida): se viaja alineado al eje
+            # y se corrige con UN arco corto al final. Cerrar con una recta sobre la línea inclinada
+            # la saca del pasillo a 16 m (corregido 05-nov). Δθ de un arco = −(ds/WB)·tan δ, exacto
+            s = 1 if (p1[0] - p0[0]) * math.cos(th_eje) > 0 else -1
+            dth = angdif(th_eje, p1[2])
+            for largo in (0.5, 1.0, 0.3):
+                d = math.atan(-dth * WB / (-s * largo))
+                if abs(d) > self.eq[cargado].dmax:
+                    continue
+                q = _arco(p1, -s, largo, d)                 # hacia atrás desde la meta
+                q = (q[0], q[1], th_eje)                    # alineado exacto (error < 1e-12)
+                arco = dict(ok=True, prims=[(s, d / self.eq[cargado].dmax, largo)],
+                            poses=[q, _arco(q, s, largo, d)], expansiones=0)
+                if not all(self.eq[cargado].libre_en(_arco(q, s, largo * k / 10, d), self.mundo()) for k in range(11)):
+                    continue
+                antes = self.traslado(p0, q, cargado)
+                if antes['ok']:
+                    arco['poses'][-1] = p1                  # la misma pose, sin el redondeo del arco
+                    return unir(antes, arco)
+            return dict(ok=False, motivo='no entra el arco final', expansiones=0)
+        meta = MetaPose(p1[0], p1[1], p1[2], tol_xy=0.05, eje='x')
+        if abs(p0[1] - p1[1]) < 0.10 and abs(angdif(p0[2], p1[2])) < math.radians(3):
+            ac = _acomodar(p0, 0, meta, self.eq[cargado], self.mundo())   # misma línea: S corta + recta
+            if ac is not None:
+                return dict(ok=True, prims=[a for a, _ in ac], poses=[p0] + [q for _, q in ac], expansiones=0)
         return planificar(p0, MetaPose(p1[0], p1[1], p1[2], tol_xy=0.05, eje='x'), self.eq[cargado],
                           self.mundo(), max_exp=self.max_exp)
 
@@ -557,6 +708,7 @@ def _ruta_txt(r):
     if not r['ok']:
         return dict(ok=False, intentos=[(a, b) for a, b, *_ in r.get('intentos', [])])
     d = _res_txt(r['total'])
+    d['salto_max_m'] = saltos(r['total'])
     d['partes'] = [(n, _res_txt(x)) for n, x in r['partes']]
     d['intentos'] = r['intentos']
     return d

@@ -266,14 +266,14 @@
    "ida": {
     "ok": true,
     "cambios": 2,
-    "largo": 11.48,
-    "tiempo": 23.6,
+    "largo": 12.08,
+    "tiempo": 25.5,
     "tramos": [
      {
       "sentido": "reversa",
       "largo": 5.5,
       "giro": 90,
-      "tiempo": 9.7,
+      "tiempo": 10.6,
       "ini": [
        9.235,
        0.0,
@@ -287,29 +287,29 @@
      },
      {
       "sentido": "adelante",
-      "largo": 2.7,
-      "giro": 93,
-      "tiempo": 6.3,
+      "largo": 3.0,
+      "giro": 91,
+      "tiempo": 6.5,
       "ini": [
        14.175,
        -0.07,
        -1.571
       ],
       "fin": [
-       16.436,
-       0.573,
-       0.044
+       16.736,
+       0.579,
+       0.016
       ]
      },
      {
       "sentido": "reversa",
-      "largo": 3.28,
-      "giro": -93,
-      "tiempo": 7.6,
+      "largo": 3.58,
+      "giro": -91,
+      "tiempo": 8.4,
       "ini": [
-       16.436,
-       0.573,
-       0.044
+       16.736,
+       0.579,
+       0.016
       ],
       "fin": [
        13.617,
@@ -318,6 +318,7 @@
       ]
      }
     ],
+    "salto_max_m": 1.427629875900223e-06,
     "partes": [
      [
       "VUELTA por la bahía 5 Rc (dos 90°)",
@@ -325,13 +326,13 @@
        "ok": true,
        "cambios": 1,
        "largo": 8.2,
-       "tiempo": 16.0,
+       "tiempo": 16.9,
        "tramos": [
         {
          "sentido": "reversa",
          "largo": 5.5,
          "giro": 90,
-         "tiempo": 9.7,
+         "tiempo": 10.6,
          "ini": [
           9.235,
           0.0,
@@ -366,24 +367,40 @@
       "TRASLADO",
       {
        "ok": true,
-       "cambios": 0,
-       "largo": 0.58,
-       "tiempo": 1.6,
+       "cambios": 1,
+       "largo": 1.18,
+       "tiempo": 3.1,
        "tramos": [
         {
-         "sentido": "reversa",
-         "largo": 0.58,
+         "sentido": "adelante",
+         "largo": 0.3,
          "giro": -2,
-         "tiempo": 1.6,
+         "tiempo": 1.2,
          "ini": [
           16.436,
           0.573,
           0.044
          ],
          "fin": [
-          15.856,
-          0.562,
+          16.736,
+          0.579,
           0.016
+         ]
+        },
+        {
+         "sentido": "reversa",
+         "largo": 0.88,
+         "giro": -2,
+         "tiempo": 2.0,
+         "ini": [
+          16.736,
+          0.579,
+          0.016
+         ],
+         "fin": [
+          15.856,
+          0.561,
+          -0.012
          ]
         }
        ]
@@ -420,27 +437,35 @@
     "intentos": [
      [
       "sale con uñas hacia la descarga, llega con uñas hacia adentro",
-      13.48,
+      14.08,
       [
        [
         "VUELTA en la zona de descarga",
-        25.3
+        26.99
+       ],
+       [
+        "VUELTA por la bahía 4 Lc (dos 90°)",
+        18.7
        ],
        [
         "VUELTA por la bahía 4 Rc (dos 90°)",
-        11.59
+        11.79
+       ],
+       [
+        "VUELTA por la bahía 5 Lc (dos 90°)",
+        17.13
        ],
        [
         "VUELTA por la bahía 5 Rc (dos 90°)",
-        10.78
+        11.38
        ],
        [
         "VUELTA por la bahía 3 Lc (dos 90°)",
-        14.46
+        14.47
        ],
        [
         "VUELTA por la bahía 3 Rc (dos 90°)",
-        14.16
+        14.17
        ]
       ]
      ]
@@ -448,9 +473,9 @@
    },
    "vuelta": {
     "ok": true,
-    "cambios": 2,
-    "largo": 20.25,
-    "tiempo": 29.0,
+    "cambios": 4,
+    "largo": 19.92,
+    "tiempo": 26.6,
     "tramos": [
      {
       "sentido": "adelante",
@@ -470,37 +495,70 @@
      },
      {
       "sentido": "reversa",
-      "largo": 14.85,
-      "giro": 0,
-      "tiempo": 13.1,
+      "largo": 15.35,
+      "giro": -86,
+      "tiempo": 14.5,
       "ini": [
        15.973,
        0.574,
        -0.012
       ],
       "fin": [
-       1.25,
-       0.185,
-       -0.013
+       0.919,
+       0.311,
+       -1.506
       ]
      },
      {
       "sentido": "adelante",
-      "largo": 2.6,
-      "giro": -180,
-      "tiempo": 8.7,
+      "largo": 0.7,
+      "giro": -92,
+      "tiempo": 1.8,
       "ini": [
-       1.25,
-       0.185,
-       -0.013
+       0.919,
+       0.311,
+       -1.506
       ],
       "fin": [
-       0.786,
-       -0.017,
-       -3.148
+       0.431,
+       -0.055,
+       -3.107
+      ]
+     },
+     {
+      "sentido": "reversa",
+      "largo": 0.72,
+      "giro": -2,
+      "tiempo": 1.8,
+      "ini": [
+       0.431,
+       -0.055,
+       -3.107
+      ],
+      "fin": [
+       1.15,
+       -0.0,
+       -3.142
+      ]
+     },
+     {
+      "sentido": "adelante",
+      "largo": 0.35,
+      "giro": 0,
+      "tiempo": 1.2,
+      "ini": [
+       1.15,
+       -0.0,
+       -3.142
+      ],
+      "fin": [
+       0.8,
+       0.0,
+       -3.142
       ]
      }
     ],
+    "salto_max_m": 1.9052353554734205e-06,
     "partes": [
      [
       "SALIDA de 5 3 Ra",
@@ -533,40 +591,56 @@
       "VUELTA en la zona de descarga",
       {
        "ok": true,
-       "cambios": 1,
-       "largo": 17.05,
-       "tiempo": 18.9,
+       "cambios": 2,
+       "largo": 16.77,
+       "tiempo": 18.1,
        "tramos": [
         {
          "sentido": "reversa",
-         "largo": 14.85,
-         "giro": 0,
-         "tiempo": 13.1,
+         "largo": 15.35,
+         "giro": -86,
+         "tiempo": 14.5,
          "ini": [
           15.973,
           0.574,
           -0.012
          ],
          "fin": [
-          1.25,
-          0.185,
-          -0.013
+          0.919,
+          0.311,
+          -1.506
          ]
         },
         {
          "sentido": "adelante",
-         "largo": 2.2,
-         "giro": -180,
-         "tiempo": 5.8,
+         "largo": 0.7,
+         "giro": -92,
+         "tiempo": 1.8,
          "ini": [
-          1.25,
-          0.185,
-          -0.013
+          0.919,
+          0.311,
+          -1.506
          ],
          "fin": [
-          1.176,
-          -0.092,
-          -3.148
+          0.431,
+          -0.055,
+          -3.107
+         ]
+        },
+        {
+         "sentido": "reversa",
+         "largo": 0.72,
+         "giro": -2,
+         "tiempo": 1.8,
+         "ini": [
+          0.431,
+          -0.055,
+          -3.107
+         ],
+         "fin": [
+          1.15,
+          -0.0,
+          -3.142
          ]
         }
        ]
@@ -577,23 +651,23 @@
       {
        "ok": true,
        "cambios": 0,
-       "largo": 0.4,
-       "tiempo": 1.5,
+       "largo": 0.35,
+       "tiempo": 1.2,
        "tramos": [
         {
          "sentido": "adelante",
-         "largo": 0.4,
+         "largo": 0.35,
          "giro": 0,
-         "tiempo": 1.5,
+         "tiempo": 1.2,
          "ini": [
-          1.176,
-          -0.092,
-          -3.148
+          1.15,
+          -0.0,
+          -3.142
          ],
          "fin": [
-          0.786,
-          -0.017,
-          -3.148
+          0.8,
+          0.0,
+          -3.142
          ]
         }
        ]
@@ -603,11 +677,11 @@
     "intentos": [
      [
       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-      22.25,
+      23.92,
       [
        [
         "VUELTA en la zona de descarga",
-        18.45
+        20.12
        ],
        [
         "VUELTA por la bahía 3 Lc (dos 90°)",
@@ -671,6 +745,7 @@
       ]
      }
     ],
+    "salto_max_m": 9.459726736510891e-07,
     "partes": [
      [
       "TRASLADO",
@@ -692,8 +767,8 @@
          ],
          "fin": [
           12.494,
-          0.54,
-          3.155
+          0.561,
+          -3.13
          ]
         }
        ]
@@ -749,7 +824,7 @@
      {
       "sentido": "adelante",
       "largo": 14.48,
-      "giro": -89,
+      "giro": -90,
       "tiempo": 16.8,
       "ini": [
        14.733,
@@ -758,11 +833,12 @@
       ],
       "fin": [
        0.8,
-       -0.209,
-       -3.116
+       0.0,
+       -3.142
       ]
      }
     ],
+    "salto_max_m": 5.425916140088956e-07,
     "partes": [
      [
       "SALIDA de 5 3 Rb",
@@ -802,7 +878,7 @@
         {
          "sentido": "adelante",
          "largo": 11.68,
-         "giro": 1,
+         "giro": -1,
          "tiempo": 11.2,
          "ini": [
           12.377,
@@ -811,8 +887,8 @@
          ],
          "fin": [
           0.8,
-          -0.209,
-          -3.116
+          0.0,
+          -3.142
          ]
         }
        ]
@@ -944,9 +1020,9 @@
   },
   "vuelta_zona": {
    "ok": true,
-   "cambios": 1,
-   "largo": 5.25,
-   "tiempo": 11.7,
+   "cambios": 3,
+   "largo": 4.87,
+   "tiempo": 9.1,
    "tramos": [
     {
      "sentido": "reversa",
@@ -966,18 +1042,50 @@
     },
     {
      "sentido": "adelante",
-     "largo": 2.5,
-     "giro": 178,
-     "tiempo": 8.2,
+     "largo": 0.5,
+     "giro": -86,
+     "tiempo": 1.8,
      "ini": [
       1.25,
       0.0,
       0.0
      ],
      "fin": [
-      1.096,
-      0.059,
-      3.108
+      1.581,
+      -0.311,
+      -1.506
+     ]
+    },
+    {
+     "sentido": "reversa",
+     "largo": 0.7,
+     "giro": -92,
+     "tiempo": 1.8,
+     "ini": [
+      1.581,
+      -0.311,
+      -1.506
+     ],
+     "fin": [
+      2.069,
+      0.055,
+      -3.107
+     ]
+    },
+    {
+     "sentido": "adelante",
+     "largo": 0.92,
+     "giro": -2,
+     "tiempo": 2.0,
+     "ini": [
+      2.069,
+      0.055,
+      -3.107
+     ],
+     "fin": [
+      1.15,
+      0.0,
+      -3.142
      ]
     }
    ]
@@ -1037,13 +1145,13 @@
      "ok": true,
      "cambios": 2,
      "largo": 7.78,
-     "tiempo": 17.2,
+     "tiempo": 17.5,
      "tramos": [
       {
        "sentido": "adelante",
        "largo": 2.38,
-       "giro": 2,
-       "tiempo": 3.2,
+       "giro": 1,
+       "tiempo": 3.6,
        "ini": [
         11.705,
         0.0,
@@ -1051,19 +1159,19 @@
        ],
        "fin": [
         13.944,
-        -0.479,
-        0.028
+        -0.561,
+        0.012
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": 88,
+       "giro": 89,
        "tiempo": 7.2,
        "ini": [
         13.944,
-        -0.479,
-        0.028
+        -0.561,
+        0.012
        ],
        "fin": [
         11.705,
@@ -1096,13 +1204,13 @@
      "ok": true,
      "cambios": 2,
      "largo": 7.78,
-     "tiempo": 17.2,
+     "tiempo": 17.5,
      "tramos": [
       {
        "sentido": "adelante",
        "largo": 2.38,
-       "giro": -2,
-       "tiempo": 3.2,
+       "giro": -1,
+       "tiempo": 3.6,
        "ini": [
         11.705,
         0.0,
@@ -1110,19 +1218,19 @@
        ],
        "fin": [
         13.944,
-        0.479,
-        -0.028
+        0.561,
+        -0.012
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": -88,
+       "giro": -89,
        "tiempo": 7.2,
        "ini": [
         13.944,
-        0.479,
-        -0.028
+        0.561,
+        -0.012
        ],
        "fin": [
         11.705,
@@ -3075,6 +3183,7 @@
        ]
       }
      ],
+     "salto_max_m": 8.179637708966752e-07,
      "partes": [
       [
        "TRASLADO",
@@ -3087,7 +3196,7 @@
          {
           "sentido": "adelante",
           "largo": 2.86,
-          "giro": 0,
+          "giro": 1,
           "tiempo": 4.9,
           "ini": [
            0.0,
@@ -3096,8 +3205,8 @@
           ],
           "fin": [
            2.692,
-           -0.541,
-           0.0
+           -0.575,
+           0.01
           ]
          }
         ]
@@ -3209,35 +3318,67 @@
     "dir": "1 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 8.21,
-     "tiempo": 19.1,
+     "cambios": 3,
+     "largo": 9.35,
+     "tiempo": 16.7,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 4.46,
-       "giro": -88,
-       "tiempo": 10.1,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 1.92,
+       "giro": -2,
+       "tiempo": 3.7,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        0.365,
+        -0.554,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 4.98,
+       "giro": -90,
+       "tiempo": 8.5,
+       "ini": [
+        0.365,
+        -0.554,
+        -3.142
        ],
        "fin": [
         4.853,
@@ -3246,29 +3387,62 @@
        ]
       }
      ],
+     "salto_max_m": 7.398099622304105e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -3278,24 +3452,40 @@
        "TRASLADO",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 1.96,
-        "tiempo": 3.3,
+        "cambios": 1,
+        "largo": 3.48,
+        "tiempo": 5.7,
         "tramos": [
          {
+          "sentido": "adelante",
+          "largo": 1.0,
+          "giro": 0,
+          "tiempo": 2.4,
+          "ini": [
+           1.15,
+           0.0,
+           -3.142
+          ],
+          "fin": [
+           0.365,
+           -0.554,
+           -3.142
+          ]
+         },
+         {
           "sentido": "reversa",
-          "largo": 1.96,
-          "giro": 2,
+          "largo": 2.48,
+          "giro": -1,
           "tiempo": 3.3,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           0.365,
+           -0.554,
+           -3.142
           ],
           "fin": [
            2.841,
-           -0.532,
-           3.149
+           -0.568,
+           3.129
           ]
          }
         ]
@@ -3332,15 +3522,19 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       9.21,
+       12.35,
        [
         [
          "VUELTA en la zona de descarga",
-         6.71
+         9.85
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
-         11.06
+         11.66
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         14.8
         ]
        ]
       ]
@@ -3416,6 +3610,7 @@
        ]
       }
      ],
+     "salto_max_m": 8.179637719861818e-07,
      "partes": [
       [
        "TRASLADO",
@@ -3428,7 +3623,7 @@
          {
           "sentido": "adelante",
           "largo": 2.86,
-          "giro": 0,
+          "giro": -1,
           "tiempo": 4.9,
           "ini": [
            0.0,
@@ -3437,8 +3632,8 @@
           ],
           "fin": [
            2.692,
-           0.541,
-           -0.0
+           0.575,
+           -0.01
           ]
          }
         ]
@@ -3550,35 +3745,67 @@
     "dir": "1 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 8.15,
-     "tiempo": 18.8,
+     "cambios": 3,
+     "largo": 9.35,
+     "tiempo": 16.7,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 4.4,
-       "giro": 92,
-       "tiempo": 9.9,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 1.92,
+       "giro": -2,
+       "tiempo": 3.7,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        0.365,
+        0.554,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 4.98,
+       "giro": 90,
+       "tiempo": 8.5,
+       "ini": [
+        0.365,
+        0.554,
+        -3.142
        ],
        "fin": [
         4.853,
@@ -3587,29 +3814,62 @@
        ]
       }
      ],
+     "salto_max_m": 7.398343421081785e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -3619,24 +3879,40 @@
        "TRASLADO",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 1.9,
-        "tiempo": 3.0,
+        "cambios": 1,
+        "largo": 3.48,
+        "tiempo": 5.7,
         "tramos": [
          {
-          "sentido": "reversa",
-          "largo": 1.9,
-          "giro": 3,
-          "tiempo": 3.0,
+          "sentido": "adelante",
+          "largo": 1.0,
+          "giro": 0,
+          "tiempo": 2.4,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
+          ],
+          "fin": [
+           0.365,
+           0.554,
+           -3.142
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 2.48,
+          "giro": 1,
+          "tiempo": 3.3,
+          "ini": [
+           0.365,
+           0.554,
+           -3.142
           ],
           "fin": [
            2.841,
-           0.553,
-           3.164
+           0.568,
+           -3.129
           ]
          }
         ]
@@ -3673,15 +3949,19 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       9.15,
+       12.35,
        [
         [
          "VUELTA en la zona de descarga",
-         6.65
+         9.85
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         14.8
         ],
         [
          "VUELTA por la bahía 1 Rc (dos 90°)",
-         11.06
+         11.66
         ]
        ]
       ]
@@ -3727,7 +4007,7 @@
       {
        "sentido": "adelante",
        "largo": 8.64,
-       "giro": 0,
+       "giro": 1,
        "tiempo": 8.7,
        "ini": [
         0.0,
@@ -3736,19 +4016,19 @@
        ],
        "fin": [
         8.471,
-        -0.541,
-        0.0
+        -0.559,
+        0.01
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": 90,
+       "giro": 89,
        "tiempo": 6.8,
        "ini": [
         8.471,
-        -0.541,
-        0.0
+        -0.559,
+        0.01
        ],
        "fin": [
         6.207,
@@ -3757,6 +4037,7 @@
        ]
       }
      ],
+     "salto_max_m": 6.379302335560492e-06,
      "partes": [
       [
        "TRASLADO",
@@ -3769,7 +4050,7 @@
          {
           "sentido": "adelante",
           "largo": 8.64,
-          "giro": 0,
+          "giro": 1,
           "tiempo": 8.7,
           "ini": [
            0.0,
@@ -3778,8 +4059,8 @@
           ],
           "fin": [
            8.471,
-           -0.541,
-           0.0
+           -0.559,
+           0.01
           ]
          }
         ]
@@ -3859,35 +4140,67 @@
     "dir": "2 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 10.59,
-     "tiempo": 19.8,
+     "cambios": 3,
+     "largo": 10.18,
+     "tiempo": 17.6,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 6.84,
-       "giro": -88,
-       "tiempo": 10.8,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 6.8,
+       "giro": -90,
+       "tiempo": 11.0,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         7.323,
@@ -3896,29 +4209,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -3929,23 +4275,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 4.14,
-        "tiempo": 6.2,
+        "largo": 4.1,
+        "tiempo": 6.4,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 4.14,
-          "giro": 6,
-          "tiempo": 6.2,
+          "largo": 4.1,
+          "giro": 3,
+          "tiempo": 6.4,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            5.057,
-           -0.307,
-           3.217
+           -0.55,
+           3.185
           ]
          }
         ]
@@ -3982,19 +4328,19 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       11.59,
+       13.18,
        [
         [
          "VUELTA en la zona de descarga",
-         8.89
+         10.48
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
-         13.28
+         13.27
         ],
         [
          "VUELTA por la bahía 1 Rc (dos 90°)",
-         13.63
+         16.53
         ]
        ]
       ]
@@ -4040,7 +4386,7 @@
       {
        "sentido": "adelante",
        "largo": 8.64,
-       "giro": 0,
+       "giro": -1,
        "tiempo": 8.7,
        "ini": [
         0.0,
@@ -4049,19 +4395,19 @@
        ],
        "fin": [
         8.471,
-        0.541,
-        -0.0
+        0.559,
+        -0.01
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": -90,
+       "giro": -89,
        "tiempo": 6.8,
        "ini": [
         8.471,
-        0.541,
-        -0.0
+        0.559,
+        -0.01
        ],
        "fin": [
         6.207,
@@ -4070,6 +4416,7 @@
        ]
       }
      ],
+     "salto_max_m": 6.379302335560492e-06,
      "partes": [
       [
        "TRASLADO",
@@ -4082,7 +4429,7 @@
          {
           "sentido": "adelante",
           "largo": 8.64,
-          "giro": 0,
+          "giro": -1,
           "tiempo": 8.7,
           "ini": [
            0.0,
@@ -4091,8 +4438,8 @@
           ],
           "fin": [
            8.471,
-           0.541,
-           -0.0
+           0.559,
+           -0.01
           ]
          }
         ]
@@ -4172,35 +4519,67 @@
     "dir": "2 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 10.56,
-     "tiempo": 19.6,
+     "cambios": 3,
+     "largo": 10.18,
+     "tiempo": 17.6,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 6.81,
-       "giro": 92,
-       "tiempo": 10.6,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 6.8,
+       "giro": 90,
+       "tiempo": 11.0,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         7.323,
@@ -4209,29 +4588,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -4242,23 +4654,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 4.11,
-        "tiempo": 5.9,
+        "largo": 4.1,
+        "tiempo": 6.4,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 4.11,
-          "giro": -1,
-          "tiempo": 5.9,
+          "largo": 4.1,
+          "giro": -3,
+          "tiempo": 6.4,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            5.057,
-           0.37,
-           3.095
+           0.55,
+           -3.185
           ]
          }
         ]
@@ -4295,19 +4707,19 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       11.56,
+       13.18,
        [
         [
          "VUELTA en la zona de descarga",
-         8.86
+         10.48
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
-         13.63
+         16.53
         ],
         [
          "VUELTA por la bahía 1 Rc (dos 90°)",
-         13.28
+         13.27
         ]
        ]
       ]
@@ -4348,13 +4760,13 @@
      "ok": true,
      "cambios": 1,
      "largo": 13.79,
-     "tiempo": 16.5,
+     "tiempo": 16.7,
      "tramos": [
       {
        "sentido": "adelante",
        "largo": 11.09,
-       "giro": -1,
-       "tiempo": 10.2,
+       "giro": -3,
+       "tiempo": 10.4,
        "ini": [
         0.0,
         0.0,
@@ -4362,19 +4774,19 @@
        ],
        "fin": [
         10.943,
-        -0.627,
-        -0.013
+        -0.55,
+        -0.044
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": 91,
+       "giro": 93,
        "tiempo": 6.3,
        "ini": [
         10.943,
-        -0.627,
-        -0.013
+        -0.55,
+        -0.044
        ],
        "fin": [
         8.677,
@@ -4383,6 +4795,7 @@
        ]
       }
      ],
+     "salto_max_m": 3.081399962216724e-06,
      "partes": [
       [
        "TRASLADO",
@@ -4390,13 +4803,13 @@
         "ok": true,
         "cambios": 0,
         "largo": 11.09,
-        "tiempo": 10.2,
+        "tiempo": 10.4,
         "tramos": [
          {
           "sentido": "adelante",
           "largo": 11.09,
-          "giro": -1,
-          "tiempo": 10.2,
+          "giro": -3,
+          "tiempo": 10.4,
           "ini": [
            0.0,
            0.0,
@@ -4404,8 +4817,8 @@
           ],
           "fin": [
            10.943,
-           -0.627,
-           -0.013
+           -0.55,
+           -0.044
           ]
          }
         ]
@@ -4485,35 +4898,67 @@
     "dir": "3 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 13.1,
-     "tiempo": 22.1,
+     "cambios": 3,
+     "largo": 12.65,
+     "tiempo": 19.3,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 9.35,
-       "giro": -88,
-       "tiempo": 13.2,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 9.27,
+       "giro": -90,
+       "tiempo": 12.7,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         9.793,
@@ -4522,29 +4967,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -4555,23 +5033,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 6.65,
-        "tiempo": 8.1,
+        "largo": 6.57,
+        "tiempo": 7.6,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 6.65,
-          "giro": 2,
-          "tiempo": 8.1,
+          "largo": 6.57,
+          "giro": -1,
+          "tiempo": 7.6,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            7.529,
-           -0.474,
-           3.149
+           -0.559,
+           3.132
           ]
          }
         ]
@@ -4608,11 +5086,11 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       14.1,
+       15.65,
        [
         [
          "VUELTA en la zona de descarga",
-         11.4
+         12.95
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
@@ -4661,13 +5139,13 @@
      "ok": true,
      "cambios": 1,
      "largo": 13.79,
-     "tiempo": 16.5,
+     "tiempo": 16.7,
      "tramos": [
       {
        "sentido": "adelante",
        "largo": 11.09,
-       "giro": 1,
-       "tiempo": 10.2,
+       "giro": 3,
+       "tiempo": 10.4,
        "ini": [
         0.0,
         0.0,
@@ -4675,19 +5153,19 @@
        ],
        "fin": [
         10.943,
-        0.627,
-        0.013
+        0.55,
+        0.044
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": -91,
+       "giro": -93,
        "tiempo": 6.3,
        "ini": [
         10.943,
-        0.627,
-        0.013
+        0.55,
+        0.044
        ],
        "fin": [
         8.677,
@@ -4696,6 +5174,7 @@
        ]
       }
      ],
+     "salto_max_m": 3.0813999508867443e-06,
      "partes": [
       [
        "TRASLADO",
@@ -4703,13 +5182,13 @@
         "ok": true,
         "cambios": 0,
         "largo": 11.09,
-        "tiempo": 10.2,
+        "tiempo": 10.4,
         "tramos": [
          {
           "sentido": "adelante",
           "largo": 11.09,
-          "giro": 1,
-          "tiempo": 10.2,
+          "giro": 3,
+          "tiempo": 10.4,
           "ini": [
            0.0,
            0.0,
@@ -4717,8 +5196,8 @@
           ],
           "fin": [
            10.943,
-           0.627,
-           0.013
+           0.55,
+           0.044
           ]
          }
         ]
@@ -4798,35 +5277,67 @@
     "dir": "3 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 13.04,
-     "tiempo": 21.9,
+     "cambios": 3,
+     "largo": 12.65,
+     "tiempo": 19.3,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 9.29,
-       "giro": 92,
-       "tiempo": 12.9,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 9.27,
+       "giro": 90,
+       "tiempo": 12.7,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         9.793,
@@ -4835,29 +5346,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -4868,23 +5412,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 6.59,
-        "tiempo": 7.8,
+        "largo": 6.57,
+        "tiempo": 7.6,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 6.59,
-          "giro": 3,
-          "tiempo": 7.8,
+          "largo": 6.57,
+          "giro": 1,
+          "tiempo": 7.6,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            7.529,
-           0.656,
-           3.164
+           0.559,
+           -3.132
           ]
          }
         ]
@@ -4921,11 +5465,11 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       14.04,
+       15.65,
        [
         [
          "VUELTA en la zona de descarga",
-         11.34
+         12.95
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
@@ -4979,7 +5523,7 @@
       {
        "sentido": "adelante",
        "largo": 13.45,
-       "giro": 0,
+       "giro": -2,
        "tiempo": 11.9,
        "ini": [
         0.0,
@@ -4988,19 +5532,19 @@
        ],
        "fin": [
         13.28,
-        -0.541,
-        0.0
+        -0.563,
+        -0.031
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.6,
-       "giro": 90,
+       "giro": 92,
        "tiempo": 7.3,
        "ini": [
         13.28,
-        -0.541,
-        0.0
+        -0.563,
+        -0.031
        ],
        "fin": [
         11.147,
@@ -5009,6 +5553,7 @@
        ]
       }
      ],
+     "salto_max_m": 1.9767639867884978e-06,
      "partes": [
       [
        "TRASLADO",
@@ -5021,7 +5566,7 @@
          {
           "sentido": "adelante",
           "largo": 13.45,
-          "giro": 0,
+          "giro": -2,
           "tiempo": 11.9,
           "ini": [
            0.0,
@@ -5030,8 +5575,8 @@
           ],
           "fin": [
            13.28,
-           -0.541,
-           0.0
+           -0.563,
+           -0.031
           ]
          }
         ]
@@ -5111,35 +5656,67 @@
     "dir": "4 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 15.59,
-     "tiempo": 24.2,
+     "cambios": 3,
+     "largo": 15.14,
+     "tiempo": 21.4,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 11.84,
-       "giro": -88,
-       "tiempo": 15.3,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 11.77,
+       "giro": -90,
+       "tiempo": 14.8,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         12.263,
@@ -5148,29 +5725,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -5181,23 +5791,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 9.14,
-        "tiempo": 9.7,
+        "largo": 9.07,
+        "tiempo": 9.2,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 9.14,
-          "giro": 2,
-          "tiempo": 9.7,
+          "largo": 9.07,
+          "giro": -1,
+          "tiempo": 9.2,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            10.024,
-           -0.457,
-           3.149
+           -0.561,
+           3.13
           ]
          }
         ]
@@ -5234,11 +5844,11 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       16.59,
+       18.14,
        [
         [
          "VUELTA en la zona de descarga",
-         13.89
+         15.44
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
@@ -5292,7 +5902,7 @@
       {
        "sentido": "adelante",
        "largo": 13.45,
-       "giro": 0,
+       "giro": 2,
        "tiempo": 11.9,
        "ini": [
         0.0,
@@ -5301,19 +5911,19 @@
        ],
        "fin": [
         13.28,
-        0.541,
-        -0.0
+        0.563,
+        0.031
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.6,
-       "giro": -90,
+       "giro": -92,
        "tiempo": 7.3,
        "ini": [
         13.28,
-        0.541,
-        -0.0
+        0.563,
+        0.031
        ],
        "fin": [
         11.147,
@@ -5322,6 +5932,7 @@
        ]
       }
      ],
+     "salto_max_m": 1.9767639867884978e-06,
      "partes": [
       [
        "TRASLADO",
@@ -5334,7 +5945,7 @@
          {
           "sentido": "adelante",
           "largo": 13.45,
-          "giro": 0,
+          "giro": 2,
           "tiempo": 11.9,
           "ini": [
            0.0,
@@ -5343,8 +5954,8 @@
           ],
           "fin": [
            13.28,
-           0.541,
-           -0.0
+           0.563,
+           0.031
           ]
          }
         ]
@@ -5424,35 +6035,67 @@
     "dir": "4 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 15.53,
-     "tiempo": 24.0,
+     "cambios": 3,
+     "largo": 15.14,
+     "tiempo": 21.4,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 11.78,
-       "giro": 92,
-       "tiempo": 15.0,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 11.77,
+       "giro": 90,
+       "tiempo": 14.8,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         12.263,
@@ -5461,29 +6104,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -5494,23 +6170,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 9.08,
-        "tiempo": 9.5,
+        "largo": 9.07,
+        "tiempo": 9.2,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 9.08,
-          "giro": 3,
-          "tiempo": 9.5,
+          "largo": 9.07,
+          "giro": 1,
+          "tiempo": 9.2,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            10.024,
-           0.711,
-           3.164
+           0.561,
+           -3.13
           ]
          }
         ]
@@ -5547,11 +6223,11 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       16.53,
+       18.14,
        [
         [
          "VUELTA en la zona de descarga",
-         13.83
+         15.44
         ],
         [
          "VUELTA por la bahía 1 Lc (dos 90°)",
@@ -5605,7 +6281,7 @@
       {
        "sentido": "adelante",
        "largo": 16.02,
-       "giro": 0,
+       "giro": 1,
        "tiempo": 13.7,
        "ini": [
         0.0,
@@ -5614,19 +6290,19 @@
        ],
        "fin": [
         15.856,
-        -0.541,
-        0.0
+        -0.561,
+        0.012
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": 90,
+       "giro": 89,
        "tiempo": 7.2,
        "ini": [
         15.856,
-        -0.541,
-        0.0
+        -0.561,
+        0.012
        ],
        "fin": [
         13.617,
@@ -5635,6 +6311,7 @@
        ]
       }
      ],
+     "salto_max_m": 8.420567299281758e-06,
      "partes": [
       [
        "TRASLADO",
@@ -5647,7 +6324,7 @@
          {
           "sentido": "adelante",
           "largo": 16.02,
-          "giro": 0,
+          "giro": 1,
           "tiempo": 13.7,
           "ini": [
            0.0,
@@ -5656,8 +6333,8 @@
           ],
           "fin": [
            15.856,
-           -0.541,
-           0.0
+           -0.561,
+           0.012
           ]
          }
         ]
@@ -5737,35 +6414,67 @@
     "dir": "5 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 18.06,
-     "tiempo": 25.9,
+     "cambios": 3,
+     "largo": 17.61,
+     "tiempo": 23.0,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 14.31,
-       "giro": -88,
-       "tiempo": 16.9,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 14.24,
+       "giro": -90,
+       "tiempo": 16.4,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         14.733,
@@ -5774,29 +6483,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -5807,23 +6549,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 11.61,
-        "tiempo": 11.4,
+        "largo": 11.54,
+        "tiempo": 10.9,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 11.61,
-          "giro": 2,
-          "tiempo": 11.4,
+          "largo": 11.54,
+          "giro": -1,
+          "tiempo": 10.9,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            12.494,
-           -0.439,
-           3.149
+           -0.561,
+           3.13
           ]
          }
         ]
@@ -5860,11 +6602,11 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       19.06,
+       20.61,
        [
         [
          "VUELTA en la zona de descarga",
-         16.36
+         17.91
         ],
         [
          "VUELTA por la bahía 2 Lc (dos 90°)",
@@ -5872,7 +6614,7 @@
         ],
         [
          "VUELTA por la bahía 2 Rc (dos 90°)",
-         25.6
+         25.63
         ]
        ]
       ]
@@ -5918,7 +6660,7 @@
       {
        "sentido": "adelante",
        "largo": 16.02,
-       "giro": 0,
+       "giro": -1,
        "tiempo": 13.7,
        "ini": [
         0.0,
@@ -5927,19 +6669,19 @@
        ],
        "fin": [
         15.856,
-        0.541,
-        -0.0
+        0.561,
+        -0.012
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": -90,
+       "giro": -89,
        "tiempo": 7.2,
        "ini": [
         15.856,
-        0.541,
-        -0.0
+        0.561,
+        -0.012
        ],
        "fin": [
         13.617,
@@ -5948,6 +6690,7 @@
        ]
       }
      ],
+     "salto_max_m": 8.420567299170738e-06,
      "partes": [
       [
        "TRASLADO",
@@ -5960,7 +6703,7 @@
          {
           "sentido": "adelante",
           "largo": 16.02,
-          "giro": 0,
+          "giro": -1,
           "tiempo": 13.7,
           "ini": [
            0.0,
@@ -5969,8 +6712,8 @@
           ],
           "fin": [
            15.856,
-           0.541,
-           -0.0
+           0.561,
+           -0.012
           ]
          }
         ]
@@ -6050,35 +6793,67 @@
     "dir": "5 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 18.0,
-     "tiempo": 25.6,
+     "cambios": 3,
+     "largo": 17.61,
+     "tiempo": 23.0,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 14.25,
-       "giro": 92,
-       "tiempo": 16.6,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 14.24,
+       "giro": 90,
+       "tiempo": 16.4,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         14.733,
@@ -6087,29 +6862,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -6120,23 +6928,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 11.55,
-        "tiempo": 11.1,
+        "largo": 11.54,
+        "tiempo": 10.9,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 11.55,
-          "giro": 3,
-          "tiempo": 11.1,
+          "largo": 11.54,
+          "giro": 1,
+          "tiempo": 10.9,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            12.494,
-           0.766,
-           3.164
+           0.561,
+           -3.13
           ]
          }
         ]
@@ -6173,15 +6981,15 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       19.0,
+       20.61,
        [
         [
          "VUELTA en la zona de descarga",
-         16.3
+         17.91
         ],
         [
          "VUELTA por la bahía 2 Lc (dos 90°)",
-         25.6
+         25.63
         ],
         [
          "VUELTA por la bahía 2 Rc (dos 90°)",
@@ -6231,7 +7039,7 @@
       {
        "sentido": "adelante",
        "largo": 18.49,
-       "giro": 0,
+       "giro": 1,
        "tiempo": 15.3,
        "ini": [
         0.0,
@@ -6240,19 +7048,19 @@
        ],
        "fin": [
         18.326,
-        -0.541,
-        0.0
+        -0.561,
+        0.012
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": 90,
+       "giro": 89,
        "tiempo": 7.2,
        "ini": [
         18.326,
-        -0.541,
-        0.0
+        -0.561,
+        0.012
        ],
        "fin": [
         16.087,
@@ -6261,6 +7069,7 @@
        ]
       }
      ],
+     "salto_max_m": 8.420567298953802e-06,
      "partes": [
       [
        "TRASLADO",
@@ -6273,7 +7082,7 @@
          {
           "sentido": "adelante",
           "largo": 18.49,
-          "giro": 0,
+          "giro": 1,
           "tiempo": 15.3,
           "ini": [
            0.0,
@@ -6282,8 +7091,8 @@
           ],
           "fin": [
            18.326,
-           -0.541,
-           0.0
+           -0.561,
+           0.012
           ]
          }
         ]
@@ -6363,35 +7172,67 @@
     "dir": "6 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 20.51,
-     "tiempo": 27.3,
+     "cambios": 3,
+     "largo": 20.09,
+     "tiempo": 25.3,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 16.76,
-       "giro": -88,
-       "tiempo": 18.3,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 16.72,
+       "giro": -90,
+       "tiempo": 18.7,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         17.203,
@@ -6400,29 +7241,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -6433,23 +7307,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 14.16,
-        "tiempo": 12.6,
+        "largo": 14.12,
+        "tiempo": 13.0,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 14.16,
-          "giro": 4,
-          "tiempo": 12.6,
+          "largo": 14.12,
+          "giro": 2,
+          "tiempo": 13.0,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            15.07,
-           -0.079,
-           3.176
+           -0.563,
+           3.172
           ]
          }
         ]
@@ -6486,11 +7360,11 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       21.51,
+       23.09,
        [
         [
          "VUELTA en la zona de descarga",
-         18.91
+         20.49
         ],
         [
          "VUELTA por la bahía 2 Lc (dos 90°)",
@@ -6498,7 +7372,7 @@
         ],
         [
          "VUELTA por la bahía 2 Rc (dos 90°)",
-         28.23
+         28.21
         ]
        ]
       ]
@@ -6544,7 +7418,7 @@
       {
        "sentido": "adelante",
        "largo": 18.49,
-       "giro": 0,
+       "giro": -1,
        "tiempo": 15.3,
        "ini": [
         0.0,
@@ -6553,19 +7427,19 @@
        ],
        "fin": [
         18.326,
-        0.541,
-        -0.0
+        0.561,
+        -0.012
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": -90,
+       "giro": -89,
        "tiempo": 7.2,
        "ini": [
         18.326,
-        0.541,
-        -0.0
+        0.561,
+        -0.012
        ],
        "fin": [
         16.087,
@@ -6574,6 +7448,7 @@
        ]
       }
      ],
+     "salto_max_m": 8.42056729884278e-06,
      "partes": [
       [
        "TRASLADO",
@@ -6586,7 +7461,7 @@
          {
           "sentido": "adelante",
           "largo": 18.49,
-          "giro": 0,
+          "giro": -1,
           "tiempo": 15.3,
           "ini": [
            0.0,
@@ -6595,8 +7470,8 @@
           ],
           "fin": [
            18.326,
-           0.541,
-           -0.0
+           0.561,
+           -0.012
           ]
          }
         ]
@@ -6676,35 +7551,67 @@
     "dir": "6 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 20.49,
-     "tiempo": 27.3,
+     "cambios": 3,
+     "largo": 20.09,
+     "tiempo": 25.3,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 16.74,
-       "giro": 92,
-       "tiempo": 18.3,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 16.72,
+       "giro": 90,
+       "tiempo": 18.7,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         17.203,
@@ -6713,29 +7620,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -6746,23 +7686,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 14.14,
-        "tiempo": 12.6,
+        "largo": 14.12,
+        "tiempo": 13.0,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 14.14,
-          "giro": -1,
-          "tiempo": 12.6,
+          "largo": 14.12,
+          "giro": -2,
+          "tiempo": 13.0,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            15.07,
-           -0.092,
-           3.095
+           0.563,
+           -3.172
           ]
          }
         ]
@@ -6799,15 +7739,15 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       21.49,
+       23.09,
        [
         [
          "VUELTA en la zona de descarga",
-         18.89
+         20.49
         ],
         [
          "VUELTA por la bahía 2 Lc (dos 90°)",
-         28.23
+         28.21
         ],
         [
          "VUELTA por la bahía 2 Rc (dos 90°)",
@@ -6857,7 +7797,7 @@
       {
        "sentido": "adelante",
        "largo": 20.99,
-       "giro": 0,
+       "giro": 1,
        "tiempo": 17.0,
        "ini": [
         0.0,
@@ -6866,19 +7806,19 @@
        ],
        "fin": [
         20.821,
-        -0.541,
-        0.0
+        -0.559,
+        0.01
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": 90,
+       "giro": 89,
        "tiempo": 6.8,
        "ini": [
         20.821,
-        -0.541,
-        0.0
+        -0.559,
+        0.01
        ],
        "fin": [
         18.557,
@@ -6887,6 +7827,7 @@
        ]
       }
      ],
+     "salto_max_m": 6.379302334241676e-06,
      "partes": [
       [
        "TRASLADO",
@@ -6899,7 +7840,7 @@
          {
           "sentido": "adelante",
           "largo": 20.99,
-          "giro": 0,
+          "giro": 1,
           "tiempo": 17.0,
           "ini": [
            0.0,
@@ -6908,8 +7849,8 @@
           ],
           "fin": [
            20.821,
-           -0.541,
-           0.0
+           -0.559,
+           0.01
           ]
          }
         ]
@@ -6989,35 +7930,67 @@
     "dir": "7 Lb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 22.98,
-     "tiempo": 28.1,
+     "cambios": 3,
+     "largo": 22.53,
+     "tiempo": 25.8,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 19.23,
-       "giro": -88,
-       "tiempo": 19.1,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 19.15,
+       "giro": -90,
+       "tiempo": 19.3,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         19.673,
@@ -7026,29 +7999,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -7059,23 +8065,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 16.53,
-        "tiempo": 14.4,
+        "largo": 16.45,
+        "tiempo": 14.6,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 16.53,
-          "giro": 6,
-          "tiempo": 14.4,
+          "largo": 16.45,
+          "giro": 3,
+          "tiempo": 14.6,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            17.407,
-           0.625,
-           3.217
+           -0.55,
+           3.185
           ]
          }
         ]
@@ -7112,19 +8118,19 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       23.98,
+       25.53,
        [
         [
          "VUELTA en la zona de descarga",
-         21.28
+         22.83
         ],
         [
          "VUELTA por la bahía 3 Lc (dos 90°)",
-         30.27
+         30.25
         ],
         [
          "VUELTA por la bahía 3 Rc (dos 90°)",
-         30.55
+         30.54
         ]
        ]
       ]
@@ -7170,7 +8176,7 @@
       {
        "sentido": "adelante",
        "largo": 20.99,
-       "giro": 0,
+       "giro": -1,
        "tiempo": 17.0,
        "ini": [
         0.0,
@@ -7179,19 +8185,19 @@
        ],
        "fin": [
         20.821,
-        0.541,
-        -0.0
+        0.559,
+        -0.01
        ]
       },
       {
        "sentido": "reversa",
        "largo": 2.7,
-       "giro": -90,
+       "giro": -89,
        "tiempo": 6.8,
        "ini": [
         20.821,
-        0.541,
-        -0.0
+        0.559,
+        -0.01
        ],
        "fin": [
         18.557,
@@ -7200,6 +8206,7 @@
        ]
       }
      ],
+     "salto_max_m": 6.379302334241676e-06,
      "partes": [
       [
        "TRASLADO",
@@ -7212,7 +8219,7 @@
          {
           "sentido": "adelante",
           "largo": 20.99,
-          "giro": 0,
+          "giro": -1,
           "tiempo": 17.0,
           "ini": [
            0.0,
@@ -7221,8 +8228,8 @@
           ],
           "fin": [
            20.821,
-           0.541,
-           -0.0
+           0.559,
+           -0.01
           ]
          }
         ]
@@ -7302,35 +8309,67 @@
     "dir": "7 Rb",
     "llega": {
      "ok": true,
-     "cambios": 1,
-     "largo": 22.93,
-     "tiempo": 27.8,
+     "cambios": 3,
+     "largo": 22.53,
+     "tiempo": 25.8,
      "tramos": [
       {
        "sentido": "adelante",
-       "largo": 3.75,
-       "giro": 178,
-       "tiempo": 9.0,
+       "largo": 1.75,
+       "giro": -86,
+       "tiempo": 2.8,
        "ini": [
         0.0,
         0.0,
         0.0
        ],
        "fin": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
        ]
       },
       {
        "sentido": "reversa",
-       "largo": 19.18,
-       "giro": 92,
-       "tiempo": 18.8,
+       "largo": 0.7,
+       "giro": -92,
+       "tiempo": 1.8,
        "ini": [
-        1.096,
-        0.059,
-        3.108
+        1.581,
+        -0.311,
+        -1.506
+       ],
+       "fin": [
+        2.069,
+        0.055,
+        -3.107
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.92,
+       "giro": -2,
+       "tiempo": 2.0,
+       "ini": [
+        2.069,
+        0.055,
+        -3.107
+       ],
+       "fin": [
+        1.15,
+        0.0,
+        -3.142
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 19.15,
+       "giro": 90,
+       "tiempo": 19.3,
+       "ini": [
+        1.15,
+        0.0,
+        -3.142
        ],
        "fin": [
         19.673,
@@ -7339,29 +8378,62 @@
        ]
       }
      ],
+     "salto_max_m": 1.905235198890889e-06,
      "partes": [
       [
        "VUELTA en la zona de descarga",
        {
         "ok": true,
-        "cambios": 0,
-        "largo": 3.75,
-        "tiempo": 9.0,
+        "cambios": 2,
+        "largo": 3.37,
+        "tiempo": 6.6,
         "tramos": [
          {
           "sentido": "adelante",
-          "largo": 3.75,
-          "giro": 178,
-          "tiempo": 9.0,
+          "largo": 1.75,
+          "giro": -86,
+          "tiempo": 2.8,
           "ini": [
            0.0,
            0.0,
            0.0
           ],
           "fin": [
-           1.096,
-           0.059,
-           3.108
+           1.581,
+           -0.311,
+           -1.506
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.7,
+          "giro": -92,
+          "tiempo": 1.8,
+          "ini": [
+           1.581,
+           -0.311,
+           -1.506
+          ],
+          "fin": [
+           2.069,
+           0.055,
+           -3.107
+          ]
+         },
+         {
+          "sentido": "adelante",
+          "largo": 0.92,
+          "giro": -2,
+          "tiempo": 2.0,
+          "ini": [
+           2.069,
+           0.055,
+           -3.107
+          ],
+          "fin": [
+           1.15,
+           0.0,
+           -3.142
           ]
          }
         ]
@@ -7372,23 +8444,23 @@
        {
         "ok": true,
         "cambios": 0,
-        "largo": 16.48,
-        "tiempo": 14.2,
+        "largo": 16.45,
+        "tiempo": 14.6,
         "tramos": [
          {
           "sentido": "reversa",
-          "largo": 16.48,
-          "giro": -1,
-          "tiempo": 14.2,
+          "largo": 16.45,
+          "giro": -3,
+          "tiempo": 14.6,
           "ini": [
-           1.096,
-           0.059,
-           3.108
+           1.15,
+           0.0,
+           -3.142
           ],
           "fin": [
            17.407,
-           -0.2,
-           3.095
+           0.55,
+           -3.185
           ]
          }
         ]
@@ -7425,19 +8497,19 @@
      "intentos": [
       [
        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
-       23.93,
+       25.53,
        [
         [
          "VUELTA en la zona de descarga",
-         21.23
+         22.83
         ],
         [
          "VUELTA por la bahía 3 Lc (dos 90°)",
-         30.55
+         30.54
         ],
         [
          "VUELTA por la bahía 3 Rc (dos 90°)",
-         30.27
+         30.25
         ]
        ]
       ]
