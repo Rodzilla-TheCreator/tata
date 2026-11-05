@@ -209,3 +209,20 @@ rack": es **la distancia del frente del poste al frente del cubo**, y se mide co
 
 **Medir:** ancho y fondo de cada poste, su altura, la separación entre postes a lo largo del
 pasillo, y el retranqueo del poste al frente del cubo a nivel del piso, en los dos racks.
+
+**Afinado (maje, 05-nov):** el retranqueo poste → cara del cubo es de **~6 cm**, no 20. El cubo
+de N1 al piso depende de dónde lo dejó el operador (**error humano**). El de N1-B, encima,
+queda alineado con el de abajo. En N2 y más arriba el cubo se mete **hasta el fondo**.
+
+**La cuenta con 6 cm en los dos lados:** entre postes quedan **3.00 + 0.06 + 0.06 = 3.12 m**. El
+ancho a rumbo máximo es **3.036 m vacío** y **3.078 m cargado** (tabla de arriba), así que el giro
+cabe **solo si las dos puntas (uñas y culo) quedan entre postes**, no frente a uno. Sobran unos 8 cm
+vacío y unos 4 cm cargado. Eso calza con el video: el operador queda pegado a las dos bahías.
+
+**Consecuencias:**
+- Con un margen de 4 cm cargado, un cubo de N1 que el operador dejó 4 cm más afuera mata el
+  giro. **Cuando los cubos de N1 los deja el kit, que los deje siempre a la misma profundidad.**
+  Si quedan cubos dejados a mano, hay que saber dónde están: medirlos o verlos.
+- **Para correr de nuevo:** `PROF_BAHIA = 0.06` **en los dos lados**, postes cada 2.35 m, y exigir
+  que en los rumbos de 56° a 89.5° las dos puntas queden entre postes. El caso del video tiene que
+  salir sin reversa después de arrancar.
