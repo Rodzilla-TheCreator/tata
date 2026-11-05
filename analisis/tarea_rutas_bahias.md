@@ -1,5 +1,15 @@
 # Encargo — rutas entre bahías (Hybrid A* general, con uñas) y la FSM con direcciones de bahía
 
+> **HECHO 05-nov-2026 en la i3.** Resultados, controles y lo que se apartó del encargo en
+> **`rutas_resultados.md`**. Lo principal:
+> - **Con uñas, ningún 90° cabe con todo el equipo dentro de 3.00 m** (ancho a rumbo 3.04 m). Se
+>   modela que las uñas pasan la cara dentro de la luz de la bahía (`PROF_BAHIA`, SUPUESTO).
+> - **Punta de uña a 0–5 cm de la cara, no a 8–15:** sobran 10 cm entre culo y punta.
+> - **La `a` se entra con las uñas hacia adentro, la `b` hacia la descarga.**
+> - **Caso de maje:** sí, va de reversa. A la 5 3 Rb, 6.1 m sin cambios de sentido; a la 5 3 Ra,
+>   11.5 m con 2.
+> - **La FSM con direcciones pasa** las 4 pruebas viejas y la del caso de maje.
+
 **Para la sesión que corre en i3.** Autocontenido. Corre en i3, **sin montacargas**: Python
 (`numpy`, `matplotlib`). Lenguaje y comentarios en **español**, al estilo del repo. Leé
 `CLAUDE.md` primero: manda sobre todo lo de abajo.

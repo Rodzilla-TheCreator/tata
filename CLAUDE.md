@@ -43,7 +43,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/emulador_timon/` | **El emulador del sensor del volante (dirección).** La dirección NO es CAN: se comanda emulando el sensor **seno/coseno** (`Vo=2.47`, `Va=1.98`, círculo, absoluto). Circuito, BOM y sketches (caracterizador + emulador ESP32). **Leer `LEEME.md`.** Ver `docs/21` §4 |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
-| `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script |
+| `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script. **Rutas entre bahías con uñas (05-nov):** `bahias.py` (direcciones `x y s` + `a`/`b`), `planificador_rutas.py` (Hybrid A* de cualquier pose a cualquier bahía), resultados en **`rutas_resultados.md`**. **Con uñas, el 90° solo existe metiendo las uñas a la luz de la bahía** (ancho a rumbo 3.04 m > 3.00); a la posición `a` se entra con las uñas hacia adentro y a la `b` hacia la descarga |
 | `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control)**, y la **FSM de coordinación A/B** (reserva, deadlock, falla; `sim_coordinacion.py`): `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real** |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
@@ -130,6 +130,13 @@ el cubo. **Girar cargado es igual que girar vacío**, tal como se observó en ca
 
 Eso deja sin efecto todo lo que se había planteado de sideshift activo durante el arco y de
 maniobra multipunto por culpa de la carga. Eran problemas inventados por un modelo malo.
+
+> **Matizado el 05-nov-2026 (`analisis/rutas_resultados.md`):** lo de arriba vale **para el
+> chasis**, que era lo único modelado. Con las uñas en la silueta, el IBC (1.00 de ancho contra
+> 0.73 de las uñas) suma 4 cm al ancho a rumbo: **3.078 m cargado contra 3.036 vacío**, los dos por
+> encima de los 3.00 del pasillo. Ni vacío ni cargado gira 90° con todo el equipo dentro del
+> pasillo: **las uñas (y el cubo) pasan la cara del rack, dentro de la luz de la bahía**, y cuánto
+> (`PROF_BAHIA`, ≥ 15 cm según la búsqueda) **no está medido**. Se filma al operador para cerrarlo.
 
 **El planificador correcto es Hybrid A\***, no un barrido de arcos. El equipo es no holónomo
 con radio mínimo; los caminos óptimos son curvas de Reeds-Shepp. Un PuzzleBot de eje
@@ -651,6 +658,16 @@ Queda por medir, con flexómetro:
 
 Y en el planificador: **modelar las uñas en `silueta()`**, que hoy no existen.
 
+> **Hecho el 05-nov-2026 en `analisis/planificador_rutas.py`** (el viejo se deja como está). Y
+> cambió dos cosas de esta sección:
+> - **Con uñas, la forma ya no domina al pivote.** `XPIV` 1.30 → 3 cambios de sentido por giro;
+>   1.50 → 0; 1.60 → desaparece la asimetría a/b. Medirlo vuelve a importar para planificar
+> - **Se suman dos cosas para medir:** filmar al operador girando hacia una bahía en N1 y en N3
+>   (altura de las uñas al girar, cuánto pasan la cara, qué hay en la luz a esa altura) y el
+>   **radio del culo**
+>
+> Ver `analisis/rutas_resultados.md`.
+
 ### 2 · El puerto de servicio ← esto es lo urgente
 
 El plan completo está en `docs/15`, actualizado por `docs/16`. Falta el viaje:
@@ -711,7 +728,8 @@ shaders 10–40 min con la ventana aparentemente colgada; **no matarlo**.
   modelo. Para un humano es un bache; para navegación autónoma es un salto de rueda y una
   discontinuidad de odometría.
 - `analisis/planificador_giro.py` → `silueta()` **no modela las uñas**. Sus números de 90° y
-  180° son solo chasis. Detallado arriba.
+  180° son solo chasis. Detallado arriba. *(05-nov: `planificador_rutas.py` sí las modela; el
+  viejo queda como referencia de lo que se calculó el 18-sep.)*
 - `herramientas/serie/probador.py` da «ESTE SIRVE» sin exigir loopback. Detallado arriba.
 - El menú de servicio del display (`Settings → Menu → lift / drive / steer`) se encontró pero
   **no se documentó cómo se entra ni qué hay adentro**. Vale fotos si sobra tiempo; no es la

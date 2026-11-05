@@ -1,0 +1,7493 @@
+{
+ "anchos": {
+  "con uñas, vacío": {
+   "tabla": [
+    [
+     0,
+     1.315
+    ],
+    [
+     5,
+     1.375
+    ],
+    [
+     10,
+     1.55
+    ],
+    [
+     15,
+     1.714
+    ],
+    [
+     20,
+     1.864
+    ],
+    [
+     25,
+     2.039
+    ],
+    [
+     30,
+     2.227
+    ],
+    [
+     35,
+     2.399
+    ],
+    [
+     40,
+     2.552
+    ],
+    [
+     45,
+     2.685
+    ],
+    [
+     50,
+     2.798
+    ],
+    [
+     55,
+     2.89
+    ],
+    [
+     60,
+     2.96
+    ],
+    [
+     65,
+     3.008
+    ],
+    [
+     70,
+     3.032
+    ],
+    [
+     75,
+     3.033
+    ],
+    [
+     80,
+     3.012
+    ],
+    [
+     85,
+     2.967
+    ],
+    [
+     90,
+     2.9
+    ]
+   ],
+   "max": 3.036,
+   "en": 73.0,
+   "no_caben": [
+    56.0,
+    89.5
+   ]
+  },
+  "con uñas, con el IBC": {
+   "tabla": [
+    [
+     0,
+     1.315
+    ],
+    [
+     5,
+     1.375
+    ],
+    [
+     10,
+     1.55
+    ],
+    [
+     15,
+     1.748
+    ],
+    [
+     20,
+     1.962
+    ],
+    [
+     25,
+     2.161
+    ],
+    [
+     30,
+     2.344
+    ],
+    [
+     35,
+     2.509
+    ],
+    [
+     40,
+     2.655
+    ],
+    [
+     45,
+     2.781
+    ],
+    [
+     50,
+     2.885
+    ],
+    [
+     55,
+     2.968
+    ],
+    [
+     60,
+     3.028
+    ],
+    [
+     65,
+     3.065
+    ],
+    [
+     70,
+     3.078
+    ],
+    [
+     75,
+     3.068
+    ],
+    [
+     80,
+     3.035
+    ],
+    [
+     85,
+     2.979
+    ],
+    [
+     90,
+     2.9
+    ]
+   ],
+   "max": 3.078,
+   "en": 70.5,
+   "no_caben": [
+    51.0,
+    89.5
+   ]
+  },
+  "sin uñas (chasis + patas)": {
+   "tabla": [
+    [
+     0,
+     1.315
+    ],
+    [
+     5,
+     1.375
+    ],
+    [
+     10,
+     1.55
+    ],
+    [
+     15,
+     1.714
+    ],
+    [
+     20,
+     1.864
+    ],
+    [
+     25,
+     2.0
+    ],
+    [
+     30,
+     2.121
+    ],
+    [
+     35,
+     2.225
+    ],
+    [
+     40,
+     2.313
+    ],
+    [
+     45,
+     2.383
+    ],
+    [
+     50,
+     2.435
+    ],
+    [
+     55,
+     2.468
+    ],
+    [
+     60,
+     2.483
+    ],
+    [
+     65,
+     2.479
+    ],
+    [
+     70,
+     2.456
+    ],
+    [
+     75,
+     2.414
+    ],
+    [
+     80,
+     2.354
+    ],
+    [
+     85,
+     2.275
+    ],
+    [
+     90,
+     2.18
+    ]
+   ],
+   "max": 2.484,
+   "en": 61.5,
+   "no_caben": null
+  }
+ },
+ "caso1": {
+  "inicio": [
+   9.235,
+   0.0,
+   3.142
+  ],
+  "5 3 Ra": {
+   "ida": {
+    "ok": true,
+    "cambios": 2,
+    "largo": 11.48,
+    "tiempo": 23.6,
+    "tramos": [
+     {
+      "sentido": "reversa",
+      "largo": 5.5,
+      "giro": 90,
+      "tiempo": 9.7,
+      "ini": [
+       9.235,
+       0.0,
+       3.142
+      ],
+      "fin": [
+       14.175,
+       -0.07,
+       -1.571
+      ]
+     },
+     {
+      "sentido": "adelante",
+      "largo": 2.7,
+      "giro": 93,
+      "tiempo": 6.3,
+      "ini": [
+       14.175,
+       -0.07,
+       -1.571
+      ],
+      "fin": [
+       16.436,
+       0.573,
+       0.044
+      ]
+     },
+     {
+      "sentido": "reversa",
+      "largo": 3.28,
+      "giro": -93,
+      "tiempo": 7.6,
+      "ini": [
+       16.436,
+       0.573,
+       0.044
+      ],
+      "fin": [
+       13.617,
+       -0.07,
+       -1.571
+      ]
+     }
+    ],
+    "partes": [
+     [
+      "VUELTA por la bahía 5 Rc (dos 90°)",
+      {
+       "ok": true,
+       "cambios": 1,
+       "largo": 8.2,
+       "tiempo": 16.0,
+       "tramos": [
+        {
+         "sentido": "reversa",
+         "largo": 5.5,
+         "giro": 90,
+         "tiempo": 9.7,
+         "ini": [
+          9.235,
+          0.0,
+          3.142
+         ],
+         "fin": [
+          14.175,
+          -0.07,
+          -1.571
+         ]
+        },
+        {
+         "sentido": "adelante",
+         "largo": 2.7,
+         "giro": 93,
+         "tiempo": 6.3,
+         "ini": [
+          14.175,
+          -0.07,
+          -1.571
+         ],
+         "fin": [
+          16.436,
+          0.573,
+          0.044
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "TRASLADO",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 0.58,
+       "tiempo": 1.6,
+       "tramos": [
+        {
+         "sentido": "reversa",
+         "largo": 0.58,
+         "giro": -2,
+         "tiempo": 1.6,
+         "ini": [
+          16.436,
+          0.573,
+          0.044
+         ],
+         "fin": [
+          15.856,
+          0.562,
+          0.016
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "ENTRADA a 5 3 Ra",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 2.7,
+       "tiempo": 7.2,
+       "tramos": [
+        {
+         "sentido": "reversa",
+         "largo": 2.7,
+         "giro": -89,
+         "tiempo": 7.2,
+         "ini": [
+          15.856,
+          0.561,
+          -0.012
+         ],
+         "fin": [
+          13.617,
+          -0.07,
+          -1.571
+         ]
+        }
+       ]
+      }
+     ]
+    ],
+    "intentos": [
+     [
+      "sale con uñas hacia la descarga, llega con uñas hacia adentro",
+      13.48,
+      [
+       [
+        "VUELTA en la zona de descarga",
+        25.3
+       ],
+       [
+        "VUELTA por la bahía 4 Rc (dos 90°)",
+        11.59
+       ],
+       [
+        "VUELTA por la bahía 5 Rc (dos 90°)",
+        10.78
+       ],
+       [
+        "VUELTA por la bahía 3 Lc (dos 90°)",
+        14.46
+       ],
+       [
+        "VUELTA por la bahía 3 Rc (dos 90°)",
+        14.16
+       ]
+      ]
+     ]
+    ]
+   },
+   "vuelta": {
+    "ok": true,
+    "cambios": 2,
+    "largo": 20.25,
+    "tiempo": 29.0,
+    "tramos": [
+     {
+      "sentido": "adelante",
+      "largo": 2.8,
+      "giro": 89,
+      "tiempo": 7.3,
+      "ini": [
+       13.617,
+       -0.07,
+       -1.571
+      ],
+      "fin": [
+       15.973,
+       0.574,
+       -0.012
+      ]
+     },
+     {
+      "sentido": "reversa",
+      "largo": 14.85,
+      "giro": 0,
+      "tiempo": 13.1,
+      "ini": [
+       15.973,
+       0.574,
+       -0.012
+      ],
+      "fin": [
+       1.25,
+       0.185,
+       -0.013
+      ]
+     },
+     {
+      "sentido": "adelante",
+      "largo": 2.6,
+      "giro": -180,
+      "tiempo": 8.7,
+      "ini": [
+       1.25,
+       0.185,
+       -0.013
+      ],
+      "fin": [
+       0.786,
+       -0.017,
+       -3.148
+      ]
+     }
+    ],
+    "partes": [
+     [
+      "SALIDA de 5 3 Ra",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 2.8,
+       "tiempo": 7.3,
+       "tramos": [
+        {
+         "sentido": "adelante",
+         "largo": 2.8,
+         "giro": 89,
+         "tiempo": 7.3,
+         "ini": [
+          13.617,
+          -0.07,
+          -1.571
+         ],
+         "fin": [
+          15.973,
+          0.574,
+          -0.012
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "VUELTA en la zona de descarga",
+      {
+       "ok": true,
+       "cambios": 1,
+       "largo": 17.05,
+       "tiempo": 18.9,
+       "tramos": [
+        {
+         "sentido": "reversa",
+         "largo": 14.85,
+         "giro": 0,
+         "tiempo": 13.1,
+         "ini": [
+          15.973,
+          0.574,
+          -0.012
+         ],
+         "fin": [
+          1.25,
+          0.185,
+          -0.013
+         ]
+        },
+        {
+         "sentido": "adelante",
+         "largo": 2.2,
+         "giro": -180,
+         "tiempo": 5.8,
+         "ini": [
+          1.25,
+          0.185,
+          -0.013
+         ],
+         "fin": [
+          1.176,
+          -0.092,
+          -3.148
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "TRASLADO",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 0.4,
+       "tiempo": 1.5,
+       "tramos": [
+        {
+         "sentido": "adelante",
+         "largo": 0.4,
+         "giro": 0,
+         "tiempo": 1.5,
+         "ini": [
+          1.176,
+          -0.092,
+          -3.148
+         ],
+         "fin": [
+          0.786,
+          -0.017,
+          -3.148
+         ]
+        }
+       ]
+      }
+     ]
+    ],
+    "intentos": [
+     [
+      "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+      22.25,
+      [
+       [
+        "VUELTA en la zona de descarga",
+        18.45
+       ],
+       [
+        "VUELTA por la bahía 3 Lc (dos 90°)",
+        28.36
+       ],
+       [
+        "VUELTA por la bahía 3 Rc (dos 90°)",
+        28.11
+       ],
+       [
+        "VUELTA por la bahía 2 Lc (dos 90°)",
+        28.35
+       ],
+       [
+        "VUELTA por la bahía 2 Rc (dos 90°)",
+        28.1
+       ],
+       [
+        "VUELTA por la bahía 4 Lc (dos 90°)",
+        28.36
+       ],
+       [
+        "VUELTA por la bahía 4 Rc (dos 90°)",
+        28.11
+       ]
+      ]
+     ]
+    ]
+   },
+   "vertical": {
+    "ELEVA": 7.2,
+    "TOMA_sube": 0.06,
+    "TRANSITO_baja": 7.3,
+    "APROXIMA": 1.0,
+    "EXTIENDE": 1.4,
+    "TOMA": 1.2,
+    "RETRAE": 1.4
+   }
+  },
+  "5 3 Rb": {
+   "ida": {
+    "ok": true,
+    "cambios": 0,
+    "largo": 6.08,
+    "tiempo": 11.2,
+    "tramos": [
+     {
+      "sentido": "reversa",
+      "largo": 6.08,
+      "giro": 90,
+      "tiempo": 11.2,
+      "ini": [
+       9.235,
+       0.0,
+       3.142
+      ],
+      "fin": [
+       14.733,
+       -0.07,
+       -1.571
+      ]
+     }
+    ],
+    "partes": [
+     [
+      "TRASLADO",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 3.38,
+       "tiempo": 5.7,
+       "tramos": [
+        {
+         "sentido": "reversa",
+         "largo": 3.38,
+         "giro": 1,
+         "tiempo": 5.7,
+         "ini": [
+          9.235,
+          0.0,
+          3.142
+         ],
+         "fin": [
+          12.494,
+          0.54,
+          3.155
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "ENTRADA a 5 3 Rb",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 2.7,
+       "tiempo": 7.2,
+       "tramos": [
+        {
+         "sentido": "reversa",
+         "largo": 2.7,
+         "giro": 89,
+         "tiempo": 7.2,
+         "ini": [
+          12.494,
+          0.561,
+          -3.13
+         ],
+         "fin": [
+          14.733,
+          -0.07,
+          -1.571
+         ]
+        }
+       ]
+      }
+     ]
+    ],
+    "intentos": [
+     [
+      "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+      6.08,
+      [
+       [
+        "TRASLADO",
+        3.38
+       ]
+      ]
+     ]
+    ]
+   },
+   "vuelta": {
+    "ok": true,
+    "cambios": 0,
+    "largo": 14.48,
+    "tiempo": 16.8,
+    "tramos": [
+     {
+      "sentido": "adelante",
+      "largo": 14.48,
+      "giro": -89,
+      "tiempo": 16.8,
+      "ini": [
+       14.733,
+       -0.07,
+       -1.571
+      ],
+      "fin": [
+       0.8,
+       -0.209,
+       -3.116
+      ]
+     }
+    ],
+    "partes": [
+     [
+      "SALIDA de 5 3 Rb",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 2.8,
+       "tiempo": 7.3,
+       "tramos": [
+        {
+         "sentido": "adelante",
+         "largo": 2.8,
+         "giro": -89,
+         "tiempo": 7.3,
+         "ini": [
+          14.733,
+          -0.07,
+          -1.571
+         ],
+         "fin": [
+          12.377,
+          0.574,
+          -3.13
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "TRASLADO",
+      {
+       "ok": true,
+       "cambios": 0,
+       "largo": 11.68,
+       "tiempo": 11.2,
+       "tramos": [
+        {
+         "sentido": "adelante",
+         "largo": 11.68,
+         "giro": 1,
+         "tiempo": 11.2,
+         "ini": [
+          12.377,
+          0.574,
+          -3.13
+         ],
+         "fin": [
+          0.8,
+          -0.209,
+          -3.116
+         ]
+        }
+       ]
+      }
+     ]
+    ],
+    "intentos": [
+     [
+      "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+      14.48,
+      [
+       [
+        "TRASLADO",
+        11.68
+       ]
+      ]
+     ]
+    ]
+   },
+   "vertical": {
+    "ELEVA": 7.2,
+    "TOMA_sube": 0.06,
+    "TRANSITO_baja": 7.3,
+    "APROXIMA": 1.0,
+    "EXTIENDE": 1.4,
+    "TOMA": 1.2,
+    "RETRAE": 1.4
+   }
+  }
+ },
+ "tabla_fsm": {
+  "TICK": 0.5,
+  "VMAX": 1.5,
+  "ACC": 0.9,
+  "VEL_ELEV": 0.55,
+  "DUR_PANTO": {
+   "APROXIMA": 1.0,
+   "EXTIENDE": 1.4,
+   "TOMA": 1.2,
+   "RETRAE": 1.4
+  },
+  "salidas": {
+   "La|adentro": {
+    "tiempo": 7.34,
+    "cambios": 0,
+    "largo": 2.6,
+    "primer_tramo": 7.34,
+    "resto": 0.0,
+    "dx_fin": 2.133,
+    "y_fin": -0.563
+   },
+   "La|descarga": null,
+   "Lb|adentro": null,
+   "Lb|descarga": {
+    "tiempo": 7.19,
+    "cambios": 0,
+    "largo": 2.7,
+    "primer_tramo": 7.19,
+    "resto": 0.0,
+    "dx_fin": -2.239,
+    "y_fin": -0.561
+   },
+   "Lc|adentro": {
+    "tiempo": 7.19,
+    "cambios": 0,
+    "largo": 2.7,
+    "primer_tramo": 7.19,
+    "resto": 0.0,
+    "dx_fin": 2.239,
+    "y_fin": -0.561
+   },
+   "Lc|descarga": {
+    "tiempo": 6.75,
+    "cambios": 0,
+    "largo": 2.7,
+    "primer_tramo": 6.75,
+    "resto": 0.0,
+    "dx_fin": -2.254,
+    "y_fin": -0.55
+   },
+   "Ra|adentro": {
+    "tiempo": 7.34,
+    "cambios": 0,
+    "largo": 2.6,
+    "primer_tramo": 7.34,
+    "resto": 0.0,
+    "dx_fin": 2.133,
+    "y_fin": 0.563
+   },
+   "Ra|descarga": null,
+   "Rb|adentro": null,
+   "Rb|descarga": {
+    "tiempo": 7.19,
+    "cambios": 0,
+    "largo": 2.7,
+    "primer_tramo": 7.19,
+    "resto": 0.0,
+    "dx_fin": -2.239,
+    "y_fin": 0.561
+   },
+   "Rc|adentro": {
+    "tiempo": 7.19,
+    "cambios": 0,
+    "largo": 2.7,
+    "primer_tramo": 7.19,
+    "resto": 0.0,
+    "dx_fin": 2.239,
+    "y_fin": 0.561
+   },
+   "Rc|descarga": {
+    "tiempo": 6.75,
+    "cambios": 0,
+    "largo": 2.7,
+    "primer_tramo": 6.75,
+    "resto": 0.0,
+    "dx_fin": -2.254,
+    "y_fin": 0.55
+   }
+  },
+  "carril central→giro": {
+   "largo": 4.16,
+   "tiempo": 5.53,
+   "cambios": 0
+  },
+  "carril giro→giro": {
+   "largo": 4.32,
+   "tiempo": 7.4,
+   "cambios": 0
+  },
+  "vuelta_zona": {
+   "ok": true,
+   "cambios": 1,
+   "largo": 5.25,
+   "tiempo": 11.7,
+   "tramos": [
+    {
+     "sentido": "reversa",
+     "largo": 2.75,
+     "giro": 0,
+     "tiempo": 3.5,
+     "ini": [
+      4.0,
+      0.0,
+      0.0
+     ],
+     "fin": [
+      1.25,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "sentido": "adelante",
+     "largo": 2.5,
+     "giro": 178,
+     "tiempo": 8.2,
+     "ini": [
+      1.25,
+      0.0,
+      0.0
+     ],
+     "fin": [
+      1.096,
+      0.059,
+      3.108
+     ]
+    }
+   ]
+  }
+ },
+ "giro_180": {
+  "con uñas": {
+   "ok": false,
+   "motivo": "sin camino",
+   "expansiones": 15001
+  },
+  "sin uñas": {
+   "ok": true,
+   "cambios": 1,
+   "largo": 1.2,
+   "tiempo": 4.2,
+   "tramos": [
+    {
+     "sentido": "adelante",
+     "largo": 0.7,
+     "giro": 121,
+     "tiempo": 2.4,
+     "ini": [
+      11.705,
+      0.0,
+      0.0
+     ],
+     "fin": [
+      11.99,
+      0.502,
+      2.108
+     ]
+    },
+    {
+     "sentido": "reversa",
+     "largo": 0.5,
+     "giro": 60,
+     "tiempo": 1.8,
+     "ini": [
+      11.99,
+      0.502,
+      2.108
+     ],
+     "fin": [
+      12.432,
+      0.33,
+      3.148
+     ]
+    }
+   ],
+   "expansiones": 10313
+  },
+  "dos 90°": [
+   [
+    "4 Lc",
+    {
+     "ok": true,
+     "cambios": 2,
+     "largo": 7.78,
+     "tiempo": 17.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.38,
+       "giro": 2,
+       "tiempo": 3.2,
+       "ini": [
+        11.705,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        13.944,
+        -0.479,
+        0.028
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": 88,
+       "tiempo": 7.2,
+       "ini": [
+        13.944,
+        -0.479,
+        0.028
+       ],
+       "fin": [
+        11.705,
+        0.07,
+        1.571
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        9.451,
+        -0.55,
+        3.158
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Rc",
+    {
+     "ok": true,
+     "cambios": 2,
+     "largo": 7.78,
+     "tiempo": 17.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.38,
+       "giro": -2,
+       "tiempo": 3.2,
+       "ini": [
+        11.705,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        13.944,
+        0.479,
+        -0.028
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": -88,
+       "tiempo": 7.2,
+       "ini": [
+        13.944,
+        0.479,
+        -0.028
+       ],
+       "fin": [
+        11.705,
+        -0.07,
+        -1.571
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        9.451,
+        0.55,
+        -3.158
+       ]
+      }
+     ]
+    }
+   ]
+  ]
+ },
+ "control_sin_unas": {
+  "sin uñas": [
+   [
+    70,
+    null
+   ],
+   [
+    75,
+    0
+   ],
+   [
+    80,
+    0
+   ],
+   [
+    90,
+    0
+   ],
+   [
+    100,
+    0
+   ],
+   [
+    110,
+    0
+   ],
+   [
+    120,
+    0
+   ],
+   [
+    130,
+    0
+   ],
+   [
+    140,
+    0
+   ],
+   [
+    150,
+    0
+   ]
+  ],
+  "con uñas": [
+   [
+    70,
+    null
+   ],
+   [
+    75,
+    null
+   ],
+   [
+    80,
+    null
+   ],
+   [
+    90,
+    null
+   ],
+   [
+    100,
+    null
+   ],
+   [
+    110,
+    null
+   ],
+   [
+    120,
+    null
+   ],
+   [
+    130,
+    null
+   ],
+   [
+    140,
+    null
+   ],
+   [
+    150,
+    null
+   ]
+  ],
+  "con uñas y bahía abierta (4 La rumbo 0 / 4 Lb rumbo π)": [
+   [
+    70,
+    null,
+    null
+   ],
+   [
+    75,
+    0,
+    0
+   ],
+   [
+    80,
+    0,
+    0
+   ],
+   [
+    90,
+    0,
+    0
+   ],
+   [
+    100,
+    0,
+    0
+   ],
+   [
+    110,
+    0,
+    0
+   ],
+   [
+    120,
+    0,
+    0
+   ],
+   [
+    130,
+    0,
+    0
+   ],
+   [
+    140,
+    0,
+    0
+   ],
+   [
+    150,
+    0,
+    0
+   ]
+  ]
+ },
+ "control_pasillo": {
+  "3.00": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.28,
+        -0.563,
+        -0.031
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.024,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.944,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        9.451,
+        -0.55,
+        3.158
+       ]
+      }
+     ]
+    }
+   ]
+  ],
+  "2.80": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "la pose inicial choca"
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "la pose inicial choca"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "la pose inicial choca"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "la pose inicial choca"
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "la pose inicial choca"
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "la pose inicial choca"
+    }
+   ]
+  ]
+ },
+ "xpiv": {
+  "1.30": {
+   "dmax": 69.5,
+   "salidas": [
+    [
+     "4 La",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 3,
+      "largo": 1.8,
+      "tiempo": 4.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": -20,
+        "tiempo": 1.0,
+        "ini": [
+         11.147,
+         -0.13,
+         1.571
+        ],
+        "fin": [
+         11.181,
+         0.066,
+         1.228
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 0.1,
+        "giro": -10,
+        "tiempo": 0.7,
+        "ini": [
+         11.181,
+         0.066,
+         1.228
+        ],
+        "fin": [
+         11.139,
+         -0.025,
+         1.056
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.1,
+        "giro": -10,
+        "tiempo": 0.7,
+        "ini": [
+         11.139,
+         -0.025,
+         1.056
+        ],
+        "fin": [
+         11.196,
+         0.058,
+         0.885
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.4,
+        "giro": -52,
+        "tiempo": 2.5,
+        "ini": [
+         11.196,
+         0.058,
+         0.885
+        ],
+        "fin": [
+         9.97,
+         -0.552,
+         -0.021
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 La",
+     "descarga",
+     {
+      "ok": false,
+      "motivo": "sin camino"
+     }
+    ],
+    [
+     "4 Lb",
+     "adentro",
+     {
+      "ok": false,
+      "motivo": "sin camino"
+     }
+    ],
+    [
+     "4 Lb",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 3,
+      "largo": 1.8,
+      "tiempo": 5.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": 20,
+        "tiempo": 1.0,
+        "ini": [
+         12.263,
+         -0.13,
+         1.571
+        ],
+        "fin": [
+         12.229,
+         0.066,
+         1.914
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 0.1,
+        "giro": 10,
+        "tiempo": 0.7,
+        "ini": [
+         12.229,
+         0.066,
+         1.914
+        ],
+        "fin": [
+         12.271,
+         -0.025,
+         2.085
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.1,
+        "giro": 10,
+        "tiempo": 0.7,
+        "ini": [
+         12.271,
+         -0.025,
+         2.085
+        ],
+        "fin": [
+         12.214,
+         0.058,
+         2.257
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.4,
+        "giro": 50,
+        "tiempo": 2.7,
+        "ini": [
+         12.214,
+         0.058,
+         2.257
+        ],
+        "fin": [
+         13.442,
+         -0.55,
+         3.13
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 3,
+      "largo": 1.8,
+      "tiempo": 5.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": -20,
+        "tiempo": 1.0,
+        "ini": [
+         11.705,
+         -0.13,
+         1.571
+        ],
+        "fin": [
+         11.739,
+         0.066,
+         1.228
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 0.1,
+        "giro": -10,
+        "tiempo": 0.7,
+        "ini": [
+         11.739,
+         0.066,
+         1.228
+        ],
+        "fin": [
+         11.697,
+         -0.025,
+         1.056
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.1,
+        "giro": -10,
+        "tiempo": 0.7,
+        "ini": [
+         11.697,
+         -0.025,
+         1.056
+        ],
+        "fin": [
+         11.754,
+         0.058,
+         0.885
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.4,
+        "giro": -50,
+        "tiempo": 2.7,
+        "ini": [
+         11.754,
+         0.058,
+         0.885
+        ],
+        "fin": [
+         10.526,
+         -0.55,
+         0.012
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 3,
+      "largo": 1.8,
+      "tiempo": 5.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": 20,
+        "tiempo": 1.0,
+        "ini": [
+         11.705,
+         -0.13,
+         1.571
+        ],
+        "fin": [
+         11.671,
+         0.066,
+         1.914
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 0.1,
+        "giro": 10,
+        "tiempo": 0.7,
+        "ini": [
+         11.671,
+         0.066,
+         1.914
+        ],
+        "fin": [
+         11.713,
+         -0.025,
+         2.085
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.1,
+        "giro": 10,
+        "tiempo": 0.7,
+        "ini": [
+         11.713,
+         -0.025,
+         2.085
+        ],
+        "fin": [
+         11.656,
+         0.058,
+         2.257
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.4,
+        "giro": 50,
+        "tiempo": 2.7,
+        "ini": [
+         11.656,
+         0.058,
+         2.257
+        ],
+        "fin": [
+         12.884,
+         -0.55,
+         3.13
+        ]
+       }
+      ]
+     }
+    ]
+   ]
+  },
+  "1.40": {
+   "dmax": 73.3,
+   "salidas": [
+    [
+     "4 La",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 1,
+      "largo": 1.8,
+      "tiempo": 4.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": -24,
+        "tiempo": 1.0,
+        "ini": [
+         11.147,
+         -0.03,
+         1.571
+        ],
+        "fin": [
+         11.189,
+         0.164,
+         1.144
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.6,
+        "giro": -66,
+        "tiempo": 3.3,
+        "ini": [
+         11.189,
+         0.164,
+         1.144
+        ],
+        "fin": [
+         9.814,
+         -0.56,
+         -0.007
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 La",
+     "descarga",
+     {
+      "ok": false,
+      "motivo": "sin camino"
+     }
+    ],
+    [
+     "4 Lb",
+     "adentro",
+     {
+      "ok": false,
+      "motivo": "sin camino"
+     }
+    ],
+    [
+     "4 Lb",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 1,
+      "largo": 1.7,
+      "tiempo": 3.9,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": 24,
+        "tiempo": 1.0,
+        "ini": [
+         12.263,
+         -0.03,
+         1.571
+        ],
+        "fin": [
+         12.221,
+         0.164,
+         1.997
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.5,
+        "giro": 64,
+        "tiempo": 3.0,
+        "ini": [
+         12.221,
+         0.164,
+         1.997
+        ],
+        "fin": [
+         13.491,
+         -0.555,
+         3.111
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 1,
+      "largo": 1.8,
+      "tiempo": 4.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": -24,
+        "tiempo": 1.0,
+        "ini": [
+         11.705,
+         -0.03,
+         1.571
+        ],
+        "fin": [
+         11.747,
+         0.164,
+         1.144
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.6,
+        "giro": -66,
+        "tiempo": 3.3,
+        "ini": [
+         11.747,
+         0.164,
+         1.144
+        ],
+        "fin": [
+         10.373,
+         -0.56,
+         -0.007
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 1,
+      "largo": 1.8,
+      "tiempo": 4.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": 24,
+        "tiempo": 1.0,
+        "ini": [
+         11.705,
+         -0.03,
+         1.571
+        ],
+        "fin": [
+         11.663,
+         0.164,
+         1.997
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 1.6,
+        "giro": 66,
+        "tiempo": 3.3,
+        "ini": [
+         11.663,
+         0.164,
+         1.997
+        ],
+        "fin": [
+         13.037,
+         -0.56,
+         3.149
+        ]
+       }
+      ]
+     }
+    ]
+   ]
+  },
+  "1.50": {
+   "dmax": 78.0,
+   "salidas": [
+    [
+     "4 La",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.6,
+      "tiempo": 7.3,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.6,
+        "giro": -92,
+        "tiempo": 7.3,
+        "ini": [
+         11.147,
+         0.07,
+         1.571
+        ],
+        "fin": [
+         13.28,
+         -0.563,
+         -0.031
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 La",
+     "descarga",
+     {
+      "ok": false,
+      "motivo": "sin camino"
+     }
+    ],
+    [
+     "4 Lb",
+     "adentro",
+     {
+      "ok": false,
+      "motivo": "sin camino"
+     }
+    ],
+    [
+     "4 Lb",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 7.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": 89,
+        "tiempo": 7.2,
+        "ini": [
+         12.263,
+         0.07,
+         1.571
+        ],
+        "fin": [
+         10.024,
+         -0.561,
+         3.13
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 7.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": -89,
+        "tiempo": 7.2,
+        "ini": [
+         11.705,
+         0.07,
+         1.571
+        ],
+        "fin": [
+         13.944,
+         -0.561,
+         0.012
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 6.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": 91,
+        "tiempo": 6.8,
+        "ini": [
+         11.705,
+         0.07,
+         1.571
+        ],
+        "fin": [
+         9.451,
+         -0.55,
+         3.158
+        ]
+       }
+      ]
+     }
+    ]
+   ]
+  },
+  "1.60": {
+   "dmax": 84.1,
+   "salidas": [
+    [
+     "4 La",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 6.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": -91,
+        "tiempo": 6.8,
+        "ini": [
+         11.147,
+         0.17,
+         1.571
+        ],
+        "fin": [
+         13.399,
+         -0.551,
+         -0.022
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 La",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 1,
+      "largo": 2.4,
+      "tiempo": 4.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": 4,
+        "tiempo": 0.9,
+        "ini": [
+         11.147,
+         0.17,
+         1.571
+        ],
+        "fin": [
+         11.135,
+         0.37,
+         1.648
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 2.2,
+        "giro": 86,
+        "tiempo": 3.2,
+        "ini": [
+         11.135,
+         0.37,
+         1.648
+        ],
+        "fin": [
+         13.001,
+         -0.573,
+         3.146
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lb",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 1,
+      "largo": 2.4,
+      "tiempo": 4.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 0.2,
+        "giro": -4,
+        "tiempo": 0.9,
+        "ini": [
+         12.263,
+         0.17,
+         1.571
+        ],
+        "fin": [
+         12.275,
+         0.37,
+         1.493
+        ]
+       },
+       {
+        "sentido": "reversa",
+        "largo": 2.2,
+        "giro": -86,
+        "tiempo": 3.2,
+        "ini": [
+         12.275,
+         0.37,
+         1.493
+        ],
+        "fin": [
+         10.409,
+         -0.573,
+         -0.005
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lb",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 6.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": 91,
+        "tiempo": 6.8,
+        "ini": [
+         12.263,
+         0.17,
+         1.571
+        ],
+        "fin": [
+         10.011,
+         -0.551,
+         3.163
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "adentro",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 6.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": -91,
+        "tiempo": 6.8,
+        "ini": [
+         11.705,
+         0.17,
+         1.571
+        ],
+        "fin": [
+         13.958,
+         -0.551,
+         -0.022
+        ]
+       }
+      ]
+     }
+    ],
+    [
+     "4 Lc",
+     "descarga",
+     {
+      "ok": true,
+      "cambios": 0,
+      "largo": 2.7,
+      "tiempo": 6.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 2.7,
+        "giro": 87,
+        "tiempo": 6.5,
+        "ini": [
+         11.705,
+         0.17,
+         1.571
+        ],
+        "fin": [
+         9.48,
+         -0.55,
+         3.097
+        ]
+       }
+      ]
+     }
+    ]
+   ]
+  }
+ },
+ "prof": {
+  "0.05": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ]
+  ],
+  "0.10": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ]
+  ],
+  "0.15": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.28,
+        -0.563,
+        -0.031
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.024,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.944,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        9.451,
+        -0.55,
+        3.158
+       ]
+      }
+     ]
+    }
+   ]
+  ],
+  "0.20": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.28,
+        -0.563,
+        -0.031
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.024,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.944,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        9.451,
+        -0.55,
+        3.158
+       ]
+      }
+     ]
+    }
+   ]
+  ],
+  "0.30": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.28,
+        -0.563,
+        -0.031
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.024,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.944,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        9.451,
+        -0.55,
+        3.158
+       ]
+      }
+     ]
+    }
+   ]
+  ],
+  "0.40": [
+   [
+    "4 La",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.28,
+        -0.563,
+        -0.031
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 La",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 1,
+     "largo": 2.5,
+     "tiempo": 5.6,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 0.5,
+       "giro": -31,
+       "tiempo": 1.8,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        11.413,
+        0.473,
+        1.037
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.0,
+       "giro": 123,
+       "tiempo": 3.7,
+       "ini": [
+        11.413,
+        0.473,
+        1.037
+       ],
+       "fin": [
+        12.874,
+        -0.557,
+        3.184
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lb",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 1,
+     "largo": 2.5,
+     "tiempo": 5.1,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 0.4,
+       "giro": 13,
+       "tiempo": 1.5,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        12.114,
+        0.435,
+        1.804
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.1,
+       "giro": -103,
+       "tiempo": 3.6,
+       "ini": [
+        12.114,
+        0.435,
+        1.804
+       ],
+       "fin": [
+        10.473,
+        -0.558,
+        0.01
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lb",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.024,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "adentro",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.944,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   ],
+   [
+    "4 Lc",
+    "descarga",
+    {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.8,
+       "ini": [
+        11.705,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        9.451,
+        -0.55,
+        3.158
+       ]
+      }
+     ]
+    }
+   ]
+  ]
+ },
+ "barrido": {
+  "inicio": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "filas": [
+   {
+    "dir": "1 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 4.46,
+     "tiempo": 7.9,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 4.26,
+       "giro": 55,
+       "tiempo": 6.9,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        3.795,
+        0.258,
+        0.968
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 0.2,
+       "giro": 35,
+       "tiempo": 1.0,
+       "ini": [
+        3.795,
+        0.258,
+        0.968
+       ],
+       "fin": [
+        3.737,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.86,
+        "tiempo": 4.9,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 2.86,
+          "giro": 0,
+          "tiempo": 4.9,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           2.692,
+           -0.541,
+           0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 1 La",
+       {
+        "ok": true,
+        "cambios": 1,
+        "largo": 1.6,
+        "tiempo": 3.5,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 1.4,
+          "giro": 55,
+          "tiempo": 2.5,
+          "ini": [
+           2.692,
+           -0.575,
+           0.01
+          ],
+          "fin": [
+           3.795,
+           0.258,
+           0.968
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.2,
+          "giro": 35,
+          "tiempo": 1.0,
+          "ini": [
+           3.795,
+           0.258,
+           0.968
+          ],
+          "fin": [
+           3.737,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       5.46,
+       [
+        [
+         "TRASLADO",
+         2.86
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 1.6,
+     "tiempo": 3.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 0.2,
+       "giro": -35,
+       "tiempo": 1.0,
+       "ini": [
+        3.737,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        3.795,
+        0.258,
+        0.968
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 1.4,
+       "giro": -55,
+       "tiempo": 2.5,
+       "ini": [
+        3.795,
+        0.258,
+        0.968
+       ],
+       "fin": [
+        2.692,
+        -0.575,
+        0.01
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "1 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 8.21,
+     "tiempo": 19.1,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 4.46,
+       "giro": -88,
+       "tiempo": 10.1,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        4.853,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 1.96,
+        "tiempo": 3.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 1.96,
+          "giro": 2,
+          "tiempo": 3.3,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           2.841,
+           -0.532,
+           3.149
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 1 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.5,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.5,
+          "giro": -89,
+          "tiempo": 6.8,
+          "ini": [
+           2.841,
+           -0.568,
+           3.129
+          ],
+          "fin": [
+           4.853,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       9.21,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         6.71
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         11.06
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.5,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.5,
+       "giro": 89,
+       "tiempo": 6.8,
+       "ini": [
+        4.853,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        2.841,
+        -0.568,
+        3.129
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "1 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 4.46,
+     "tiempo": 7.9,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 4.26,
+       "giro": -55,
+       "tiempo": 6.9,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        3.795,
+        -0.258,
+        -0.968
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 0.2,
+       "giro": -35,
+       "tiempo": 1.0,
+       "ini": [
+        3.795,
+        -0.258,
+        -0.968
+       ],
+       "fin": [
+        3.737,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.86,
+        "tiempo": 4.9,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 2.86,
+          "giro": 0,
+          "tiempo": 4.9,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           2.692,
+           0.541,
+           -0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 1 Ra",
+       {
+        "ok": true,
+        "cambios": 1,
+        "largo": 1.6,
+        "tiempo": 3.5,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 1.4,
+          "giro": -55,
+          "tiempo": 2.5,
+          "ini": [
+           2.692,
+           0.575,
+           -0.01
+          ],
+          "fin": [
+           3.795,
+           -0.258,
+           -0.968
+          ]
+         },
+         {
+          "sentido": "reversa",
+          "largo": 0.2,
+          "giro": -35,
+          "tiempo": 1.0,
+          "ini": [
+           3.795,
+           -0.258,
+           -0.968
+          ],
+          "fin": [
+           3.737,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       5.46,
+       [
+        [
+         "TRASLADO",
+         2.86
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 1.6,
+     "tiempo": 3.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 0.2,
+       "giro": 35,
+       "tiempo": 1.0,
+       "ini": [
+        3.737,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        3.795,
+        -0.258,
+        -0.968
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 1.4,
+       "giro": 55,
+       "tiempo": 2.5,
+       "ini": [
+        3.795,
+        -0.258,
+        -0.968
+       ],
+       "fin": [
+        2.692,
+        0.575,
+        -0.01
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "1 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 8.15,
+     "tiempo": 18.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 4.4,
+       "giro": 92,
+       "tiempo": 9.9,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        4.853,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 1.9,
+        "tiempo": 3.0,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 1.9,
+          "giro": 3,
+          "tiempo": 3.0,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           2.841,
+           0.553,
+           3.164
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 1 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.5,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.5,
+          "giro": 89,
+          "tiempo": 6.8,
+          "ini": [
+           2.841,
+           0.568,
+           -3.129
+          ],
+          "fin": [
+           4.853,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       9.15,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         6.65
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         11.06
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.5,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.5,
+       "giro": -89,
+       "tiempo": 6.8,
+       "ini": [
+        4.853,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        2.841,
+        0.568,
+        -3.129
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "2 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 11.34,
+     "tiempo": 15.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 8.64,
+       "giro": 0,
+       "tiempo": 8.7,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        8.471,
+        -0.541,
+        0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": 90,
+       "tiempo": 6.8,
+       "ini": [
+        8.471,
+        -0.541,
+        0.0
+       ],
+       "fin": [
+        6.207,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 8.64,
+        "tiempo": 8.7,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 8.64,
+          "giro": 0,
+          "tiempo": 8.7,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           8.471,
+           -0.541,
+           0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 2 La",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 6.8,
+          "ini": [
+           8.471,
+           -0.559,
+           0.01
+          ],
+          "fin": [
+           6.207,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       12.34,
+       [
+        [
+         "TRASLADO",
+         8.64
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 6.8,
+       "ini": [
+        6.207,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        8.471,
+        -0.559,
+        0.01
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "2 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 10.59,
+     "tiempo": 19.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 6.84,
+       "giro": -88,
+       "tiempo": 10.8,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        7.323,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 4.14,
+        "tiempo": 6.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 4.14,
+          "giro": 6,
+          "tiempo": 6.2,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           5.057,
+           -0.307,
+           3.217
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 2 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -93,
+          "tiempo": 6.3,
+          "ini": [
+           5.057,
+           -0.55,
+           3.185
+          ],
+          "fin": [
+           7.323,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       11.59,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         8.89
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         13.28
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         13.63
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 93,
+       "tiempo": 6.3,
+       "ini": [
+        7.323,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        5.057,
+        -0.55,
+        3.185
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "2 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 11.34,
+     "tiempo": 15.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 8.64,
+       "giro": 0,
+       "tiempo": 8.7,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        8.471,
+        0.541,
+        -0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": -90,
+       "tiempo": 6.8,
+       "ini": [
+        8.471,
+        0.541,
+        -0.0
+       ],
+       "fin": [
+        6.207,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 8.64,
+        "tiempo": 8.7,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 8.64,
+          "giro": 0,
+          "tiempo": 8.7,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           8.471,
+           0.541,
+           -0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 2 Ra",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 6.8,
+          "ini": [
+           8.471,
+           0.559,
+           -0.01
+          ],
+          "fin": [
+           6.207,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       12.34,
+       [
+        [
+         "TRASLADO",
+         8.64
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 6.8,
+       "ini": [
+        6.207,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        8.471,
+        0.559,
+        -0.01
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "2 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 10.56,
+     "tiempo": 19.6,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 6.81,
+       "giro": 92,
+       "tiempo": 10.6,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        7.323,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 4.11,
+        "tiempo": 5.9,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 4.11,
+          "giro": -1,
+          "tiempo": 5.9,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           5.057,
+           0.37,
+           3.095
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 2 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 93,
+          "tiempo": 6.3,
+          "ini": [
+           5.057,
+           0.55,
+           -3.185
+          ],
+          "fin": [
+           7.323,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       11.56,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         8.86
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         13.63
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         13.28
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -93,
+       "tiempo": 6.3,
+       "ini": [
+        7.323,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        5.057,
+        0.55,
+        -3.185
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "3 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 13.79,
+     "tiempo": 16.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 11.09,
+       "giro": -1,
+       "tiempo": 10.2,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        10.943,
+        -0.627,
+        -0.013
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": 91,
+       "tiempo": 6.3,
+       "ini": [
+        10.943,
+        -0.627,
+        -0.013
+       ],
+       "fin": [
+        8.677,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 11.09,
+        "tiempo": 10.2,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 11.09,
+          "giro": -1,
+          "tiempo": 10.2,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           10.943,
+           -0.627,
+           -0.013
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 3 La",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 93,
+          "tiempo": 6.3,
+          "ini": [
+           10.943,
+           -0.55,
+           -0.044
+          ],
+          "fin": [
+           8.677,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       14.79,
+       [
+        [
+         "TRASLADO",
+         11.09
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -93,
+       "tiempo": 6.3,
+       "ini": [
+        8.677,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.943,
+        -0.55,
+        -0.044
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "3 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 13.1,
+     "tiempo": 22.1,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 9.35,
+       "giro": -88,
+       "tiempo": 13.2,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        9.793,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 6.65,
+        "tiempo": 8.1,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 6.65,
+          "giro": 2,
+          "tiempo": 8.1,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           7.529,
+           -0.474,
+           3.149
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 3 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 6.8,
+          "ini": [
+           7.529,
+           -0.559,
+           3.132
+          ],
+          "fin": [
+           9.793,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       14.1,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         11.4
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         15.75
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         16.09
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 6.8,
+       "ini": [
+        9.793,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        7.529,
+        -0.559,
+        3.132
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "3 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 13.79,
+     "tiempo": 16.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 11.09,
+       "giro": 1,
+       "tiempo": 10.2,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        10.943,
+        0.627,
+        0.013
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": -91,
+       "tiempo": 6.3,
+       "ini": [
+        10.943,
+        0.627,
+        0.013
+       ],
+       "fin": [
+        8.677,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 11.09,
+        "tiempo": 10.2,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 11.09,
+          "giro": 1,
+          "tiempo": 10.2,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           10.943,
+           0.627,
+           0.013
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 3 Ra",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -93,
+          "tiempo": 6.3,
+          "ini": [
+           10.943,
+           0.55,
+           0.044
+          ],
+          "fin": [
+           8.677,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       14.79,
+       [
+        [
+         "TRASLADO",
+         11.09
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 93,
+       "tiempo": 6.3,
+       "ini": [
+        8.677,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        10.943,
+        0.55,
+        0.044
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "3 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 13.04,
+     "tiempo": 21.9,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 9.29,
+       "giro": 92,
+       "tiempo": 12.9,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        9.793,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 6.59,
+        "tiempo": 7.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 6.59,
+          "giro": 3,
+          "tiempo": 7.8,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           7.529,
+           0.656,
+           3.164
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 3 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 6.8,
+          "ini": [
+           7.529,
+           0.559,
+           -3.132
+          ],
+          "fin": [
+           9.793,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       14.04,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         11.34
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         16.09
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         15.75
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 6.8,
+       "ini": [
+        9.793,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        7.529,
+        0.559,
+        -3.132
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "4 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 16.05,
+     "tiempo": 19.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 13.45,
+       "giro": 0,
+       "tiempo": 11.9,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        13.28,
+        -0.541,
+        0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.6,
+       "giro": 90,
+       "tiempo": 7.3,
+       "ini": [
+        13.28,
+        -0.541,
+        0.0
+       ],
+       "fin": [
+        11.147,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 13.45,
+        "tiempo": 11.9,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 13.45,
+          "giro": 0,
+          "tiempo": 11.9,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           13.28,
+           -0.541,
+           0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 4 La",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.6,
+        "tiempo": 7.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.6,
+          "giro": 92,
+          "tiempo": 7.3,
+          "ini": [
+           13.28,
+           -0.563,
+           -0.031
+          ],
+          "fin": [
+           11.147,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       17.05,
+       [
+        [
+         "TRASLADO",
+         13.45
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        13.28,
+        -0.563,
+        -0.031
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "4 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 15.59,
+     "tiempo": 24.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 11.84,
+       "giro": -88,
+       "tiempo": 15.3,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        12.263,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 9.14,
+        "tiempo": 9.7,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 9.14,
+          "giro": 2,
+          "tiempo": 9.7,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           10.024,
+           -0.457,
+           3.149
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 4 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 7.2,
+          "ini": [
+           10.024,
+           -0.561,
+           3.13
+          ],
+          "fin": [
+           12.263,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       16.59,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         13.89
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         18.24
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         18.59
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        10.024,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "4 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 16.05,
+     "tiempo": 19.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 13.45,
+       "giro": 0,
+       "tiempo": 11.9,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        13.28,
+        0.541,
+        -0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.6,
+       "giro": -90,
+       "tiempo": 7.3,
+       "ini": [
+        13.28,
+        0.541,
+        -0.0
+       ],
+       "fin": [
+        11.147,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 13.45,
+        "tiempo": 11.9,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 13.45,
+          "giro": 0,
+          "tiempo": 11.9,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           13.28,
+           0.541,
+           -0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 4 Ra",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.6,
+        "tiempo": 7.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.6,
+          "giro": -92,
+          "tiempo": 7.3,
+          "ini": [
+           13.28,
+           0.563,
+           0.031
+          ],
+          "fin": [
+           11.147,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       17.05,
+       [
+        [
+         "TRASLADO",
+         13.45
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": 92,
+       "tiempo": 7.3,
+       "ini": [
+        11.147,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        13.28,
+        0.563,
+        0.031
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "4 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 15.53,
+     "tiempo": 24.0,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 11.78,
+       "giro": 92,
+       "tiempo": 15.0,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        12.263,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 9.08,
+        "tiempo": 9.5,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 9.08,
+          "giro": 3,
+          "tiempo": 9.5,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           10.024,
+           0.711,
+           3.164
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 4 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 7.2,
+          "ini": [
+           10.024,
+           0.561,
+           -3.13
+          ],
+          "fin": [
+           12.263,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       16.53,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         13.83
+        ],
+        [
+         "VUELTA por la bahía 1 Lc (dos 90°)",
+         18.59
+        ],
+        [
+         "VUELTA por la bahía 1 Rc (dos 90°)",
+         18.24
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        12.263,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        10.024,
+        0.561,
+        -3.13
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "5 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 18.72,
+     "tiempo": 20.9,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 16.02,
+       "giro": 0,
+       "tiempo": 13.7,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        15.856,
+        -0.541,
+        0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": 90,
+       "tiempo": 7.2,
+       "ini": [
+        15.856,
+        -0.541,
+        0.0
+       ],
+       "fin": [
+        13.617,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 16.02,
+        "tiempo": 13.7,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 16.02,
+          "giro": 0,
+          "tiempo": 13.7,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           15.856,
+           -0.541,
+           0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 5 La",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 7.2,
+          "ini": [
+           15.856,
+           -0.561,
+           0.012
+          ],
+          "fin": [
+           13.617,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       19.72,
+       [
+        [
+         "TRASLADO",
+         16.02
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        13.617,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        15.856,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "5 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 18.06,
+     "tiempo": 25.9,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 14.31,
+       "giro": -88,
+       "tiempo": 16.9,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        14.733,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 11.61,
+        "tiempo": 11.4,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 11.61,
+          "giro": 2,
+          "tiempo": 11.4,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           12.494,
+           -0.439,
+           3.149
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 5 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 7.2,
+          "ini": [
+           12.494,
+           -0.561,
+           3.13
+          ],
+          "fin": [
+           14.733,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       19.06,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         16.36
+        ],
+        [
+         "VUELTA por la bahía 2 Lc (dos 90°)",
+         25.34
+        ],
+        [
+         "VUELTA por la bahía 2 Rc (dos 90°)",
+         25.6
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        14.733,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        12.494,
+        -0.561,
+        3.13
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "5 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 18.72,
+     "tiempo": 20.9,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 16.02,
+       "giro": 0,
+       "tiempo": 13.7,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        15.856,
+        0.541,
+        -0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": -90,
+       "tiempo": 7.2,
+       "ini": [
+        15.856,
+        0.541,
+        -0.0
+       ],
+       "fin": [
+        13.617,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 16.02,
+        "tiempo": 13.7,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 16.02,
+          "giro": 0,
+          "tiempo": 13.7,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           15.856,
+           0.541,
+           -0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 5 Ra",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 7.2,
+          "ini": [
+           15.856,
+           0.561,
+           -0.012
+          ],
+          "fin": [
+           13.617,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       19.72,
+       [
+        [
+         "TRASLADO",
+         16.02
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        13.617,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        15.856,
+        0.561,
+        -0.012
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "5 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 18.0,
+     "tiempo": 25.6,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 14.25,
+       "giro": 92,
+       "tiempo": 16.6,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        14.733,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 11.55,
+        "tiempo": 11.1,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 11.55,
+          "giro": 3,
+          "tiempo": 11.1,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           12.494,
+           0.766,
+           3.164
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 5 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 7.2,
+          "ini": [
+           12.494,
+           0.561,
+           -3.13
+          ],
+          "fin": [
+           14.733,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       19.0,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         16.3
+        ],
+        [
+         "VUELTA por la bahía 2 Lc (dos 90°)",
+         25.6
+        ],
+        [
+         "VUELTA por la bahía 2 Rc (dos 90°)",
+         25.34
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        14.733,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        12.494,
+        0.561,
+        -3.13
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "6 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 21.19,
+     "tiempo": 22.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 18.49,
+       "giro": 0,
+       "tiempo": 15.3,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        18.326,
+        -0.541,
+        0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": 90,
+       "tiempo": 7.2,
+       "ini": [
+        18.326,
+        -0.541,
+        0.0
+       ],
+       "fin": [
+        16.087,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 18.49,
+        "tiempo": 15.3,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 18.49,
+          "giro": 0,
+          "tiempo": 15.3,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           18.326,
+           -0.541,
+           0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 6 La",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 7.2,
+          "ini": [
+           18.326,
+           -0.561,
+           0.012
+          ],
+          "fin": [
+           16.087,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       22.19,
+       [
+        [
+         "TRASLADO",
+         18.49
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 7.2,
+       "ini": [
+        16.087,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        18.326,
+        -0.561,
+        0.012
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "6 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 20.51,
+     "tiempo": 27.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 16.76,
+       "giro": -88,
+       "tiempo": 18.3,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        17.203,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 14.16,
+        "tiempo": 12.6,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 14.16,
+          "giro": 4,
+          "tiempo": 12.6,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           15.07,
+           -0.079,
+           3.176
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 6 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.6,
+        "tiempo": 7.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.6,
+          "giro": -92,
+          "tiempo": 7.3,
+          "ini": [
+           15.07,
+           -0.563,
+           3.172
+          ],
+          "fin": [
+           17.203,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       21.51,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         18.91
+        ],
+        [
+         "VUELTA por la bahía 2 Lc (dos 90°)",
+         27.92
+        ],
+        [
+         "VUELTA por la bahía 2 Rc (dos 90°)",
+         28.23
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": 92,
+       "tiempo": 7.3,
+       "ini": [
+        17.203,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        15.07,
+        -0.563,
+        3.172
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "6 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 21.19,
+     "tiempo": 22.5,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 18.49,
+       "giro": 0,
+       "tiempo": 15.3,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        18.326,
+        0.541,
+        -0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": -90,
+       "tiempo": 7.2,
+       "ini": [
+        18.326,
+        0.541,
+        -0.0
+       ],
+       "fin": [
+        16.087,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 18.49,
+        "tiempo": 15.3,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 18.49,
+          "giro": 0,
+          "tiempo": 15.3,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           18.326,
+           0.541,
+           -0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 6 Ra",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 7.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 7.2,
+          "ini": [
+           18.326,
+           0.561,
+           -0.012
+          ],
+          "fin": [
+           16.087,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       22.19,
+       [
+        [
+         "TRASLADO",
+         18.49
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 7.2,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 7.2,
+       "ini": [
+        16.087,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        18.326,
+        0.561,
+        -0.012
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "6 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 20.49,
+     "tiempo": 27.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 16.74,
+       "giro": 92,
+       "tiempo": 18.3,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        17.203,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 14.14,
+        "tiempo": 12.6,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 14.14,
+          "giro": -1,
+          "tiempo": 12.6,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           15.07,
+           -0.092,
+           3.095
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 6 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.6,
+        "tiempo": 7.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.6,
+          "giro": 92,
+          "tiempo": 7.3,
+          "ini": [
+           15.07,
+           0.563,
+           -3.172
+          ],
+          "fin": [
+           17.203,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       21.49,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         18.89
+        ],
+        [
+         "VUELTA por la bahía 2 Lc (dos 90°)",
+         28.23
+        ],
+        [
+         "VUELTA por la bahía 2 Rc (dos 90°)",
+         27.92
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.6,
+     "tiempo": 7.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.6,
+       "giro": -92,
+       "tiempo": 7.3,
+       "ini": [
+        17.203,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        15.07,
+        0.563,
+        -3.172
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "7 La",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 23.69,
+     "tiempo": 23.7,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 20.99,
+       "giro": 0,
+       "tiempo": 17.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        20.821,
+        -0.541,
+        0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": 90,
+       "tiempo": 6.8,
+       "ini": [
+        20.821,
+        -0.541,
+        0.0
+       ],
+       "fin": [
+        18.557,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 20.99,
+        "tiempo": 17.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 20.99,
+          "giro": 0,
+          "tiempo": 17.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           20.821,
+           -0.541,
+           0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 7 La",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 89,
+          "tiempo": 6.8,
+          "ini": [
+           20.821,
+           -0.559,
+           0.01
+          ],
+          "fin": [
+           18.557,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       24.69,
+       [
+        [
+         "TRASLADO",
+         20.99
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -89,
+       "tiempo": 6.8,
+       "ini": [
+        18.557,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        20.821,
+        -0.559,
+        0.01
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "7 Lb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 22.98,
+     "tiempo": 28.1,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 19.23,
+       "giro": -88,
+       "tiempo": 19.1,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        19.673,
+        0.07,
+        1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 16.53,
+        "tiempo": 14.4,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 16.53,
+          "giro": 6,
+          "tiempo": 14.4,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           17.407,
+           0.625,
+           3.217
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 7 Lb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -93,
+          "tiempo": 6.3,
+          "ini": [
+           17.407,
+           -0.55,
+           3.185
+          ],
+          "fin": [
+           19.673,
+           0.07,
+           1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       23.98,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         21.28
+        ],
+        [
+         "VUELTA por la bahía 3 Lc (dos 90°)",
+         30.27
+        ],
+        [
+         "VUELTA por la bahía 3 Rc (dos 90°)",
+         30.55
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 93,
+       "tiempo": 6.3,
+       "ini": [
+        19.673,
+        0.07,
+        1.571
+       ],
+       "fin": [
+        17.407,
+        -0.55,
+        3.185
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   },
+   {
+    "dir": "7 Ra",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 23.69,
+     "tiempo": 23.7,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 20.99,
+       "giro": 0,
+       "tiempo": 17.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        20.821,
+        0.541,
+        -0.0
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 2.7,
+       "giro": -90,
+       "tiempo": 6.8,
+       "ini": [
+        20.821,
+        0.541,
+        -0.0
+       ],
+       "fin": [
+        18.557,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 20.99,
+        "tiempo": 17.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 20.99,
+          "giro": 0,
+          "tiempo": 17.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           20.821,
+           0.541,
+           -0.0
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 7 Ra",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.8,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": -89,
+          "tiempo": 6.8,
+          "ini": [
+           20.821,
+           0.559,
+           -0.01
+          ],
+          "fin": [
+           18.557,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia adentro",
+       24.69,
+       [
+        [
+         "TRASLADO",
+         20.99
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": false,
+     "motivo": "sin camino"
+    },
+    "sale_fondo": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": 89,
+       "tiempo": 6.8,
+       "ini": [
+        18.557,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        20.821,
+        0.559,
+        -0.01
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "dir": "7 Rb",
+    "llega": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 22.93,
+     "tiempo": 27.8,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 3.75,
+       "giro": 178,
+       "tiempo": 9.0,
+       "ini": [
+        0.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.096,
+        0.059,
+        3.108
+       ]
+      },
+      {
+       "sentido": "reversa",
+       "largo": 19.18,
+       "giro": 92,
+       "tiempo": 18.8,
+       "ini": [
+        1.096,
+        0.059,
+        3.108
+       ],
+       "fin": [
+        19.673,
+        -0.07,
+        -1.571
+       ]
+      }
+     ],
+     "partes": [
+      [
+       "VUELTA en la zona de descarga",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 3.75,
+        "tiempo": 9.0,
+        "tramos": [
+         {
+          "sentido": "adelante",
+          "largo": 3.75,
+          "giro": 178,
+          "tiempo": 9.0,
+          "ini": [
+           0.0,
+           0.0,
+           0.0
+          ],
+          "fin": [
+           1.096,
+           0.059,
+           3.108
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "TRASLADO",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 16.48,
+        "tiempo": 14.2,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 16.48,
+          "giro": -1,
+          "tiempo": 14.2,
+          "ini": [
+           1.096,
+           0.059,
+           3.108
+          ],
+          "fin": [
+           17.407,
+           -0.2,
+           3.095
+          ]
+         }
+        ]
+       }
+      ],
+      [
+       "ENTRADA a 7 Rb",
+       {
+        "ok": true,
+        "cambios": 0,
+        "largo": 2.7,
+        "tiempo": 6.3,
+        "tramos": [
+         {
+          "sentido": "reversa",
+          "largo": 2.7,
+          "giro": 93,
+          "tiempo": 6.3,
+          "ini": [
+           17.407,
+           0.55,
+           -3.185
+          ],
+          "fin": [
+           19.673,
+           -0.07,
+           -1.571
+          ]
+         }
+        ]
+       }
+      ]
+     ],
+     "intentos": [
+      [
+       "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+       23.93,
+       [
+        [
+         "VUELTA en la zona de descarga",
+         21.23
+        ],
+        [
+         "VUELTA por la bahía 3 Lc (dos 90°)",
+         30.55
+        ],
+        [
+         "VUELTA por la bahía 3 Rc (dos 90°)",
+         30.27
+        ]
+       ]
+      ]
+     ]
+    },
+    "sale_descarga": {
+     "ok": true,
+     "cambios": 0,
+     "largo": 2.7,
+     "tiempo": 6.3,
+     "tramos": [
+      {
+       "sentido": "adelante",
+       "largo": 2.7,
+       "giro": -93,
+       "tiempo": 6.3,
+       "ini": [
+        19.673,
+        -0.07,
+        -1.571
+       ],
+       "fin": [
+        17.407,
+        0.55,
+        -3.185
+       ]
+      }
+     ]
+    },
+    "sale_fondo": {
+     "ok": false,
+     "motivo": "sin camino"
+    }
+   }
+  ]
+ },
+ "supuestos": {
+  "N": 7,
+  "X0": 3.0,
+  "POSTE": 0.12,
+  "PROF_BAHIA": 0.2,
+  "HOLGURA": 0.05,
+  "GAP_OBJ": 0.03,
+  "CARRIL_CM": 85,
+  "XPIV": 1.5,
+  "L_ANCHO": 0.48,
+  "VMAX": 1.5,
+  "VMAN": 0.35,
+  "ACC": 0.9,
+  "VEL_ELEV": 0.55,
+  "COSTO_CAMBIO": 1.0
+ }
+}

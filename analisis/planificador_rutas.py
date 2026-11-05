@@ -1,0 +1,807 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Planificador de rutas del EDR18N2 entre bahías — Hybrid A* general, CON UÑAS
+#
+#   py analisis/planificador_rutas.py          # casos 1–3 y controles → rutas_resultados.md,
+#                                              # ruta_3L_5R.png y rutas_tabla.json (la usa la FSM)
+#
+# Qué agrega sobre analisis/planificador_giro.py (que se deja como está):
+#   · pose inicial y final CUALQUIERA, con cambios de sentido (costo parámetro)
+#   · silueta CON UÑAS (la de almacen-nuevo/planificar_giro_318.py) y con el IBC si va cargado
+#   · L_ANCHO = 0.48 medido el 18-sep (el viejo tiene 0.20, desmentido)
+#   · el mundo: pasillo, zona de descarga, pared del fondo, y la luz de las bahías
+#   · tramos con sentido (adelante = uñas primero), largo y tiempo con el sobre de 1.5 m/s
+#   · el mismo step() (cinemática de bicicleta, rueda directriz atrás a WB, punto medio)
+#
+# EL HALLAZGO QUE ORDENA TODO (ver rutas_resultados.md):
+#   Con uñas, la silueta cruzada al pasillo mide 3.03 m a ~72° (culo a punta, proyectado). Eso es
+#   una propiedad de la FORMA, no del camino: trasladar no cambia el ancho que ocupa a un rumbo
+#   dado. Ningún giro de 90° ni de 180° cabe en 3.00 m con TODO el equipo dentro del pasillo.
+#   El operador gira 90° todos los días → algo entra a la bahía. Lo que se modela: durante el
+#   giro, LAS UÑAS (y el cubo, si va cargado) pueden pasar la cara del rack hasta PROF_BAHIA,
+#   pero SOLO en la luz de la bahía a la que se entra o de la que se sale. El chasis nunca.
+#   sec/gen_svg.py ya dibujaba «uñas N cm dentro de la bahía al girar» con el modelo viejo.
+#   PROF_BAHIA es SUPUESTO, y lo que se mide para cerrarlo está en rutas_resultados.md.
+# ─────────────────────────────────────────────────────────────────────────────
+import heapq
+import json
+import math
+import os
+import sys
+
+import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import bahias as B                                             # noqa: E402
+
+for _f in (sys.stdout, sys.stderr):
+    try:
+        _f.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
+# ── el equipo (CLAUDE.md) ────────────────────────────────────────────────────
+WB, Wa = 1.562, 1.797
+W_MAX, W_CAPO = 1.315, 1.065
+L_ANCHO = 0.48                  # medido 18-sep (el viejo planificador tiene 0.20)
+UNA_ANCHO, UNA_CENTRO = 0.13, 0.30
+PROF_BAHIA = 0.20               # SUPUESTO: cuánto pueden pasar la cara las uñas/el cubo al girar
+
+# ── velocidades (CLAUDE.md y sim-web) ────────────────────────────────────────
+VMAX = 1.50                     # sobre de velocidad, CLAUDE.md
+VMAN = 0.35                     # maniobra con la dirección por encima del 45 %: sim-web T.VMAN, SUPUESTO
+ACC = 0.90                      # m/s², sim-web T.ACC, SUPUESTO
+COSTO_CAMBIO = 1.0              # m equivalentes por cambio de sentido (parámetro)
+COSTO_REVERSA = 0.0             # el reach truck maneja igual en los dos sentidos (CLAUDE.md, el 180°)
+
+
+def dmax(xpiv):
+    """Tope de dirección con la fórmula de planificador_giro.py (≈ 78° con XPIV = 1.50)."""
+    return math.atan(WB / (math.sqrt(Wa ** 2 - xpiv ** 2) - W_MAX / 2))
+
+
+def step(p, ds, d):
+    """Copia de planificador_giro.py:54 — la misma que percepcion/odometria.py."""
+    dth = -(ds / WB) * math.tan(d); th2 = p[2] + dth * 0.5
+    return (p[0] + ds * math.cos(th2), p[1] + ds * math.sin(th2), p[2] + dth)
+
+
+# ── silueta ──────────────────────────────────────────────────────────────────
+def _muestrear(poly, paso=0.05):
+    out = []
+    for (a0, l0), (a1, l1) in zip(poly, poly[1:] + poly[:1]):
+        n = max(1, int(math.ceil(math.hypot(a1 - a0, l1 - l0) / paso)))
+        out += [(a0 + (a1 - a0) * k / n, l0 + (l1 - l0) * k / n) for k in range(n)]
+    return out
+
+
+def poligonos(xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
+    """Las piezas de la silueta por separado (para dibujar): cuerpo, uñas, IBC."""
+    a_culo, a_mast = -xpiv, B.LCH - xpiv
+    a_pata, a_pun = a_mast + l_ancho, B.a_punta(xpiv)
+    hc, hp = W_CAPO / 2, W_MAX / 2
+    out = [[(a_culo, hc), (a_mast, hc), (a_mast, hp), (a_pata, hp),
+            (a_pata, -hp), (a_mast, -hp), (a_mast, -hc), (a_culo, -hc)]]
+    if unas:
+        for s in (1, -1):
+            e0, e1 = UNA_CENTRO - UNA_ANCHO / 2, UNA_CENTRO + UNA_ANCHO / 2
+            out.append([(a_pata, s * e1), (a_pun, s * e1), (a_pun, s * e0), (a_pata, s * e0)])
+    if cargado:
+        out.append([(a_pun - B.IBC_FONDO, 0.5), (a_pun, 0.5), (a_pun, -0.5), (a_pun - B.IBC_FONDO, -0.5)])
+    return out
+
+
+def silueta(xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
+    """Puntos del contorno en el marco del vehículo (a = 0 pivote, + hacia las uñas) y la máscara
+    de los que pueden entrar a la luz de una bahía abierta (uñas y cubo por delante de las patas).
+    Forma (almacen-nuevo/planificar_giro_318.py, con L_ANCHO medido): capó 1.065 del culo a la
+    torre, patas 1.315 por L_ANCHO delante de la torre, uñas de 0.13 a ±0.30 hasta la punta."""
+    a_culo, a_mast = -xpiv, B.LCH - xpiv
+    a_pata, a_pun = a_mast + l_ancho, B.a_punta(xpiv)
+    hc, hp = W_CAPO / 2, W_MAX / 2
+    cuerpo = [(a_culo, hc), (a_mast, hc), (a_mast, hp), (a_pata, hp),
+              (a_pata, -hp), (a_mast, -hp), (a_mast, -hc), (a_culo, -hc)]
+    pts = _muestrear(cuerpo)
+    frente = [False] * len(pts)
+    if unas:
+        for s in (1, -1):
+            e0, e1 = UNA_CENTRO - UNA_ANCHO / 2, UNA_CENTRO + UNA_ANCHO / 2
+            una = [(a_pata, s * e1), (a_pun, s * e1), (a_pun, s * e0), (a_pata, s * e0)]
+            q = _muestrear(una)
+            pts += q; frente += [True] * len(q)
+    if cargado:                                  # el IBC en las uñas: 1.20 de fondo, 1.00 de cara
+        cubo = [(a_pun - B.IBC_FONDO, 0.5), (a_pun, 0.5), (a_pun, -0.5), (a_pun - B.IBC_FONDO, -0.5)]
+        q = _muestrear(cubo)
+        pts += q; frente += [a > a_pata - 1e-9 for a, _ in q]
+    return np.array(pts), np.array(frente)
+
+
+def ancho_a_rumbo(sil, phi):
+    """Lo que ocupa la silueta a lo ancho del pasillo con rumbo φ respecto del eje. Independiente
+    de dónde esté: es la condición necesaria para girar por φ en un pasillo recto."""
+    ys = sil[:, 0] * math.sin(phi) + sil[:, 1] * math.cos(phi)
+    return ys.max() - ys.min()
+
+
+# ── el mundo ─────────────────────────────────────────────────────────────────
+class Mundo:
+    """Pasillo de ancho `pasillo`, zona de descarga en x < X0, pared al fondo, y bahías abiertas
+    [(nro, 'L'|'R')] donde las uñas/el cubo pueden pasar la cara hasta `prof`."""
+
+    def __init__(self, pasillo=B.PASILLO, abiertas=(), prof=PROF_BAHIA, holgura=B.HOLGURA,
+                 zona=True):
+        self.half = pasillo / 2
+        self.hol = holgura
+        self.zona = zona
+        self.abiertas = []
+        for nro, s in abiertas:
+            x0, x1 = B.bahia_x(nro)
+            self.abiertas.append((x0, x1, 1 if s == 'L' else -1, prof))
+
+    def libre(self, X, Y, frente):
+        """X, Y arreglos (..., P); frente (P,). True donde TODOS los puntos están libres."""
+        h, m = self.half, self.hol
+        en_zona = (X < B.X0) if self.zona else np.zeros_like(X, dtype=bool)
+        sup = np.where(en_zona, B.ZONA_ANCHO / 2 - m, h - m)
+        inf = -sup
+        for x0, x1, sg, prof in self.abiertas:
+            dentro = (X >= x0 + m) & (X <= x1 - m) & frente
+            if sg > 0:
+                sup = np.where(dentro, h + prof, sup)
+            else:
+                inf = np.where(dentro, -(h + prof), inf)
+        ok = (Y <= sup) & (Y >= inf) & (X <= B.x_fondo() - m)
+        if self.zona:
+            ok &= X >= -B.ZONA_ATRAS + m
+        return ok.all(axis=-1)
+
+
+# ── primitivas ───────────────────────────────────────────────────────────────
+DS, NSUB = 0.10, 5          # 2 cm por submuestra; contra una cara recta, muestrear el arco erra < 1 mm
+FRACS = (-1.0, -0.6, -0.3, 0.0, 0.3, 0.6, 1.0)
+
+
+class Equipo:
+    def __init__(self, xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
+        self.xpiv, self.dmax = xpiv, dmax(xpiv)
+        self.sil, self.frente = silueta(xpiv, unas, cargado, l_ancho)
+        self.prims = []                                  # (sentido, frac, poses locales)
+        LX, LY, FIN = [], [], []
+        for sg in (1, -1):
+            for f in FRACS:
+                q, poses = (0.0, 0.0, 0.0), []
+                for _ in range(NSUB):
+                    q = step(q, sg * DS / NSUB, f * self.dmax)
+                    poses.append(q)
+                self.prims.append((sg, f))
+                FIN.append(q)
+                c = np.array([math.cos(p[2]) for p in poses])[:, None]
+                s = np.array([math.sin(p[2]) for p in poses])[:, None]
+                px = np.array([p[0] for p in poses])[:, None]
+                py = np.array([p[1] for p in poses])[:, None]
+                LX.append(px + self.sil[:, 0] * c - self.sil[:, 1] * s)
+                LY.append(py + self.sil[:, 0] * s + self.sil[:, 1] * c)
+        self.LX, self.LY = np.array(LX), np.array(LY)    # (n_prim, NSUB, P)
+        self.fin = FIN
+
+    def huella(self, p):
+        c, s = math.cos(p[2]), math.sin(p[2])
+        return (p[0] + self.sil[:, 0] * c - self.sil[:, 1] * s,
+                p[1] + self.sil[:, 0] * s + self.sil[:, 1] * c)
+
+    def libre_en(self, p, mundo):
+        X, Y = self.huella(p)
+        return bool(mundo.libre(X[None], Y[None], self.frente)[0])
+
+    def sucesores(self, p, mundo):
+        c, s = math.cos(p[2]), math.sin(p[2])
+        WX = p[0] + self.LX * c - self.LY * s
+        WY = p[1] + self.LX * s + self.LY * c
+        ok = mundo.libre(WX, WY, self.frente).all(axis=1)
+        out = []
+        for i in np.nonzero(ok)[0]:
+            fx, fy, fth = self.fin[i]
+            out.append((self.prims[i], (p[0] + fx * c - fy * s, p[1] + fx * s + fy * c, p[2] + fth)))
+        return out
+
+
+def angdif(a, b):
+    return (a - b + math.pi) % (2 * math.pi) - math.pi
+
+
+# ── metas ────────────────────────────────────────────────────────────────────
+class MetaPose:
+    """Llegar a (x, y, θ) con tolerancias. `recta` permite cerrar la última distancia en línea
+    recta sobre el rumbo (así se aproxima de frente al rack sin buscarlo a ciegas)."""
+
+    def __init__(self, x, y, th, tol_xy=0.04, tol_th=math.radians(2.0), recta=True, eje='y'):
+        self.x, self.y, self.th = x, y, th
+        self.tol_xy, self.tol_th, self.recta, self.eje = tol_xy, tol_th, recta, eje
+
+    def h(self, p):
+        if self.eje == 'x':                 # traslado: el largo en x lo cierra la recta final
+            return abs(p[1] - self.y) + 0.33 * abs(angdif(p[2], self.th))
+        return math.hypot(p[0] - self.x, p[1] - self.y) + 0.33 * abs(angdif(p[2], self.th))
+
+    @property
+    def max_cierre(self):
+        return 1.5 if self.eje == 'y' else 100.0
+
+    def cerca(self, p):
+        if abs(angdif(p[2], self.th)) > self.tol_th:
+            return False
+        if self.eje == 'y':                 # de frente a un rack: x fija, y se cierra en recta
+            return abs(p[0] - self.x) <= self.tol_xy and (self.recta or abs(p[1] - self.y) <= self.tol_xy)
+        return abs(p[1] - self.y) <= self.tol_xy and (self.recta or abs(p[0] - self.x) <= self.tol_xy)
+
+    def dentro(self, p):
+        return self.cerca(p) and math.hypot(p[0] - self.x, p[1] - self.y) <= self.tol_xy
+
+    def cierre(self, p):
+        """Distancia con signo a recorrer en recta sobre el rumbo para quedar en la meta."""
+        c, s = math.cos(p[2]), math.sin(p[2])
+        if self.eje == 'y':
+            return (self.y - p[1]) / s if abs(s) > 0.5 else None
+        return (self.x - p[0]) / c if abs(c) > 0.5 else None
+
+
+class MetaRumbo:
+    """Alinearse con el pasillo con rumbo `th`, |y − y0| ≤ tol, en cualquier x (salidas)."""
+
+    def __init__(self, th, y0=0.0, tol_y=0.30, tol_th=math.radians(3.0)):
+        self.th, self.y0, self.tol_y, self.tol_th = th, y0, tol_y, tol_th
+
+    def h(self, p):
+        return 0.33 * abs(angdif(p[2], self.th)) + max(0.0, abs(p[1] - self.y0) - self.tol_y)
+
+    def cerca(self, p):
+        return abs(angdif(p[2], self.th)) <= self.tol_th and abs(p[1] - self.y0) <= self.tol_y
+
+    max_cierre = 0.0
+
+    def dentro(self, p):
+        return self.cerca(p)
+
+    def cierre(self, p):
+        return 0.0
+
+
+# ── Hybrid A* ────────────────────────────────────────────────────────────────
+def planificar(p0, meta, eq, mundo, max_exp=60000, peso=1.5, costo_cambio=COSTO_CAMBIO):
+    """Devuelve dict(ok, prims=[(sentido, frac, ds)], poses, expansiones) o ok=False."""
+    if not eq.libre_en(p0, mundo):
+        return dict(ok=False, motivo='la pose inicial choca', expansiones=0)
+    key = lambda p, sg: (round(p[0] / 0.05), round(p[1] / 0.05),
+                         round((p[2] % (2 * math.pi)) / math.radians(3)) % 120, sg)
+    Q = [(peso * meta.h(p0), 0.0, 0, p0, 0)]
+    info = {0: (p0, None, None)}                 # id → (pose, padre, primitiva que llevó ahí)
+    visto, cnt = {}, 1
+    while Q:
+        f, g, nid, p, sg = heapq.heappop(Q)
+        k = key(p, sg)
+        if k in visto:
+            continue
+        visto[k] = g
+        if meta.cerca(p):
+            if meta.dentro(p):                   # ya está: no se agrega un tramo de 1 cm
+                prims, poses = _reconstruir(info, nid)
+                return dict(ok=True, prims=prims, poses=poses, expansiones=len(visto))
+            d = meta.cierre(p)
+            # la recta final sigue el sentido que traía; si hay que invertirlo, cuenta como cambio
+            # y se lo deja a la búsqueda (no se regala un cambio de sentido gratis)
+            if d is not None and (sg == 0 or (d > 0) == (sg > 0)):
+                final = _cerrar(p, d, eq, mundo, meta.max_cierre)
+                if final is not None:
+                    prims, poses = _reconstruir(info, nid)
+                    prims.append((1 if d > 0 else -1, 0.0, abs(d)))
+                    poses.append(final)
+                    return dict(ok=True, prims=prims, poses=poses, expansiones=len(visto))
+        if len(visto) > max_exp:
+            break
+        for (s2, fr), q in eq.sucesores(p, mundo):
+            cambio = sg != 0 and s2 != sg
+            ng = (g + DS + (costo_cambio if cambio else 0.0) + (COSTO_REVERSA * DS if s2 < 0 else 0.0)
+                  + 0.02 * abs(fr))
+            heapq.heappush(Q, (ng + peso * meta.h(q), ng, cnt, q, s2))
+            info[cnt] = (q, nid, (s2, fr))
+            cnt += 1
+    return dict(ok=False, motivo='sin camino', expansiones=len(visto))
+
+
+def _cerrar(p, d, eq, mundo, max_d, paso=0.02):
+    """Recta de largo d (con signo) sobre el rumbo de p, verificando choque. None si choca."""
+    if abs(d) > max_d:
+        return None
+    n = max(1, int(math.ceil(abs(d) / paso)))
+    q = p
+    for _ in range(n):
+        q = step(q, d / n, 0.0)
+        if not eq.libre_en(q, mundo):
+            return None
+    return q
+
+
+def _reconstruir(info, nid):
+    prims, poses = [], []
+    while nid is not None:
+        p, padre, prim = info[nid]
+        poses.append(p)
+        if prim is not None:
+            prims.append((prim[0], prim[1], DS))
+        nid = padre
+    return prims[::-1], poses[::-1]
+
+
+# ── tramos y tiempo ──────────────────────────────────────────────────────────
+def tramos(res, eq):
+    """Agrupa las primitivas por sentido. Cada tramo: sentido, largo, giro neto, tiempo."""
+    out, poses = [], res['poses']
+    i = 0
+    for k, (sg, fr, ds) in enumerate(res['prims']):
+        if not out or out[-1]['sg'] != sg:
+            out.append(dict(sg=sg, largo=0.0, t_crucero=0.0, vpico=0.0, ini=poses[k], fin=None, fr=[]))
+        t = out[-1]
+        v = VMAN if abs(fr) > 0.45 else VMAX
+        t['largo'] += ds
+        t['t_crucero'] += ds / v
+        t['vpico'] = max(t['vpico'], v)
+        t['fin'] = poses[k + 1]
+        t['fr'].append(fr)
+    for t in out:
+        # arranca y para en cada tramo: trapecio con ACC; si es corto, triángulo
+        vp = t['vpico']
+        if t['largo'] < vp ** 2 / ACC:
+            t['tiempo'] = max(t['t_crucero'], 2 * math.sqrt(t['largo'] / ACC))
+        else:
+            t['tiempo'] = t['t_crucero'] + vp / ACC
+        t['giro'] = math.degrees(angdif(t['fin'][2], t['ini'][2]))
+        t['sentido'] = 'adelante (uñas primero)' if t['sg'] > 0 else 'reversa (culo primero)'
+    return out
+
+
+def resumen(res, eq):
+    ts = tramos(res, eq)
+    return dict(tramos=ts, cambios=max(0, len(ts) - 1), largo=sum(t['largo'] for t in ts),
+                tiempo=sum(t['tiempo'] for t in ts))
+
+
+# ── rutas: salida de bahía, entrada (= salida al revés), traslado y vueltas ────
+def invertir(res):
+    """La misma traza recorrida al revés. step() con punto medio es exactamente reversible:
+    step(step(p, ds, δ), −ds, δ) = p. Por eso una ENTRADA a la bahía es una SALIDA invertida."""
+    prims = [(-sg, fr, ds) for sg, fr, ds in reversed(res['prims'])]
+    return dict(res, prims=prims, poses=list(reversed(res['poses'])))
+
+
+def unir(*partes):
+    prims, poses = [], []
+    for r in partes:
+        if not r or not r['prims']:
+            continue
+        prims += r['prims']
+        poses += r['poses'] if not poses else r['poses'][1:]
+    return dict(ok=True, prims=prims, poses=poses, expansiones=sum(r['expansiones'] for r in partes if r))
+
+
+def familia(th):
+    """0 = uñas hacia adentro, π = uñas hacia la descarga (rumbo alineado al pasillo)."""
+    return 0.0 if math.cos(th) > 0 else math.pi
+
+
+def _rumbo_txt(r):
+    return 'uñas hacia adentro' if r == 0.0 else 'uñas hacia la descarga'
+
+
+def costo(res):
+    R = resumen(res, None)
+    return R['largo'] + COSTO_CAMBIO * R['cambios']
+
+
+class Planificador:
+    """Arma rutas componiendo maniobras, todas con el mismo Hybrid A*:
+         SALIDA     de la pose frente a un hueco hasta quedar alineado (rumbo 0 o π) en su carril
+         ENTRADA    una SALIDA invertida
+         TRASLADO   por el pasillo, de alineado a alineado (cambio de carril + recta)
+         VUELTA     cambiar el rumbo de viaje: dos 90° por el centro de una bahía (`k s c`), o una
+                    maniobra libre en la zona de descarga
+       y se queda con la combinación más barata (largo + COSTO_CAMBIO por cambio de sentido).
+       El A* de una sola pieza también existe (planificar), pero de 5 m de pasillo más un giro de
+       huelgo de centímetros no sale en un presupuesto razonable en i3: por eso se compone.
+       Cada SALIDA se busca una vez por (dirección, rumbo, carga) y se guarda."""
+
+    def __init__(self, xpiv=B.XPIV, pasillo=B.PASILLO, prof=PROF_BAHIA, cm=B.CARRIL_CM,
+                 max_exp=15000, unas=True, n_vueltas=6):
+        self.xpiv, self.pasillo, self.prof, self.cm, self.max_exp = xpiv, pasillo, prof, cm, max_exp
+        self.n_vueltas = n_vueltas
+        self.eq = {False: Equipo(xpiv, unas=unas), True: Equipo(xpiv, unas=unas, cargado=unas)}
+        self.cache = {}
+
+    def mundo(self, abiertas=()):
+        return Mundo(self.pasillo, abiertas=abiertas, prof=self.prof)
+
+    def salida(self, direccion, rumbo, cargado=False):
+        d = B.leer(direccion) if isinstance(direccion, str) else direccion
+        k = (repr(d), round(rumbo, 3), cargado)
+        if k not in self.cache:
+            x, y, th, _ = B.pose_de(d, xpiv=self.xpiv, pasillo=self.pasillo)
+            meta = MetaRumbo(rumbo, B.carril(d.s, self.cm, self.pasillo), 0.10)
+            self.cache[k] = planificar((x, y, th), meta, self.eq[cargado], self.mundo([(d.x, d.s)]),
+                                       max_exp=self.max_exp)
+        return self.cache[k]
+
+    def entrada(self, direccion, rumbo, cargado=False):
+        r = self.salida(direccion, rumbo, cargado)
+        return invertir(r) if r['ok'] else r
+
+    def traslado(self, p0, p1, cargado=False):
+        if abs(angdif(p0[2], p1[2])) > math.radians(10):
+            return dict(ok=False, motivo='rumbos opuestos', expansiones=0)
+        if abs(p0[1] - p1[1]) < 0.02 and abs(angdif(p0[2], p1[2])) < math.radians(1):
+            d = (p1[0] - p0[0]) / math.cos(p0[2])           # misma línea: recta pura
+            q = _cerrar(p0, d, self.eq[cargado], self.mundo(), 100.0)
+            if q is not None:
+                return dict(ok=True, prims=[(1 if d > 0 else -1, 0.0, abs(d))] if abs(d) > 1e-6 else [],
+                            poses=[p0, q] if abs(d) > 1e-6 else [p0], expansiones=0)
+        return planificar(p0, MetaPose(p1[0], p1[1], p1[2], tol_xy=0.05, eje='x'), self.eq[cargado],
+                          self.mundo(), max_exp=self.max_exp)
+
+    def vuelta_zona(self, p0, rumbo1, cargado=False):
+        """Dar la vuelta en la zona de descarga: salir del rack, maniobrar en piso libre, quedar
+        alineado con el rumbo opuesto en la boca del pasillo."""
+        k = ('zona', tuple(round(v, 3) for v in p0), rumbo1, cargado)
+        if k not in self.cache:
+            self.cache[k] = self._vuelta_zona(p0, rumbo1, cargado)
+        return self.cache[k]
+
+    def _vuelta_zona(self, p0, rumbo1, cargado):
+        eq = self.eq[cargado]
+        largo_hacia = lambda r: B.a_punta(self.xpiv) if r == 0.0 else self.xpiv
+        r0 = familia(p0[2])
+        x_fuera = B.X0 - B.HOLGURA - largo_hacia(r0) - 0.30      # todo el equipo fuera del rack
+        ida = self.traslado(p0, (x_fuera, 0.0, r0), cargado)
+        if not ida['ok']:
+            return ida
+        x1 = B.X0 - B.HOLGURA - largo_hacia(rumbo1) - 0.30
+        giro = planificar(ida['poses'][-1], MetaPose(x1, 0.0, rumbo1, tol_xy=0.10, eje='x'), eq,
+                          self.mundo(), max_exp=4 * self.max_exp, peso=2.0)
+        return unir(ida, giro) if giro['ok'] else giro
+
+    def vueltas_bahia(self, p0, rumbo1, cargado=False, cerca_de=None, n=6):
+        """Dos 90° por el centro de una bahía: entra con el rumbo que trae, sale con el otro.
+        Devuelve las candidatas que existen [(res, 'k sc')], de las `n` bahías más cercanas."""
+        r0 = familia(p0[2])
+        x_ref = p0[0] if cerca_de is None else cerca_de
+        cands = sorted(((nro, s) for nro in range(1, B.N + 1) for s in 'LR'),
+                       key=lambda c: abs(B.centro_posicion(c[0], 'c') - x_ref))
+        out = []
+        for nro, s in cands[:n]:
+            d = B.Direccion(nro, None, s, 'c')
+            r_in, r_out = self.entrada(d, r0, cargado), self.salida(d, rumbo1, cargado)
+            if not (r_in['ok'] and r_out['ok']):
+                continue
+            tr = self.traslado(p0, r_in['poses'][0], cargado)
+            if tr['ok']:
+                out.append((unir(tr, r_in, r_out), f"{nro} {s}c"))
+        return out
+
+    def ruta(self, p0=None, objetivo=None, origen=None, cargado=False):
+        """De la pose p0 (alineada al pasillo) o de la bahía `origen`, a `objetivo` (dirección de
+        bahía o pose alineada). Devuelve dict(ok, partes=[(nombre, res)], total, intentos)."""
+        if origen is not None:
+            arranques = []
+            for r in (0.0, math.pi):
+                s = self.salida(origen, r, cargado)
+                if s['ok']:
+                    arranques.append((r, [('SALIDA de ' + repr(B.leer(origen)), s)]))
+        else:
+            arranques = [(familia(p0[2]), [('INICIO', dict(ok=True, prims=[], poses=[p0], expansiones=0))])]
+        if isinstance(objetivo, str):
+            llegadas = []
+            for r in (0.0, math.pi):
+                e = self.entrada(objetivo, r, cargado)
+                if e['ok']:
+                    llegadas.append((r, e['poses'][0], [('ENTRADA a ' + repr(B.leer(objetivo)), e)]))
+        else:
+            llegadas = [(familia(objetivo[2]), objetivo, [])]
+        intentos, mejor = [], None
+        for r0, partes0 in arranques:
+            p = partes0[-1][1]['poses'][-1]
+            for r1, p1, partes1 in llegadas:
+                if r0 == r1:
+                    tr = self.traslado(p, p1, cargado)
+                    opciones = [[('TRASLADO', tr)]] if tr['ok'] else []
+                else:
+                    opciones = []
+                    vz = self.vuelta_zona(p, r1, cargado)
+                    if vz['ok']:
+                        tr = self.traslado(vz['poses'][-1], p1, cargado)
+                        if tr['ok']:
+                            opciones.append([('VUELTA en la zona de descarga', vz), ('TRASLADO', tr)])
+                    for vb, donde in self.vueltas_bahia(p, r1, cargado, cerca_de=(p[0] + p1[0]) / 2, n=self.n_vueltas):
+                        tr = self.traslado(vb['poses'][-1], p1, cargado)
+                        if tr['ok']:
+                            opciones.append([(f'VUELTA por la bahía {donde} (dos 90°)', vb), ('TRASLADO', tr)])
+                nombre = f"sale con {_rumbo_txt(r0)}, llega con {_rumbo_txt(r1)}"
+                if not opciones:
+                    intentos.append((nombre, None)); continue
+                medio = min(opciones, key=lambda o: costo(unir(*[x for _, x in o])))
+                partes = [x for x in partes0 if x[1]['prims']] + medio + partes1
+                total = unir(*[x for _, x in partes])
+                intentos.append((nombre, round(costo(total), 2),
+                                 [(o[0][0], round(costo(unir(*[x for _, x in o])), 2)) for o in opciones]))
+                if mejor is None or costo(total) < costo(mejor['total']):
+                    mejor = dict(ok=True, partes=partes, total=total)
+        if mejor is None:
+            return dict(ok=False, intentos=intentos, arranques=[a[0] for a in arranques],
+                        llegadas=[l[0] for l in llegadas])
+        mejor['intentos'] = intentos
+        return mejor
+
+
+# ── informe: casos 1–3, controles y barridos ─────────────────────────────────
+TICK = 0.5                       # s por tick de la FSM (percepcion/fsm_estados.py)
+DUR_PANTO = {'APROXIMA': 1.0, 'EXTIENDE': 1.4, 'TOMA': 1.2, 'RETRAE': 1.4}   # sim-web DUR, SUPUESTO
+
+
+def _res_txt(r):
+    if not r['ok']:
+        return dict(ok=False, motivo=r.get('motivo', ''))
+    R = resumen(r, None)
+    return dict(ok=True, cambios=R['cambios'], largo=round(R['largo'], 2), tiempo=round(R['tiempo'], 1),
+                tramos=[dict(sentido='adelante' if t['sg'] > 0 else 'reversa', largo=round(t['largo'], 2),
+                             giro=round(t['giro']), tiempo=round(t['tiempo'], 1),
+                             ini=[round(v, 3) for v in t['ini']], fin=[round(v, 3) for v in t['fin']])
+                        for t in R['tramos']])
+
+
+def _ruta_txt(r):
+    if not r['ok']:
+        return dict(ok=False, intentos=[(a, b) for a, b, *_ in r.get('intentos', [])])
+    d = _res_txt(r['total'])
+    d['partes'] = [(n, _res_txt(x)) for n, x in r['partes']]
+    d['intentos'] = r['intentos']
+    return d
+
+
+def anchos():
+    out = {}
+    lim = B.PASILLO - 2 * B.HOLGURA
+    for nombre, kw in (('con uñas, vacío', {}), ('con uñas, con el IBC', dict(cargado=True)),
+                       ('sin uñas (chasis + patas)', dict(unas=False))):
+        sil, _ = silueta(**kw)
+        tabla = [(d, round(ancho_a_rumbo(sil, math.radians(d)), 3)) for d in range(0, 91, 5)]
+        fino = [(k / 2, ancho_a_rumbo(sil, math.radians(k / 2))) for k in range(181)]
+        mx = max(fino, key=lambda f: f[1])
+        malos = [f for f, a in fino if a > lim + 1e-9]
+        out[nombre] = dict(tabla=tabla, max=round(mx[1], 3), en=mx[0],
+                           no_caben=(min(malos), max(malos)) if malos else None)
+    return out
+
+
+def caso_maje(pl, log):
+    p0 = B.pose_en_pasillo('3L', 'descarga')
+    out = dict(inicio=[round(v, 3) for v in p0])
+    for hueco in ('5 3 Ra', '5 3 Rb'):
+        ida = pl.ruta(p0, hueco)
+        log(f"  caso 1 · {hueco}: ida {'ok' if ida['ok'] else 'NO'}")
+        vuelta = pl.ruta(None, B.pose_descarga(pl.xpiv), origen=hueco, cargado=True)
+        log(f"  caso 1 · {hueco}: vuelta a la descarga {'ok' if vuelta['ok'] else 'NO'}")
+        h = B.altura_uña(hueco, 'entrada'); ha = B.altura_uña(hueco, 'agarre')
+        vertical = dict(ELEVA=round(B.t_elevar(0, h), 1), TOMA_sube=round(ha - h, 3),
+                        TRANSITO_baja=round(B.t_elevar(ha, 0), 1), **DUR_PANTO)
+        out[hueco] = dict(ida=_ruta_txt(ida), vuelta=_ruta_txt(vuelta), vertical=vertical,
+                          _ida=ida, _vuelta=vuelta)
+    return out
+
+
+def barrido(pl, log):
+    p_can = (0.0, 0.0, 0.0)                          # en la descarga, uñas hacia adentro
+    filas = []
+    for x in range(1, B.N + 1):
+        for s in 'LR':
+            for p in 'ab':
+                d = f"{x} {s}{p}"
+                r = pl.ruta(p_can, d)
+                sd, sf = pl.salida(d, math.pi), pl.salida(d, 0.0)
+                filas.append(dict(dir=d, llega=_ruta_txt(r), sale_descarga=_res_txt(sd), sale_fondo=_res_txt(sf)))
+                log(f"  barrido {d}: llega {'sí' if r['ok'] else 'NO'} · sale a descarga "
+                    f"{'sí' if sd['ok'] else 'no'} · al fondo {'sí' if sf['ok'] else 'no'}")
+    return dict(inicio=list(p_can), filas=filas)
+
+
+def giro_180(log):
+    p = (B.centro_posicion(4, 'c'), 0.0, 0.0)
+    m = Mundo(abiertas=(), zona=False)
+    out = {}
+    for nombre, eq in (('con uñas', Equipo()), ('sin uñas', Equipo(unas=False))):
+        r = planificar(p, MetaRumbo(math.pi, 0.0, 1.0), eq, m, max_exp=15000)
+        out[nombre] = _res_txt(r); out[nombre]['expansiones'] = r['expansiones']
+        log(f"  180° en el pasillo, {nombre}: {'sí' if r['ok'] else 'no'} ({r['expansiones']} expansiones)")
+    pl = Planificador()
+    vb = pl.vueltas_bahia(p, math.pi, n=2)
+    out['dos 90°'] = [(donde, _res_txt(r)) for r, donde in vb]
+    log(f"  dos 90° por una bahía: {len(vb)} bahías sirven")
+    return out
+
+
+def control_sin_unas(log, cms=(70, 75, 80, 90, 100, 110, 120, 130, 140, 150)):
+    """Lo de planificador_giro.py: desde el carril a cm del rack opuesto, girar 90° (meta vieja:
+    θ = 90°, |y| < 1.0), en un pasillo sin bahías abiertas."""
+    out = {}
+    m = Mundo(abiertas=(), zona=False)
+    for nombre, eq in (('sin uñas', Equipo(unas=False)), ('con uñas', Equipo())):
+        fila = []
+        for cm in cms:
+            p0 = (10.0, -(B.HALF - cm / 100), 0.0)
+            if not eq.libre_en(p0, m):
+                fila.append((cm, None)); continue
+            r = planificar(p0, MetaRumbo(math.pi / 2, 0.0, 1.0), eq, m, max_exp=20000)
+            fila.append((cm, resumen(r, None)['cambios'] if r['ok'] else None))
+        out[nombre] = fila
+        log(f"  control sin uñas · {nombre}: " + ' '.join(f"{c}:{'-' if v is None else v}" for c, v in fila))
+    # con uñas y la bahía abierta: la ventana de carriles para entrar a 4 La / 4 Lb
+    fila = []
+    for cm in cms:
+        pl = Planificador(cm=cm, max_exp=8000)
+        ra, rb = pl.salida('4 La', 0.0), pl.salida('4 Lb', math.pi)
+        fila.append((cm, resumen(ra, None)['cambios'] if ra['ok'] else None,
+                     resumen(rb, None)['cambios'] if rb['ok'] else None))
+    out['con uñas y bahía abierta (4 La rumbo 0 / 4 Lb rumbo π)'] = fila
+    log("  control · con uñas y bahía: " + ' '.join(f"{c}:{a}/{b}" for c, a, b in fila))
+    return out
+
+
+def _salidas(pl, dirs=(('4 La', 0.0), ('4 La', math.pi), ('4 Lb', 0.0), ('4 Lb', math.pi),
+                       ('4 Lc', 0.0), ('4 Lc', math.pi))):
+    out = []
+    for d, r in dirs:
+        x = pl.salida(d, r)
+        out.append((d, 'adentro' if r == 0.0 else 'descarga', _res_txt(x)))
+    return out
+
+
+def control_pasillo(log):
+    out = {}
+    for ancho in (3.00, 2.80):
+        out[f"{ancho:.2f}"] = _salidas(Planificador(pasillo=ancho))
+        log(f"  pasillo {ancho:.2f}: " + ' '.join(f"{d}→{r}:{'sí' if x['ok'] else 'no'}" for d, r, x in out[f'{ancho:.2f}']))
+    return out
+
+
+def barrido_xpiv(log):
+    out = {}
+    for xp in (1.30, 1.40, 1.50, 1.60):
+        out[f"{xp:.2f}"] = dict(dmax=round(math.degrees(dmax(xp)), 1), salidas=_salidas(Planificador(xpiv=xp)))
+        log(f"  XPIV {xp:.2f}: " + ' '.join(f"{d}→{r}:{'sí' if x['ok'] else 'no'}" for d, r, x in out[f'{xp:.2f}']['salidas']))
+    return out
+
+
+def barrido_prof(log):
+    out = {}
+    for pr in (0.05, 0.10, 0.15, 0.20, 0.30, 0.40):
+        out[f"{pr:.2f}"] = _salidas(Planificador(prof=pr))
+        log(f"  PROF {pr:.2f}: " + ' '.join(f"{d}→{r}:{'sí' if x['ok'] else 'no'}" for d, r, x in out[f'{pr:.2f}']))
+    return out
+
+
+def tabla_fsm(pl):
+    """Lo que necesita la FSM (percepcion/fsm_rutas.py), medido en la bahía 4 (lejos de la boca y
+    del fondo; las maniobras no dependen de x)."""
+    out = dict(TICK=TICK, VMAX=VMAX, ACC=ACC, VEL_ELEV=B.VEL_ELEV, DUR_PANTO=DUR_PANTO, salidas={})
+    for s in 'LR':
+        for p in 'abc':
+            d = f"4 {s}{p}"
+            xc = B.centro_posicion(4, p)
+            for r in (0.0, math.pi):
+                x = pl.salida(d, r)
+                if not x['ok']:
+                    out['salidas'][f"{s}{p}|{'adentro' if r == 0.0 else 'descarga'}"] = None
+                    continue
+                R = resumen(x, None)
+                ts = R['tramos']
+                out['salidas'][f"{s}{p}|{'adentro' if r == 0.0 else 'descarga'}"] = dict(
+                    tiempo=round(R['tiempo'], 2), cambios=R['cambios'], largo=round(R['largo'], 2),
+                    primer_tramo=round(ts[0]['tiempo'], 2), resto=round(R['tiempo'] - ts[0]['tiempo'], 2),
+                    dx_fin=round(x['poses'][-1][0] - xc, 3), y_fin=round(x['poses'][-1][1], 3))
+    for nombre, y0, y1 in (('central→giro', 0.0, B.carril('L')), ('giro→giro', B.carril('R'), B.carril('L'))):
+        r = pl.traslado((10.0, y0, 0.0), (14.0, y1, 0.0))
+        R = resumen(r, None)
+        out[f"carril {nombre}"] = dict(largo=round(R['largo'], 2), tiempo=round(R['tiempo'], 2),
+                                       cambios=R['cambios'])
+    vz = pl.vuelta_zona((B.X0 + 1.0, 0.0, 0.0), math.pi)
+    out['vuelta_zona'] = _res_txt(vz) if vz['ok'] else None
+    return out
+
+
+# ── figura ───────────────────────────────────────────────────────────────────
+def figura(maje, pl, ruta_png):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Polygon, Rectangle
+    fig, axs = plt.subplots(2, 1, figsize=(15, 8.6))
+    for ax, hueco in zip(axs, ('5 3 Ra', '5 3 Rb')):
+        ida, vuelta = maje[hueco]['_ida'], maje[hueco]['_vuelta']
+        h = B.HALF
+        x_fin = B.x_fondo()
+        ax.add_patch(Rectangle((-B.ZONA_ATRAS, -B.ZONA_ANCHO / 2), B.X0 + B.ZONA_ATRAS, B.ZONA_ANCHO,
+                               fc='#f3efe4', ec='none'))
+        for sg in (1, -1):
+            y0 = h if sg > 0 else -h - B.FONDO_RACK
+            ax.add_patch(Rectangle((B.X0, y0), B.fin_rack() - B.X0, B.FONDO_RACK, fc='#d9d9d9', ec='#888'))
+            for nro in range(1, B.N + 1):
+                a0, a1 = B.bahia_x(nro)
+                ax.add_patch(Rectangle((a0, y0), a1 - a0, B.FONDO_RACK, fc='#ececec', ec='#aaa', lw=0.6))
+                ax.text((a0 + a1) / 2, y0 + B.FONDO_RACK / 2, f"{nro}{'L' if sg > 0 else 'R'}",
+                        ha='center', va='center', fontsize=8, color='#777')
+        ax.plot([x_fin, x_fin], [-h - 1.1, h + 1.1], color='#555', lw=3)
+        ax.plot([0], [0], marker='X', color='#c0392b', ms=10)
+        ax.text(0, -0.35, 'descarga', ha='center', fontsize=8, color='#c0392b')
+        d = B.leer(hueco)
+        xc = B.centro_posicion(d.x, d.p)
+        ax.add_patch(Rectangle((xc - 0.5, -h - B.IBC_FONDO), 1.0, B.IBC_FONDO, fc='#f5b041', ec='#b9770e'))
+        for res, est, nombre in ((ida, '-', 'ida (vacío)'), (vuelta, '--', 'vuelta (con el IBC)')):
+            if not res['ok']:
+                continue
+            tot = res['total']; poses = tot['poses']
+            for k, (sg, fr, ds) in enumerate(tot['prims']):
+                a, b = poses[k], poses[k + 1]
+                ax.plot([a[0], b[0]], [a[1], b[1]], est, color='#1f77b4' if sg > 0 else '#d62728', lw=1.8)
+            polis = poligonos(pl.xpiv, cargado=res is vuelta)
+            cortes = [0] + [k for k in range(1, len(tot['prims'])) if tot['prims'][k][0] != tot['prims'][k - 1][0]] + [len(tot['prims'])]
+            for k in cortes:
+                q = poses[k]; c, sn = math.cos(q[2]), math.sin(q[2])
+                for pg in polis:
+                    ax.add_patch(Polygon([(q[0] + a * c - l * sn, q[1] + a * sn + l * c) for a, l in pg], closed=True,
+                                         fc='none', ec='#1f77b4' if est == '-' else '#7d3c98', lw=0.8, alpha=0.75))
+        R1 = resumen(ida['total'], None) if ida['ok'] else None
+        R2 = resumen(vuelta['total'], None) if vuelta['ok'] else None
+        tit = f"3L (uñas hacia la descarga) → {hueco} → descarga"
+        if R1 and R2:
+            tit += (f"   ·   ida {R1['largo']:.1f} m, {R1['cambios']} cambios de sentido, {R1['tiempo']:.0f} s"
+                    f"   ·   vuelta {R2['largo']:.1f} m, {R2['cambios']} cambios, {R2['tiempo']:.0f} s")
+        ax.set_title(tit, fontsize=10, loc='left')
+        ax.plot([], [], color='#1f77b4', label='adelante (uñas primero)')
+        ax.plot([], [], color='#d62728', label='reversa (culo primero)')
+        ax.plot([], [], '--', color='#555', label='con el IBC')
+        ax.legend(loc='lower left', fontsize=8, ncol=3)
+        ax.set_xlim(-B.ZONA_ATRAS, x_fin + 0.3); ax.set_ylim(-h - 1.2, h + 1.2)
+        ax.set_aspect('equal'); ax.set_xlabel('x a lo largo del pasillo (m) — crece hacia adentro')
+        ax.set_ylabel('y (m)')
+    fig.text(0.01, 0.005, f"SUPUESTOS: {B.N} bahías, poste {B.POSTE} m, X0 {B.X0} m, uñas hasta "
+             f"{PROF_BAHIA * 100:.0f} cm dentro de la bahía al girar. Silueta con uñas, XPIV {B.XPIV}.",
+             fontsize=8, color='#666')
+    fig.tight_layout(rect=(0, 0.02, 1, 1))
+    fig.savefig(ruta_png, dpi=130)
+
+
+def main():
+    import time
+    t0 = time.time()
+    aqui = os.path.dirname(os.path.abspath(__file__))
+    log = lambda s: print(f"[{time.time() - t0:6.0f} s] {s}", flush=True)
+    R = {}
+    R['anchos'] = anchos(); log("anchos a rumbo listos")
+    for k, v in R['anchos'].items():
+        log(f"  {k}: máximo {v['max']} m a {v['en']}° · no caben de {v['no_caben']}")
+    pl = Planificador()
+    R['caso1'] = caso_maje(pl, log)
+    figura(R['caso1'], pl, os.path.join(aqui, 'ruta_3L_5R.png')); log("figura lista")
+    R['tabla_fsm'] = tabla_fsm(pl); log("tabla para la FSM lista")
+    R['giro_180'] = giro_180(log)
+    R['control_sin_unas'] = control_sin_unas(log)
+    R['control_pasillo'] = control_pasillo(log)
+    R['xpiv'] = barrido_xpiv(log)
+    R['prof'] = barrido_prof(log)
+    R['barrido'] = barrido(Planificador(n_vueltas=2), log)
+    for h in ('5 3 Ra', '5 3 Rb'):
+        R['caso1'][h].pop('_ida'); R['caso1'][h].pop('_vuelta')
+    R['supuestos'] = dict(N=B.N, X0=B.X0, POSTE=B.POSTE, PROF_BAHIA=PROF_BAHIA, HOLGURA=B.HOLGURA,
+                          GAP_OBJ=B.GAP_OBJ, CARRIL_CM=B.CARRIL_CM, XPIV=B.XPIV, L_ANCHO=L_ANCHO,
+                          VMAX=VMAX, VMAN=VMAN, ACC=ACC, VEL_ELEV=B.VEL_ELEV, COSTO_CAMBIO=COSTO_CAMBIO)
+    with open(os.path.join(aqui, 'rutas_tabla.json'), 'w', encoding='utf-8') as f:
+        json.dump(R, f, ensure_ascii=False, indent=1, default=str)
+    log("rutas_tabla.json escrito")
+
+
+if __name__ == "__main__":
+    main()
