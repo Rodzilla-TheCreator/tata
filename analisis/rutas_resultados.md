@@ -190,3 +190,22 @@ Una sola búsqueda de 5 m de pasillo más un giro de pocos centímetros de huelg
 
 Cada combinación posible se evalúa y se elige la más barata. **No es óptimo globalmente:** es el
 mejor de los planes armados con esas piezas.
+
+
+## Dato de campo — el video del operador (maje, 05-nov-2026)
+
+- Se pone en posición retrocediendo, y **una vez que empieza el giro no retrocede: solo mueve el
+  timón**, de forma continua. Entra al mismo hueco al que se iba a alinear.
+- Las uñas van a **pocos cm del piso** durante el giro (lo justo para no rozar). **No entran a los
+  huecos del IBC** ni al girar ni al terminar, pero sí quedan **un poco dentro de la bahía**.
+- El equipo queda **pegado a las dos bahías**: la de entrada y la de enfrente.
+- **Los 3.00 m del pasillo se miden entre los postes de seguridad**, que son los puntos más
+  angostos. Entre poste y poste, la cara de los cubos queda más atrás.
+
+**Qué cambia en el modelo:** el pasillo no es una pared de 3.00 m. Son **postes cada 2.35 m** con
+un **retranqueo entre postes, en los dos lados**, y las uñas (al piso) y posiblemente el culo
+pueden usar ese retranqueo. `PROF_BAHIA` deja de ser un supuesto de "cuánto pasan la cara del
+rack": es **la distancia del frente del poste al frente del cubo**, y se mide con cinta.
+
+**Medir:** ancho y fondo de cada poste, su altura, la separación entre postes a lo largo del
+pasillo, y el retranqueo del poste al frente del cubo a nivel del piso, en los dos racks.
