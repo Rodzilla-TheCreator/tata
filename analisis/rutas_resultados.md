@@ -226,3 +226,114 @@ vacío y unos 4 cm cargado. Eso calza con el video: el operador queda pegado a l
 - **Para correr de nuevo:** `PROF_BAHIA = 0.06` **en los dos lados**, postes cada 2.35 m, y exigir
   que en los rumbos de 56° a 89.5° las dos puntas queden entre postes. El caso del video tiene que
   salir sin reversa después de arrancar.
+
+
+## v2 — postes, retranqueo de 6 cm y el giro sin reversa del video (05-nov-2026, tarde, en la i3)
+
+Encargo: `tarea_rutas_v2.md`. `py analisis/planificador_rutas.py` corre ahora la batería v2
+(~2 min) y escribe `rutas_v2.json`. `--v1` reproduce todo lo de arriba. La FSM sigue leyendo
+`rutas_tabla.json` (v1); ver «Pendiente» al final.
+
+**Lo que se metió al modelo** (`Planificador(modelo='v2')`):
+- **Postes y retranqueo.** Los 3.00 m son de cara de poste a cara de poste. En la luz de cada
+  bahía, en los **dos** lados, cualquier punto del equipo (uñas al piso y culo) puede llegar
+  **6 cm** más allá. El poste mide 0.12 de ancho.
+  - **Reconciliado con `visibilidad.py`:** 2.35 m es la **luz** entre caras de poste y 2.47 m es
+    el **paso** entre centros de poste (2.35 + 0.12). Son el mismo rack.
+- **El hueco.** La punta de uña queda a 3 cm de la **cara del cubo**, es decir 3 cm dentro de la
+  luz, sin entrar a los huecos del IBC.
+- **Resolución del giro.** Timón de 15 ángulos en vez de 7, primitivas de 3 cm, silueta muestreada
+  cada 2 cm (con 5 cm la esquina de un poste se colaba) y grilla de 1 cm y 1°.
+- **Giro sin reversa, como en el video.** La salida del hueco se busca **solo en reversa**. Una
+  salida sin cambios de sentido es una entrada que, una vez que arranca el giro, ya no retrocede.
+  Posicionarse antes, retrocediendo, está permitido.
+- **Carril central** (`central=True`): tránsito por el eje, bajando al carril de giro 4 m antes.
+- **Holgura de 1 cm al girar**, contra los 5 cm de v1. Es el margen que deja el giro cargado
+  (abajo).
+
+### La cuenta y lo que dice el planificador
+
+Entre postes caben **3.12 m**. El ancho a rumbo máximo es 3.036 vacío y 3.078 cargado: sobran
+**8.4 cm** vacío y **4.2 cm** cargado **en total**. La cuenta dice que cabe, pero no mira la
+cinemática.
+
+**Con XPIV 1.50 (δmax 78°), el giro sin reversa NO existe: 0 de 12** (a/b/c × los dos sentidos ×
+vacío/cargado), ni con holgura 0. Por qué:
+- saliendo en reversa del hueco, el eje de carga solo puede alejarse del rack;
+- con δmax 78° el centro de giro queda a 33 cm del pivote, y girar 25° cuesta al menos 14.5 cm
+  de recorrido;
+- pero entre 65° y 80° la ventana para el pivote mide 8 cm.
+
+El 90° entra **solo si el equipo casi rota en el lugar**. Con XPIV 1.30 o 1.40 (δmax 69.5° y
+73°), tampoco sale ninguno.
+
+**El umbral** (holgura 0; «S» = sale, en el orden La con uñas hacia adentro, La hacia la descarga,
+Lc hacia adentro):
+
+| XPIV (δmax) | 1.50 (78°) | 1.52 | 1.54 | 1.56 (81.5°) | **1.58 (82.8°)** | 1.60 (84.1°) | 1.62 | 1.64 | 1.66 (88°) |
+|---|---|---|---|---|---|---|---|---|---|
+| retranqueo 3 cm, vacío | ··· | ··· | ··· | ··· | ··· | ··· | SSS | ··· | SSS |
+| retranqueo 3 cm, cargado | ··· | ··· | ··· | ··· | ··· | ··· | ··· | ··· | ··· |
+| **retranqueo 6 cm**, vacío y cargado | ··· | ··· | ··· | ·SS | **SSS** | SSS | SSS | SSS | SSS |
+| retranqueo 9 cm, vacío y cargado | ·SS | ·SS | SSS | SSS | SSS | SSS | SSS | SSS | SSS |
+
+**El video del operador es evidencia de que δmax ≥ ~83°**: XPIV ≥ 1.58 por la fórmula de ficha
+(cota dura 1.6724). Con 3 cm, lo que sale suelto (1.62 y 1.66, no 1.64) está en el borde de la
+resolución de la búsqueda: no es un resultado, es ruido de ese borde. Desde acá se trabaja con
+**XPIV 1.60** (`XPIV_V2`), SUPUESTO tomado del video.
+
+### Validación contra el video (XPIV 1.60, retranqueo 6 cm)
+
+| Hueco y sentido de viaje | Vacío | Cargado |
+|---|---|---|
+| `a`, `b` y centro, con uñas hacia adentro y hacia la descarga (las 6) | **sale sin reversa, margen 2 cm** | **sale sin reversa, margen 1 cm** |
+
+- **El margen es la holgura por lado**, contra poste y contra cara de cubo, con la que todavía
+  sale. La cuenta a mano daba 4.2 y 2.1 como techo, y la cinemática se come la mitad.
+- **El giro es casi una rotación sobre el eje de carga:** el pivote recorre **0.27 m** para
+  87–89°, con el timón a fondo. Arranca a **5 cm del eje del pasillo**, no a 85 cm del rack. El
+  «carril de giro» y el carril central casi coinciden: por eso el operador queda pegado a las dos
+  bahías.
+- **Retranqueo mínimo para el giro sin reversa** (XPIV 1.60): **4 cm vacío, 5 cm cargado**. Con
+  XPIV 1.50 no alcanza ningún retranqueo hasta 9 cm para la `a`; el centro sale recién con 9.
+  **Un cubo de N1 dejado 2 cm más afuera mata el giro cargado.** La consecuencia del afinado se
+  confirma con el planificador: si el kit deja los cubos de N1, que los deje siempre a la misma
+  profundidad.
+- **Control: retranqueo 0, con XPIV 1.60, no sale ninguno (0/12).** Lo que restringe son los
+  postes y el retranqueo.
+
+### El caso de maje y el barrido, v2
+
+| | Ida (vacío) | Vuelta a la descarga (con el IBC) |
+|---|---|---|
+| 5 3 **Ra** | **4.8 m · 1 cambio · 6 s**: 4.6 m en reversa posicionándose, y entra **hacia adelante girando 89° sin retroceder** | 13.3 m · 1 cambio · 12 s: sale girando en reversa, y de frente a la descarga |
+| 5 3 **Rb** | **6.0 m · 1 cambio · 7 s**, igual | 14.5 m · 1 cambio · 12 s |
+
+**Es lo que hace el operador en el video:** se posiciona retrocediendo, y desde que gira ya no
+retrocede. **Barrido** desde la descarga: **las 28 llegan sin ningún cambio de sentido** (en v1:
+1 a la `a`, 3 a la `b`). **Con o sin la regla del carril central, las rutas son idénticas:** el
+giro arranca desde el eje, así que el tránsito ya va por el central sin forzarlo.
+
+### Decía / es / qué lo tumbó (contra lo de esta mañana)
+
+| Decía (05-nov, v1) | Es (v2) | Qué lo tumbó |
+|---|---|---|
+| El pasillo es una pared de 3.00 m; las uñas pasan la cara hasta `PROF_BAHIA` = 0.20 (SUPUESTO), solo en la bahía objetivo | Postes cada 2.47 m; **entre postes, 6 cm de retranqueo en los dos lados**, para uñas y culo | el video y la medición de maje |
+| A la `a` solo con uñas hacia adentro, a la `b` solo hacia la descarga | **Las dos en los dos sentidos** (con XPIV ≥ 1.58) | el retranqueo del lado opuesto deja pasar el culo; la asimetría venía del poste vecino con las uñas solas |
+| Al giro le cuesta 0 a 3 cambios de sentido, y dar la vuelta 2 más | **Sin cambios de sentido una vez que arranca**, en las 28 bahías | el video: el operador no retrocede después de empezar a girar |
+| XPIV 1.50 alcanza («la forma domina al pivote», 18-sep, solo chasis) | **Con uñas y sin reversa, XPIV 1.50 no gira.** Hace falta δmax ≥ ~83° (XPIV ≥ 1.58) | el giro del video existe; con 78° la cinemática no lo permite |
+| Holgura de 5 cm por lado | **2 cm vacío y 1 cm cargado** es lo que hay | ancho a rumbo 3.036/3.078 contra 3.12 entre postes, más la cinemática |
+| Carril de giro a 85 cm del rack opuesto | El giro sin reversa arranca **a ~5 cm del eje** | casi una rotación sobre el eje de carga |
+
+### Lo que hay que medir, en orden
+
+1. **El ángulo de tope de la rueda de dirección** (δmax), directo con transportador, o el `XPIV`
+   con plomada. Decide si el giro del video sale en el modelo. Hoy es una inferencia.
+2. **El retranqueo** poste → cara del cubo de N1, en varios huecos de los dos racks. Con menos de
+   5 cm, el giro cargado no sale.
+3. **El ancho y el fondo del poste**: hoy 0.12 de ancho, del DXF.
+
+**Pendiente:** la FSM (`percepcion/fsm_rutas.py`) sigue con la tabla de v1. Pasarla a v2 cambia
+la prueba 5: con v2 ya no hay vuelta en la ida a la Ra, porque a la `a` se entra en los dos
+sentidos. Su control («rutas sin rumbo») deja de discriminar y habría que rehacerlo. No se hizo
+en esta tarea. `rutas_v2.json` → `rutas.central.tabla_fsm` tiene la tabla lista.

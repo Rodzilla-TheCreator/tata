@@ -49,6 +49,17 @@ ZONA_ANCHO = 6.00               # SUPUESTO
 ZONA_ATRAS = 3.00               # SUPUESTO
 VEL_ELEV = 0.55                 # SUPUESTO (sim-web)
 
+# ── v2 (05-nov, el video del operador y el afinado de maje) ───────────────────
+# Los 3.00 m son de CARA DE POSTE a cara de poste: el punto más angosto. Hay un poste en cada borde
+# de bahía. Entre postes (la luz de 2.35 m), la cara del cubo de N1 queda REC más atrás, en los DOS
+# racks: ahí entran las uñas (al piso) y el culo al girar. Sin uñas en los huecos del IBC.
+# Reconciliado con visibilidad.py: 2.35 es la LUZ entre caras de poste; 2.47 = 2.35 + 0.12 es el
+# PASO entre centros de poste. Los dos números son el mismo rack.
+REC_L = 0.06                    # maje, ~6 cm. N1 al piso: depende de dónde lo dejó el operador
+REC_R = 0.06
+POSTE_ALTO = 1.00               # SUPUESTO, sin uso en la cuenta plana (las uñas y el culo van al piso)
+PASO_POSTE = BAHIA + POSTE      # 2.47 m entre centros de poste
+
 # ── el equipo (CLAUDE.md, «Corregido en campo») ──────────────────────────────
 XPIV = 1.50                     # culo → eje de carga, DERIVADO
 LCH = 1.70                      # culo → cara de torre
@@ -141,13 +152,14 @@ def x_fondo():
     return fin_rack() + LIBRE_FONDO
 
 
-def pose_de(direccion, gap=GAP_OBJ, xpiv=XPIV, pasillo=PASILLO):
+def pose_de(direccion, gap=GAP_OBJ, xpiv=XPIV, pasillo=PASILLO, rec=0.0):
     """Pose objetivo (x, y, θ, altura_uña) frente al hueco: uñas encarando el rack `s`, punta de uña
-    a `gap` de la cara, centrado en la posición a/b. Altura = la de ENTRADA del nivel."""
+    a `gap` de la cara, centrado en la posición a/b. Altura = la de ENTRADA del nivel. `rec`: retranqueo
+    de la cara del cubo detrás de la cara del poste (v2); la punta queda a `gap` de la cara del CUBO."""
     d = leer(direccion) if isinstance(direccion, str) else direccion
     xc = centro_posicion(d.x, d.p)
     lado = 1 if d.s == 'L' else -1
-    y = lado * (pasillo / 2 - gap - a_punta(xpiv))
+    y = lado * (pasillo / 2 + rec - gap - a_punta(xpiv))
     th = lado * math.pi / 2
     alt = ALTURAS[d.y][1] if d.y else 0.0
     return xc, y, th, alt

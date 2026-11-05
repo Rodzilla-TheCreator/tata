@@ -39,15 +39,17 @@ def _prims(ruta):
     return out
 
 
-def generar():
+def generar(archivo=ARCHIVO, **kw_pl):
     t0 = time.time()
     log = lambda s: print(f"[{time.time() - t0:5.0f} s] {s}", flush=True)
-    pl = P.Planificador(n_vueltas=2)
-    out = dict(xpiv=pl.xpiv, dmax=P.dmax(pl.xpiv), rutas={})
+    pl = P.Planificador(n_vueltas=2, **kw_pl)
+    out = dict(xpiv=pl.xpiv, dmax=P.dmax(pl.xpiv), modelo=pl.modelo, central=pl.central, rutas={})
     p0 = B.pose_en_pasillo('3L', 'descarga')
     for h in ('5 3 Ra', '5 3 Rb'):
         ida = pl.ruta(p0, h)
         vuelta = pl.ruta(None, B.pose_descarga(pl.xpiv), origen=h, cargado=True)
+        if not (ida['ok'] and vuelta['ok']):
+            log(f"maje {h}: NO sale"); continue
         out['rutas'][f"maje_{h[-2:]}"] = dict(inicio=list(p0), hueco=h, piernas=[
             dict(nombre=f'3L → {h}', cargado=False, prims=_prims(ida)),
             dict(nombre=f'{h} → descarga', cargado=True, prims=_prims(vuelta))])
@@ -58,18 +60,28 @@ def generar():
             for p in 'ab':
                 d = f"{x} {s}{p}"
                 r = pl.ruta(p_can, d)
+                if not r['ok']:
+                    log(f"barrido {d}: NO sale"); continue
                 out['rutas'][f"barrido_{x}{s}{p}"] = dict(inicio=list(p_can), hueco=d, piernas=[
                     dict(nombre=f'descarga → {d}', cargado=False, prims=_prims(r))])
                 log(f"barrido {d}")
-    with open(ARCHIVO, 'w', encoding='utf-8') as f:
+    with open(archivo, 'w', encoding='utf-8') as f:
         json.dump(out, f)
-    log(f"escrito {ARCHIVO}")
+    log(f"escrito {archivo}")
 
 
-def cargar():
-    with open(ARCHIVO, encoding='utf-8') as f:
+def archivo_v2(central):
+    return os.path.join(AQUI, f"rutas_densas_v2_{'central' if central else 'libre'}.json")
+
+
+def cargar(archivo=ARCHIVO):
+    with open(archivo, encoding='utf-8') as f:
         return json.load(f)
 
 
 if __name__ == "__main__":
-    generar()
+    if '--v2' in sys.argv:          # postes + retranqueo + giro sin reversa, con y sin carril central
+        for central in (False, True):
+            generar(archivo_v2(central), modelo='v2', xpiv=P.XPIV_V2, central=central)
+    else:
+        generar()

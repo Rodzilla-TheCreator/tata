@@ -90,7 +90,7 @@ def poligonos(xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
     return out
 
 
-def silueta(xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
+def silueta(xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO, paso=0.05):
     """Puntos del contorno en el marco del vehículo (a = 0 pivote, + hacia las uñas) y la máscara
     de los que pueden entrar a la luz de una bahía abierta (uñas y cubo por delante de las patas).
     Forma (almacen-nuevo/planificar_giro_318.py, con L_ANCHO medido): capó 1.065 del culo a la
@@ -100,17 +100,17 @@ def silueta(xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
     hc, hp = W_CAPO / 2, W_MAX / 2
     cuerpo = [(a_culo, hc), (a_mast, hc), (a_mast, hp), (a_pata, hp),
               (a_pata, -hp), (a_mast, -hp), (a_mast, -hc), (a_culo, -hc)]
-    pts = _muestrear(cuerpo)
+    pts = _muestrear(cuerpo, paso)
     frente = [False] * len(pts)
     if unas:
         for s in (1, -1):
             e0, e1 = UNA_CENTRO - UNA_ANCHO / 2, UNA_CENTRO + UNA_ANCHO / 2
             una = [(a_pata, s * e1), (a_pun, s * e1), (a_pun, s * e0), (a_pata, s * e0)]
-            q = _muestrear(una)
+            q = _muestrear(una, paso)
             pts += q; frente += [True] * len(q)
     if cargado:                                  # el IBC en las uñas: 1.20 de fondo, 1.00 de cara
         cubo = [(a_pun - B.IBC_FONDO, 0.5), (a_pun, 0.5), (a_pun, -0.5), (a_pun - B.IBC_FONDO, -0.5)]
-        q = _muestrear(cubo)
+        q = _muestrear(cubo, paso)
         pts += q; frente += [a > a_pata - 1e-9 for a, _ in q]
     return np.array(pts), np.array(frente)
 
@@ -124,14 +124,19 @@ def ancho_a_rumbo(sil, phi):
 
 # ── el mundo ─────────────────────────────────────────────────────────────────
 class Mundo:
-    """Pasillo de ancho `pasillo`, zona de descarga en x < X0, pared al fondo, y bahías abiertas
-    [(nro, 'L'|'R')] donde las uñas/el cubo pueden pasar la cara hasta `prof`."""
+    """Pasillo de ancho `pasillo`, zona de descarga en x < X0, pared al fondo, y:
+       v1 (05-nov, mañana): caras de rack como pared, y bahías abiertas [(nro, 'L'|'R')] donde
+          SOLO las uñas/el cubo pueden pasar la cara hasta `prof`
+       v2 (05-nov, el video): `rec=(rec_L, rec_R)`: el pasillo mide `pasillo` entre CARAS DE POSTE;
+          en la luz de cada bahía (entre postes, los dos lados) CUALQUIER punto del equipo puede ir
+          hasta rec más allá: las uñas al piso y el culo usan el retranqueo del cubo de N1"""
 
     def __init__(self, pasillo=B.PASILLO, abiertas=(), prof=PROF_BAHIA, holgura=B.HOLGURA,
-                 zona=True):
+                 zona=True, rec=None):
         self.half = pasillo / 2
         self.hol = holgura
         self.zona = zona
+        self.rec = rec
         self.abiertas = []
         for nro, s in abiertas:
             x0, x1 = B.bahia_x(nro)
@@ -143,6 +148,13 @@ class Mundo:
         en_zona = (X < B.X0) if self.zona else np.zeros_like(X, dtype=bool)
         sup = np.where(en_zona, B.ZONA_ANCHO / 2 - m, h - m)
         inf = -sup
+        if self.rec is not None:
+            rel = X - B.X0
+            k = np.floor(rel / B.PASO_POSTE)
+            off = rel - k * B.PASO_POSTE                   # desde la cara de atrás del poste k
+            luz = (k >= 0) & (k < B.N) & (off >= B.POSTE + m) & (off <= B.PASO_POSTE - m)
+            sup = np.where(luz & ~en_zona, h + self.rec[0] - m, sup)
+            inf = np.where(luz & ~en_zona, -(h + self.rec[1] - m), inf)
         for x0, x1, sg, prof in self.abiertas:
             dentro = (X >= x0 + m) & (X <= x1 - m) & frente
             if sg > 0:
@@ -155,22 +167,32 @@ class Mundo:
         return ok.all(axis=-1)
 
 
+DS_GIRO = 0.03                # primitivas del giro en v2: el huelgo es de centímetros
+HOLGURA_V2 = 0.01             # el margen del giro CARGADO sin reversa es 1 cm (rutas_resultados.md, v2)
+LARGO_CARRIL = 4.0            # m de pasillo que se reserva para un cambio de carril (≈ los 4.16 medidos)
+
 # ── primitivas ───────────────────────────────────────────────────────────────
 DS, NSUB = 0.10, 5          # 2 cm por submuestra; contra una cara recta, muestrear el arco erra < 1 mm
 FRACS = (-1.0, -0.6, -0.3, 0.0, 0.3, 0.6, 1.0)
 
 
+FRACS_FINO = (-1.0, -0.85, -0.7, -0.55, -0.4, -0.25, -0.1, 0.0, 0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1.0)
+
+
 class Equipo:
-    def __init__(self, xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO):
+    def __init__(self, xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO, fracs=FRACS, paso_sil=0.05,
+                 ds=None):
+        ds = DS if ds is None else ds
+        self.ds = ds
         self.xpiv, self.dmax = xpiv, dmax(xpiv)
-        self.sil, self.frente = silueta(xpiv, unas, cargado, l_ancho)
+        self.sil, self.frente = silueta(xpiv, unas, cargado, l_ancho, paso_sil)
         self.prims = []                                  # (sentido, frac, poses locales)
         LX, LY, FIN = [], [], []
         for sg in (1, -1):
-            for f in FRACS:
+            for f in fracs:
                 q, poses = (0.0, 0.0, 0.0), []
                 for _ in range(NSUB):
-                    q = step(q, sg * DS / NSUB, f * self.dmax)
+                    q = step(q, sg * ds / NSUB, f * self.dmax)
                     poses.append(q)
                 self.prims.append((sg, f))
                 FIN.append(q)
@@ -182,6 +204,7 @@ class Equipo:
                 LY.append(py + self.sil[:, 0] * s + self.sil[:, 1] * c)
         self.LX, self.LY = np.array(LX), np.array(LY)    # (n_prim, NSUB, P)
         self.fin = FIN
+        self.por_sentido = {sg: np.array([i for i, (s_, _) in enumerate(self.prims) if s_ == sg]) for sg in (1, -1)}
 
     def huella(self, p):
         c, s = math.cos(p[2]), math.sin(p[2])
@@ -192,13 +215,15 @@ class Equipo:
         X, Y = self.huella(p)
         return bool(mundo.libre(X[None], Y[None], self.frente)[0])
 
-    def sucesores(self, p, mundo):
+    def sucesores(self, p, mundo, sentidos=(1, -1)):
         c, s = math.cos(p[2]), math.sin(p[2])
-        WX = p[0] + self.LX * c - self.LY * s
-        WY = p[1] + self.LX * s + self.LY * c
+        idx = np.concatenate([self.por_sentido[sg] for sg in sentidos])
+        LX, LY = self.LX[idx], self.LY[idx]
+        WX = p[0] + LX * c - LY * s
+        WY = p[1] + LX * s + LY * c
         ok = mundo.libre(WX, WY, self.frente).all(axis=1)
         out = []
-        for i in np.nonzero(ok)[0]:
+        for i in idx[np.nonzero(ok)[0]]:
             fx, fy, fth = self.fin[i]
             out.append((self.prims[i], (p[0] + fx * c - fy * s, p[1] + fx * s + fy * c, p[2] + fth)))
         return out
@@ -272,12 +297,15 @@ class MetaRumbo:
 
 
 # ── Hybrid A* ────────────────────────────────────────────────────────────────
-def planificar(p0, meta, eq, mundo, max_exp=60000, peso=1.5, costo_cambio=COSTO_CAMBIO):
-    """Devuelve dict(ok, prims=[(sentido, frac, ds)], poses, expansiones) o ok=False."""
+def planificar(p0, meta, eq, mundo, max_exp=60000, peso=1.5, costo_cambio=COSTO_CAMBIO,
+               sentidos=(1, -1), res_xy=0.05, res_th=3.0):
+    """Devuelve dict(ok, prims=[(sentido, frac, ds)], poses, expansiones) o ok=False.
+    sentidos=(-1,): solo reversa (una salida sin cambios de sentido = una entrada sin reversa)."""
     if not eq.libre_en(p0, mundo):
         return dict(ok=False, motivo='la pose inicial choca', expansiones=0)
-    key = lambda p, sg: (round(p[0] / 0.05), round(p[1] / 0.05),
-                         round((p[2] % (2 * math.pi)) / math.radians(3)) % 120, sg)
+    n_th = int(round(360 / res_th))
+    key = lambda p, sg: (round(p[0] / res_xy), round(p[1] / res_xy),
+                         round((p[2] % (2 * math.pi)) / math.radians(res_th)) % n_th, sg)
     Q = [(peso * meta.h(p0), 0.0, 0, p0, 0)]
     info = {0: (p0, None, None)}                 # id → (pose, padre, primitiva que llevó ahí)
     cierres = {}                                 # id de nodo final → (id del que cierra, cierre)
@@ -336,12 +364,12 @@ def planificar(p0, meta, eq, mundo, max_exp=60000, peso=1.5, costo_cambio=COSTO_
             if mejor is not None:
                 return terminar(mejor[1])
             break
-        for (s2, fr), q in eq.sucesores(p, mundo):
+        for (s2, fr), q in eq.sucesores(p, mundo, sentidos):
             cambio = sg != 0 and s2 != sg
-            ng = (g + DS + (costo_cambio if cambio else 0.0) + (COSTO_REVERSA * DS if s2 < 0 else 0.0)
+            ng = (g + eq.ds + (costo_cambio if cambio else 0.0) + (COSTO_REVERSA * eq.ds if s2 < 0 else 0.0)
                   + 0.02 * abs(fr))
             heapq.heappush(Q, (ng + peso * meta.h(q), ng, cnt, q, s2))
-            info[cnt] = (q, nid, (s2, fr))
+            info[cnt] = (q, nid, (s2, fr, eq.ds))
             cnt += 1
     return dict(ok=False, motivo='sin camino', expansiones=len(visto))
 
@@ -450,7 +478,7 @@ def _reconstruir(info, nid):
         p, padre, prim = info[nid]
         poses.append(p)
         if prim is not None:
-            prims.append((prim[0], prim[1], DS))
+            prims.append((prim[0], prim[1], prim[2] if len(prim) > 2 else DS))
         nid = padre
     return prims[::-1], poses[::-1]
 
@@ -539,32 +567,70 @@ class Planificador:
        Cada SALIDA se busca una vez por (dirección, rumbo, carga) y se guarda."""
 
     def __init__(self, xpiv=B.XPIV, pasillo=B.PASILLO, prof=PROF_BAHIA, cm=B.CARRIL_CM,
-                 max_exp=15000, unas=True, n_vueltas=6):
+                 max_exp=15000, unas=True, n_vueltas=6, modelo='v1', rec=(B.REC_L, B.REC_R),
+                 holgura=None, sin_reversa=None, central=False, tol_carril=None):
+        """modelo 'v1': pared + uñas en la bahía (PROF_BAHIA). 'v2': postes + retranqueo `rec` en
+        los dos lados, timón fino, giro SIN cambios de sentido (como el video), holgura chica.
+        central=True: el tránsito va por el carril central y solo se baja al de giro para alinearse."""
         self.xpiv, self.pasillo, self.prof, self.cm, self.max_exp = xpiv, pasillo, prof, cm, max_exp
-        self.n_vueltas = n_vueltas
+        self.n_vueltas, self.modelo, self.rec, self.central = n_vueltas, modelo, rec, central
+        v2 = modelo == 'v2'
+        self.hol = (HOLGURA_V2 if v2 else B.HOLGURA) if holgura is None else holgura
+        self.sin_reversa = v2 if sin_reversa is None else sin_reversa
+        self.tol_carril = (0.80 if v2 else 0.10) if tol_carril is None else tol_carril
         self.eq = {False: Equipo(xpiv, unas=unas), True: Equipo(xpiv, unas=unas, cargado=unas)}
+        if v2:      # el giro: timón fino y silueta cada 2 cm (con 5 cm la esquina de un poste se cuela)
+            self.eq_giro = {c: Equipo(xpiv, unas=unas, cargado=c and unas, fracs=FRACS_FINO, paso_sil=0.02,
+                                      ds=DS_GIRO) for c in (False, True)}
+        else:
+            self.eq_giro = self.eq
         self.cache = {}
 
     def mundo(self, abiertas=()):
-        return Mundo(self.pasillo, abiertas=abiertas, prof=self.prof)
+        if self.modelo == 'v2':
+            return Mundo(self.pasillo, holgura=self.hol, rec=self.rec)
+        return Mundo(self.pasillo, abiertas=abiertas, prof=self.prof, holgura=self.hol)
+
+    def pose_hueco(self, d):
+        rec = (self.rec[0] if d.s == 'L' else self.rec[1]) if self.modelo == 'v2' else 0.0
+        return B.pose_de(d, xpiv=self.xpiv, pasillo=self.pasillo, rec=rec)
 
     def salida(self, direccion, rumbo, cargado=False):
         d = B.leer(direccion) if isinstance(direccion, str) else direccion
         k = (repr(d), round(rumbo, 3), cargado)
         if k not in self.cache:
-            x, y, th, _ = B.pose_de(d, xpiv=self.xpiv, pasillo=self.pasillo)
-            meta = MetaRumbo(rumbo, B.carril(d.s, self.cm, self.pasillo), 0.10)
-            self.cache[k] = planificar((x, y, th), meta, self.eq[cargado], self.mundo([(d.x, d.s)]),
-                                       max_exp=self.max_exp)
+            x, y, th, _ = self.pose_hueco(d)
+            meta = MetaRumbo(rumbo, B.carril(d.s, self.cm, self.pasillo), self.tol_carril)
+            kw = dict(sentidos=(-1,), res_xy=0.01, res_th=1.0) if self.sin_reversa else {}
+            self.cache[k] = planificar((x, y, th), meta, self.eq_giro[cargado], self.mundo([(d.x, d.s)]),
+                                       max_exp=self.max_exp, **kw)
         return self.cache[k]
 
     def entrada(self, direccion, rumbo, cargado=False):
         r = self.salida(direccion, rumbo, cargado)
         return invertir(r) if r['ok'] else r
 
-    def traslado(self, p0, p1, cargado=False):
+    def traslado(self, p0, p1, cargado=False, _central=None):
         if abs(angdif(p0[2], p1[2])) > math.radians(10):
             return dict(ok=False, motivo='rumbos opuestos', expansiones=0)
+        central = self.central if _central is None else _central
+        if central:
+            # tránsito por el carril central (idea de maje): sube al central apenas puede y baja al
+            # de giro LARGO_CARRIL antes de la meta. Si no hay lugar para las dos curvas, directo
+            th = familia(p1[2])
+            s = 1 if p1[0] > p0[0] else -1
+            if abs(p1[0] - p0[0]) > 2 * LARGO_CARRIL and (abs(p0[1]) > 0.05 or abs(p1[1]) > 0.05):
+                piezas, q = [], p0
+                for w in ((p0[0] + s * LARGO_CARRIL, 0.0, th) if abs(p0[1]) > 0.05 else None,
+                          (p1[0] - s * LARGO_CARRIL, 0.0, th) if abs(p1[1]) > 0.05 else None, p1):
+                    if w is None:
+                        continue
+                    r = self.traslado(q, w, cargado, _central=False)
+                    if not r['ok']:
+                        break
+                    piezas.append(r); q = r['poses'][-1]
+                else:
+                    return unir(*piezas)
         th_eje = familia(p1[2])
         if abs(angdif(p1[2], th_eje)) > 1e-6:
             # la meta viene inclinada (la tolerancia de 3° de una salida): se viaja alineado al eje
@@ -927,6 +993,7 @@ def figura(maje, pl, ruta_png):
 
 
 def main():
+    """v1 (05-nov, mañana). Se conserva para poder volver: `py analisis/planificador_rutas.py --v1`."""
     import time
     t0 = time.time()
     aqui = os.path.dirname(os.path.abspath(__file__))
@@ -955,5 +1022,139 @@ def main():
     log("rutas_tabla.json escrito")
 
 
+# ── v2: postes, retranqueo y el giro sin reversa del video ───────────────────
+XPIV_V2 = 1.60          # el menor de la grilla con el que sale el giro del video (ver validar_video)
+COMBOS = (('4 La', 0.0), ('4 La', math.pi), ('4 Lb', 0.0), ('4 Lb', math.pi), ('4 Lc', 0.0), ('4 Lc', math.pi))
+
+
+def _rt(r):
+    return 'adentro' if r == 0.0 else 'descarga'
+
+
+def giro_sin_reversa(xpiv, rec, hol, d, r, cargado, max_exp=6000):
+    pl = Planificador(modelo='v2', xpiv=xpiv, rec=(rec, rec), holgura=hol, max_exp=max_exp)
+    return pl.salida(d, r, cargado)
+
+
+def umbral_xpiv(log, xps=(1.50, 1.52, 1.54, 1.56, 1.58, 1.60, 1.62, 1.64, 1.66), recs=(0.03, 0.06, 0.09)):
+    """¿Con qué XPIV (y su δmax por la fórmula de ficha) aparece el giro SIN reversa, holgura 0?
+    Solo La y Lc: la Lb es el espejo de la La (Lb→descarga = La→adentro)."""
+    out = {}
+    for rec in recs:
+        for c in (False, True):
+            fila = {}
+            for xp in xps:
+                fila[f"{xp:.2f}"] = {f"{d}→{_rt(r)}": giro_sin_reversa(xp, rec, 0.0, d, r, c)['ok']
+                                     for d, r in (('4 La', 0.0), ('4 La', math.pi), ('4 Lc', 0.0))}
+            out[f"rec {rec:.2f} {'cargado' if c else 'vacío'}"] = fila
+            log(f"  umbral XPIV · rec {rec:.2f} {'cargado' if c else 'vacío'}: " +
+                ' '.join(f"{xp}:" + ''.join('S' if v else '·' for v in f.values()) for xp, f in fila.items()))
+    return out
+
+
+def margen(xpiv, rec, d, r, c, pasos=(0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.10)):
+    """La mayor holgura (contra postes y caras de cubo) con la que el giro sin reversa sigue saliendo."""
+    mejor, res = None, None
+    for h in pasos:
+        x = giro_sin_reversa(xpiv, rec, h, d, r, c)
+        if not x['ok']:
+            break
+        mejor, res = h, x
+    return mejor, res
+
+
+def validar_video(log, xpiv=XPIV_V2, rec=B.REC_L):
+    """Para cada hueco a/b/c y sentido de viaje, vacío y cargado: ¿sale sin reversa?, margen, carril."""
+    out = {}
+    for d, r in COMBOS:
+        for c in (False, True):
+            m, x = margen(xpiv, rec, d, r, c)
+            fila = dict(ok=m is not None, margen_cm=None if m is None else round(100 * m))
+            if x is not None:
+                R = resumen(x, None)
+                f = x['poses'][-1]
+                fila.update(largo=round(R['largo'], 2), carril_cm=round(100 * (B.HALF - abs(f[1]))),
+                            y_carril=round(f[1], 3))
+            out[f"{d}→{_rt(r)} {'cargado' if c else 'vacío'}"] = fila
+            log(f"  video · {d} con {_rt(r)}, {'cargado' if c else 'vacío'}: "
+                f"{'sale' if fila['ok'] else 'NO sale'}" + (f", margen {fila['margen_cm']} cm, termina a "
+                f"{fila['carril_cm']} cm del rack {'R' if d.endswith('Lc') or 'L' in d else 'L'}" if fila['ok'] else ''))
+    return out
+
+
+def retranqueo_minimo(log, xps=(1.50, 1.60), recs=(0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09)):
+    out = {}
+    for xp in xps:
+        for c in (False, True):
+            for d, r in (('4 La', 0.0), ('4 Lc', 0.0)):
+                fila = {f"{rec:.2f}": giro_sin_reversa(xp, rec, 0.0, d, r, c)['ok'] for rec in recs}
+                minimo = next((k for k, v in fila.items() if v), None)
+                out[f"XPIV {xp:.2f} {d}→{_rt(r)} {'cargado' if c else 'vacío'}"] = dict(fila=fila, minimo=minimo)
+                log(f"  retranqueo mínimo · XPIV {xp} {d} {'cargado' if c else 'vacío'}: {minimo} · "
+                    + ''.join('S' if v else '·' for v in fila.values()))
+    return out
+
+
+def rutas_v2(log, xpiv=XPIV_V2):
+    """Caso de maje y barrido con el modelo v2, con y sin la regla del carril central."""
+    out = {}
+    for central in (False, True):
+        pl = Planificador(modelo='v2', xpiv=xpiv, central=central, n_vueltas=2)
+        nom = 'central' if central else 'libre'
+        caso = {}
+        p0 = B.pose_en_pasillo('3L', 'descarga')
+        for h in ('5 3 Ra', '5 3 Rb'):
+            ida = pl.ruta(p0, h)
+            vuelta = pl.ruta(None, B.pose_descarga(pl.xpiv), origen=h, cargado=True)
+            caso[h] = dict(ida=_ruta_txt(ida), vuelta=_ruta_txt(vuelta))
+            log(f"  rutas v2 {nom} · {h}: ida {_corto(ida)} · vuelta {_corto(vuelta)}")
+        filas = []
+        for x in range(1, B.N + 1):
+            for s in 'LR':
+                for p in 'ab':
+                    r = pl.ruta((0.0, 0.0, 0.0), f"{x} {s}{p}")
+                    filas.append(dict(dir=f"{x} {s}{p}", llega=_ruta_txt(r)))
+        log(f"  rutas v2 {nom} · barrido: llegan {sum(f['llega']['ok'] for f in filas)}/{len(filas)}")
+        out[nom] = dict(caso1=caso, barrido=filas, tabla_fsm=tabla_fsm(pl))
+    return out
+
+
+def _corto(r):
+    if not r['ok']:
+        return 'NO'
+    R = resumen(r['total'], None)
+    return f"{R['largo']:.1f} m, {R['cambios']} cambios, {R['tiempo']:.0f} s"
+
+
+def main_v2():
+    import time
+    t0 = time.time()
+    aqui = os.path.dirname(os.path.abspath(__file__))
+    log = lambda s: print(f"[{time.time() - t0:6.0f} s] {s}", flush=True)
+    R = dict(supuestos=dict(XPIV_V2=XPIV_V2, REC=(B.REC_L, B.REC_R), POSTE=B.POSTE, PASO_POSTE=B.PASO_POSTE,
+                            HOLGURA_V2=HOLGURA_V2, DS_GIRO=DS_GIRO, FRACS_FINO=FRACS_FINO,
+                            LARGO_CARRIL=LARGO_CARRIL))
+    lim = B.PASILLO + B.REC_L + B.REC_R
+    R['cuenta'] = {k: dict(max=v['max'], entre_postes=lim, sobra_cm=round(100 * (lim - v['max']), 1))
+                   for k, v in anchos().items()}
+    log(f"cuenta: entre postes {lim:.2f} m · " + ' · '.join(f"{k}: sobra {v['sobra_cm']} cm" for k, v in R['cuenta'].items()))
+    R['base_1_50'] = {f"{d}→{_rt(r)} {'cargado' if c else 'vacío'}": giro_sin_reversa(1.50, B.REC_L, 0.0, d, r, c)['ok']
+                      for d, r in COMBOS for c in (False, True)}
+    log(f"con XPIV 1.50 (δmax 78°), holgura 0: salen {sum(R['base_1_50'].values())}/{len(R['base_1_50'])}")
+    R['umbral_xpiv'] = umbral_xpiv(log)
+    R['video'] = validar_video(log)
+    R['retranqueo'] = retranqueo_minimo(log)
+    R['control_rec0'] = {f"{d}→{_rt(r)} {'cargado' if c else 'vacío'}": giro_sin_reversa(XPIV_V2, 0.0, 0.0, d, r, c)['ok']
+                         for d, r in COMBOS for c in (False, True)}
+    log(f"CONTROL retranqueo 0 (XPIV {XPIV_V2}): salen {sum(R['control_rec0'].values())}/{len(R['control_rec0'])}")
+    R['rutas'] = rutas_v2(log)
+    with open(os.path.join(aqui, 'rutas_v2.json'), 'w', encoding='utf-8') as f:
+        json.dump(R, f, ensure_ascii=False, indent=1, default=str)
+    log("rutas_v2.json escrito")
+
+
 if __name__ == "__main__":
-    main()
+    if '--v1' in sys.argv:
+        main()          # lo del 05-nov a la mañana: pared + uñas en la bahía (rutas_tabla.json v1)
+    else:
+        main_v2()       # postes + retranqueo + giro sin reversa (rutas_v2.json)

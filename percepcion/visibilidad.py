@@ -75,7 +75,24 @@ class Camara:
 
 X_CAPO = -0.75                  # SUPUESTO: a media capota
 Y_CAPO = 1.065 / 2             # costado de la capota (W_CAPO / 2)
-MONTAJES = {
+def montajes(xpiv=B.XPIV):
+    """Las cámaras van atornilladas al CHASIS: si cambia el XPIV (el pivote), la trasera queda en
+    −xpiv respecto del eje de carga y la frontal en LCH − xpiv."""
+    return {
+        'A': ('lateral + trasera (la idea de maje)',
+              [Camara('lateral', X_CAPO, Y_CAPO, 1.0, 90), Camara('trasera', -xpiv, 0.0, 1.0, 180)]),
+        'A2': ('lateral + trasera en diagonal (135°)',
+               [Camara('lateral', X_CAPO, Y_CAPO, 1.0, 90), Camara('trasera diag.', -xpiv, 0.0, 1.0, -135)]),
+        'B': ('dos laterales (lo de sim_sintetico.py)',
+              [Camara('lateral izq.', X_CAPO, Y_CAPO, 1.0, 90), Camara('lateral der.', X_CAPO, -Y_CAPO, 1.0, -90)]),
+        'C': ('dos laterales altas en la jaula, hacia abajo',
+              [Camara('alta izq.', X_CAPO, 0.40, 2.2, 90, -47), Camara('alta der.', X_CAPO, -0.40, 2.2, -90, -47)]),
+        'D': ('frontal + lateral (docs/03)',
+              [Camara('frontal', B.LCH - xpiv, 0.0, 2.2, 0, -10), Camara('lateral', X_CAPO, Y_CAPO, 1.0, 90)]),
+    }
+
+
+MONTAJES_V1 = {
     'A': ('lateral + trasera (la idea de maje)',
           [Camara('lateral', X_CAPO, Y_CAPO, 1.0, 90), Camara('trasera', -B.XPIV, 0.0, 1.0, 180)]),
     'A2': ('lateral + trasera en diagonal (135°)',
@@ -87,19 +104,24 @@ MONTAJES = {
     'D': ('frontal + lateral (docs/03)',
           [Camara('frontal', B.LCH - B.XPIV, 0.0, 2.2, 0, -10), Camara('lateral', X_CAPO, Y_CAPO, 1.0, 90)]),
 }
+MONTAJES = montajes()
 
 
 # ── el mapa ──────────────────────────────────────────────────────────────────
-def mapa(paso, lado=L_MARCA):
+def mapa(paso, lado=L_MARCA, alternadas=False):
     """Marcas en las dos caras, sobre los postes cada `paso` bahías (0.5 = también a mitad de
     bahía). paso=None → una sola marca por cara, a mitad del pasillo (control).
+    alternadas=True: la cara R corrida medio paso (en el eje del pasillo, con las marcas a la misma
+    x en las dos caras, dos laterales ven juntas o ninguna; alternadas se reparten el recorrido).
     Devuelve arreglo (n, 6): x, y, h, θ normal, lado, id."""
     x0, x1 = B.X0 + B.POSTE / 2, B.fin_rack() - B.POSTE / 2
     xs = [(x0 + x1) / 2] if paso is None else list(np.arange(x0, x1 + 1e-6, paso * PASO_BAHIA))
+    corr = 0.0 if (paso is None or not alternadas) else paso * PASO_BAHIA / 2
     filas = []
     for x in xs:
         filas.append((x, +B.HALF, H_MARCA, -math.pi / 2, lado))
-        filas.append((x, -B.HALF, H_MARCA, +math.pi / 2, lado))
+        if x + corr <= x1 + 1e-6:
+            filas.append((x + corr, -B.HALF, H_MARCA, +math.pi / 2, lado))
     M = np.array(filas)
     return np.c_[M, np.arange(len(M))]
 
@@ -330,8 +352,8 @@ def _txt_paso(p):
     return f"{p:g} bahía{'' if p == 1 else 's'} ({p * PASO_BAHIA:.2f} m)"
 
 
-def evaluar_ekf(trs, camaras, paso, lado=L_MARCA, activa=None, semillas=SEMILLAS, **kw):
-    M = mapa(paso, lado)
+def evaluar_ekf(trs, camaras, paso, lado=L_MARCA, activa=None, semillas=SEMILLAS, alternadas=False, **kw):
+    M = mapa(paso, lado, alternadas)
     errs = []
     for tr in trs:
         for s in range(semillas):
@@ -353,8 +375,8 @@ def paso_maximo(fila):
     return mejor
 
 
-def cobertura_agregada(trs, camaras, paso, lado=L_MARCA, **kw):
-    M = mapa(paso, lado)
+def cobertura_agregada(trs, camaras, paso, lado=L_MARCA, alternadas=False, **kw):
+    M = mapa(paso, lado, alternadas)
     cuenta = {c: np.zeros(3) for c in CLASES + ('total',)}
     ciego_m = ciego_s = 0.0
     for tr in trs:
@@ -484,5 +506,49 @@ def main():
     log("visibilidad_resultados.json escrito")
 
 
+def main_v2():
+    """Rutas v2 (postes + retranqueo + giro sin reversa, XPIV_V2), con y sin carril central:
+    cobertura y espaciado máximo para A2 y B, contra lo de v1 (visibilidad_resultados.json)."""
+    import json
+    import time
+    import rutas_densas
+    t0 = time.time()
+    log = lambda s: print(f"[{time.time() - t0:5.0f} s] {s}", flush=True)
+    R = {}
+    for central in (False, True):
+        D = rutas_densas.cargar(rutas_densas.archivo_v2(central))
+        trs = {k: trayectoria(r, D['dmax']) for k, r in D['rutas'].items()}
+        ekf_trs = [trs[k] for k in RUTAS_EKF if k in trs]
+        nom = 'central' if central else 'libre'
+        R[nom] = dict(rutas=len(trs), rutas_ekf=len(ekf_trs), montajes={})
+        mont = montajes(D['xpiv'])
+        for m in ('A2', 'B'):
+            cams = mont[m][1]
+            cob = {str(p): cobertura_agregada(list(trs.values()), cams, p) for p in PASOS}
+            fila = {p: evaluar_ekf(ekf_trs, cams, p) for p in PASOS}
+            alt = {p: evaluar_ekf(ekf_trs, cams, p, alternadas=True) for p in PASOS}
+            cob_alt = cobertura_agregada(list(trs.values()), cams, 1, alternadas=True)
+            R[nom]['montajes'][m] = dict(maximo=paso_maximo(fila), cobertura=cob,
+                                         ekf={str(p): v for p, v in fila.items()},
+                                         alternadas=dict(maximo=paso_maximo(alt), cobertura_1=cob_alt,
+                                                         ekf={str(p): v for p, v in alt.items()}))
+            log(f"v2 {nom} · {m} con marcas ALTERNADAS: máximo {paso_maximo(alt)} · " +
+                ' '.join(f"{_txt_paso(p).split(' (')[0]}={v['max_cm']}" for p, v in alt.items()) +
+                f" · 1 bahía 0/1/2 {cob_alt['pct']['total']} ciego {cob_alt['ciego_m']} m")
+            log(f"v2 {nom} · {m}: máximo {paso_maximo(fila)} · " +
+                ' '.join(f"{_txt_paso(p).split(' (')[0]}={v['max_cm']}" for p, v in fila.items()) +
+                f" · 1 bahía 0/1/2 {cob['1']['pct']['total']} ciego {cob['1']['ciego_m']} m")
+            if central:
+                figura(m + '_v2', mont[m][0] + ' · rutas v2, carril central', cams,
+                       {k: trs[k] for k in ('maje_Ra', 'maje_Rb') if k in trs}, 1,
+                       os.path.join(AQUI, f"visibilidad_{m}_v2.png"))
+    with open(os.path.join(AQUI, 'visibilidad_v2.json'), 'w', encoding='utf-8') as f:
+        json.dump(R, f, ensure_ascii=False, indent=1, default=str)
+    log("visibilidad_v2.json escrito")
+
+
 if __name__ == "__main__":
-    main()
+    if '--v2' in sys.argv:
+        main_v2()
+    else:
+        main()

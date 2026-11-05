@@ -370,3 +370,41 @@ volver a correr.
 - **Odometría:** los sesgos de `sim_sintetico.py`.
 - **Muestra:** 84 llegadas por celda. Un «cumple» es 84/84, no una garantía. Lo que pasa raspando
   (A2 a 3 bahías: 3.85 cm) **se confirma con más semillas antes de imprimir marcas**.
+
+### Con las rutas v2 (postes, retranqueo, giro sin reversa) — 05-nov, tarde
+
+`py percepcion/rutas_densas.py --v2` y `py percepcion/visibilidad.py --v2` (~5 min). Recorridos de
+`analisis/planificador_rutas.py` modelo v2, con XPIV 1.60 (ver `analisis/rutas_resultados.md`, v2),
+con y sin la regla del carril central. Solo A2 y B, los dos mejores. Números en
+`visibilidad_v2.json`, figuras en `visibilidad_A2_v2.png` y `visibilidad_B_v2.png`.
+
+**Sí cambia el espaciado máximo: baja.**
+
+| Montaje | v1 (rutas por el carril de giro) | **v2** | v2 con marcas **alternadas** (cara R corrida medio paso) |
+|---|---|---|---|
+| A2 · lateral + trasera diagonal | 3 bahías (3.85 cm) | **2 bahías** (3.25 cm; a 3 bahías, 4.70 cm, 1/84) | 1 bahía (a 2 bahías, 4.86 cm) |
+| B · dos laterales | 2 bahías (2.30 cm) | **1 bahía** (a 2 bahías, 5.02 cm, 1/84) | **2 bahías** (2.36–2.64 cm) |
+
+Con y sin la regla del carril central da lo mismo, salvo décimas de milímetro: con el giro de v2
+las rutas ya van por el eje.
+
+**Por qué baja:**
+- **El tránsito ahora va por el eje del pasillo.** Las dos laterales quedan a 0.97 m de su cara,
+  donde la C920 cubre una franja de 0.99 m. En v1 iba por el carril de giro, y la lateral del
+  lado lejano veía más (punto 4 de arriba).
+- **El giro es casi una rotación en el lugar** (0.27 m): hay menos tiempo mirando marcas al girar.
+- **Con las marcas a la misma x en las dos caras, las dos laterales de B ven juntas o ninguna.**
+  En tránsito: 24 % las dos, 6 % una, **70 % ninguna**. Las cámaras se duplican en vez de
+  complementarse.
+- **Alternar las marcas de las dos caras arregla a B** (de 1 a 2 bahías; 1 bahía: 54 / 45 / 1 %)
+  **y empeora a A2** (de 2 a 1), cuyas dos cámaras miran distinto.
+- **Dónde van las marcas tiene que decidirse junto con el montaje**, no por separado.
+
+Las diferencias entre celdas son de milímetros sobre 84 llegadas: un «1/84 fuera» es borde, no
+veredicto. Con marcas cada **1 bahía, cumplen los dos montajes con cualquier disposición**
+(1.7–2.6 cm). Hasta medir `PX_MIN` y `ANG_MAX`, esa es la recomendación segura.
+
+| Decía (05-nov, v1) | Es (v2) | Qué lo tumbó |
+|---|---|---|
+| A2 llega a ±4.5 cm con marcas cada 3 bahías; B, cada 2 | **A2 cada 2, B cada 1** (cada 2 si las marcas se alternan entre caras) | las rutas v2 van por el eje y giran casi en el lugar |
+| Las dos laterales de B son mejor que una (v1) | **Por el eje, con marcas a la misma x, son redundantes**: ven las dos o ninguna | la simetría del montaje y del mapa |

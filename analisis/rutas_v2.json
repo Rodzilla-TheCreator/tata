@@ -1,0 +1,8334 @@
+{
+ "supuestos": {
+  "XPIV_V2": 1.6,
+  "REC": [
+   0.06,
+   0.06
+  ],
+  "POSTE": 0.12,
+  "PASO_POSTE": 2.47,
+  "HOLGURA_V2": 0.01,
+  "DS_GIRO": 0.03,
+  "FRACS_FINO": [
+   -1.0,
+   -0.85,
+   -0.7,
+   -0.55,
+   -0.4,
+   -0.25,
+   -0.1,
+   0.0,
+   0.1,
+   0.25,
+   0.4,
+   0.55,
+   0.7,
+   0.85,
+   1.0
+  ],
+  "LARGO_CARRIL": 4.0
+ },
+ "cuenta": {
+  "con uñas, vacío": {
+   "max": 3.036,
+   "entre_postes": 3.12,
+   "sobra_cm": 8.4
+  },
+  "con uñas, con el IBC": {
+   "max": 3.078,
+   "entre_postes": 3.12,
+   "sobra_cm": 4.2
+  },
+  "sin uñas (chasis + patas)": {
+   "max": 2.484,
+   "entre_postes": 3.12,
+   "sobra_cm": 63.6
+  }
+ },
+ "base_1_50": {
+  "4 La→adentro vacío": false,
+  "4 La→adentro cargado": false,
+  "4 La→descarga vacío": false,
+  "4 La→descarga cargado": false,
+  "4 Lb→adentro vacío": false,
+  "4 Lb→adentro cargado": false,
+  "4 Lb→descarga vacío": false,
+  "4 Lb→descarga cargado": false,
+  "4 Lc→adentro vacío": false,
+  "4 Lc→adentro cargado": false,
+  "4 Lc→descarga vacío": false,
+  "4 Lc→descarga cargado": false
+ },
+ "umbral_xpiv": {
+  "rec 0.03 vacío": {
+   "1.50": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.52": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.54": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.56": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.58": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.60": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.62": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.64": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.66": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   }
+  },
+  "rec 0.03 cargado": {
+   "1.50": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.52": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.54": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.56": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.58": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.60": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.62": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.64": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.66": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   }
+  },
+  "rec 0.06 vacío": {
+   "1.50": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.52": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.54": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.56": {
+    "4 La→adentro": false,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.58": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.60": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.62": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.64": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.66": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   }
+  },
+  "rec 0.06 cargado": {
+   "1.50": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.52": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.54": {
+    "4 La→adentro": false,
+    "4 La→descarga": false,
+    "4 Lc→adentro": false
+   },
+   "1.56": {
+    "4 La→adentro": false,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.58": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.60": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.62": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.64": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.66": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   }
+  },
+  "rec 0.09 vacío": {
+   "1.50": {
+    "4 La→adentro": false,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.52": {
+    "4 La→adentro": false,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.54": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.56": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.58": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.60": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.62": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.64": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.66": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   }
+  },
+  "rec 0.09 cargado": {
+   "1.50": {
+    "4 La→adentro": false,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.52": {
+    "4 La→adentro": false,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.54": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.56": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.58": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.60": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.62": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.64": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   },
+   "1.66": {
+    "4 La→adentro": true,
+    "4 La→descarga": true,
+    "4 Lc→adentro": true
+   }
+  }
+ },
+ "video": {
+  "4 La→adentro vacío": {
+   "ok": true,
+   "margen_cm": 2,
+   "largo": 0.27,
+   "carril_cm": 145,
+   "y_carril": 0.049
+  },
+  "4 La→adentro cargado": {
+   "ok": true,
+   "margen_cm": 1,
+   "largo": 0.27,
+   "carril_cm": 146,
+   "y_carril": 0.045
+  },
+  "4 La→descarga vacío": {
+   "ok": true,
+   "margen_cm": 2,
+   "largo": 0.27,
+   "carril_cm": 145,
+   "y_carril": 0.049
+  },
+  "4 La→descarga cargado": {
+   "ok": true,
+   "margen_cm": 1,
+   "largo": 0.27,
+   "carril_cm": 146,
+   "y_carril": 0.045
+  },
+  "4 Lb→adentro vacío": {
+   "ok": true,
+   "margen_cm": 2,
+   "largo": 0.27,
+   "carril_cm": 145,
+   "y_carril": 0.049
+  },
+  "4 Lb→adentro cargado": {
+   "ok": true,
+   "margen_cm": 1,
+   "largo": 0.27,
+   "carril_cm": 146,
+   "y_carril": 0.045
+  },
+  "4 Lb→descarga vacío": {
+   "ok": true,
+   "margen_cm": 2,
+   "largo": 0.27,
+   "carril_cm": 145,
+   "y_carril": 0.049
+  },
+  "4 Lb→descarga cargado": {
+   "ok": true,
+   "margen_cm": 1,
+   "largo": 0.27,
+   "carril_cm": 146,
+   "y_carril": 0.045
+  },
+  "4 Lc→adentro vacío": {
+   "ok": true,
+   "margen_cm": 2,
+   "largo": 0.27,
+   "carril_cm": 145,
+   "y_carril": 0.049
+  },
+  "4 Lc→adentro cargado": {
+   "ok": true,
+   "margen_cm": 1,
+   "largo": 0.27,
+   "carril_cm": 146,
+   "y_carril": 0.045
+  },
+  "4 Lc→descarga vacío": {
+   "ok": true,
+   "margen_cm": 2,
+   "largo": 0.27,
+   "carril_cm": 145,
+   "y_carril": 0.049
+  },
+  "4 Lc→descarga cargado": {
+   "ok": true,
+   "margen_cm": 1,
+   "largo": 0.27,
+   "carril_cm": 146,
+   "y_carril": 0.045
+  }
+ },
+ "retranqueo": {
+  "XPIV 1.50 4 La→adentro vacío": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": false,
+    "0.05": false,
+    "0.06": false,
+    "0.07": false,
+    "0.08": false,
+    "0.09": false
+   },
+   "minimo": null
+  },
+  "XPIV 1.50 4 Lc→adentro vacío": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": false,
+    "0.05": false,
+    "0.06": false,
+    "0.07": false,
+    "0.08": false,
+    "0.09": true
+   },
+   "minimo": "0.09"
+  },
+  "XPIV 1.50 4 La→adentro cargado": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": false,
+    "0.05": false,
+    "0.06": false,
+    "0.07": false,
+    "0.08": false,
+    "0.09": false
+   },
+   "minimo": null
+  },
+  "XPIV 1.50 4 Lc→adentro cargado": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": false,
+    "0.05": false,
+    "0.06": false,
+    "0.07": false,
+    "0.08": false,
+    "0.09": true
+   },
+   "minimo": "0.09"
+  },
+  "XPIV 1.60 4 La→adentro vacío": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": true,
+    "0.05": true,
+    "0.06": true,
+    "0.07": true,
+    "0.08": true,
+    "0.09": true
+   },
+   "minimo": "0.04"
+  },
+  "XPIV 1.60 4 Lc→adentro vacío": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": true,
+    "0.05": true,
+    "0.06": true,
+    "0.07": true,
+    "0.08": true,
+    "0.09": true
+   },
+   "minimo": "0.04"
+  },
+  "XPIV 1.60 4 La→adentro cargado": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": false,
+    "0.05": true,
+    "0.06": true,
+    "0.07": true,
+    "0.08": true,
+    "0.09": true
+   },
+   "minimo": "0.05"
+  },
+  "XPIV 1.60 4 Lc→adentro cargado": {
+   "fila": {
+    "0.00": false,
+    "0.01": false,
+    "0.02": false,
+    "0.03": false,
+    "0.04": false,
+    "0.05": true,
+    "0.06": true,
+    "0.07": true,
+    "0.08": true,
+    "0.09": true
+   },
+   "minimo": "0.05"
+  }
+ },
+ "control_rec0": {
+  "4 La→adentro vacío": false,
+  "4 La→adentro cargado": false,
+  "4 La→descarga vacío": false,
+  "4 La→descarga cargado": false,
+  "4 Lb→adentro vacío": false,
+  "4 Lb→adentro cargado": false,
+  "4 Lb→descarga vacío": false,
+  "4 Lb→descarga cargado": false,
+  "4 Lc→adentro vacío": false,
+  "4 Lc→adentro cargado": false,
+  "4 Lc→descarga vacío": false,
+  "4 Lc→descarga cargado": false
+ },
+ "rutas": {
+  "libre": {
+   "caso1": {
+    "5 3 Ra": {
+     "ida": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 4.83,
+      "tiempo": 5.9,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 4.56,
+        "giro": 1,
+        "tiempo": 4.7,
+        "ini": [
+         9.235,
+         0.0,
+         3.142
+        ],
+        "fin": [
+         13.795,
+         -0.068,
+         -3.123
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.27,
+        "giro": 89,
+        "tiempo": 1.2,
+        "ini": [
+         13.795,
+         -0.068,
+         -3.123
+        ],
+        "fin": [
+         13.617,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.0026862151751298187,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 4.56,
+         "tiempo": 4.7,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 4.56,
+           "giro": 1,
+           "tiempo": 4.7,
+           "ini": [
+            9.235,
+            0.0,
+            3.142
+           ],
+           "fin": [
+            13.795,
+            -0.068,
+            -3.123
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 3 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            13.795,
+            -0.068,
+            -3.123
+           ],
+           "fin": [
+            13.617,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia adentro",
+        8.37,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          24.18
+         ],
+         [
+          "VUELTA por la bahía 4 Lc (dos 90°)",
+          8.13
+         ],
+         [
+          "VUELTA por la bahía 4 Rc (dos 90°)",
+          8.1
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        5.83,
+        [
+         [
+          "TRASLADO",
+          4.56
+         ]
+        ]
+       ]
+      ]
+     },
+     "vuelta": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 13.34,
+      "tiempo": 11.5,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 0.27,
+        "giro": -87,
+        "tiempo": 1.2,
+        "ini": [
+         13.617,
+         -0.23,
+         -1.571
+        ],
+        "fin": [
+         13.771,
+         -0.045,
+         -3.097
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 13.07,
+        "giro": -3,
+        "tiempo": 10.4,
+        "ini": [
+         13.771,
+         -0.045,
+         -3.097
+        ],
+        "fin": [
+         0.7,
+         0.0,
+         -3.142
+        ]
+       }
+      ],
+      "salto_max_m": 0.004112868980988532,
+      "partes": [
+       [
+        "SALIDA de 5 3 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 0.27,
+           "giro": -87,
+           "tiempo": 1.2,
+           "ini": [
+            13.617,
+            -0.23,
+            -1.571
+           ],
+           "fin": [
+            13.771,
+            -0.045,
+            -3.097
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 13.07,
+         "tiempo": 10.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 13.07,
+           "giro": -3,
+           "tiempo": 10.4,
+           "ini": [
+            13.771,
+            -0.045,
+            -3.097
+           ],
+           "fin": [
+            0.7,
+            0.0,
+            -3.142
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        15.64,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          15.37
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          16.63
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          16.61
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        14.34,
+        [
+         [
+          "TRASLADO",
+          13.07
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    "5 3 Rb": {
+     "ida": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 5.95,
+      "tiempo": 6.6,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 5.68,
+        "giro": 1,
+        "tiempo": 5.5,
+        "ini": [
+         9.235,
+         0.0,
+         3.142
+        ],
+        "fin": [
+         14.912,
+         -0.068,
+         -3.123
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.27,
+        "giro": 89,
+        "tiempo": 1.2,
+        "ini": [
+         14.912,
+         -0.068,
+         -3.123
+        ],
+        "fin": [
+         14.733,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.0026862151751298187,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 5.68,
+         "tiempo": 5.5,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 5.68,
+           "giro": 1,
+           "tiempo": 5.5,
+           "ini": [
+            9.235,
+            0.0,
+            3.142
+           ],
+           "fin": [
+            14.912,
+            -0.068,
+            -3.123
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 3 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            14.912,
+            -0.068,
+            -3.123
+           ],
+           "fin": [
+            14.733,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia adentro",
+        9.49,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          25.3
+         ],
+         [
+          "VUELTA por la bahía 4 Lc (dos 90°)",
+          9.24
+         ],
+         [
+          "VUELTA por la bahía 4 Rc (dos 90°)",
+          9.22
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        6.95,
+        [
+         [
+          "TRASLADO",
+          5.68
+         ]
+        ]
+       ]
+      ]
+     },
+     "vuelta": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 14.46,
+      "tiempo": 12.3,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 0.27,
+        "giro": -87,
+        "tiempo": 1.2,
+        "ini": [
+         14.733,
+         -0.23,
+         -1.571
+        ],
+        "fin": [
+         14.887,
+         -0.045,
+         -3.097
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 14.19,
+        "giro": -3,
+        "tiempo": 11.1,
+        "ini": [
+         14.887,
+         -0.045,
+         -3.097
+        ],
+        "fin": [
+         0.7,
+         0.0,
+         -3.142
+        ]
+       }
+      ],
+      "salto_max_m": 0.004112868981285833,
+      "partes": [
+       [
+        "SALIDA de 5 3 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 0.27,
+           "giro": -87,
+           "tiempo": 1.2,
+           "ini": [
+            14.733,
+            -0.23,
+            -1.571
+           ],
+           "fin": [
+            14.887,
+            -0.045,
+            -3.097
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 14.19,
+         "tiempo": 11.1,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 14.19,
+           "giro": -3,
+           "tiempo": 11.1,
+           "ini": [
+            14.887,
+            -0.045,
+            -3.097
+           ],
+           "fin": [
+            0.7,
+            0.0,
+            -3.142
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        16.76,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          16.49
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          17.74
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          17.73
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        15.46,
+        [
+         [
+          "TRASLADO",
+          14.19
+         ]
+        ]
+       ]
+      ]
+     }
+    }
+   },
+   "barrido": [
+    {
+     "dir": "1 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 3.83,
+      "tiempo": 4.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 3.83,
+        "giro": 90,
+        "tiempo": 4.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         3.737,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 3.56,
+         "tiempo": 4.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 3.56,
+           "giro": 1,
+           "tiempo": 4.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            3.558,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            3.558,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            3.737,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        3.83,
+        [
+         [
+          "TRASLADO",
+          3.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.05,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          9.12
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.82
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.78
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "1 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 4.95,
+      "tiempo": 5.6,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 4.95,
+        "giro": 90,
+        "tiempo": 5.6,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         4.853,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 4.68,
+         "tiempo": 4.8,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 4.68,
+           "giro": 1,
+           "tiempo": 4.8,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            4.675,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            4.675,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            4.853,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        4.95,
+        [
+         [
+          "TRASLADO",
+          4.68
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        10.09,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          10.24
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          8.82
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          9.17
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "1 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 3.83,
+      "tiempo": 4.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 3.83,
+        "giro": -90,
+        "tiempo": 4.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         3.737,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 3.56,
+         "tiempo": 4.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 3.56,
+           "giro": -1,
+           "tiempo": 4.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            3.558,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            3.558,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            3.737,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        3.83,
+        [
+         [
+          "TRASLADO",
+          3.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.05,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          9.12
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.78
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.82
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "1 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 4.95,
+      "tiempo": 5.6,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 4.95,
+        "giro": -90,
+        "tiempo": 5.6,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         4.853,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 4.68,
+         "tiempo": 4.8,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 4.68,
+           "giro": -1,
+           "tiempo": 4.8,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            4.675,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            4.675,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            4.853,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        4.95,
+        [
+         [
+          "TRASLADO",
+          4.68
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        10.09,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          10.24
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          9.17
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          8.82
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 6.3,
+      "tiempo": 6.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 6.3,
+        "giro": 90,
+        "tiempo": 6.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         6.207,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 6.03,
+         "tiempo": 5.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 6.03,
+           "giro": 1,
+           "tiempo": 5.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            6.028,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            6.028,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            6.207,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        6.3,
+        [
+         [
+          "TRASLADO",
+          6.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          11.59
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.57
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.6
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 7.42,
+      "tiempo": 7.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 7.42,
+        "giro": 90,
+        "tiempo": 7.2,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         7.323,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 7.15,
+         "tiempo": 6.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 7.15,
+           "giro": 1,
+           "tiempo": 6.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            7.145,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            7.145,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            7.323,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        7.42,
+        [
+         [
+          "TRASLADO",
+          7.15
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        9.96,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          12.71
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          8.69
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          8.72
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 6.3,
+      "tiempo": 6.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 6.3,
+        "giro": -90,
+        "tiempo": 6.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         6.207,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 6.03,
+         "tiempo": 5.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 6.03,
+           "giro": -1,
+           "tiempo": 5.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            6.028,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            6.028,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            6.207,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        6.3,
+        [
+         [
+          "TRASLADO",
+          6.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          11.59
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.6
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.57
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 7.42,
+      "tiempo": 7.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 7.42,
+        "giro": -90,
+        "tiempo": 7.2,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         7.323,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 7.15,
+         "tiempo": 6.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 7.15,
+           "giro": -1,
+           "tiempo": 6.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            7.145,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            7.145,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            7.323,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        7.42,
+        [
+         [
+          "TRASLADO",
+          7.15
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        9.96,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          12.71
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          8.72
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          8.69
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 8.77,
+      "tiempo": 8.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 8.77,
+        "giro": 90,
+        "tiempo": 8.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         8.677,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 8.5,
+         "tiempo": 7.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 8.5,
+           "giro": 1,
+           "tiempo": 7.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            8.498,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            8.498,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            8.677,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        8.77,
+        [
+         [
+          "TRASLADO",
+          8.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        11.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          14.06
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          10.04
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          10.07
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 9.89,
+      "tiempo": 8.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 9.89,
+        "giro": 90,
+        "tiempo": 8.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         9.793,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 9.62,
+         "tiempo": 8.1,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 9.62,
+           "giro": 1,
+           "tiempo": 8.1,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            9.615,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            9.615,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            9.793,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        9.89,
+        [
+         [
+          "TRASLADO",
+          9.62
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        12.43,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          15.18
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          11.16
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          11.19
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 8.77,
+      "tiempo": 8.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 8.77,
+        "giro": -90,
+        "tiempo": 8.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         8.677,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 8.5,
+         "tiempo": 7.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 8.5,
+           "giro": -1,
+           "tiempo": 7.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            8.498,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            8.498,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            8.677,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        8.77,
+        [
+         [
+          "TRASLADO",
+          8.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        11.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          14.06
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          10.07
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          10.04
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 9.89,
+      "tiempo": 8.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 9.89,
+        "giro": -90,
+        "tiempo": 8.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         9.793,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 9.62,
+         "tiempo": 8.1,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 9.62,
+           "giro": -1,
+           "tiempo": 8.1,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            9.615,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            9.615,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            9.793,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        9.89,
+        [
+         [
+          "TRASLADO",
+          9.62
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        12.43,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          15.18
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          11.19
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          11.16
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 11.24,
+      "tiempo": 9.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 11.24,
+        "giro": 90,
+        "tiempo": 9.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         11.147,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 10.97,
+         "tiempo": 9.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 10.97,
+           "giro": 1,
+           "tiempo": 9.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            10.968,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            10.968,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            11.147,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        11.24,
+        [
+         [
+          "TRASLADO",
+          10.97
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        13.78,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          16.53
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          12.51
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          12.54
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 12.36,
+      "tiempo": 10.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 12.36,
+        "giro": 90,
+        "tiempo": 10.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         12.263,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 12.09,
+         "tiempo": 9.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 12.09,
+           "giro": 1,
+           "tiempo": 9.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            12.085,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            12.085,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            12.263,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        12.36,
+        [
+         [
+          "TRASLADO",
+          12.09
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        14.9,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          17.65
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          13.63
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          13.66
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 11.24,
+      "tiempo": 9.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 11.24,
+        "giro": -90,
+        "tiempo": 9.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         11.147,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 10.97,
+         "tiempo": 9.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 10.97,
+           "giro": -1,
+           "tiempo": 9.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            10.968,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            10.968,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            11.147,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        11.24,
+        [
+         [
+          "TRASLADO",
+          10.97
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        13.78,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          16.53
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          12.54
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          12.51
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 12.36,
+      "tiempo": 10.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 12.36,
+        "giro": -90,
+        "tiempo": 10.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         12.263,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 12.09,
+         "tiempo": 9.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 12.09,
+           "giro": -1,
+           "tiempo": 9.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            12.085,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            12.085,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            12.263,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        12.36,
+        [
+         [
+          "TRASLADO",
+          12.09
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        14.9,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          17.65
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          13.66
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          13.63
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 13.71,
+      "tiempo": 11.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 13.71,
+        "giro": 90,
+        "tiempo": 11.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         13.617,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 13.44,
+         "tiempo": 10.6,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 13.44,
+           "giro": 1,
+           "tiempo": 10.6,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            13.438,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            13.438,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            13.617,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        13.71,
+        [
+         [
+          "TRASLADO",
+          13.44
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        16.25,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          19.0
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          14.98
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          15.01
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 14.83,
+      "tiempo": 12.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 14.83,
+        "giro": 90,
+        "tiempo": 12.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         14.733,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 14.56,
+         "tiempo": 11.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 14.56,
+           "giro": 1,
+           "tiempo": 11.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            14.555,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            14.555,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            14.733,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        14.83,
+        [
+         [
+          "TRASLADO",
+          14.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        17.37,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          20.12
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          16.1
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          16.13
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 13.71,
+      "tiempo": 11.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 13.71,
+        "giro": -90,
+        "tiempo": 11.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         13.617,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 13.44,
+         "tiempo": 10.6,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 13.44,
+           "giro": -1,
+           "tiempo": 10.6,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            13.438,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            13.438,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            13.617,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        13.71,
+        [
+         [
+          "TRASLADO",
+          13.44
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        16.25,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          19.0
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          15.01
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          14.98
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 14.83,
+      "tiempo": 12.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 14.83,
+        "giro": -90,
+        "tiempo": 12.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         14.733,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 14.56,
+         "tiempo": 11.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 14.56,
+           "giro": -1,
+           "tiempo": 11.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            14.555,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            14.555,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            14.733,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        14.83,
+        [
+         [
+          "TRASLADO",
+          14.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        17.37,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          20.12
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          16.13
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          16.1
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 16.18,
+      "tiempo": 13.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 16.18,
+        "giro": 90,
+        "tiempo": 13.0,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         16.087,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 15.91,
+         "tiempo": 12.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 15.91,
+           "giro": 1,
+           "tiempo": 12.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            15.908,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            15.908,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            16.087,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        16.18,
+        [
+         [
+          "TRASLADO",
+          15.91
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        18.72,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          21.47
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          17.45
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          17.48
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 17.3,
+      "tiempo": 13.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 17.3,
+        "giro": 90,
+        "tiempo": 13.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         17.203,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 17.03,
+         "tiempo": 13.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 17.03,
+           "giro": 1,
+           "tiempo": 13.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            17.025,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            17.025,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            17.203,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        17.3,
+        [
+         [
+          "TRASLADO",
+          17.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        19.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          22.59
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          18.57
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          18.6
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 16.18,
+      "tiempo": 13.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 16.18,
+        "giro": -90,
+        "tiempo": 13.0,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         16.087,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 15.91,
+         "tiempo": 12.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 15.91,
+           "giro": -1,
+           "tiempo": 12.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            15.908,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            15.908,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            16.087,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        16.18,
+        [
+         [
+          "TRASLADO",
+          15.91
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        18.72,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          21.47
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          17.48
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          17.45
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 17.3,
+      "tiempo": 13.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 17.3,
+        "giro": -90,
+        "tiempo": 13.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         17.203,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 17.03,
+         "tiempo": 13.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 17.03,
+           "giro": -1,
+           "tiempo": 13.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            17.025,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            17.025,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            17.203,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        17.3,
+        [
+         [
+          "TRASLADO",
+          17.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        19.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          22.59
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          18.6
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          18.57
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 18.65,
+      "tiempo": 14.7,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 18.65,
+        "giro": 90,
+        "tiempo": 14.7,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         18.557,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 18.38,
+         "tiempo": 13.9,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 18.38,
+           "giro": 1,
+           "tiempo": 13.9,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            18.378,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            18.378,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            18.557,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        18.65,
+        [
+         [
+          "TRASLADO",
+          18.38
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        21.19,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          23.94
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          19.92
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          19.95
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 19.77,
+      "tiempo": 15.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 19.77,
+        "giro": 90,
+        "tiempo": 15.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         19.673,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 19.5,
+         "tiempo": 14.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 19.5,
+           "giro": 1,
+           "tiempo": 14.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            19.495,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            19.495,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            19.673,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        19.77,
+        [
+         [
+          "TRASLADO",
+          19.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        22.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          25.06
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          21.04
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          21.07
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 18.65,
+      "tiempo": 14.7,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 18.65,
+        "giro": -90,
+        "tiempo": 14.7,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         18.557,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 18.38,
+         "tiempo": 13.9,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 18.38,
+           "giro": -1,
+           "tiempo": 13.9,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            18.378,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            18.378,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            18.557,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        18.65,
+        [
+         [
+          "TRASLADO",
+          18.38
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        21.19,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          23.94
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          19.95
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          19.92
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 19.77,
+      "tiempo": 15.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 19.77,
+        "giro": -90,
+        "tiempo": 15.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         19.673,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 19.5,
+         "tiempo": 14.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 19.5,
+           "giro": -1,
+           "tiempo": 14.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            19.495,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            19.495,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            19.673,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        19.77,
+        [
+         [
+          "TRASLADO",
+          19.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        22.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          25.06
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          21.07
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          21.04
+         ]
+        ]
+       ]
+      ]
+     }
+    }
+   ],
+   "tabla_fsm": {
+    "TICK": 0.5,
+    "VMAX": 1.5,
+    "ACC": 0.9,
+    "VEL_ELEV": 0.55,
+    "DUR_PANTO": {
+     "APROXIMA": 1.0,
+     "EXTIENDE": 1.4,
+     "TOMA": 1.2,
+     "RETRAE": 1.4
+    },
+    "salidas": {
+     "La|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": 0.068
+     },
+     "La|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": 0.068
+     },
+     "Lb|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": 0.068
+     },
+     "Lb|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": 0.068
+     },
+     "Lc|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": 0.068
+     },
+     "Lc|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": 0.068
+     },
+     "Ra|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": -0.068
+     },
+     "Ra|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": -0.068
+     },
+     "Rb|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": -0.068
+     },
+     "Rb|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": -0.068
+     },
+     "Rc|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": -0.068
+     },
+     "Rc|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": -0.068
+     }
+    },
+    "carril central→giro": {
+     "largo": 4.21,
+     "tiempo": 6.01,
+     "cambios": 0
+    },
+    "carril giro→giro": {
+     "largo": 4.37,
+     "tiempo": 7.64,
+     "cambios": 0
+    },
+    "vuelta_zona": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 4.56,
+     "tiempo": 7.6,
+     "tramos": [
+      {
+       "sentido": "reversa",
+       "largo": 3.75,
+       "giro": -178,
+       "tiempo": 5.7,
+       "ini": [
+        4.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.857,
+        -0.026,
+        3.175
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.81,
+       "giro": -2,
+       "tiempo": 1.9,
+       "ini": [
+        1.857,
+        -0.026,
+        3.175
+       ],
+       "fin": [
+        1.05,
+        0.0,
+        3.142
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "central": {
+   "caso1": {
+    "5 3 Ra": {
+     "ida": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 4.83,
+      "tiempo": 5.9,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 4.56,
+        "giro": 1,
+        "tiempo": 4.7,
+        "ini": [
+         9.235,
+         0.0,
+         3.142
+        ],
+        "fin": [
+         13.795,
+         -0.068,
+         -3.123
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.27,
+        "giro": 89,
+        "tiempo": 1.2,
+        "ini": [
+         13.795,
+         -0.068,
+         -3.123
+        ],
+        "fin": [
+         13.617,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.0026862151751298187,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 4.56,
+         "tiempo": 4.7,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 4.56,
+           "giro": 1,
+           "tiempo": 4.7,
+           "ini": [
+            9.235,
+            0.0,
+            3.142
+           ],
+           "fin": [
+            13.795,
+            -0.068,
+            -3.123
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 3 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            13.795,
+            -0.068,
+            -3.123
+           ],
+           "fin": [
+            13.617,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia adentro",
+        8.37,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          24.18
+         ],
+         [
+          "VUELTA por la bahía 4 Lc (dos 90°)",
+          8.13
+         ],
+         [
+          "VUELTA por la bahía 4 Rc (dos 90°)",
+          8.1
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        5.83,
+        [
+         [
+          "TRASLADO",
+          4.56
+         ]
+        ]
+       ]
+      ]
+     },
+     "vuelta": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 13.34,
+      "tiempo": 11.5,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 0.27,
+        "giro": -87,
+        "tiempo": 1.2,
+        "ini": [
+         13.617,
+         -0.23,
+         -1.571
+        ],
+        "fin": [
+         13.771,
+         -0.045,
+         -3.097
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 13.07,
+        "giro": -3,
+        "tiempo": 10.4,
+        "ini": [
+         13.771,
+         -0.045,
+         -3.097
+        ],
+        "fin": [
+         0.7,
+         0.0,
+         -3.142
+        ]
+       }
+      ],
+      "salto_max_m": 0.004112868980988532,
+      "partes": [
+       [
+        "SALIDA de 5 3 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 0.27,
+           "giro": -87,
+           "tiempo": 1.2,
+           "ini": [
+            13.617,
+            -0.23,
+            -1.571
+           ],
+           "fin": [
+            13.771,
+            -0.045,
+            -3.097
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 13.07,
+         "tiempo": 10.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 13.07,
+           "giro": -3,
+           "tiempo": 10.4,
+           "ini": [
+            13.771,
+            -0.045,
+            -3.097
+           ],
+           "fin": [
+            0.7,
+            0.0,
+            -3.142
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        15.64,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          15.37
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          16.63
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          16.61
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        14.34,
+        [
+         [
+          "TRASLADO",
+          13.07
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    "5 3 Rb": {
+     "ida": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 5.95,
+      "tiempo": 6.6,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 5.68,
+        "giro": 1,
+        "tiempo": 5.5,
+        "ini": [
+         9.235,
+         0.0,
+         3.142
+        ],
+        "fin": [
+         14.912,
+         -0.068,
+         -3.123
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 0.27,
+        "giro": 89,
+        "tiempo": 1.2,
+        "ini": [
+         14.912,
+         -0.068,
+         -3.123
+        ],
+        "fin": [
+         14.733,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.0026862151751298187,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 5.68,
+         "tiempo": 5.5,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 5.68,
+           "giro": 1,
+           "tiempo": 5.5,
+           "ini": [
+            9.235,
+            0.0,
+            3.142
+           ],
+           "fin": [
+            14.912,
+            -0.068,
+            -3.123
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 3 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            14.912,
+            -0.068,
+            -3.123
+           ],
+           "fin": [
+            14.733,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia adentro",
+        9.49,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          25.3
+         ],
+         [
+          "VUELTA por la bahía 4 Lc (dos 90°)",
+          9.24
+         ],
+         [
+          "VUELTA por la bahía 4 Rc (dos 90°)",
+          9.22
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        6.95,
+        [
+         [
+          "TRASLADO",
+          5.68
+         ]
+        ]
+       ]
+      ]
+     },
+     "vuelta": {
+      "ok": true,
+      "cambios": 1,
+      "largo": 14.46,
+      "tiempo": 12.3,
+      "tramos": [
+       {
+        "sentido": "reversa",
+        "largo": 0.27,
+        "giro": -87,
+        "tiempo": 1.2,
+        "ini": [
+         14.733,
+         -0.23,
+         -1.571
+        ],
+        "fin": [
+         14.887,
+         -0.045,
+         -3.097
+        ]
+       },
+       {
+        "sentido": "adelante",
+        "largo": 14.19,
+        "giro": -3,
+        "tiempo": 11.1,
+        "ini": [
+         14.887,
+         -0.045,
+         -3.097
+        ],
+        "fin": [
+         0.7,
+         0.0,
+         -3.142
+        ]
+       }
+      ],
+      "salto_max_m": 0.004112868981285833,
+      "partes": [
+       [
+        "SALIDA de 5 3 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "reversa",
+           "largo": 0.27,
+           "giro": -87,
+           "tiempo": 1.2,
+           "ini": [
+            14.733,
+            -0.23,
+            -1.571
+           ],
+           "fin": [
+            14.887,
+            -0.045,
+            -3.097
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 14.19,
+         "tiempo": 11.1,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 14.19,
+           "giro": -3,
+           "tiempo": 11.1,
+           "ini": [
+            14.887,
+            -0.045,
+            -3.097
+           ],
+           "fin": [
+            0.7,
+            0.0,
+            -3.142
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        16.76,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          16.49
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          17.74
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          17.73
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia la descarga, llega con uñas hacia la descarga",
+        15.46,
+        [
+         [
+          "TRASLADO",
+          14.19
+         ]
+        ]
+       ]
+      ]
+     }
+    }
+   },
+   "barrido": [
+    {
+     "dir": "1 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 3.83,
+      "tiempo": 4.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 3.83,
+        "giro": 90,
+        "tiempo": 4.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         3.737,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 3.56,
+         "tiempo": 4.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 3.56,
+           "giro": 1,
+           "tiempo": 4.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            3.558,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            3.558,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            3.737,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        3.83,
+        [
+         [
+          "TRASLADO",
+          3.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.05,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          9.12
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.82
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.78
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "1 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 4.95,
+      "tiempo": 5.6,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 4.95,
+        "giro": 90,
+        "tiempo": 5.6,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         4.853,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 4.68,
+         "tiempo": 4.8,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 4.68,
+           "giro": 1,
+           "tiempo": 4.8,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            4.675,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            4.675,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            4.853,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        4.95,
+        [
+         [
+          "TRASLADO",
+          4.68
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        10.09,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          10.24
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          8.82
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          9.17
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "1 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 3.83,
+      "tiempo": 4.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 3.83,
+        "giro": -90,
+        "tiempo": 4.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         3.737,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 3.56,
+         "tiempo": 4.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 3.56,
+           "giro": -1,
+           "tiempo": 4.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            3.558,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            3.558,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            3.737,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        3.83,
+        [
+         [
+          "TRASLADO",
+          3.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.05,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          9.12
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.78
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.82
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "1 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 4.95,
+      "tiempo": 5.6,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 4.95,
+        "giro": -90,
+        "tiempo": 5.6,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         4.853,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 4.68,
+         "tiempo": 4.8,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 4.68,
+           "giro": -1,
+           "tiempo": 4.8,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            4.675,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 1 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            4.675,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            4.853,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        4.95,
+        [
+         [
+          "TRASLADO",
+          4.68
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        10.09,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          10.24
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          9.17
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          8.82
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 6.3,
+      "tiempo": 6.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 6.3,
+        "giro": 90,
+        "tiempo": 6.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         6.207,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 6.03,
+         "tiempo": 5.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 6.03,
+           "giro": 1,
+           "tiempo": 5.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            6.028,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            6.028,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            6.207,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        6.3,
+        [
+         [
+          "TRASLADO",
+          6.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          11.59
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.57
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.6
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 7.42,
+      "tiempo": 7.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 7.42,
+        "giro": 90,
+        "tiempo": 7.2,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         7.323,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585586,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 7.15,
+         "tiempo": 6.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 7.15,
+           "giro": 1,
+           "tiempo": 6.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            7.145,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            7.145,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            7.323,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        7.42,
+        [
+         [
+          "TRASLADO",
+          7.15
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        9.96,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          12.71
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          8.69
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          8.72
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 6.3,
+      "tiempo": 6.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 6.3,
+        "giro": -90,
+        "tiempo": 6.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         6.207,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 6.03,
+         "tiempo": 5.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 6.03,
+           "giro": -1,
+           "tiempo": 5.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            6.028,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            6.028,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            6.207,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        6.3,
+        [
+         [
+          "TRASLADO",
+          6.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        8.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          11.59
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          7.6
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          7.57
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "2 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 7.42,
+      "tiempo": 7.2,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 7.42,
+        "giro": -90,
+        "tiempo": 7.2,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         7.323,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393473,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 7.15,
+         "tiempo": 6.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 7.15,
+           "giro": -1,
+           "tiempo": 6.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            7.145,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 2 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            7.145,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            7.323,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        7.42,
+        [
+         [
+          "TRASLADO",
+          7.15
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        9.96,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          12.71
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          8.72
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          8.69
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 8.77,
+      "tiempo": 8.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 8.77,
+        "giro": 90,
+        "tiempo": 8.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         8.677,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.0023417007645855966,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 8.5,
+         "tiempo": 7.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 8.5,
+           "giro": 1,
+           "tiempo": 7.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            8.498,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            8.498,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            8.677,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        8.77,
+        [
+         [
+          "TRASLADO",
+          8.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        11.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          14.06
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          10.04
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          10.07
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 9.89,
+      "tiempo": 8.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 9.89,
+        "giro": 90,
+        "tiempo": 8.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         9.793,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.0023417007645855966,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 9.62,
+         "tiempo": 8.1,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 9.62,
+           "giro": 1,
+           "tiempo": 8.1,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            9.615,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            9.615,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            9.793,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        9.89,
+        [
+         [
+          "TRASLADO",
+          9.62
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        12.43,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          15.18
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          11.16
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          11.19
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 8.77,
+      "tiempo": 8.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 8.77,
+        "giro": -90,
+        "tiempo": 8.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         8.677,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393424,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 8.5,
+         "tiempo": 7.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 8.5,
+           "giro": -1,
+           "tiempo": 7.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            8.498,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            8.498,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            8.677,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        8.77,
+        [
+         [
+          "TRASLADO",
+          8.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        11.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          14.06
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          10.07
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          10.04
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "3 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 9.89,
+      "tiempo": 8.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 9.89,
+        "giro": -90,
+        "tiempo": 8.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         9.793,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393424,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 9.62,
+         "tiempo": 8.1,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 9.62,
+           "giro": -1,
+           "tiempo": 8.1,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            9.615,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 3 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            9.615,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            9.793,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        9.89,
+        [
+         [
+          "TRASLADO",
+          9.62
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        12.43,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          15.18
+         ],
+         [
+          "VUELTA por la bahía 1 Lc (dos 90°)",
+          11.19
+         ],
+         [
+          "VUELTA por la bahía 1 Rc (dos 90°)",
+          11.16
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 11.24,
+      "tiempo": 9.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 11.24,
+        "giro": 90,
+        "tiempo": 9.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         11.147,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585534,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 10.97,
+         "tiempo": 9.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 10.97,
+           "giro": 1,
+           "tiempo": 9.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            10.968,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            10.968,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            11.147,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        11.24,
+        [
+         [
+          "TRASLADO",
+          10.97
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        13.78,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          16.53
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          12.51
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          12.54
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 12.36,
+      "tiempo": 10.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 12.36,
+        "giro": 90,
+        "tiempo": 10.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         12.263,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585534,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 12.09,
+         "tiempo": 9.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 12.09,
+           "giro": 1,
+           "tiempo": 9.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            12.085,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            12.085,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            12.263,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        12.36,
+        [
+         [
+          "TRASLADO",
+          12.09
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        14.9,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          17.65
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          13.63
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          13.66
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 11.24,
+      "tiempo": 9.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 11.24,
+        "giro": -90,
+        "tiempo": 9.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         11.147,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393424,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 10.97,
+         "tiempo": 9.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 10.97,
+           "giro": -1,
+           "tiempo": 9.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            10.968,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            10.968,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            11.147,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        11.24,
+        [
+         [
+          "TRASLADO",
+          10.97
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        13.78,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          16.53
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          12.54
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          12.51
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "4 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 12.36,
+      "tiempo": 10.5,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 12.36,
+        "giro": -90,
+        "tiempo": 10.5,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         12.263,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393567,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 12.09,
+         "tiempo": 9.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 12.09,
+           "giro": -1,
+           "tiempo": 9.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            12.085,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 4 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            12.085,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            12.263,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        12.36,
+        [
+         [
+          "TRASLADO",
+          12.09
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        14.9,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          17.65
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          13.66
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          13.63
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 13.71,
+      "tiempo": 11.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 13.71,
+        "giro": 90,
+        "tiempo": 11.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         13.617,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585534,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 13.44,
+         "tiempo": 10.6,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 13.44,
+           "giro": 1,
+           "tiempo": 10.6,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            13.438,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            13.438,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            13.617,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        13.71,
+        [
+         [
+          "TRASLADO",
+          13.44
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        16.25,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          19.0
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          14.98
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          15.01
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 14.83,
+      "tiempo": 12.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 14.83,
+        "giro": 90,
+        "tiempo": 12.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         14.733,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585534,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 14.56,
+         "tiempo": 11.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 14.56,
+           "giro": 1,
+           "tiempo": 11.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            14.555,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            14.555,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            14.733,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        14.83,
+        [
+         [
+          "TRASLADO",
+          14.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        17.37,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          20.12
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          16.1
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          16.13
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 13.71,
+      "tiempo": 11.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 13.71,
+        "giro": -90,
+        "tiempo": 11.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         13.617,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393567,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 13.44,
+         "tiempo": 10.6,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 13.44,
+           "giro": -1,
+           "tiempo": 10.6,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            13.438,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            13.438,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            13.617,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        13.71,
+        [
+         [
+          "TRASLADO",
+          13.44
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        16.25,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          19.0
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          15.01
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          14.98
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "5 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 14.83,
+      "tiempo": 12.1,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 14.83,
+        "giro": -90,
+        "tiempo": 12.1,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         14.733,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393567,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 14.56,
+         "tiempo": 11.4,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 14.56,
+           "giro": -1,
+           "tiempo": 11.4,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            14.555,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 5 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            14.555,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            14.733,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        14.83,
+        [
+         [
+          "TRASLADO",
+          14.56
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        17.37,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          20.12
+         ],
+         [
+          "VUELTA por la bahía 2 Lc (dos 90°)",
+          16.13
+         ],
+         [
+          "VUELTA por la bahía 2 Rc (dos 90°)",
+          16.1
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 16.18,
+      "tiempo": 13.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 16.18,
+        "giro": 90,
+        "tiempo": 13.0,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         16.087,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585534,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 15.91,
+         "tiempo": 12.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 15.91,
+           "giro": 1,
+           "tiempo": 12.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            15.908,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            15.908,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            16.087,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        16.18,
+        [
+         [
+          "TRASLADO",
+          15.91
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        18.72,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          21.47
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          17.45
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          17.48
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 17.3,
+      "tiempo": 13.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 17.3,
+        "giro": 90,
+        "tiempo": 13.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         17.203,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585534,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 17.03,
+         "tiempo": 13.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 17.03,
+           "giro": 1,
+           "tiempo": 13.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            17.025,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            17.025,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            17.203,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        17.3,
+        [
+         [
+          "TRASLADO",
+          17.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        19.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          22.59
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          18.57
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          18.6
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 16.18,
+      "tiempo": 13.0,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 16.18,
+        "giro": -90,
+        "tiempo": 13.0,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         16.087,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393567,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 15.91,
+         "tiempo": 12.3,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 15.91,
+           "giro": -1,
+           "tiempo": 12.3,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            15.908,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            15.908,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            16.087,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        16.18,
+        [
+         [
+          "TRASLADO",
+          15.91
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        18.72,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          21.47
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          17.48
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          17.45
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "6 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 17.3,
+      "tiempo": 13.8,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 17.3,
+        "giro": -90,
+        "tiempo": 13.8,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         17.203,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393567,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 17.03,
+         "tiempo": 13.0,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 17.03,
+           "giro": -1,
+           "tiempo": 13.0,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            17.025,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 6 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            17.025,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            17.203,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        17.3,
+        [
+         [
+          "TRASLADO",
+          17.03
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        19.84,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          22.59
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          18.6
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          18.57
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 La",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 18.65,
+      "tiempo": 14.7,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 18.65,
+        "giro": 90,
+        "tiempo": 14.7,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         18.557,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585618,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 18.38,
+         "tiempo": 13.9,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 18.38,
+           "giro": 1,
+           "tiempo": 13.9,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            18.378,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 La",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            18.378,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            18.557,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        18.65,
+        [
+         [
+          "TRASLADO",
+          18.38
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        21.19,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          23.94
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          19.92
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          19.92
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 Lb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 19.77,
+      "tiempo": 15.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 19.77,
+        "giro": 90,
+        "tiempo": 15.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         19.673,
+         0.23,
+         1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764585785,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 19.5,
+         "tiempo": 14.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 19.5,
+           "giro": 1,
+           "tiempo": 14.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            19.495,
+            0.068,
+            0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 Lb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": 89,
+           "tiempo": 1.2,
+           "ini": [
+            19.495,
+            0.068,
+            0.019
+           ],
+           "fin": [
+            19.673,
+            0.23,
+            1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        19.77,
+        [
+         [
+          "TRASLADO",
+          19.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        22.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          25.06
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          21.04
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          21.04
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 Ra",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 18.65,
+      "tiempo": 14.7,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 18.65,
+        "giro": -90,
+        "tiempo": 14.7,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         18.557,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.002341700764393567,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 18.38,
+         "tiempo": 13.9,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 18.38,
+           "giro": -1,
+           "tiempo": 13.9,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            18.378,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 Ra",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            18.378,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            18.557,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        18.65,
+        [
+         [
+          "TRASLADO",
+          18.38
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        21.19,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          23.94
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          19.92
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          19.92
+         ]
+        ]
+       ]
+      ]
+     }
+    },
+    {
+     "dir": "7 Rb",
+     "llega": {
+      "ok": true,
+      "cambios": 0,
+      "largo": 19.77,
+      "tiempo": 15.4,
+      "tramos": [
+       {
+        "sentido": "adelante",
+        "largo": 19.77,
+        "giro": -90,
+        "tiempo": 15.4,
+        "ini": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "fin": [
+         19.673,
+         -0.23,
+         -1.571
+        ]
+       }
+      ],
+      "salto_max_m": 0.00234170076439371,
+      "partes": [
+       [
+        "TRASLADO",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 19.5,
+         "tiempo": 14.7,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 19.5,
+           "giro": -1,
+           "tiempo": 14.7,
+           "ini": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "fin": [
+            19.495,
+            -0.068,
+            -0.019
+           ]
+          }
+         ]
+        }
+       ],
+       [
+        "ENTRADA a 7 Rb",
+        {
+         "ok": true,
+         "cambios": 0,
+         "largo": 0.27,
+         "tiempo": 1.2,
+         "tramos": [
+          {
+           "sentido": "adelante",
+           "largo": 0.27,
+           "giro": -89,
+           "tiempo": 1.2,
+           "ini": [
+            19.495,
+            -0.068,
+            -0.019
+           ],
+           "fin": [
+            19.673,
+            -0.23,
+            -1.571
+           ]
+          }
+         ]
+        }
+       ]
+      ],
+      "intentos": [
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia adentro",
+        19.77,
+        [
+         [
+          "TRASLADO",
+          19.5
+         ]
+        ]
+       ],
+       [
+        "sale con uñas hacia adentro, llega con uñas hacia la descarga",
+        22.31,
+        [
+         [
+          "VUELTA en la zona de descarga",
+          25.06
+         ],
+         [
+          "VUELTA por la bahía 3 Lc (dos 90°)",
+          21.04
+         ],
+         [
+          "VUELTA por la bahía 3 Rc (dos 90°)",
+          21.04
+         ]
+        ]
+       ]
+      ]
+     }
+    }
+   ],
+   "tabla_fsm": {
+    "TICK": 0.5,
+    "VMAX": 1.5,
+    "ACC": 0.9,
+    "VEL_ELEV": 0.55,
+    "DUR_PANTO": {
+     "APROXIMA": 1.0,
+     "EXTIENDE": 1.4,
+     "TOMA": 1.2,
+     "RETRAE": 1.4
+    },
+    "salidas": {
+     "La|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": 0.068
+     },
+     "La|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": 0.068
+     },
+     "Lb|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": 0.068
+     },
+     "Lb|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": 0.068
+     },
+     "Lc|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": 0.068
+     },
+     "Lc|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": 0.068
+     },
+     "Ra|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": -0.068
+     },
+     "Ra|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": -0.068
+     },
+     "Rb|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": -0.068
+     },
+     "Rb|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": -0.068
+     },
+     "Rc|adentro": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": -0.178,
+      "y_fin": -0.068
+     },
+     "Rc|descarga": {
+      "tiempo": 1.16,
+      "cambios": 0,
+      "largo": 0.27,
+      "primer_tramo": 1.16,
+      "resto": 0.0,
+      "dx_fin": 0.178,
+      "y_fin": -0.068
+     }
+    },
+    "carril central→giro": {
+     "largo": 4.21,
+     "tiempo": 6.01,
+     "cambios": 0
+    },
+    "carril giro→giro": {
+     "largo": 4.37,
+     "tiempo": 7.64,
+     "cambios": 0
+    },
+    "vuelta_zona": {
+     "ok": true,
+     "cambios": 1,
+     "largo": 4.56,
+     "tiempo": 7.6,
+     "tramos": [
+      {
+       "sentido": "reversa",
+       "largo": 3.75,
+       "giro": -178,
+       "tiempo": 5.7,
+       "ini": [
+        4.0,
+        0.0,
+        0.0
+       ],
+       "fin": [
+        1.857,
+        -0.026,
+        3.175
+       ]
+      },
+      {
+       "sentido": "adelante",
+       "largo": 0.81,
+       "giro": -2,
+       "tiempo": 1.9,
+       "ini": [
+        1.857,
+        -0.026,
+        3.175
+       ],
+       "fin": [
+        1.05,
+        0.0,
+        3.142
+       ]
+      }
+     ]
+    }
+   }
+  }
+ }
+}

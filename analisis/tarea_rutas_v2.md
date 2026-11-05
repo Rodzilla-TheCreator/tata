@@ -1,5 +1,16 @@
 # Encargo — rutas v2: postes, retranqueo de 6 cm y carril central; validar contra el video del operador
 
+> **HECHO 05-nov-2026 en la i3.** Sección «v2» de `rutas_resultados.md`.
+> - **Con XPIV 1.50 (δmax 78°) el giro sin reversa NO existe:** la cuenta (3.12 m entre postes)
+>   no alcanza, porque falta la cinemática.
+> - **Aparece con XPIV ≥ 1.58 (δmax ≥ ~83°).** Se trabaja con 1.60, como SUPUESTO tomado del video.
+> - **Ahí sale para `a`, `b` y centro, en los dos sentidos:** margen de 2 cm vacío y 1 cm cargado,
+>   retranqueo mínimo de 4–5 cm. El control con retranqueo 0 da 0/12.
+> - **El giro arranca a 5 cm del eje:** la regla del carril central sale sola. El caso de maje
+>   y las 28 del barrido salen como el video.
+> - **Visibilidad con las rutas v2:** A2 cada 2 bahías, B cada 1 (cada 2 con marcas alternadas).
+> - **La FSM sigue con la tabla v1** (anotado como pendiente).
+
 **Para la sesión de i3.** Sigue a `tarea_rutas_bahias.md` y a `percepcion/tarea_visibilidad.md`,
 los dos hechos el 05-nov. Leé `CLAUDE.md`, `analisis/rutas_resultados.md` (sobre todo las
 secciones «Dato de campo» y «Afinado» del final) y la sección de visibilidad de
