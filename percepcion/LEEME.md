@@ -196,3 +196,18 @@ esa convención interna coincide con la realidad, no solo consigo misma).
 equivalente con **dos** cámaras montadas en el equipo real (el `montaje` de cada una) para
 confirmar que `cth` (ángulo de montaje) también se combina con el signo correcto — hoy solo se
 probó con la cámara haciendo de "equipo" directamente (`montaje` trivial).
+
+
+## Dato en tensión — dónde van las dos cámaras (05-nov-2026)
+
+| Fuente | Dice |
+|---|---|
+| `docs/03` §«Dos cámaras USB» | **una frontal + una lateral.** En el pasillo la frontal ve la cabecera y la lateral la cara del rack; en el giro de 90° intercambian papeles |
+| `sim_sintetico.py` (EKF, 02-nov) | **dos laterales** a ±0.55 m del eje de carga, una mirando a cada rack — marcado como SUPUESTO |
+
+No se contradicen en lo que el EKF validó (el filtro no depende de dónde esté la cámara), pero el
+número de marcas visibles y los tramos ciegos sí. **Manda `docs/03`.** Pendiente: correr el
+sintético con frontal + lateral, con marcas también en la cabecera del pasillo.
+
+Para la frontal, la cabecera puede estar a 6 m: una marca de 15 cm ahí son ~16 px con la C920
+(fx 623), en el límite de detección. **En la cabecera, marcas de 30 cm.**
