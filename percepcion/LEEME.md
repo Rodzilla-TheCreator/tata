@@ -228,3 +228,145 @@ sintético con frontal + lateral, con marcas también en la cabecera del pasillo
 
 Para la frontal, la cabecera puede estar a 6 m: una marca de 15 cm ahí son ~16 px con la C920
 (fx 623), en el límite de detección. **En la cabecera, marcas de 30 cm.**
+
+> **Actualizado el 05-nov con `visibilidad.py` (sección siguiente).** maje descartó las marcas en
+> las cabeceras: van solo en las caras de los racks. Sin cabecera, la frontal de `docs/03` ve las
+> caras siempre de refilón y **es el peor montaje** de los cinco. Ver la tabla decía/es abajo.
+
+
+## Visibilidad de ArUco a lo largo de las rutas — 05-nov-2026, en la i3
+
+`visibilidad.py` · `rutas_densas.py` · figuras `visibilidad_<montaje>.png` · números en
+`visibilidad_resultados.json`. Encargo: `tarea_visibilidad.md`. Primera pasada en 2D con altura:
+sin luz, sin desenfoque por movimiento, sin oclusión por gente o por el mástil.
+
+```
+py percepcion/rutas_densas.py    # una vez, ~2.5 min: los 30 recorridos del planificador, primitiva por primitiva
+py percepcion/visibilidad.py     # ~21 min en la i3
+```
+
+**Cómo está hecho:**
+- **Recorridos:** los de `analisis/planificador_rutas.py`. El caso de maje (3L → 5 3 Ra / Rb →
+  descarga) y el barrido (descarga → 7 bahías × L/R × a/b), reproducidos pieza por pieza (1 cm)
+  con el perfil de velocidad del planificador. La llegada cae a 0.02 cm de la meta.
+- **Marcas:** sobre los postes de las dos caras, cada N bahías (2.47 m entre postes; ½ = también a
+  mitad de bahía), a 1.00 m de altura (SUPUESTO), de 15 cm.
+- **Cámara:** la C920 calibrada (fx 623.4, 640×480, FOV 54.3°), en 3D con pitch.
+- **Se ve una marca si:** entra **completa** en la imagen, mide ≥ `PX_MIN` = 20 px y la incidencia
+  es ≤ `ANG_MAX` = 60°. Los dos son SUPUESTO; los mide maje.
+- **EKF:** el de `ekf.py`, con la odometría sesgada de `sim_sintetico.py` (escalada para dar el
+  mismo ruido por segundo) y ruido de medición que crece con la distancia.
+- **Criterio:** error lateral **al llegar al hueco** < 4.5 cm en **todas** las llegadas. Son 2
+  recorridos de maje + 12 del barrido (bahías 2, 4 y 6), × 6 semillas = **84 llegadas** por celda.
+
+**Montajes** (posición respecto del eje de carga; altura 1.0 m salvo donde se indica):
+
+| | Cámaras |
+|---|---|
+| **A** | lateral izquierda en la capota (−0.75, +0.53, 90°) + **trasera derecha hacia atrás** en el culo (−1.50, 0, 180°). La idea de maje |
+| **A2** | la misma lateral + **trasera en diagonal** (−135°, hacia atrás y a la derecha) |
+| **B** | dos laterales, una a cada lado (lo de `sim_sintetico.py`) |
+| **C** | dos laterales **altas en la jaula** (2.2 m, ±0.40), inclinadas 47° hacia abajo |
+| **D** | **frontal** en el mástil (2.2 m, mirando a las uñas, −10°) + lateral izquierda (`docs/03`) |
+
+### El resultado: espaciado máximo que llega al hueco a ±4.5 cm
+
+| Montaje | **Espaciado máximo** | Error máx. ahí | Tramo ciego más largo (1 bahía) | 0 / 1 / 2 cámaras (1 bahía, en movimiento) | En el giro | En la alineación | **Una sola cámara en el giro** |
+|---|---|---|---|---|---|---|---|
+| A · lateral + trasera | **2 bahías (4.94 m)** | 3.99 cm | 4.3 m · 8.3 s | 58 / 32 / 10 % | 42 / 36 / 22 | 92 / 8 / 0 | **no alcanza:** baja a 1 bahía con cualquiera de las dos |
+| **A2 · lateral + trasera diagonal** | **3 bahías (7.41 m)** | 3.85 cm | 4.2 m · 7.8 s | 35 / 49 / 16 % | 35 / 49 / 16 | 92 / 8 / 0 | **alcanza con la lateral** (3); con la diagonal sola, 2 |
+| B · dos laterales | 2 bahías (4.94 m) | 2.30 cm | 3.3 m · 6.0 s | 42 / 45 / 12 % | 28 / 56 / 16 | 88 / 12 / 0 | alcanza (2 con cualquiera) |
+| C · laterales altas | 2 bahías (4.94 m) | 2.66 cm | 4.5 m · 8.9 s | 38 / 52 / 10 % | 30 / 54 / 16 | 93 / 7 / 0 | alcanza (2 con cualquiera) |
+| D · frontal + lateral | **1 bahía (2.47 m)** | 2.78 cm | 3.8 m · 5.5 s | 61 / 39 / 0 % | 50 / 50 / 0 | 92 / 8 / 0 | la frontal sola: ½ bahía |
+
+El EKF por espaciado (error máximo sobre 84 llegadas, en cm; lo que pasa de 4.5 cm va en negrita):
+
+| | ½ (1.24 m) | 1 (2.47 m) | 2 (4.94 m) | 3 (7.41 m) | 4 (9.88 m) | una por cara (control) |
+|---|---|---|---|---|---|---|
+| A | 1.2 | 2.3 | 4.0 | **5.7** (2/84) | **6.4** (6/84) | **25.1** (24/84) |
+| A2 | 1.4 | 2.2 | 2.7 | 3.9 | **6.2** (3/84) | **25.1** (27/84) |
+| B | 1.3 | 1.9 | 2.3 | **4.7** (1/84) | **5.1** (1/84) | **25.1** (24/84) |
+| C | 1.8 | 2.3 | 2.7 | **11.9** (5/84) | **7.1** (3/84) | **25.1** (26/84) |
+| D | 2.1 | 2.8 | **4.6** (1/84) | **6.5** (5/84) | **6.4** (9/84) | **25.1** (23/84) |
+
+### Lo que dicen los números
+
+1. **Al llegar frente al hueco, nadie ve marcas: alrededor del 90 % de la alineación va ciega con
+   los cinco montajes.**
+   - La lateral queda mirando a lo largo del pasillo.
+   - La trasera queda a centímetros del rack de enfrente: la marca no entra entera.
+   - El EKF llega bien porque **trae la pose del giro**; la alineación final es navegación por
+     odometría de 1 a 3 m.
+   - Por eso el espaciado manda: con marcas cada 3 o 4 bahías, el último arreglo puede quedar
+     demasiado lejos del hueco.
+2. **La trasera derecha hacia atrás (A, la idea de maje) no ve nada en el tránsito.**
+   - Con 54° de FOV, mirando a lo largo del pasillo, las caras quedan siempre con más de 63° de
+     incidencia, por encima de `ANG_MAX`.
+   - **Girada 45° hacia el costado (A2) se vuelve el mejor montaje:** 3 bahías, 82–90 % de
+     cobertura en recta, y la lateral sola alcanza en el giro.
+   - La idea de maje sirve: hace falta la diagonal.
+3. **¿Hace falta que las dos vean durante el giro?**
+   - **Con A2, B y C, no:** una cámara en el giro da el mismo espaciado, salvo la diagonal sola
+     de A2, que baja a 2 bahías.
+   - **Con A, sí:** sin las dos en el giro baja de 2 bahías a 1.
+   - Las dos a la vez en el giro pasan solo el 16–22 % del tiempo en cualquier montaje.
+4. **La cámara cerca de la cara ve una franja angosta.**
+   - A 0.97 m de la cara (lateral en el carril central), la C920 cubre 0.99 m de rack: con una
+     marca por bahía ve algo el 35–39 % del recorrido recto.
+   - En el carril de giro, la lateral del lado lejano (a 1.5 m) sube al 61 %, y la del lado
+     cercano (a 0.40 m) baja al 8 %.
+   - Por eso **la marca de 30 cm no ayuda a las laterales:** no entra entera en la imagen. Con A,
+     un recorrido llega a 21 m ciegos.
+   - Con 30 cm, B pasa de 2 a 3 bahías y A queda en 2.
+5. **El planificador hace el tránsito por el carril de giro, no por el central.** El traslado se
+   corre de carril al principio de la recta. La idea de maje (central para tránsito, carril de giro
+   solo para alinearse) **no está forzada en el planificador**, y con laterales eso cambia la
+   cobertura en los dos sentidos (punto 4). Queda anotado; no se cambió.
+
+### Cuánto depende de lo no medido
+
+| | A: espaciado máximo | B: espaciado máximo | A: 0/1/2 a 1 bahía |
+|---|---|---|---|
+| pesimista: `PX_MIN` 30 px, `ANG_MAX` 45° | 1 bahía | 2 bahías | 64 / 34 / 2 % |
+| **base: 20 px, 60°** | **2 bahías** | **2 bahías** | 58 / 32 / 10 % |
+| optimista: 15 px, 75° | 3 bahías | 4 bahías | 33 / 44 / 23 % |
+| marca de 30 cm (base) | 2 bahías | 3 bahías | 60 / 31 / 9 % |
+
+**El resultado se mueve un factor de 2 a 3 con `PX_MIN` y `ANG_MAX`.** Es lo primero que hay que
+medir.
+
+### Controles
+
+| Control | Tiene que | Dio |
+|---|---|---|
+| una marca por cara (a mitad del pasillo) | fallar | **falla en los 5 montajes**: 25 cm, 23–27 de 84 llegadas fuera |
+| FOV de 5° (montaje A, 1 bahía) | tramos ciegos largos | **32 m y 57 s ciegos**, contra 4.3 m con 54.3°; 99.9 % del tiempo sin marcas |
+| sin marcas (solo odometría) | fallar | **75 de 84 llegadas fuera**, máx. 40 cm |
+
+### Decía / es / qué lo tumbó (contra `docs/03`)
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| Una frontal + una lateral; «en cada ángulo del arco hay al menos una cámara con un ArUco a la vista»; la frontal ve la cabecera en el pasillo y la bahía en el giro (`docs/03`) | **Sin marcas en la cabecera, la frontal ve las caras siempre de refilón: es el peor montaje** (1 bahía; sola en el giro, ½). Y en la **alineación final, ~90 % del tiempo no ve marcas ninguna cámara**, de ningún montaje | maje sacó las marcas de las cabeceras (lejos). `visibilidad.py`: la frontal del D nunca ve con las dos a la vez (0 %), y de frente al hueco las cámaras quedan pegadas o mirando a lo largo |
+| La cámara trasera mirando hacia la tracción (idea de maje) | **Recta hacia atrás no ve nada en el tránsito; en diagonal (45° hacia un costado) es el mejor montaje** | con FOV 54° a lo largo del pasillo, la incidencia sobre las caras supera siempre 63° |
+| `sim_sintetico.py`: dos laterales, «ven marcas entre 0.3 y 3 m, ±50°» | Ven una franja de ~1 m de rack: con una marca por bahía, el 35–39 % del recorrido recto en el carril central | el FOV real de la C920 (54.3°) y la distancia a la cara |
+| 5 m sin marcas es demasiado (oclusión del EKF, 02-nov) | Coincide en el orden de magnitud: **con marcas cada 2 bahías (4.94 m) A, A2, B y C cumplen** (2.3–4.0 cm de máximo); **cada 3 bahías (7.4 m), solo A2** (3.9 cm), y D ya falla a 2 bahías | `visibilidad.py`, barrido de espaciado |
+
+### Lo que mide maje en casa, y qué reemplaza
+
+| Medición | Reemplaza |
+|---|---|
+| Distancia máxima de detección de frente, marca de 15 cm | `PX_MIN = fx · 0.15 / d_max` (hoy 20 px → d_max 4.7 m) |
+| A ~1.5 m, girar la marca hasta que deje de detectarse | `ANG_MAX` (hoy 60°) |
+| Error de distancia y lateral en esos bordes | `SIG_REF` (hoy el pesimista de `aruco_precision.py`) |
+
+Con esos números: cambiar `PX_MIN`, `ANG_MAX` y `SIG_REF` al principio de `visibilidad.py` y
+volver a correr.
+
+**Supuestos además de esos:**
+- **Geometría:** marcas a 1.00 m de altura; montajes y alturas de cámara inventados; las rutas
+  heredan todos los SUPUESTOS de `analisis/rutas_resultados.md` (7 bahías, `PROF_BAHIA`).
+- **Sin modelar:** la oclusión por el mástil o el IBC (la frontal del D es optimista) y la luz.
+- **Odometría:** los sesgos de `sim_sintetico.py`.
+- **Muestra:** 84 llegadas por celda. Un «cumple» es 84/84, no una garantía. Lo que pasa raspando
+  (A2 a 3 bahías: 3.85 cm) **se confirma con más semillas antes de imprimir marcas**.

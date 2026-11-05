@@ -1,5 +1,18 @@
 # Encargo — visibilidad de ArUco a lo largo de las rutas: cuándo ve cada cámara y qué espaciado hace falta
 
+> **HECHO 05-nov-2026 en la i3.** Resultados en `LEEME.md`, sección «Visibilidad de ArUco a lo
+> largo de las rutas».
+> - **Espaciado máximo que llega a ±4.5 cm:** lateral + trasera **en diagonal**, 3 bahías
+>   (7.4 m); lateral + trasera recta, dos laterales y laterales altas, 2 bahías; frontal +
+>   lateral (`docs/03`), 1 bahía.
+> - **La trasera recta hacia atrás no ve nada en el tránsito.**
+> - **En la alineación final, ~90 % del tiempo ninguna cámara ve marcas**, con cualquier montaje.
+> - **Una sola cámara en el giro alcanza** salvo en el montaje A.
+> - Todo con `PX_MIN` y `ANG_MAX` SUPUESTOS, que mueven el resultado un factor de 2–3.
+>
+> **De paso apareció un defecto de `analisis/planificador_rutas.py`:** había saltos escondidos entre
+> piezas, de hasta 1.28 m. Está corregido; ver `analisis/rutas_resultados.md`.
+
 **Para la sesión de i3, DESPUÉS de `analisis/tarea_rutas_bahias.md`** (usa sus recorridos).
 Autocontenido. Python (`numpy`, `matplotlib`), sin montacargas ni Isaac. Español, al estilo del
 repo. Leé `CLAUDE.md` y `percepcion/LEEME.md` primero.
