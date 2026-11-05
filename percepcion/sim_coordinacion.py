@@ -14,6 +14,17 @@
 #            la FSM no cede sin retraer en orden; termina en PARADA con todo en 0
 #            CONTROL falla 'ingenua': cede el control tal cual y retoma desde la mitad
 # Prueba 4 · operación al azar, 20 semillas × 3000 ticks: colisiones y deadlocks por política
+#
+# Las cuatro corren DOS veces: con la tabla fija TICKS (los números de clases/fsm.html) y con
+# DIRECCIONES DE BAHÍA y duraciones del planificador (fsm_rutas.py). Y una quinta, solo con
+# direcciones:
+# Prueba 5 · EL CASO DE MAJE: el equipo frente a 3L, uñas hacia la descarga; pedido del cubo de
+#            5 3 Ra (y de 5 3 Rb) a la descarga. Secuencia de estados, maniobras, y que el tiempo
+#            de movimiento de la FSM dé lo mismo que el planificador PARADO ENTRE MANIOBRAS (±25 %),
+#            que es como se mueve la FSM: un paso termina quieto antes de que empiece el otro.
+#            Corregido 05-nov: se comparaba contra el plan continuo y daba +30–43 %; la mitad era
+#            un bug (la RECTA contaba de nuevo lo que avanza el CARRIL) y el resto es parar entre
+#            pasos, que se reporta aparte como lo que cuesta la FSM por pasos
 # ─────────────────────────────────────────────────────────────────────────────
 import os
 import random
@@ -22,6 +33,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fsm_estados import ESPERAS, Equipo, Mundo, Slot          # noqa: E402
 from reserva import GestorDeReservas, GestorTonto             # noqa: E402
+import fsm_rutas                                               # noqa: E402
 
 for _f in (sys.stdout, sys.stderr):
     try:
@@ -30,20 +42,45 @@ for _f in (sys.stdout, sys.stderr):
         pass
 
 PASO_NIVEL = 1.38        # m entre plataformas (CLAUDE.md, el rack)
+MODO = {'rutas': None}   # None = tabla fija TICKS · fsm_rutas.Rutas() = direcciones de bahía
+NIVELES = ['1A', '2', '3', '4']
+
+
+def nuevo(nombre, **kw):
+    return Equipo(nombre, rutas=MODO['rutas'], **kw)
+
+
+def dir_de(i):
+    """Hueco i → dirección: bahías 1, 1, 2, 2, 3, 3… alternando L/R, posición a/b alternada por
+    bahía, niveles 1A, 2, 3, 4 (el mismo i % 4 de la versión con alturas fijas)."""
+    return f"{1 + i // 2} {NIVELES[i % 4]} {'L' if i % 2 == 0 else 'R'}{'a' if (i // 2) % 2 == 0 else 'b'}"
+
+
+def hueco(sector, i, cubo=None, nivel=None):
+    if MODO['rutas'] is None:
+        return Slot('hueco', sector, (i % 4 if nivel is None else nivel) * PASO_NIVEL, cubo)
+    d = dir_de(i) if nivel is None else f"{1 + i} {NIVELES[nivel]} La"
+    return Slot.hueco_en(sector, d, cubo)
+
+
+def lugar(tipo, sector=None, cubo=None):
+    if MODO['rutas'] is None:
+        return Slot(tipo, sector, 0.0, cubo)
+    return Slot.lugar(tipo, sector, cubo)
 
 
 def mundo_chico(trasbordos, huecosA, huecosB, entrada=False):
     s = {}
     for i, c in enumerate(trasbordos):
-        s[f"T{i}"] = Slot('trasbordo', None, 0.0, c)
+        s[f"T{i}"] = lugar('trasbordo', None, c)
     for i, c in enumerate(huecosA):
-        s[f"HA{i}"] = Slot('hueco', 'A', (i % 4) * PASO_NIVEL, c)
+        s[f"HA{i}"] = hueco('A', i, c)
     for i, c in enumerate(huecosB):
-        s[f"HB{i}"] = Slot('hueco', 'B', (i % 4) * PASO_NIVEL, c)
+        s[f"HB{i}"] = hueco('B', i, c)
     if entrada:
-        s["E"] = Slot('entrada', 'A', 0.0, None)
-        s["SA"] = Slot('salida', 'A', 0.0, None)
-        s["SB"] = Slot('salida', 'B', 0.0, None)
+        s["E"] = lugar('entrada', 'A')
+        s["SA"] = lugar('salida', 'A')
+        s["SB"] = lugar('salida', 'B')
     return Mundo(s)
 
 
@@ -91,7 +128,7 @@ def prueba_carrera():
                                   ("CONTROL GestorTonto", GestorTonto, False)):
         m = mundo_chico(['?', None], ['B', None], ['A', None])     # T0 ocupado por otra cosa
         g = Gestor(m.tipos())
-        A, B = Equipo('A', verificar_hueco=verif), Equipo('B', verificar_hueco=verif)
+        A, B = nuevo('A', verificar_hueco=verif), nuevo('B', verificar_hueco=verif)
         A.tick(0, m, g); B.tick(0, m, g)
         duenios = [e.nombre for e in (A, B) if 'T1' in e.reservas]
         perdedor = [e.est for e in (A, B) if 'T1' not in e.reservas]
@@ -116,7 +153,7 @@ def prueba_deadlock():
     for pol in ('ordenada', 'tardia'):
         m = mundo_chico([None], ['B', None], ['A', None])
         g = GestorDeReservas(m.tipos())
-        A, B = Equipo('A', politica=pol), Equipo('B', politica=pol)
+        A, B = nuevo('A', politica=pol), nuevo('B', politica=pol)
         t_dl, _ = correr(m, g, [A, B], 600)
         res[pol] = dict(deadlock=t_dl, en_casa=en_casa(m), A=(A.est, A.carga), B=(B.est, B.carga),
                         T0=m.slots['T0'].cubo, hechas=A.completadas + B.completadas)
@@ -137,9 +174,9 @@ def prueba_deadlock():
 # ── Prueba 3 · paro en altura ────────────────────────────────────────────────
 def un_paro(falla, en_paso, fraccion_ext=0.5):
     """Un equipo lleva su cubo del trasbordo al hueco del 3er nivel; PARO en `en_paso` (fase DESTINO)."""
-    m = Mundo({'T0': Slot('trasbordo', None, 0.0, 'A'), 'HA0': Slot('hueco', 'A', 2 * PASO_NIVEL, None)})
+    m = Mundo({'T0': lugar('trasbordo', None, 'A'), 'HA0': hueco('A', 0, None, nivel=2)})
     g = GestorDeReservas(m.tipos())
-    A = Equipo('A', falla=falla)
+    A = nuevo('A', falla=falla)
     t, marca = 0, None
     while t < 300:
         A.tick(t, m, g)
@@ -161,7 +198,8 @@ def un_paro(falla, en_paso, fraccion_ext=0.5):
 
 
 def prueba_paro():
-    print("3 · PARO con el pantógrafo extendido en altura (fase DESTINO, hueco a 2.76 m)")
+    h = hueco('A', 0, None, nivel=2).altura
+    print(f"3 · PARO con el pantógrafo extendido en altura (fase DESTINO, hueco a {h:.2f} m)")
     oks = []
     for paso in ('EXTIENDE', 'TOMA'):
         A, m, marca, cedio, tras = un_paro('correcta', paso)
@@ -170,7 +208,7 @@ def prueba_paro():
         baja_afuera = any(h1[3] < h0[3] - 1e-9 and h0[2] > 1e-9 and h1[4] == 'deshacer' and h1[1] != 'DESHACE_TOMA'
                           for h0, h1 in zip(tras, tras[1:]))
         secuencia = [x[0] for x in A.log_deshacer]
-        toma_antes = paso != 'TOMA' or (secuencia[:1] == ['DESHACE_TOMA'] and A.log_deshacer[1][2] == round(2 * PASO_NIVEL, 4))
+        toma_antes = paso != 'TOMA' or (secuencia[:1] == ['DESHACE_TOMA'] and A.log_deshacer[1][2] == round(m.slots['HA0'].altura, 4))
         cubo = f"cubo en las uñas: {'sí' if A.carga else 'no'}, hueco {'vacío' if m.slots['HA0'].cubo is None else 'con cubo'}"
         ok = (A.est == 'PARADA' and A.seguro() and monotono and not baja_afuera and cedio['est'] == 'FALLA' and toma_antes
               and (paso != 'TOMA' or (A.carga == 'A' and m.slots['HA0'].cubo is None)))
@@ -193,8 +231,8 @@ def prueba_paro():
 def pruebas_extra():
     """No son del criterio del encargo; documentan los otros dos eventos."""
     print("   extra · ARUCO_PERDIDO en EXTIENDE y HUECO_OCUPADO al llegar")
-    m = Mundo({'T0': Slot('trasbordo', None, 0.0, 'A'), 'HA0': Slot('hueco', 'A', PASO_NIVEL, None)})
-    g = GestorDeReservas(m.tipos()); A = Equipo('A'); hecho = False
+    m = Mundo({'T0': lugar('trasbordo', None, 'A'), 'HA0': hueco('A', 0, None, nivel=1)})
+    g = GestorDeReservas(m.tipos()); A = nuevo('A'); hecho = False
     for t in range(400):
         A.tick(t, m, g)
         if not hecho and A.est == 'EXTIENDE' and A.fase == 'DESTINO' and A.paso_t == 2:
@@ -202,9 +240,9 @@ def pruebas_extra():
     print(f"        ARUCO_PERDIDO: deshace, re-aproxima y termina → tareas hechas {A.completadas}, cubo en HA0: "
           f"{'sí' if m.slots['HA0'].cubo == 'A' else 'no'}")
     ok1 = A.completadas == 1 and m.slots['HA0'].cubo == 'A'
-    m = Mundo({'T0': Slot('trasbordo', None, 0.0, 'A'), 'HA0': Slot('hueco', 'A', PASO_NIVEL, None),
-               'HA1': Slot('hueco', 'A', 2 * PASO_NIVEL, None)})
-    g = GestorDeReservas(m.tipos()); A = Equipo('A'); puesto = False
+    m = Mundo({'T0': lugar('trasbordo', None, 'A'), 'HA0': hueco('A', 0, None, nivel=1),
+               'HA1': hueco('A', 1, None, nivel=2)})
+    g = GestorDeReservas(m.tipos()); A = nuevo('A'); puesto = False
     for t in range(500):
         A.tick(t, m, g)
         if not puesto and A.fase == 'DESTINO' and A.est == 'RECTA':
@@ -225,7 +263,7 @@ def operacion(semilla, politica, Gestor, trasbordos=1, lleno=0.8, ticks=3000):
     m = mundo_chico([None] * trasbordos, ini(), ini(), entrada=True)
     g = Gestor(m.tipos())
     verif = Gestor is GestorDeReservas
-    eq = [Equipo('A', politica=politica, verificar_hueco=verif), Equipo('B', politica=politica, verificar_hueco=verif)]
+    eq = [nuevo('A', politica=politica, verificar_hueco=verif), nuevo('B', politica=politica, verificar_hueco=verif)]
 
     def mundo_vivo(t, m, g):
         if m.slots['E'].cubo is None and g.es_de('E') is None and r.random() < 0.03:
@@ -262,11 +300,83 @@ def prueba_operacion(n=20):
     return ok
 
 
-def main():
+# ── Prueba 5 · el caso de maje ───────────────────────────────────────────────
+ESPERADA = ['CARRIL', 'RECTA', 'GIRO', 'ELEVA', 'APROXIMA', 'EXTIENDE', 'TOMA', 'RETRAE', 'RETROCEDE',
+            'DESGIRA', 'TRANSITO'] * 2
+
+
+def _correr_maje(rutas, hueco_dir, x3):
+    m = Mundo({'H': Slot.hueco_en('A', hueco_dir, 'A'), 'SA': Slot.lugar('salida', 'A')})
+    g = GestorDeReservas(m.tipos())
+    A = Equipo('A', rutas=rutas, pose=(x3, 0.0, 'descarga'))
+    A.pedidos = 1
+    t = 0
+    while A.completadas == 0 and t < 2000:
+        A.tick(t, m, g); t += 1
+    return A, m, t
+
+
+def prueba_maje():
+    import json
+    import bahias
+    print("5 · EL CASO DE MAJE: frente a 3L con las uñas hacia la descarga; el cubo de 5R a la descarga")
+    tabla = json.load(open(os.path.join(fsm_rutas._AN, 'rutas_tabla.json'), encoding='utf-8'))['caso1']
+    rutas = fsm_rutas.Rutas()
+    x3 = sum(bahias.bahia_x(3)) / 2
+    oks = []
+    for hueco_dir in ('5 3 Ra', '5 3 Rb'):
+        A, m, t = _correr_maje(rutas, hueco_dir, x3)
+        estados = [h[1] for h in A.historial]
+        seq = [e for i, e in enumerate(estados) if i == 0 or e != estados[i - 1]]
+        mov = sum(1 for h in A.historial if h[1] in ('CARRIL', 'RECTA', 'GIRO', 'RETROCEDE', 'DESGIRA')) * rutas.tick
+        plan = tabla[hueco_dir]
+        t_cont = plan['ida']['tiempo'] + plan['vuelta']['tiempo']
+        t_plan = sum(p['tiempo'] for _, p in plan['ida']['partes'] + plan['vuelta']['partes'])
+        vuelta_ida = any(f == 'ORIGEN' and 'VUELTA' in x for f, _, x in A.maniobras)
+        print(f"    {hueco_dir}: {' → '.join(seq)}")
+        for fase, sid, txt in A.maniobras:
+            print(f"        {fase:<7} {txt}")
+        print(f"        cubo en la descarga: {'sí' if m.slots['SA'].cubo == 'A' else 'no'} · {t} ticks · "
+              f"movimiento FSM {mov:.0f} s vs planificador {t_plan:.0f} s parando entre maniobras "
+              f"({t_cont:.0f} s sin parar) "
+              f"(ida {plan['ida']['largo']} m y {plan['ida']['cambios']} cambios de sentido, vuelta "
+              f"{plan['vuelta']['largo']} m y {plan['vuelta']['cambios']})")
+        oks.append(seq[:len(ESPERADA)] == ESPERADA and m.slots['SA'].cubo == 'A'
+                   and abs(mov - t_plan) <= 0.25 * t_plan
+                   and vuelta_ida == (hueco_dir == '5 3 Ra'))       # a la Ra se llega dando la vuelta; a la Rb no
+    # CONTROL: rutas que dejan entrar a cualquier posición con cualquier rumbo. Si con ellas la Ra
+    # TAMBIÉN diera la vuelta, la prueba no estaría mirando el rumbo
+    falsa = fsm_rutas.Rutas()
+    for k in list(falsa.T['salidas']):
+        if falsa.T['salidas'][k] is None:
+            otro = k.split('|')[0] + ('|adentro' if k.endswith('descarga') else '|descarga')
+            falsa.T['salidas'][k] = falsa.T['salidas'][otro]
+    A, m, t = _correr_maje(falsa, '5 3 Ra', x3)
+    vuelta_falsa = any(f == 'ORIGEN' and 'VUELTA' in x for f, _, x in A.maniobras)
+    print(f"    CONTROL rutas sin rumbo (a la Ra se entra de cualquier lado): vuelta en la ida: "
+          f"{'sí (OJO: no discrimina)' if vuelta_falsa else 'no → la prueba sí ve el rumbo'}")
+    ok = all(oks) and not vuelta_falsa
+    print(f"    → {'PASA' if ok else 'FALLA'}: la FSM recorre las 22 etapas, da la vuelta donde la da el "
+          f"planificador, y su tiempo de movimiento coincide con el del planificador")
+    return ok
+
+
+def correr_todas(titulo):
+    print(f"══ {titulo} ══")
     r = [prueba_carrera()]
     print(); r.append(prueba_deadlock())
     print(); r.append(prueba_paro()); r.append(pruebas_extra())
     print(); r.append(prueba_operacion())
+    print()
+    return r
+
+
+def main():
+    MODO['rutas'] = None
+    r = correr_todas("con la tabla fija TICKS (la de clases/fsm.html)")
+    MODO['rutas'] = fsm_rutas.Rutas()
+    r += correr_todas("con DIRECCIONES DE BAHÍA y duraciones del planificador (fsm_rutas.py)")
+    r.append(prueba_maje())
     print("\nRESULTADO:", "PASA" if all(r) else "FALLA")
     return 0 if all(r) else 1
 

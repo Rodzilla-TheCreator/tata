@@ -27,6 +27,13 @@
 # reserva sola no evita: A espera trasbordo para un PASE, y lo que llena el trasbordo es un cubo
 # SUYO que solo él puede sacar. Con las uñas vacías no retiene nada, así que cambiar de tarea no
 # rompe ninguna exclusión. Con el cubo en las uñas sí se cumple el encargo al pie de la letra.
+#
+# Con DIRECCIONES DE BAHÍA (05-nov, analisis/tarea_rutas_bahias.md): un hueco puede llevar `dir`
+# (`x y s` + a/b, analisis/bahias.py) y entonces su altura es la de ENTRADA de la tabla del rack y
+# su x la del centro de la posición. Si el Equipo recibe `rutas` (fsm_rutas.Rutas), CARRIL,
+# RECTA, GIRO, RETROCEDE, DESGIRA, ELEVA y TRANSITO duran lo que dice el planificador, el carril
+# depende del lado `s`, y el equipo lleva su x, su carril y su rumbo de viaje. Sin `rutas` todo
+# queda como estaba (TICKS fija): así siguen valiendo los números de clases/fsm.html.
 # ─────────────────────────────────────────────────────────────────────────────
 from fsm_falla import NO_REANUDABLES, PASOS, plan_deshacer, seguro_para_ceder
 
@@ -41,8 +48,25 @@ TICKS = {'CARRIL': 2, 'RECTA': 5, 'GIRO': 6, 'APROXIMA': 2, 'EXTIENDE': 3, 'TOMA
 
 
 class Slot:
-    def __init__(self, tipo, sector=None, altura=0.0, cubo=None):
+    def __init__(self, tipo, sector=None, altura=0.0, cubo=None, dir=None, x=None):
         self.tipo, self.sector, self.altura, self.cubo = tipo, sector, altura, cubo
+        self.dir, self.x = dir, x
+
+    @classmethod
+    def hueco_en(cls, sector, direccion, cubo=None):
+        """Hueco con dirección de bahía: altura de ENTRADA del nivel, x del centro de la posición."""
+        import fsm_rutas                                  # noqa: F401  (pone analisis/ en el path)
+        import bahias
+        d = bahias.leer(direccion)
+        return cls('hueco', sector, bahias.altura_uña(d, 'entrada'), cubo, dir=repr(d),
+                   x=bahias.centro_posicion(d.x, d.p))
+
+    @classmethod
+    def lugar(cls, tipo, sector=None, cubo=None):
+        """Trasbordo (al fondo), entrada y salida (en la descarga), con su x."""
+        import fsm_rutas
+        x = fsm_rutas.X_FONDO_TRASBORDO if tipo == 'trasbordo' else fsm_rutas.X_DESCARGA
+        return cls(tipo, sector, 0.0, cubo, x=x)
 
 
 class Mundo:
@@ -80,8 +104,14 @@ def espera_para(tipo_destino):
 
 
 class Equipo:
-    def __init__(self, nombre, politica='ordenada', falla='correcta', verificar_hueco=True):
+    def __init__(self, nombre, politica='ordenada', falla='correcta', verificar_hueco=True, rutas=None,
+                 pose=None):
         self.nombre, self.politica, self.politica_falla = nombre, politica, falla
+        self.rutas, self.dur, self.despues, self.maniobras = rutas, {}, None, []
+        self.vel_altura = VEL_ALTURA if rutas is None else rutas.T['VEL_ELEV'] * rutas.tick
+        if rutas is not None:                       # (x, carril, rumbo): en la boca, uñas hacia adentro
+            import bahias
+            self.x, self.carril_y, self.rumbo = pose or (bahias.X0, 0.0, 'adentro')
         self.verificar_hueco = verificar_hueco
         self.est, self.paso_t, self.fase, self.tarea = 'LIBRE', 0, None, None
         self.carga, self.ext, self.altura, self.alt_toma0 = None, 0.0, 0.0, None
@@ -152,8 +182,18 @@ class Equipo:
             self._paso(t, m, g)
         self.historial.append((t, self.est, round(self.ext, 4), round(self.altura, 4), self.modo))
 
-    def _arrancar(self, fase):
+    def _arrancar(self, fase, m=None):
         self.fase, self.est, self.paso_t = fase, 'CARRIL', 0
+        if self.rutas is not None and m is not None:
+            sid = self.tarea.origen if fase == 'ORIGEN' else self.tarea.destino
+            sig = self.tarea.destino if fase == 'ORIGEN' else None
+            x_sig = m.slots[sig].x if sig else None
+            seg, self.despues, man = self.rutas.plan(self.x, self.carril_y, self.rumbo, m.slots[sid], x_sig)
+            self.dur = {k: self.rutas.ticks(v) for k, v in seg.items()}
+            self.maniobras += [(fase, sid, t) for t in man]
+
+    def _t(self, e):
+        return self.dur.get(e, TICKS[e]) if self.rutas is not None else TICKS[e]
 
     def _decidir(self, t, m, g):
         if self.carga is None:                        # uñas vacías: el selector manda (ver arriba)
@@ -167,13 +207,13 @@ class Equipo:
                 if dest and g.reservar_todo(self.nombre, [dest, self.tarea.origen]):
                     self.tarea.destino = dest
                     self.reservas = {dest, self.tarea.origen}
-                    self._arrancar('ORIGEN')
+                    self._arrancar('ORIGEN', m)
                 else:
                     self.est = espera_para(self.tarea.tipo_destino)
             else:                                     # 'tardia': solo el origen, destino después
                 if g.reservar(self.nombre, self.tarea.origen):
                     self.reservas = {self.tarea.origen}
-                    self._arrancar('ORIGEN')
+                    self._arrancar('ORIGEN', m)
                 else:
                     self.est = 'ESPERA_PEDIDO'
         else:                                         # con el cubo en las uñas: hace falta destino
@@ -181,7 +221,7 @@ class Equipo:
             if dest and g.reservar(self.nombre, dest):
                 self.tarea.destino = dest
                 self.reservas.add(dest)
-                self._arrancar('DESTINO')
+                self._arrancar('DESTINO', m)
             else:
                 self.est = espera_para(self.tarea.tipo_destino)
 
@@ -194,7 +234,7 @@ class Equipo:
         self.paso_t += 1
         sid, s = self._objetivo(m)
         if e == 'ELEVA':
-            self.altura = _hacia(self.altura, s.altura, VEL_ALTURA)
+            self.altura = _hacia(self.altura, s.altura, self.vel_altura)
             listo = abs(self.altura - s.altura) < 1e-9
         elif e == 'APROXIMA':
             listo = self.paso_t >= TICKS[e]
@@ -221,18 +261,20 @@ class Equipo:
             self.ext = max(0.0, self.ext - EXT_MAX / TICKS[e])
             listo = self.ext <= 1e-9
         elif e == 'TRANSITO':
-            self.altura = _hacia(self.altura, 0.0, VEL_ALTURA)
+            self.altura = _hacia(self.altura, 0.0, self.vel_altura)
             listo = self.altura <= 1e-9 and self.paso_t >= TICKS[e]
         else:
-            listo = self.paso_t >= TICKS[e]
+            listo = self.paso_t >= self._t(e)
         if not listo:
             return
+        if e == 'DESGIRA' and self.rutas is not None and self.despues is not None:
+            self.x, self.carril_y, self.rumbo = self.despues      # salió y quedó alineado
         i = PASOS.index(e)
         if i < len(PASOS) - 1:
             self.est, self.paso_t = PASOS[i + 1], 0
         elif self.fase == 'ORIGEN':
             if self.politica == 'ordenada':
-                self._arrancar('DESTINO')
+                self._arrancar('DESTINO', m)
             else:
                 self.est = 'LIBRE'                    # 'tardia': recién ahora busca destino
         else:

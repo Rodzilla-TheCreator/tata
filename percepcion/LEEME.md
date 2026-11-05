@@ -95,8 +95,25 @@ el número firme sale con odometría real del bus. La clase interactiva: `clases
 dependencias. Encargo: `tarea_fsm.md`. No toca `sim-web/` (integrar es después).
 
 ```
-py percepcion/sim_coordinacion.py     # ~2 s; termina con RESULTADO: PASA / FALLA
+py percepcion/sim_coordinacion.py     # ~17 s en la i3; termina con RESULTADO: PASA / FALLA
 ```
+
+> **05-nov: con direcciones de bahía** (`fsm_rutas.py`, encargo `analisis/tarea_rutas_bahias.md`).
+> Las cuatro pruebas corren dos veces: con la tabla fija `TICKS`, que es la de la tabla de abajo y
+> la de `clases/fsm.html` y no se movió, y con huecos `x y s` + `a`/`b`. En el segundo modo
+> CARRIL, RECTA, GIRO, RETROCEDE, DESGIRA, ELEVA y TRANSITO duran lo que dice
+> `analisis/rutas_tabla.json`, y el equipo lleva su x, su carril y su rumbo de viaje.
+> - **Resultados con direcciones:** pasan las cuatro. Deadlock tardío en el tick 175; operación al
+>   azar: buena 0/0, tardía 19/20, tonto con choques en 19/20.
+> - **La quinta es el caso de maje** (3L → 5 3 Ra / Rb → descarga): las 22 etapas en orden, la
+>   vuelta solo donde la da el planificador, y el tiempo a ±25 % del planificador parando entre
+>   maniobras. Tiene su control: con rutas «sin rumbo» desaparece la vuelta.
+> - **El rumbo de viaje manda:** a la `a` se entra con las uñas hacia adentro y a la `b` hacia la
+>   descarga. Si el equipo viene al revés, paga una vuelta (dos 90° por el centro de la bahía, o
+>   la zona de descarga), que va anotada en `Equipo.maniobras` y se cuenta dentro de RECTA. `PASOS`
+>   no cambió.
+> - **Pendiente:** elegir `a` o `b` según el rumbo con que llega, para no pagar la vuelta. Ver
+>   `analisis/rutas_resultados.md`.
 
 | Prueba | Con lo bueno | Control |
 |---|---|---|
