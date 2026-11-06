@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clase 5 · El giro en 3.00 m</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#E4E9ED;--surf:#F6F8F9;--surf2:#DCE3E8;--ink:#111B23;--mut:#5A6C79;
+  --line:#B9C6CF;--amber:#B4720C;--load:#136F69;--blue:#1F6FEB;--red:#C0392B;--green:#2E7D32}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;--mut:#7D91A2;
+  --line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--blue:#58A6FF;--red:#E5534B;--green:#5CC46A}}
+:root[data-theme="dark"]{--bg:#0D131A;--surf:#141D26;--surf2:#1C2831;--ink:#DCE6EE;
+  --mut:#7D91A2;--line:#2A3945;--amber:#F0A93B;--load:#3BB5AC;--blue:#58A6FF;--red:#E5534B;--green:#5CC46A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 16px 80px;display:flex;flex-direction:column;gap:30px}
+h1{font-weight:900;font-size:clamp(26px,4.4vw,38px);margin:0;letter-spacing:-.02em;line-height:1.06}
+.eyebrow{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+p{margin:0;max-width:70ch;color:var(--mut)}
+h2{font-weight:700;font-size:17px;margin:0 0 4px;letter-spacing:-.01em;color:var(--ink)}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:16px;
+  display:flex;flex-direction:column;gap:12px;min-width:0}
+canvas{width:100%;height:auto;display:block;background:var(--surf2);border-radius:2px;border:1px solid var(--line)}
+.eq{font:400 12.5px/1.75 "IBM Plex Mono",monospace;background:var(--surf2);border-radius:2px;padding:10px 12px;
+  white-space:pre-wrap;color:var(--ink);border-left:2px solid var(--amber);overflow-x:auto}
+.eq b{color:var(--amber);font-weight:600}
+.tag{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--load)}
+.verdict{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--amber);
+  border-radius:3px;padding:16px 18px;display:flex;flex-direction:column;gap:9px}
+.verdict p{color:var(--ink)}
+.sw{display:flex;flex-wrap:wrap;gap:8px 18px;font:600 12px "IBM Plex Mono",monospace;color:var(--ink)}
+.sw label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.sw input{accent-color:var(--amber)}
+.row{display:flex;align-items:center;gap:10px;font:600 12px/1 "IBM Plex Mono",monospace;flex-wrap:wrap}
+.row input[type=range]{flex:1;accent-color:var(--amber);min-width:120px}
+.row span,.row output{color:var(--mut)}
+.row label{min-width:150px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.st{background:var(--surf2);border-radius:2px;padding:9px 11px}
+.st b{display:block;font:600 18px/1.2 "IBM Plex Mono",monospace;color:var(--ink)}
+.st span{font:600 10px/1.3 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.st.bad b{color:var(--red)} .st.good b{color:var(--green)} .st.mid b{color:var(--amber)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+td{color:var(--ink)} .scroll{overflow-x:auto}
+code{font:400 13px/1 "IBM Plex Mono",monospace;background:var(--surf2);padding:2px 5px;border-radius:2px}
+a{color:var(--amber)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font:600 11px "IBM Plex Mono",monospace;color:var(--mut)}
+.leg i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:2px}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--mut)}
+ol{margin:0;padding-left:20px;color:var(--ink);font-size:14.5px} li{margin:5px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">TaTa &middot; Clase 5</div>
+  <h1>El giro en 3.00 m &mdash; por qué 2.90 no cabe en 3.00</h1>
+</header>
+
+<p>El equipo mide <b>2.90 m de culo a punta de uña</b>. El pasillo mide <b>3.00 m</b> de poste a poste.
+De frente al rack sobran 5 cm por lado. Y aun así, a mitad del giro, el equipo <b>no cabe</b>. Esta clase
+es la cuenta, paso por paso, y lo que el 5-nov se descubrió al meterle las uñas al planificador
+(<code>analisis/planificador_rutas.py</code>, <code>analisis/rutas_resultados.md</code>).</p>
+
+<div class="verdict">
+  <h2>La idea en una línea</h2>
+  <p>Al girar no cruza el pasillo el <b>largo</b>: cruza la <b>diagonal</b>, del rincón del culo al rincón
+  contrario de las uñas. Es un mueble pasando por una puerta: de frente pasa, en diagonal se traba.</p>
+</div>
+
+<!-- ───────────────────────── 1 · el simulador ───────────────────────── -->
+<div class="panel">
+  <div><div class="tag">Interactivo &middot; la silueta del planificador, vista desde arriba</div>
+  <h2>1 · Girá el equipo y mirá cuánto ocupa a lo ancho</h2></div>
+  <div class="row"><label>rumbo φ</label><input type="range" id="phi" min="0" max="90" step="0.5" value="73"><output id="phiO"></output></div>
+  <div class="row"><label>radio del culo</label><input type="range" id="rc" min="0" max="0.35" step="0.01" value="0"><output id="rcO"></output></div>
+  <div class="row"><label>retranqueo entre postes</label><input type="range" id="rec" min="0" max="0.10" step="0.005" value="0.06"><output id="recO"></output></div>
+  <div class="sw">
+    <label><input type="checkbox" id="carg"> cargado (IBC de 1.00 de cara)</label>
+    <label><input type="checkbox" id="diag" checked> marcar los dos puntos extremos</label>
+  </div>
+  <canvas id="cA" width="1000" height="430"></canvas>
+  <div class="leg">
+    <span><i style="background:var(--ink)"></i>poste de seguridad (cara a ±1.50)</span>
+    <span><i style="background:var(--mut);opacity:.5"></i>cara del cubo de N1 (retranqueada)</span>
+    <span><i style="background:var(--blue)"></i>chasis</span>
+    <span><i style="background:var(--amber)"></i>uñas</span>
+    <span><i style="background:var(--load)"></i>IBC</span>
+  </div>
+  <div class="stats">
+    <div class="st" id="sW"><b>–</b><span>ocupa a lo ancho</span></div>
+    <div class="st"><b id="sD">–</b><span>distancia entre los 2 extremos</span></div>
+    <div class="st" id="sP"><b>–</b><span>margen contra postes (3.00)</span></div>
+    <div class="st" id="sR"><b>–</b><span>margen entre postes</span></div>
+  </div>
+  <canvas id="cB" width="1000" height="300"></canvas>
+  <div class="leg">
+    <span><i style="background:var(--blue)"></i>ancho que ocupa, según el rumbo</span>
+    <span><i style="background:var(--red)"></i>3.00 · de poste a poste</span>
+    <span><i style="background:var(--green)"></i>3.00 + 2×retranqueo · entre postes</span>
+  </div>
+</div>
+
+<!-- ───────────────────────── 2 · la cuenta ───────────────────────── -->
+<div class="panel">
+  <div><div class="tag">La cuenta</div><h2>2 · De dónde sale el 3.035</h2></div>
+  <p>Cada punto del equipo tiene dos coordenadas en su propio marco: <b>a</b> a lo largo (desde el culo
+  hacia las uñas) y <b>l</b> de costado. Con el equipo girado un ángulo φ respecto del eje del pasillo,
+  ese punto queda a esta altura <b>a través</b> del pasillo:</p>
+  <div class="eq">y = <b>a·sin φ + l·cos φ</b>
+
+lo que ocupa a lo ancho  =  y_max − y_min   (el punto más arriba menos el más abajo)
+no depende de dónde esté el equipo: solo del rumbo φ.  Es ancho_a_rumbo() en planificador_rutas.py</div>
+  <p>A mitad del giro, los dos puntos extremos son siempre los mismos: el <b>rincón del culo</b> de un
+  lado y el <b>rincón de afuera de la uña</b> del otro (el simulador los marca).</p>
+  <div class="eq">rincón del culo        a = 0.00   l = −0.5325   (capó de 1.065 / 2)
+rincón de la uña       a = 2.90   l = +0.365    (uña de 0.13 centrada a 0.30)
+
+Δa = 2.90       Δl = 0.5325 + 0.365 = <b>0.8975</b>
+
+ancho(φ) = Δa·sin φ + Δl·cos φ = R · sin(φ + α)
+
+R = √(Δa² + Δl²) = √(2.90² + 0.8975²) = √(8.410 + 0.806) = <b>3.035 m</b>
+el máximo es R, y pasa cuando  tan φ = Δa / Δl  →  φ = atan(2.90 / 0.8975) = <b>72.8°</b></div>
+  <p>Ese R es la <b>distancia entre los dos rincones</b>: no cambia nunca. Lo que cambia con el rumbo es
+  cuánto de esa distancia queda <b>atravesada</b> en el pasillo. A 72.8° la diagonal queda justo de
+  través, y ocupa entera.</p>
+  <div class="eq">cargado:  el IBC mide 1.00 de cara → su rincón está en l = +0.50
+Δl = 0.5325 + 0.50 = 1.0325    R = √(2.90² + 1.0325²) = <b>3.078 m</b>   a φ = 70.4°</div>
+  <div class="scroll"><table>
+    <tr><th>rumbo φ</th><th>0°</th><th>45°</th><th>60°</th><th>72.8°</th><th>80°</th><th>90°</th></tr>
+    <tr><td>vacío (m)</td><td id="t0">–</td><td id="t45">–</td><td id="t60">–</td><td id="t73">–</td><td id="t80">–</td><td id="t90">–</td></tr>
+    <tr><td>cargado (m)</td><td id="c0">–</td><td id="c45">–</td><td id="c60">–</td><td id="c73">–</td><td id="c80">–</td><td id="c90">–</td></tr>
+  </table></div>
+  <p>A 0° ocupa el ancho de las patas (1.315). A 90° ocupa el largo (2.90). <b>En el medio ocupa más que
+  las dos cosas.</b> Por eso la intuición de "si de frente cabe, girando también" falla.</p>
+</div>
+
+<!-- ───────────────────────── 3 · el culo redondo ───────────────────────── -->
+<div class="panel">
+  <div><div class="tag">Lo que todavía no está medido</div><h2>3 · El culo redondeado</h2></div>
+  <p>El modelo dibuja el culo con esquinas en ángulo recto. Si el culo real es redondeado con radio
+  <b>r</b>, el rincón se mete hacia adentro y la diagonal se acorta. Un rincón redondeado es un rincón
+  recto encogido r hacia adentro en las dos direcciones, más un círculo de radio r:</p>
+  <div class="eq">aporte del rincón recto        a·sin φ + l·cos φ
+aporte del rincón redondeado   (a + r)·sin φ + (l + r)·cos φ − r      ← el círculo empuja r hacia afuera
+
+lo que se gana  =  <b>r · (sin φ + cos φ − 1)</b>
+
+a 72.8°:  sin + cos − 1 = 0.955 + 0.296 − 1 = 0.251
+r = 0.10 m  →  2.5 cm menos     r = 0.20 m  →  <b>5.0 cm menos</b>  →  3.035 − 0.050 = 2.985 m &lt; 3.00</div>
+  <p>Con un culo de <b>20 cm de radio</b>, el equipo vacío gira <b>sin usar el espacio entre
+  postes</b>. Por eso el radio del culo es, junto con el ángulo de la rueda, la medida que más pesa hoy.
+  Movés el deslizador del radio en el simulador de arriba y lo ves.</p>
+</div>
+
+<!-- ───────────────────────── 4 · los postes ───────────────────────── -->
+<div class="panel">
+  <div><div class="tag">Dato de campo &middot; 5-nov</div><h2>4 · Los 3.00 m son de poste a poste</h2></div>
+  <p>Los 3.00 m se miden entre los <b>postes de seguridad</b>, el punto más angosto. Entre poste y poste,
+  la cara del cubo de N1 queda unos <b>6 cm más atrás</b>, en los dos racks. Ahí caben
+  <b>3.00 + 0.06 + 0.06 = 3.12 m</b>.</p>
+  <div class="eq">vacío:    3.12 − 3.035 = <b>8.5 cm</b> de sobra en total
+cargado:  3.12 − 3.078 = <b>4.2 cm</b> de sobra en total
+
+condición: los dos extremos (culo y punta de uña) tienen que quedar ENTRE postes, no frente a uno.
+Por eso el operador queda "pegado a las dos bahías".</div>
+  <p>El planificador con postes y retranqueo (v2) confirmó la cuenta, pero con menos margen:
+  <b>2 cm por lado vacío y 1 cm cargado</b>. La cinemática se come la mitad (sección 5). Y el
+  retranqueo de N1 depende de dónde dejó el cubo el operador: con menos de 5 cm, el giro cargado
+  no sale.</p>
+</div>
+
+<!-- ───────────────────────── 5 · la cinemática ───────────────────────── -->
+<div class="panel">
+  <div><div class="tag">Interactivo &middot; por qué el ancho no alcanza</div><h2>5 · Además tiene que poder rotar casi en el lugar</h2></div>
+  <p>Que la silueta quepa a cada rumbo es <b>necesario, no suficiente</b>. Para pasar de un rumbo al
+  siguiente, el equipo tiene que <b>moverse</b>, y un reach truck no rota en el lugar: el eje de carga
+  describe un arco de radio mínimo. De la clase 1:</p>
+  <div class="eq">dθ = (ds / WB)·tan δ   →   ds = (WB / tan δ)·dθ
+
+radio del eje de carga a tope:  R_eje = WB / tan δmax
+para girar Δθ, el eje de carga recorre  ds = R_eje · Δθ</div>
+  <p>El planificador midió que, en la franja peligrosa (de ~65° a 80°, unos 25° de giro), el eje de carga
+  tiene apenas <b>~8 cm</b> de lugar para moverse sin que un extremo toque. Entonces:</p>
+  <div class="eq">ds = R_eje · 25° (en radianes) ≤ 0.08 m   →   R_eje ≤ 0.183 m   →   tan δmax ≥ 8.5   →   <b>δmax ≥ 83°</b></div>
+  <p>Y δmax no está medido: sale de la ficha con esta fórmula (la del repo, <code>planificador_giro.py</code>):</p>
+  <div class="eq">δmax = atan( WB / ( √(Wa² − XPIV²) − W_MAX/2 ) )     WB 1.562 · Wa 1.797 (ficha) · W_MAX 1.315</div>
+  <div class="row"><label>XPIV (culo → eje de carga)</label><input type="range" id="xp" min="1.30" max="1.67" step="0.005" value="1.50"><output id="xpO"></output></div>
+  <div class="stats">
+    <div class="st"><b id="kD">–</b><span>δmax</span></div>
+    <div class="st"><b id="kR">–</b><span>R_eje a tope</span></div>
+    <div class="st" id="kS"><b>–</b><span>recorrido para 25° (≤ 8 cm)</span></div>
+  </div>
+  <canvas id="cC" width="1000" height="230"></canvas>
+  <p>Con el <b>XPIV 1.50</b> que se derivó en agosto, δmax = 78°: el eje de carga necesita ~14.5 cm y hay 8.
+  <b>El giro sin reversa no existe.</b> La cuenta de bolsillo cruza los 8 cm cerca de XPIV 1.59; el
+  planificador, que hace la cuenta exacta, encontró el umbral en <b>1.58</b>. Como el operador sí gira
+  sin retroceder (el video), <b>el video es evidencia de que δmax ≥ ~83°</b>. Hay que medirlo.</p>
+</div>
+
+<div class="verdict">
+  <h2>Lo que hay que medir, y por qué</h2>
+  <ol>
+    <li><b>El ángulo de la rueda de dirección a tope</b>, con un transportador. Decide si el giro sin
+      reversa existe en el modelo (sección 5).</li>
+    <li><b>El radio del culo</b>, desde arriba con escuadra o foto con cinta. Con ~20 cm, el vacío
+      gira sin usar el retranqueo (sección 3).</li>
+    <li><b>El retranqueo poste → cara del cubo de N1</b> en varias bahías de los dos racks. Con menos de
+      5 cm el giro cargado no sale (sección 4).</li>
+    <li><b>W_MAX</b>, el ancho pata a pata. Entra en la fórmula de δmax.</li>
+  </ol>
+  <p><b style="color:var(--amber)">Entrega:</b> con los cuatro números, mové los deslizadores de esta
+  página y decí cuánto margen queda de verdad, vacío y cargado. Si el margen sale negativo con los datos
+  medidos y el operador igual gira, el modelo sigue incompleto: anotá qué falta.</p>
+</div>
+
+<footer>
+  <a href="index.html">Clases</a> &middot; el código: <code>analisis/planificador_rutas.py</code>
+  (<code>ancho_a_rumbo</code>, <code>silueta</code>, <code>validar_video</code>) &middot; los resultados:
+  <code>analisis/rutas_resultados.md</code>
+</footer>
+
+</div>
+<script>
+// ───── geometría (la de planificador_rutas.py: capó, patas, uñas, IBC) ─────
+const LCH=1.70, L_ANCHO=0.48, FLEN=1.20, W_CAPO=1.065, W_MAX=1.315, UNA_C=0.30, UNA_W=0.13,
+      IBC_F=1.20, IBC_W=1.00, WB=1.562, WA=1.797, PASO_POSTE=2.47, POSTE=0.12, HALF=1.50;
+const A_PATA=LCH+L_ANCHO, A_PUN=LCH+FLEN;           // marco del equipo: a=0 en el culo
+const $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+function piezas(rc, carg){
+  const hc=W_CAPO/2, hp=W_MAX/2, out=[];
+  // cuerpo con el culo redondeado (radio rc en los dos rincones del culo)
+  const r=Math.min(rc,hc-0.01);
+  // armado explícito: recorre el contorno en sentido antihorario
+  const body=[];
+  if(r>0){ // rincón de abajo (l negativo): centro (r, -hc+r)
+    for(let k=0;k<=8;k++){const t=Math.PI+(Math.PI/2)*k/8; body.push([r+r*Math.cos(t), -hc+r+r*Math.sin(t)]);}
+  } else body.push([0,-hc]);
+  body.push([LCH,-hc],[LCH,-hp],[A_PATA,-hp],[A_PATA,hp],[LCH,hp],[LCH,hc]);
+  if(r>0){ // rincón de arriba: centro (r, hc-r)
+    for(let k=0;k<=8;k++){const t=Math.PI/2+(Math.PI/2)*k/8; body.push([r+r*Math.cos(t), hc-r+r*Math.sin(t)]);}
+  } else body.push([0,hc]);
+  out.push({p:body,k:'chasis'});
+  for(const s of [1,-1]){const e0=UNA_C-UNA_W/2,e1=UNA_C+UNA_W/2;
+    out.push({p:[[A_PATA,s*e0],[A_PUN,s*e0],[A_PUN,s*e1],[A_PATA,s*e1]],k:'una'});}
+  if(carg) out.push({p:[[A_PUN-IBC_F,-IBC_W/2],[A_PUN,-IBC_W/2],[A_PUN,IBC_W/2],[A_PUN-IBC_F,IBC_W/2]],k:'ibc'});
+  return out;
+}
+function ancho(ps,phi){ // y = a sinφ + l cosφ ; devuelve [ancho, ptMin, ptMax]
+  const s=Math.sin(phi),c=Math.cos(phi); let mn=1e9,mx=-1e9,pm=null,pM=null;
+  for(const pz of ps) for(const [a,l] of pz.p){const y=a*s+l*c; if(y<mn){mn=y;pm=[a,l];} if(y>mx){mx=y;pM=[a,l];}}
+  return [mx-mn,pm,pM,mn,mx];
+}
+const deg=x=>x*Math.PI/180;
+
+// ───── tabla de la sección 2 (con el culo recto, como el modelo) ─────
+(function(){const v=piezas(0,false), c=piezas(0,true);
+  for(const [id,ph] of [['0',0],['45',45],['60',60],['73',72.8],['80',80],['90',90]]){
+    $('t'+id).textContent=ancho(v,deg(ph))[0].toFixed(3); $('c'+id).textContent=ancho(c,deg(ph))[0].toFixed(3);}})();
+
+// ───── dibujo ─────
+function dibujarA(){
+  const cv=$('cA'), g=cv.getContext('2d'), W=cv.width, H=cv.height;
+  const phi=deg(+$('phi').value), rc=+$('rc').value, rec=+$('rec').value, carg=$('carg').checked;
+  const ps=piezas(rc,carg); const [w,pm,pM,ymn,ymx]=ancho(ps,phi);
+  g.clearRect(0,0,W,H);
+  const S=100, cx=W/2, cy=H/2;                       // 100 px por metro; y del mundo hacia arriba
+  const X=x=>cx+x*S, Y=y=>cy-y*S;
+  // postes y caras de cubo: un tramo entre postes centrado en x=0
+  const luz=PASO_POSTE-POSTE;
+  g.fillStyle=css('--mut'); g.globalAlpha=.18;
+  for(const sgn of [1,-1]) g.fillRect(0, sgn>0?0:Y(-HALF-rec), W, sgn>0?Y(HALF+rec):H-Y(-HALF-rec));
+  g.globalAlpha=1;
+  for(let k=-3;k<=3;k++){
+    const x0=-luz/2-POSTE+k*PASO_POSTE;             // cara de atrás del poste k
+    g.fillStyle=css('--ink');
+    g.fillRect(X(x0),Y(HALF+0.25),POSTE*S,0.25*S);           // poste arriba (cara en +1.50)
+    g.fillRect(X(x0),Y(-HALF),POSTE*S,0.25*S);                // poste abajo (cara en −1.50)
+  }
+  // líneas de referencia ±1.50 y ±(1.50+rec)
+  g.setLineDash([6,5]); g.strokeStyle=css('--red'); g.lineWidth=1;
+  for(const v of [HALF,-HALF]){g.beginPath();g.moveTo(0,Y(v));g.lineTo(W,Y(v));g.stroke();}
+  g.strokeStyle=css('--green');
+  for(const v of [HALF+rec,-HALF-rec]){g.beginPath();g.moveTo(0,Y(v));g.lineTo(W,Y(v));g.stroke();}
+  g.setLineDash([]);
+  // el equipo: centrado a lo ancho y en el tramo entre postes
+  const s=Math.sin(phi),c=Math.cos(phi);
+  let xs=[];for(const pz of ps)for(const [a,l] of pz.p)xs.push(a*c-l*s);
+  const ox=-(Math.max(...xs)+Math.min(...xs))/2, oy=-(ymx+ymn)/2;
+  const T=([a,l])=>[X(a*c-l*s+ox), Y(a*s+l*c+oy)];
+  const col={chasis:css('--blue'),una:css('--amber'),ibc:css('--load')};
+  for(const pz of ps){g.beginPath();pz.p.forEach((q,i)=>{const [u,v]=T(q); i?g.lineTo(u,v):g.moveTo(u,v);});g.closePath();
+    g.fillStyle=col[pz.k]; g.globalAlpha=pz.k==='ibc'?.35:.8; g.fill(); g.globalAlpha=1;}
+  // culo marcado
+  g.fillStyle=css('--ink'); g.font='600 12px IBM Plex Mono'; const [cu,cv2]=T([0.15,0]); g.fillText('culo',cu-14,cv2+4);
+  if($('diag').checked){
+    const a=T(pm), b=T(pM);
+    g.strokeStyle=css('--red'); g.lineWidth=2; g.setLineDash([4,4]); g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.stroke(); g.setLineDash([]);
+    for(const q of [a,b]){g.beginPath();g.arc(q[0],q[1],5,0,7);g.fillStyle=css('--red');g.fill();}
+    // cota vertical
+    const xr=W-60; g.strokeStyle=css('--ink'); g.lineWidth=1.5; g.beginPath();
+    g.moveTo(xr,Y(ymn+oy)); g.lineTo(xr,Y(ymx+oy)); g.stroke();
+    for(const v of [ymn+oy,ymx+oy]){g.beginPath();g.moveTo(xr-8,Y(v));g.lineTo(xr+8,Y(v));g.stroke();}
+    g.fillStyle=css('--ink'); g.font='600 13px IBM Plex Mono'; g.fillText(w.toFixed(3)+' m',xr-112,cy+4);
+  }
+  // estadísticas
+  const dist=Math.hypot(pM[0]-pm[0],pM[1]-pm[1]);
+  $('sW').querySelector('b').textContent=w.toFixed(3)+' m';
+  $('sD').textContent=dist.toFixed(3)+' m';
+  const mP=(3.00-w)/2, mR=(3.00+2*rec-w)/2;
+  $('sP').querySelector('b').textContent=(mP*100).toFixed(1)+' cm/lado';
+  $('sR').querySelector('b').textContent=(mR*100).toFixed(1)+' cm/lado';
+  $('sW').className='st '+(w<=3.00?'good':w<=3.00+2*rec?'mid':'bad');
+  $('sP').className='st '+(mP>=0?'good':'bad'); $('sR').className='st '+(mR>=0?'good':'bad');
+  return ps;
+}
+function dibujarB(ps){
+  const cv=$('cB'), g=cv.getContext('2d'), W=cv.width, H=cv.height, rec=+$('rec').value, phiN=+$('phi').value;
+  g.clearRect(0,0,W,H);
+  const L=60,R=W-20,T=20,B=H-36, y0=1.2,y1=3.25;
+  const X=p=>L+(R-L)*p/90, Y=v=>B-(B-T)*(v-y0)/(y1-y0);
+  g.strokeStyle=css('--line'); g.fillStyle=css('--mut'); g.font='600 11px IBM Plex Mono'; g.lineWidth=1;
+  for(let p=0;p<=90;p+=15){g.beginPath();g.moveTo(X(p),T);g.lineTo(X(p),B);g.stroke();g.fillText(p+'°',X(p)-8,B+16);}
+  for(let v=1.4;v<=3.2;v+=0.2){g.beginPath();g.moveTo(L,Y(v));g.lineTo(R,Y(v));g.stroke();g.fillText(v.toFixed(1),L-34,Y(v)+4);}
+  for(const [v,c] of [[3.00,'--red'],[3.00+2*rec,'--green']]){g.strokeStyle=css(c);g.lineWidth=2;g.beginPath();g.moveTo(L,Y(v));g.lineTo(R,Y(v));g.stroke();}
+  g.strokeStyle=css('--blue'); g.lineWidth=2.5; g.beginPath(); let best=[0,0];
+  for(let p=0;p<=90;p+=0.5){const w=ancho(ps,deg(p))[0]; if(w>best[1])best=[p,w]; p?g.lineTo(X(p),Y(w)):g.moveTo(X(p),Y(w));}
+  g.stroke();
+  g.fillStyle=css('--blue'); g.beginPath(); g.arc(X(best[0]),Y(best[1]),5,0,7); g.fill();
+  g.fillText('máx '+best[1].toFixed(3)+' m a '+best[0].toFixed(1)+'°', Math.min(X(best[0])+8,R-190), Y(best[1])-10);
+  const wN=ancho(ps,deg(phiN))[0]; g.strokeStyle=css('--amber'); g.lineWidth=1.5; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(X(phiN),T); g.lineTo(X(phiN),B); g.stroke(); g.setLineDash([]);
+  g.fillStyle=css('--amber'); g.beginPath(); g.arc(X(phiN),Y(wN),4,0,7); g.fill();
+  g.fillStyle=css('--mut'); g.fillText('rumbo φ →', R-78, B-8);
+}
+function dmax(x){return Math.atan(WB/(Math.sqrt(WA*WA-x*x)-W_MAX/2));}
+function dibujarC(){
+  const cv=$('cC'), g=cv.getContext('2d'), W=cv.width, H=cv.height, xp=+$('xp').value;
+  g.clearRect(0,0,W,H);
+  const L=60,R=W-20,T=16,B=H-34, x0=1.30,x1=1.67, y0=0,y1=0.30;
+  const X=v=>L+(R-L)*(v-x0)/(x1-x0), Y=v=>B-(B-T)*(v-y0)/(y1-y0);
+  g.strokeStyle=css('--line'); g.fillStyle=css('--mut'); g.font='600 11px IBM Plex Mono'; g.lineWidth=1;
+  for(let v=1.30;v<=1.671;v+=0.05){g.beginPath();g.moveTo(X(v),T);g.lineTo(X(v),B);g.stroke();g.fillText(v.toFixed(2),X(v)-14,B+16);}
+  for(let v=0;v<=0.301;v+=0.05){g.beginPath();g.moveTo(L,Y(v));g.lineTo(R,Y(v));g.stroke();g.fillText((v*100).toFixed(0)+' cm',L-50,Y(v)+4);}
+  g.strokeStyle=css('--green'); g.lineWidth=2; g.beginPath(); g.moveTo(L,Y(0.08)); g.lineTo(R,Y(0.08)); g.stroke();
+  g.fillStyle=css('--green'); g.fillText('8 cm de lugar (planificador)',L+8,Y(0.08)-6);
+  g.strokeStyle=css('--blue'); g.lineWidth=2.5; g.beginPath(); let first=true;
+  for(let v=x0;v<=1.6724;v+=0.002){const d=dmax(v), s=WB/Math.tan(d)*deg(25); if(s>y1)continue;
+    first?g.moveTo(X(v),Y(s)):g.lineTo(X(v),Y(s)); first=false;}
+  g.stroke();
+  g.strokeStyle=css('--red'); g.setLineDash([4,4]); g.beginPath(); g.moveTo(X(1.6724),T); g.lineTo(X(1.6724),B); g.stroke();
+  g.strokeStyle=css('--amber'); g.beginPath(); g.moveTo(X(1.58),T); g.lineTo(X(1.58),B); g.stroke(); g.setLineDash([]);
+  g.fillStyle=css('--red'); g.fillText('cota dura 1.672',X(1.6724)-108,T+12);
+  g.fillStyle=css('--amber'); g.fillText('umbral del planificador 1.58',X(1.58)-212,T+28);
+  const d=dmax(xp), Re=WB/Math.tan(d), s=Re*deg(25);
+  g.fillStyle=css('--ink'); g.beginPath(); g.arc(X(xp),Y(Math.min(s,y1)),6,0,7); g.fill();
+  g.fillStyle=css('--mut'); g.fillText('XPIV →', L+8, B-8);
+  $('kD').textContent=(d*180/Math.PI).toFixed(1)+'°'; $('kR').textContent=(Re*100).toFixed(1)+' cm';
+  $('kS').querySelector('b').textContent=(s*100).toFixed(1)+' cm'; $('kS').className='st '+(s<=0.08?'good':'bad');
+}
+function todo(){
+  $('phiO').textContent=(+$('phi').value).toFixed(1)+'°';
+  $('rcO').textContent=(+$('rc').value*100).toFixed(0)+' cm';
+  $('recO').textContent=(+$('rec').value*100).toFixed(1)+' cm';
+  $('xpO').textContent=(+$('xp').value).toFixed(3)+' m';
+  const ps=dibujarA(); dibujarB(ps); dibujarC();
+}
+for(const id of ['phi','rc','rec','carg','diag','xp']) $(id).addEventListener('input',todo);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',todo);
+todo();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(todo);
+</script>
+</body>
+</html>
