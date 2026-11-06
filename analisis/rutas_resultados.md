@@ -368,3 +368,21 @@ configuración es este equipo (serie `82824121`).
 
 **Pendiente para el planificador:** correr v2 con **δmax = 90°** y `XPIV` en 1.72–1.80. Con rotación
 sobre el eje de carga la cinemática deja de ser el límite y queda solo el ancho a rumbo.
+
+
+## Las fichas técnicas (06-nov-2026, `herramientas/fichas/LEEME.md`)
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| `XPIV` 1.50 (derivado), 1.60 (supuesto del video) | **≈ 1.80** (`l2 + x = 1,582 + 219`), igual a `Wa` | ficha VDI del ETR 335d |
+| culo en ángulo recto a 1.50 del eje | el culo es un **arco** alrededor del eje de carga: su punto más lejano está a `Wa` | `XPIV = Wa` |
+| el giro necesita 3.036 vacío / 3.078 cargado (silueta del 05-nov) | la fórmula del fabricante, con rotación sobre el eje de carga: **2.84 vacío (uñas 1.20) / 2.90 con el IBC**, sin el margen de 200 | VDI 2198, comprobada contra las 3 filas de `Ast` |
+| pantógrafo 0.61 | **1.067** | ficha EDR18N2 (doble profundidad) |
+
+**Dato en tensión:** con la ficha estándar el equipo mide 2.65–2.78 m de culo a punta; se midieron
+**2.91**. Cuadra con el compartimento de batería largo (+126 mm), y entonces `XPIV`/`Wa` de este
+equipo son ~1.93 y el IBC pide ~3.03 sin margen, lo que vuelve a necesitar el retranqueo entre postes.
+**Lo que decide:** el largo del compartimento de batería de este equipo, o su configuración por la serie.
+
+**Pendiente:** rehacer la silueta de `planificador_rutas.py` con los datos de la ficha (eje de carga a
+1.80, culo en arco, uñas sobre los brazos) y volver a correr v2.
