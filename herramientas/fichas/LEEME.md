@@ -48,3 +48,19 @@ Vacío, uñas de 1,067 abiertas a 802: 2,739 sin margen. Uñas de 1,200 a 700: 2
   La placa (batería de 1,050–1,180 kg, más que los 907–1,050 de la ficha) apunta a lo mismo. Si es así,
   `XPIV` y `Wa` de **este** equipo son ~13 cm más que los de la ficha. Se confirma midiendo el
   compartimento o pidiendo la configuración por la serie `82824121`.
+
+## Dato de campo (maje, 06-nov): las uñas son adaptadas
+
+Las uñas de este equipo **no son las de fábrica (1,067)**: son **adaptadas, casi del largo del IBC
+(~1.20 m)**. Confirma el `FLEN = 1.20` medido. Quedan **13 cm** sin explicar entre la ficha con uñas
+de 1.20 (1,582 + 1,200 = 2,782) y los 2.91 medidos → la hipótesis del **compartimento de batería
+largo (+126)** sigue en pie, y es lo que falta confirmar.
+
+Si se confirma (`l2` = 1,708 → `XPIV` ≈ 1,927, culo en arco con ese radio):
+
+| | Ancho que pide el giro (rotando sobre el eje de carga) | En 3.00 m |
+|---|---|---|
+| vacío (uñas de 1.20, abiertas a ~0.70) | 1.927 + √(0.981² + 0.35²) = **2.97** | cabe, sobran ~3 cm |
+| con el IBC (1.00 de cara) | 1.927 + √(0.981² + 0.50²) = **3.03** | **no cabe entre postes**; cabe con el retranqueo (3.12) |
+
+Eso es justo lo que se ve en el video: cargado, el operador usa el espacio entre postes.
