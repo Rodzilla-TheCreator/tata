@@ -41,8 +41,9 @@ Vacío, uñas de 1,067 abiertas a 802: 2,739 sin margen. Uñas de 1,200 a 700: 2
 
 - **El empuje del EDR18N2 es 1,067 mm, no 0.61.** El 0.61 es el de los ESR (simple profundidad).
   `CLAUDE.md` y `percepcion/fsm_estados.py` (`EXT_MAX`) usan 0.61.
-- **`XPIV = l2 + x = 1,801 = Wa`.** El eje de carga queda a 1.80 m del culo, no a 1.50. Que coincida
-  con `Wa` dice que el culo es un arco alrededor del eje de carga: lo más lejano está atrás, en el eje.
+- **`XPIV = l2 + x = 1,801`.** El eje de carga queda a ~1.80 m del culo (ficha estándar), no a 1.50.
+  ~~Que coincida con `Wa` dice que el culo es un arco alrededor del eje de carga~~ **Corregido abajo:**
+  el dibujo muestra esquinas redondeadas, no un arco; la coincidencia con `Wa` es aproximada.
 - **El largo culo → punta estándar es 1,582 + 1,067 = 2,649**; con uñas de 1.20, 2,782. **Los 2.91
   medidos cuadran con el compartimento de batería largo (+126) y uñas de 1.20: 1,708 + 1,200 = 2,908.**
   La placa (batería de 1,050–1,180 kg, más que los 907–1,050 de la ficha) apunta a lo mismo. Si es así,
@@ -64,3 +65,28 @@ Si se confirma (`l2` = 1,708 → `XPIV` ≈ 1,927, culo en arco con ese radio):
 | con el IBC (1.00 de cara) | 1.927 + √(0.981² + 0.50²) = **3.03** | **no cabe entre postes**; cabe con el retranqueo (3.12) |
 
 Eso es justo lo que se ve en el video: cargado, el operador usa el espacio entre postes.
+
+## La curva del culo, del dibujo de la ficha (06-nov)
+
+`vista_superior_etr335d.png` es la vista de arriba de la hoja VDI (pág. 2), ampliada. Escala sacada
+del ancho del chasis `b2` = 1,054 mm (303 px → 1 px = 3.48 mm). El dibujo es esquemático: tomar
+±3 cm.
+
+| | Del dibujo |
+|---|---|
+| Forma del culo | **rectángulo con las esquinas redondeadas**, no un semicírculo |
+| Radio de la esquina (ajuste de círculo a 8 puntos del contorno, rms 4 mm) | **≈ 0.17 m** |
+| Culo → eje de carga (línea de las ruedas de carga) | ≈ 1.77 m (la ficha: `l2 + x` = 1.80) |
+| `Wa` | medido del centro del eje de carga a la esquina del culo |
+
+**Corrige lo de arriba:** el culo no es un arco de radio `Wa`. La tabla de «si se confirma»
+(2.97 / 3.03) suponía ese arco y queda reemplazada por la cuenta con el largo medido:
+
+| Silueta: 2.91 culo → punta (medido), capó 1.065, uñas a ±0.365 | Vacío | Con el IBC |
+|---|---|---|
+| culo en ángulo recto | 3.045 m | 3.088 m |
+| esquina de 0.10 m | 3.021 m | 3.061 m |
+| **esquina de 0.17 m (ficha)** | **3.005 m** | **3.043 m** |
+
+**Con la esquina de la ficha, vacío gira justo en 3.00, y cargado necesita ~2 cm por lado del
+retranqueo entre postes (hay 6).** Calza con el video.
