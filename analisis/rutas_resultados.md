@@ -337,3 +337,34 @@ giro arranca desde el eje, así que el tránsito ya va por el central sin forzar
 la prueba 5: con v2 ya no hay vuelta en la ida a la Ra, porque a la `a` se entra en los dos
 sentidos. Su control («rutas sin rumbo») deja de discriminar y habría que rehacerlo. No se hizo
 en esta tarea. `rutas_v2.json` → `rutas.central.tabla_fsm` tiene la tabla lista.
+
+
+## Del manual y de la ficha (06-nov-2026)
+
+**Manual de servicio** (`herramientas/Codigos de error reach color_*.pdf`, eventos `1.71`/`1.72`):
+existe un **«cambio de modo de dirección de 180°/360°»**, con botón selector y entradas
+redundantes. En **modo 180°** la rueda motriz va de −90° a +90°; en **360°** gira sin tope. O sea,
+**δmax ≥ 90°**, no los 78° que salían de la fórmula de la ficha.
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| δmax 78°, derivado de `Wa` + `XPIV` 1.50 | **δmax ≥ 90°** (modo 180°/360°) | el manual de servicio; el video ya pedía ≥ 83° |
+| `XPIV` sale de δmax | **Al revés:** con δ = 90° el equipo rota sobre el centro del eje de carga, y `Wa` es la distancia de ahí al punto más lejano del culo → `XPIV` sale de `Wa` y de la forma del culo | la fórmula de `planificador_giro.py` suponía un δmax que no es el real |
+
+**Con δ = 90°, `Wa = 1.797` (ficha) da `XPIV` según la forma del culo** (si la rueda motriz va
+centrada; si va corrida a un lado, cambia):
+- culo en ángulo recto, capó de 1.065: `XPIV = √(1.797² − 0.5325²) = 1.716 m`
+- culo en semicírculo completo: `XPIV = Wa = 1.797 m`
+- la «cota dura» de 1.6724 usaba `W_MAX/2 = 0.6575` en el culo, pero el culo es el capó (1.065):
+  con el ancho del capó la cota pasa a **1.716**
+
+**Ficha comercial Mitsubishi ESR20N2/EDR18N2** (solo leída por resúmenes de búsqueda; el PDF no se
+pudo bajar desde la sesión). Las cifras van por configuración:
+radio de giro mínimo exterior **1,746–1,797 mm** · largo total **1,882–1,983 mm** · largo hasta la
+cara de las uñas **1,321–1,582 mm** · ancho del chasis **1,054 mm**.
+**Dato en tensión:** el modelo pone la cara de la torre a **1.70 m** del culo (`LCH`), más que el
+máximo de la ficha (1.582). El 2.91 medido de culo a punta manda, pero hay que ver qué
+configuración es este equipo (serie `82824121`).
+
+**Pendiente para el planificador:** correr v2 con **δmax = 90°** y `XPIV` en 1.72–1.80. Con rotación
+sobre el eje de carga la cinemática deja de ser el límite y queda solo el ancho a rumbo.
