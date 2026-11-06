@@ -38,7 +38,8 @@
 from fsm_falla import NO_REANUDABLES, PASOS, plan_deshacer, seguro_para_ceder
 
 ESPERAS = ('ESPERA_PEDIDO', 'ESPERA_HUECO', 'ESPERA_TRASBORDO')
-EXT_MAX = 0.61          # pantógrafo (CLAUDE.md)
+EXT_MAX = 1.067         # pantógrafo: empuje del EDR18N2 = ETR 335d, doble profundidad (herramientas/fichas/,
+                        # 06-nov). Decía 0.61, el de los ESR de simple profundidad
 SUBE_TOMA = 0.12        # ORIGEN: sube 12 cm para cargar (sec/gen_fsm.py)
 BAJA_DEJA = 0.04        # DESTINO: baja 4 cm para soltar
 VEL_ALTURA = 0.25       # m por tick

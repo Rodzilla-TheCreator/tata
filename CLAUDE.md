@@ -44,7 +44,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `herramientas/fichas/` | **Las fichas técnicas (Mitsubishi EDR18N2 y Jungheinrich ETR 335d).** Leer `LEEME.md`: empuje **1,067** (no 0.61), `l2` 1,582, `x` 219 → **`XPIV` ≈ 1.80 = `Wa`**, y la fórmula de pasillo VDI comprobada: el IBC necesita **2,902 mm sin margen** |
 | `herramientas/Codigos de error reach color_*.pdf` | **El manual de servicio completo, 259 pág.** Leerlo con `pdftotext -layout`. Ver `docs/16` |
 | `almacen-nuevo/` | **Otro almacén, NO es RETHINK.** Pasillo **3.18 m**, 20 bahías de 2.35 m por lado, postes de 6", 4 niveles. Planificador de giro **con uñas** y animación. Ver `LEEME.md` |
-| `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script. **Rutas entre bahías con uñas (05-nov):** `bahias.py` (direcciones `x y s` + `a`/`b`), `planificador_rutas.py` (Hybrid A* de cualquier pose a cualquier bahía), resultados en **`rutas_resultados.md`**. **Con uñas, el 90° solo existe metiendo las uñas a la luz de la bahía** (ancho a rumbo 3.04 m > 3.00); a la posición `a` se entra con las uñas hacia adentro y a la `b` hacia la descarga. **v2 (05-nov, tarde, con el video):** postes cada 2.47 m y 6 cm de retranqueo en los dos lados; el giro **sin reversa** del operador **solo existe con δmax ≥ ~83° (XPIV ≥ 1.58)**: con los 78° derivados no sale. Margen: 2 cm vacío, **1 cm cargado**; retranqueo mínimo 4–5 cm. **06-nov: el manual de servicio tiene modo de dirección 180°/360° → δmax ≥ 90°**, y `XPIV` sale de `Wa` y la forma del culo (1.72–1.80), ver el final de `rutas_resultados.md` |
+| `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script. **Rutas entre bahías con uñas (05-nov):** `bahias.py` (direcciones `x y s` + `a`/`b`), `planificador_rutas.py` (Hybrid A* de cualquier pose a cualquier bahía), resultados en **`rutas_resultados.md`**. **Con uñas, el 90° solo existe metiendo las uñas a la luz de la bahía** (ancho a rumbo 3.04 m > 3.00); a la posición `a` se entra con las uñas hacia adentro y a la `b` hacia la descarga. **v2 (05-nov, tarde, con el video):** postes cada 2.47 m y 6 cm de retranqueo en los dos lados; el giro **sin reversa** del operador **solo existe con δmax ≥ ~83° (XPIV ≥ 1.58)**: con los 78° derivados no sale. Margen: 2 cm vacío, **1 cm cargado**; retranqueo mínimo 4–5 cm. **06-nov: el manual de servicio tiene modo de dirección 180°/360° → δmax ≥ 90°**, y `XPIV` sale de `Wa` y la forma del culo (1.72–1.80), ver el final de `rutas_resultados.md`. **v3 (06-nov, fichas): 2.91 + culo de 0.17 + δmax 90° → el giro es una rotación sobre el eje de carga y solo manda el ancho** (3.005 vacío, 3.042 cargado): margen 5 / 3 cm por lado con 6 cm de retranqueo; cargado pide > 2 cm de retranqueo; `XPIV` (1.93, derivado) ya no decide si gira. Lo que más pesa medir: el radio del culo |
 | `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control)**, y la **FSM de coordinación A/B** (reserva, deadlock, falla; `sim_coordinacion.py`): `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real**. **Visibilidad de ArUco por montaje (05-nov, `visibilidad.py`):** con marcas solo en las caras, lateral + trasera **en diagonal** llega a ±4.5 cm con marcas cada 3 bahías; la trasera recta no ve nada en el tránsito; la frontal de `docs/03` es el peor montaje; en la alineación final ninguna cámara ve marcas ~90 % del tiempo. Depende de `PX_MIN`/`ANG_MAX`, que mide maje. **Con las rutas v2 (por el eje, giro casi en el lugar) baja: A2 cada 2 bahías, B cada 1** (cada 2 alternando las marcas entre caras); cada 1 bahía cumplen los dos |
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
@@ -119,6 +119,12 @@ Todo esto contradice lo que estaba escrito antes. **Manda esta sección.**
 | Ancho | 1.054 | **1.315** en el punto más ancho | medido. Los 1.054 eran el capó |
 | Silueta | rectángulo | **forma de L** | el 1.315 son las **patas portantes**, cortas y adelante. El capó atrás mide ~1.065 |
 | `FLEN` uña útil | 1.21 | **1.20** | punta a torre |
+| `XPIV` (06-nov) | 1.50 derivado; 1.60 supuesto del video (v2) | **1.93**, derivado: 2.91 − 1.20 + 0.219 | largo medido + ficha VDI (`x` = 0.219, eje de carga → dorso de uñas). Barrido 1.80–1.95: no cambia si gira |
+| δmax (06-nov) | 78° derivado de la ficha; ≥ ~83° pedido por el video | **90°** | manual de servicio, modo de dirección 180°/360° (eventos `1.71`/`1.72`) |
+| Pantógrafo (06-nov) | 0.61 | **1.067** (doble profundidad) | ficha EDR18N2 / ETR 335d |
+| Esquina del culo (06-nov) | ángulo recto | **radio ~0.17** (±3 cm, no medido) | dibujo de la ficha VDI |
+
+> **Superado el 06-nov** por las filas de arriba (`analisis/rutas_resultados.md`, v3): δmax es 90° y `XPIV` sale del largo.
 
 `XPIV = 1.50` da δmax **78°**, coherente con la ficha y con el 76° que ya usaba el visor web
 por dos caminos independientes. **Sigue siendo derivado, no medido.**
@@ -674,6 +680,10 @@ Y en el planificador: **modelar las uñas en `silueta()`**, que hoy no existen.
 > video es evidencia de que el tope de dirección es mayor que lo derivado. **Medir el ángulo de
 > tope de la rueda de dirección** pasa a ser lo primero de esta lista, junto con el retranqueo
 > poste → cara del cubo de N1 (con menos de 5 cm el giro cargado no sale).
+>
+> **06-nov (v3, fichas y manual):** δmax es **90°** (manual), así que el tope ya no se mide para saber
+> si gira. Lo primero pasa a ser **el radio de las esquinas del culo** (ficha: ~0.17) y el retranqueo:
+> con 0.17, cargado pide más de 2 cm por lado. Ver `analisis/rutas_resultados.md`, v3.
 
 ### 2 · El puerto de servicio ← esto es lo urgente
 

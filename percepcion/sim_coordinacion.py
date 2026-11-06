@@ -31,7 +31,7 @@ import random
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from fsm_estados import ESPERAS, Equipo, Mundo, Slot          # noqa: E402
+from fsm_estados import ESPERAS, EXT_MAX, Equipo, Mundo, Slot  # noqa: E402
 from reserva import GestorDeReservas, GestorTonto             # noqa: E402
 import fsm_rutas                                               # noqa: E402
 
@@ -181,7 +181,7 @@ def un_paro(falla, en_paso, fraccion_ext=0.5):
     while t < 300:
         A.tick(t, m, g)
         if (marca is None and A.fase == 'DESTINO' and A.est == en_paso
-                and (en_paso != 'EXTIENDE' or A.ext >= fraccion_ext * 0.61 - 1e-9)
+                and (en_paso != 'EXTIENDE' or A.ext >= fraccion_ext * EXT_MAX - 1e-9)
                 and (en_paso != 'TOMA' or A.paso_t >= 1)):
             A.evento('PARO')
             marca = t

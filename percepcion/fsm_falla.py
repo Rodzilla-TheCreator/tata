@@ -3,7 +3,8 @@
 #
 # CLAUDE.md, «Lo que falta» #4: hay pasos que NO se pueden reanudar a la mitad — el pantógrafo
 # extendido en altura. Si entra un paro ahí, retomar EXTIENDE desde la mitad (o rendir el
-# control así) deja 0.61 m de pantógrafo afuera a varios metros de altura.
+# control así) deja hasta 1.067 m de pantógrafo afuera (doble profundidad; decía 0.61) a varios metros
+# de altura.
 #
 # Reglas:
 #   · NO REANUDABLES a la mitad: EXTIENDE, TOMA, RETRAE. Ante una falla se DESHACEN.

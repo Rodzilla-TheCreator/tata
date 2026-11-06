@@ -1,7 +1,7 @@
 # Rutas entre bahías — resultados (05-nov-2026, en la i3)
 
 Encargo: `tarea_rutas_bahias.md`. Código: `bahias.py` (direcciones `x y s`), `planificador_rutas.py`
-(Hybrid A* con uñas). Todo sale de `py analisis/planificador_rutas.py` (~5 min en la i3), que escribe
+(Hybrid A* con uñas). Todo sale de `py analisis/planificador_rutas.py --v1` (~5 min en la i3), que escribe
 `rutas_tabla.json` (lo lee la FSM) y `ruta_3L_5R.png`.
 
 > **Rehecho el mismo 05-nov (tarea de visibilidad).** La primera versión **pegaba piezas con
@@ -20,7 +20,7 @@ Encargo: `tarea_rutas_bahias.md`. Código: `bahias.py` (direcciones `x y s`), `p
 
 ```
 py analisis/bahias.py                 # direcciones → pose objetivo y altura
-py analisis/planificador_rutas.py     # casos 1–3, controles, barridos → rutas_tabla.json + la figura
+py analisis/planificador_rutas.py --v1  # casos 1–3, controles, barridos → rutas_tabla.json + la figura
 py percepcion/sim_coordinacion.py     # la FSM, con tabla fija y con direcciones; termina en PASA/FALLA
 ```
 
@@ -230,7 +230,7 @@ vacío y unos 4 cm cargado. Eso calza con el video: el operador queda pegado a l
 
 ## v2 — postes, retranqueo de 6 cm y el giro sin reversa del video (05-nov-2026, tarde, en la i3)
 
-Encargo: `tarea_rutas_v2.md`. `py analisis/planificador_rutas.py` corre ahora la batería v2
+Encargo: `tarea_rutas_v2.md`. `py analisis/planificador_rutas.py --v2` corre la batería v2 (sin flag era v2 hasta v3)
 (~2 min) y escribe `rutas_v2.json`. `--v1` reproduce todo lo de arriba. La FSM sigue leyendo
 `rutas_tabla.json` (v1); ver «Pendiente» al final.
 
@@ -386,3 +386,143 @@ equipo son ~1.93 y el IBC pide ~3.03 sin margen, lo que vuelve a necesitar el re
 
 **Pendiente:** rehacer la silueta de `planificador_rutas.py` con los datos de la ficha (eje de carga a
 1.80, culo en arco, uñas sobre los brazos) y volver a correr v2.
+
+> **Hecho el 06-nov en v3** (abajo), con el culo de esquinas redondeadas que dio el dibujo (no en arco)
+> y el largo medido.
+
+
+## v3 — la silueta de la ficha: 2.91, culo redondeado, δmax 90° (06-nov-2026, en la i3)
+
+Encargo: `tarea_rutas_v3.md`. `py analisis/planificador_rutas.py` corre la batería v3 (~11 min en la
+i3) y escribe `rutas_v3.json` y `ruta_3L_5R_v3.png`. `--v2` y `--v1` reproducen lo de arriba sin
+cambios (verificado: la misma salida de 4 La, 1.16 s y 0.27 m en v2, y 7.34 s y 2.60 m en v1).
+
+**Lo que se metió al modelo** (`Planificador(modelo='v3')`; mundo y reglas de v2):
+
+| | v2 | **v3** | Fuente |
+|---|---|---|---|
+| Culo → punta de uña | 2.90 | **2.91** (`LCH_V3` 1.71 + uña 1.20) | medido por maje |
+| Esquina del culo | ángulo recto | **radio 0.17** (`R_CULO_V3`) | dibujo de la ficha VDI, ±3 cm |
+| δmax | 84.1° (supuesto del video) | **90°** | manual, modo 180°/360° |
+| `XPIV` | 1.60 | **1.929** = 1.71 + 0.219 (`XPIV_V3`) | derivado de la ficha (`x`) |
+
+**Lo que hubo que cambiar para que δ = 90° funcione:**
+- **La cinemática.** Con δ = 90°, `tan δ` explota. En v3 los `ds` de las primitivas son el recorrido de
+  la **rueda motriz** (`step(..., rueda=True)`): `ds_eje = ds·cos δ` y `Δθ = −(ds/WB)·sin δ`. Para
+  δ < 90° es la misma cinemática; con 90° el eje de carga queda quieto y el equipo rota. Sigue siendo
+  exactamente reversible, así que la ENTRADA sigue siendo la SALIDA invertida.
+- **El largo y el tiempo.** El «largo» de un giro v3 es lo que recorre la rueda motriz: **2.4 m para
+  88°** (WB·π/2 = 2.45), unos **7 s** a `VMAN`. En v2 el largo de un giro era lo que recorría el eje de
+  carga (0.27 m). Comparar largos v2 contra v3 es comparar cosas distintas.
+- **La heurística y el castigo del timón.** Con la heurística vieja (0.33 m por radián, el radio del
+  eje de carga a 78°) y el castigo de 0.02 por primitiva a fondo, rotar en el lugar parecía casi el
+  doble de caro de lo que es, y el giro **no salía en 6000 expansiones** (sí en 22 700). Con 1.562 m por
+  radián (WB, el mínimo exacto) y castigo de 0.005, sale en 81.
+- **La meta de la salida.** El giro v3 termina con el eje de carga a ~0.5 m del eje del pasillo, del
+  lado de la bahía. La meta de v2 (el carril de giro del lado opuesto, ±0.80) lo rechazaba. En v3 vale
+  cualquier `y` alineada (±1.00 del eje); el traslado acomoda el carril.
+- **El margen tenía un tope falso.** La punta arranca a 3 cm de la cara del cubo (`GAP_OBJ`): con una
+  holgura de 4 cm ya chocaba la pose de arranque y el margen salía siempre «3 cm». Para medirlo, la
+  punta arranca a `holgura + 0.5 cm`.
+
+### La cuenta: el planificador la reproduce
+
+`anchos_v3()`: el ancho a rumbo máximo de la silueta. No depende de `XPIV`, solo de la forma.
+
+| Culo | Vacío | Con el IBC |
+|---|---|---|
+| ángulo recto | 3.045 | 3.088 |
+| 0.10 | 3.021 | 3.061 |
+| **0.17 (ficha)** | **3.005** | **3.042** |
+| 0.24 | 2.990 | 3.025 |
+
+Es la tabla de `herramientas/fichas/LEEME.md` al milímetro (allá, 3.043 cargado).
+
+### El giro sin reversa, contra el video (nominal: `XPIV` 1.93, culo 0.17, retranqueo 6 cm)
+
+| Hueco y sentido de viaje | Vacío | Cargado |
+|---|---|---|
+| `a`, `b` y centro, con uñas hacia adentro y hacia la descarga (las 6) | **sale, margen 5 cm por lado** | **sale, margen 3 cm por lado** |
+
+- **Es una rotación sobre el eje de carga.** La rueda motriz recorre 2.4 m a fondo (90°); el eje de
+  carga se mueve **5 cm vacío y 10 cm cargado** (retrocede eso antes de rotar, para que la uña no
+  toque el cubo).
+- **El margen es casi toda la sobra de la cuenta**: 3.12 entre postes contra 3.005 y 3.042 deja 5.7 y
+  3.9 cm por lado; el planificador da 5 y 3. **En v2 la cinemática se comía la mitad (2 y 1 cm); con
+  90° ya no se come nada.**
+
+### Sensibilidad (holgura 0; «S» = sale en La→adentro, La→descarga, Lc→adentro; Lb es espejo de La)
+
+| Carga | Culo | Retranqueo 0 (todo dentro de 3.00) | 3 cm | 6 cm |
+|---|---|---|---|---|
+| vacío | 0.10 | ··· | SSS | SSS |
+| vacío | 0.17 | ··· | SSS | SSS |
+| vacío | **0.24** | **SSS** | SSS | SSS |
+| cargado | **0.10** | ··· | **···** | SSS |
+| cargado | 0.17 | ··· | SSS | SSS |
+| cargado | 0.24 | ··· | SSS | SSS |
+
+**Igual con `XPIV` 1.80 y 1.93**, celda por celda. Barrido aparte, con culo de 0.17: `XPIV` 1.80,
+1.85, 1.90, 1.93 y 1.95 dan lo mismo (sale con 6 cm, no sale con 0, vacío y cargado).
+
+- **Sale exactamente cuando la cuenta de ancho dice que cabe**, en las 36 combinaciones: vacío dentro
+  de 3.00 solo con culo de 0.24 (2.990); cargado nunca dentro de 3.00 (el mínimo es 3.025); con 3 cm
+  de retranqueo (3.06) cargado sale con 0.17 y 0.24 y no con 0.10 (3.061).
+- **Con δmax = 90°, `XPIV` deja de decidir si gira.** Solo mueve dónde queda el eje de carga.
+- **Lo que decide ahora es la forma: el radio del culo y el retranqueo.** Con el culo de la ficha,
+  cargado necesita **más de 2 cm por lado** de retranqueo.
+
+**Control de falsación: culo en ángulo recto, retranqueo 0, holgura 0 → 0/6 cargado (3.088 > 3.00) y
+0/6 vacío (3.045).** Las búsquedas que no salen se agotan (66–360 expansiones, «sin camino»), no se
+quedan sin presupuesto.
+
+### El caso de maje y el barrido, v3
+
+| | Ida (vacío) | Vuelta a la descarga (con el IBC) |
+|---|---|---|
+| 5 3 **Ra** | **7.8 m · 1 cambio · 15 s**: 5.4 m en reversa posicionándose (con el eje de carga a 0.50 m del eje del pasillo, lado R) y **rota 88° hacia adelante** (2.4 m de rueda, 7 s) | 16.3 m · 1 cambio · 20 s: rota en reversa y de frente a la descarga |
+| 5 3 **Rb** | **8.9 m · 1 cambio · 16 s**, igual | 17.4 m · 1 cambio · 21 s |
+
+- **Sigue siendo lo del video:** se posiciona retrocediendo y, desde que gira, no retrocede.
+- **Barrido desde la descarga: las 28 llegan sin ningún cambio de sentido**, como en v2.
+- **Con y sin la regla del carril central, las rutas son idénticas**, otra vez.
+- **Los tiempos suben** (ida a la Ra: 6 s en v2, 15 s en v3) porque ahora la rotación tiene costo: la
+  rueda motriz recorre 2.4 m. Es la diferencia de medir el giro con la rueda en vez del eje de carga, y
+  `VMAN` (0.35 m/s) es SUPUESTO.
+- Saltos entre piezas: < 2 µm en todas las rutas.
+
+**Dato para la FSM, no resuelto:** el cambio de carril de un carril de giro al otro (1.3 m de lado en
+4 m de pasillo) **no sale con 15 000 expansiones**; con 60 000 sale, con 1 cambio de sentido. En la tabla
+para la FSM queda `None`. La FSM sigue con la tabla v1, así que hoy no la usa nadie; si se pasa a v3,
+hay que darle más presupuesto o revisar si con el giro v3 hace falta ese cambio de carril.
+
+### El pantógrafo
+
+`EXT_MAX` = **1.067** en `percepcion/fsm_estados.py` (decía 0.61), y donde se usaba el número suelto:
+`sim_coordinacion.py` (prueba 3), el comentario de `fsm_falla.py` y `clases/fsm.html`. **Las cinco pruebas
+de la FSM pasan**; la prueba 3 cambia solo sus números (paro en EXTIENDE con 0.71 m afuera, en TOMA con
+1.07) y su control sigue fallando como debe (cede el control con el pantógrafo afuera).
+
+### Decía / es / qué lo tumbó (contra v2)
+
+| Decía (v2, 05-nov) | Es (v3) | Qué lo tumbó |
+|---|---|---|
+| δmax 84° (XPIV 1.60), supuesto del video | **90°**: rota sobre el eje de carga | el manual (modo 180°/360°) |
+| `XPIV` 1.60 | **1.93**, derivado; y **ya no decide si gira** | la ficha (`x` = 0.219) y el largo medido |
+| 2.90 de culo a punta, culo en ángulo recto | **2.91**, culo con esquinas de **0.17** | maje midió el largo; el dibujo VDI da la esquina |
+| Margen 2 cm vacío, 1 cm cargado: la cinemática se come la mitad | **5 cm vacío, 3 cm cargado**: casi toda la sobra de la cuenta | con 90° la cinemática deja de restringir |
+| Retranqueo mínimo 4 cm vacío, 5 cm cargado | **0 vacío solo con culo ≥ ~0.20; cargado > 2 cm por lado** con culo de 0.17 | lo decide solo el ancho a rumbo |
+| El giro es casi una rotación de 0.27 m | **Es una rotación**: el eje de carga se mueve 5–10 cm; la rueda motriz recorre 2.4 m | δ = 90° |
+| Ida a la Ra 4.8 m · 6 s | 7.8 m · 15 s (la rueda recorre 2.4 m en el giro) | el giro se mide con la rueda motriz |
+| Pantógrafo 0.61 | **1.067** | ficha EDR18N2 / ETR 335d |
+
+### Lo que hay que medir, en orden (reemplaza la lista de v2)
+
+1. **El radio de las esquinas del culo**, desde arriba con escuadra o una foto con cinta. Es lo que más
+   pesa: de 0.10 a 0.24 el cargado pasa de no salir a salir con 3 cm de retranqueo.
+2. **El retranqueo** poste → cara del cubo de N1, en varios huecos de los dos racks. Con el culo de 0.17,
+   cargado necesita más de 2 cm por lado.
+3. **Que la rueda llegue a 90°** con el selector de modo, mirándola. Lo dice el manual; no se vio en
+   este equipo.
+4. **El compartimento de batería** (o la configuración por la serie `82824121`): explica los 13 cm de
+   más del 2.91 y fija `XPIV`, que ya no decide si gira pero sí dónde queda el eje de carga.

@@ -64,9 +64,10 @@ PASO_POSTE = BAHIA + POSTE      # 2.47 m entre centros de poste
 XPIV = 1.50                     # culo → eje de carga, DERIVADO
 LCH = 1.70                      # culo → cara de torre
 FLEN = 1.20                     # uña útil
-def a_punta(xpiv=XPIV):
-    """Punta de uña en el marco del vehículo (a = 0 en el pivote). Largo total 2.90."""
-    return (LCH - xpiv) + FLEN
+def a_punta(xpiv=XPIV, lch=LCH):
+    """Punta de uña en el marco del vehículo (a = 0 en el pivote). Largo total lch + FLEN: 2.90 en
+    v1/v2; en v3 2.91 medido (lch 1.71)."""
+    return (lch - xpiv) + FLEN
 
 # ── alturas por nivel: Base / Entrada / Agarre, al fondo de la uña (CLAUDE.md, El rack) ──
 ALTURAS = {
@@ -152,14 +153,14 @@ def x_fondo():
     return fin_rack() + LIBRE_FONDO
 
 
-def pose_de(direccion, gap=GAP_OBJ, xpiv=XPIV, pasillo=PASILLO, rec=0.0):
+def pose_de(direccion, gap=GAP_OBJ, xpiv=XPIV, pasillo=PASILLO, rec=0.0, lch=LCH):
     """Pose objetivo (x, y, θ, altura_uña) frente al hueco: uñas encarando el rack `s`, punta de uña
     a `gap` de la cara, centrado en la posición a/b. Altura = la de ENTRADA del nivel. `rec`: retranqueo
     de la cara del cubo detrás de la cara del poste (v2); la punta queda a `gap` de la cara del CUBO."""
     d = leer(direccion) if isinstance(direccion, str) else direccion
     xc = centro_posicion(d.x, d.p)
     lado = 1 if d.s == 'L' else -1
-    y = lado * (pasillo / 2 + rec - gap - a_punta(xpiv))
+    y = lado * (pasillo / 2 + rec - gap - a_punta(xpiv, lch))
     th = lado * math.pi / 2
     alt = ALTURAS[d.y][1] if d.y else 0.0
     return xc, y, th, alt
@@ -175,10 +176,10 @@ def pose_en_pasillo(texto, mirando='descarga', cm=None):
     return xc, y, th
 
 
-def pose_descarga(xpiv=XPIV):
+def pose_descarga(xpiv=XPIV, lch=LCH):
     """Dejar el cubo en el punto de descarga (x = 0, eje del pasillo), uñas hacia afuera (θ = π).
     El IBC va de la torre a la punta: su centro queda a (a_punta − 0.60) del pivote."""
-    return a_punta(xpiv) - IBC_FONDO / 2, 0.0, math.pi
+    return a_punta(xpiv, lch) - IBC_FONDO / 2, 0.0, math.pi
 
 
 def altura_uña(direccion, momento='entrada'):

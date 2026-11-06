@@ -2,7 +2,7 @@
 # Duraciones de la FSM sacadas del planificador, no de la tabla fija TICKS
 #
 # Fuente: analisis/rutas_tabla.json → 'tabla_fsm', que escribe analisis/planificador_rutas.py
-# (regenerar con `py analisis/planificador_rutas.py` si cambia la geometría o un SUPUESTO).
+# (regenerar con `py analisis/planificador_rutas.py --v1` si cambia la geometría o un SUPUESTO).
 #
 # Qué sale de dónde, por paso (1 tick = 0.5 s, como el resto de la FSM):
 #   CARRIL     cambio de carril al de giro del lado `s` (Hybrid A*: curva en S)

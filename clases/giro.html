@@ -62,13 +62,15 @@ ol{margin:0;padding-left:20px;color:var(--ink);font-size:14.5px} li{margin:5px 0
 
 <header>
   <div class="eyebrow">TaTa &middot; Clase 5</div>
-  <h1>El giro en 3.00 m &mdash; por qué 2.90 no cabe en 3.00</h1>
+  <h1>El giro en 3.00 m &mdash; por qué 2.91 no cabe en 3.00</h1>
 </header>
 
-<p>El equipo mide <b>2.90 m de culo a punta de uña</b>. El pasillo mide <b>3.00 m</b> de poste a poste.
-De frente al rack sobran 5 cm por lado. Y aun así, a mitad del giro, el equipo <b>no cabe</b>. Esta clase
-es la cuenta, paso por paso, y lo que el 5-nov se descubrió al meterle las uñas al planificador
-(<code>analisis/planificador_rutas.py</code>, <code>analisis/rutas_resultados.md</code>).</p>
+<p>El equipo mide <b>2.91 m de culo a punta de uña</b> (medido por maje; el modelo usaba 2.90). El pasillo
+mide <b>3.00 m</b> de poste a poste. De frente al rack sobran 4.5 cm por lado. Y aun así, a mitad del giro,
+el equipo <b>no cabe</b>. Esta clase es la cuenta, paso por paso, y lo que el 5-nov se descubrió al meterle
+las uñas al planificador (<code>analisis/planificador_rutas.py</code>, <code>analisis/rutas_resultados.md</code>).
+<b>6-nov:</b> con las fichas técnicas (<code>herramientas/fichas/</code>) el culo tiene esquinas de
+<b>~0.17 m</b> y la rueda de dirección llega a <b>90°</b>; la clase se actualizó a eso (modelo v3).</p>
 
 <div class="verdict">
   <h2>La idea en una línea</h2>
@@ -80,8 +82,8 @@ es la cuenta, paso por paso, y lo que el 5-nov se descubrió al meterle las uña
 <div class="panel">
   <div><div class="tag">Interactivo &middot; la silueta del planificador, vista desde arriba</div>
   <h2>1 · Girá el equipo y mirá cuánto ocupa a lo ancho</h2></div>
-  <div class="row"><label>rumbo φ</label><input type="range" id="phi" min="0" max="90" step="0.5" value="73"><output id="phiO"></output></div>
-  <div class="row"><label>radio del culo</label><input type="range" id="rc" min="0" max="0.35" step="0.01" value="0"><output id="rcO"></output></div>
+  <div class="row"><label>rumbo φ</label><input type="range" id="phi" min="0" max="90" step="0.5" value="75"><output id="phiO"></output></div>
+  <div class="row"><label>radio del culo</label><input type="range" id="rc" min="0" max="0.35" step="0.01" value="0.17"><output id="rcO"></output></div>
   <div class="row"><label>retranqueo entre postes</label><input type="range" id="rec" min="0" max="0.10" step="0.005" value="0.06"><output id="recO"></output></div>
   <div class="sw">
     <label><input type="checkbox" id="carg"> cargado (IBC de 1.00 de cara)</label>
@@ -111,7 +113,7 @@ es la cuenta, paso por paso, y lo que el 5-nov se descubrió al meterle las uña
 
 <!-- ───────────────────────── 2 · la cuenta ───────────────────────── -->
 <div class="panel">
-  <div><div class="tag">La cuenta</div><h2>2 · De dónde sale el 3.035</h2></div>
+  <div><div class="tag">La cuenta</div><h2>2 · De dónde sale el 3.045</h2></div>
   <p>Cada punto del equipo tiene dos coordenadas en su propio marco: <b>a</b> a lo largo (desde el culo
   hacia las uñas) y <b>l</b> de costado. Con el equipo girado un ángulo φ respecto del eje del pasillo,
   ese punto queda a esta altura <b>a través</b> del pasillo:</p>
@@ -121,33 +123,37 @@ lo que ocupa a lo ancho  =  y_max − y_min   (el punto más arriba menos el má
 no depende de dónde esté el equipo: solo del rumbo φ.  Es ancho_a_rumbo() en planificador_rutas.py</div>
   <p>A mitad del giro, los dos puntos extremos son siempre los mismos: el <b>rincón del culo</b> de un
   lado y el <b>rincón de afuera de la uña</b> del otro (el simulador los marca).</p>
-  <div class="eq">rincón del culo        a = 0.00   l = −0.5325   (capó de 1.065 / 2)
-rincón de la uña       a = 2.90   l = +0.365    (uña de 0.13 centrada a 0.30)
+  <div class="eq">rincón del culo        a = 0.00   l = −0.5325   (capó de 1.065 / 2; culo en ángulo recto)
+rincón de la uña       a = 2.91   l = +0.365    (uña de 0.13 centrada a 0.30)
 
-Δa = 2.90       Δl = 0.5325 + 0.365 = <b>0.8975</b>
+Δa = 2.91       Δl = 0.5325 + 0.365 = <b>0.8975</b>
 
 ancho(φ) = Δa·sin φ + Δl·cos φ = R · sin(φ + α)
 
-R = √(Δa² + Δl²) = √(2.90² + 0.8975²) = √(8.410 + 0.806) = <b>3.035 m</b>
-el máximo es R, y pasa cuando  tan φ = Δa / Δl  →  φ = atan(2.90 / 0.8975) = <b>72.8°</b></div>
+R = √(Δa² + Δl²) = √(2.91² + 0.8975²) = √(8.468 + 0.806) = <b>3.045 m</b>
+el máximo es R, y pasa cuando  tan φ = Δa / Δl  →  φ = atan(2.91 / 0.8975) = <b>72.9°</b>
+
+(con los 2.90 del modelo v2 daba 3.035 a 72.8°)</div>
   <p>Ese R es la <b>distancia entre los dos rincones</b>: no cambia nunca. Lo que cambia con el rumbo es
-  cuánto de esa distancia queda <b>atravesada</b> en el pasillo. A 72.8° la diagonal queda justo de
+  cuánto de esa distancia queda <b>atravesada</b> en el pasillo. A 72.9° la diagonal queda justo de
   través, y ocupa entera.</p>
   <div class="eq">cargado:  el IBC mide 1.00 de cara → su rincón está en l = +0.50
-Δl = 0.5325 + 0.50 = 1.0325    R = √(2.90² + 1.0325²) = <b>3.078 m</b>   a φ = 70.4°</div>
+Δl = 0.5325 + 0.50 = 1.0325    R = √(2.91² + 1.0325²) = <b>3.088 m</b>   a φ = 70.5°</div>
   <div class="scroll"><table>
-    <tr><th>rumbo φ</th><th>0°</th><th>45°</th><th>60°</th><th>72.8°</th><th>80°</th><th>90°</th></tr>
+    <tr><th>rumbo φ</th><th>0°</th><th>45°</th><th>60°</th><th>72.9°</th><th>80°</th><th>90°</th></tr>
     <tr><td>vacío (m)</td><td id="t0">–</td><td id="t45">–</td><td id="t60">–</td><td id="t73">–</td><td id="t80">–</td><td id="t90">–</td></tr>
     <tr><td>cargado (m)</td><td id="c0">–</td><td id="c45">–</td><td id="c60">–</td><td id="c73">–</td><td id="c80">–</td><td id="c90">–</td></tr>
   </table></div>
-  <p>A 0° ocupa el ancho de las patas (1.315). A 90° ocupa el largo (2.90). <b>En el medio ocupa más que
+  <p>A 0° ocupa el ancho de las patas (1.315). A 90° ocupa el largo (2.91). <b>En el medio ocupa más que
   las dos cosas.</b> Por eso la intuición de "si de frente cabe, girando también" falla.</p>
 </div>
 
 <!-- ───────────────────────── 3 · el culo redondo ───────────────────────── -->
 <div class="panel">
-  <div><div class="tag">Lo que todavía no está medido</div><h2>3 · El culo redondeado</h2></div>
-  <p>El modelo dibuja el culo con esquinas en ángulo recto. Si el culo real es redondeado con radio
+  <div><div class="tag">De la ficha VDI &middot; 6-nov (±3 cm, no medido)</div><h2>3 · El culo redondeado</h2></div>
+  <p>Hasta v2 el modelo dibujaba el culo con esquinas en ángulo recto. El dibujo de la ficha técnica
+  (<code>herramientas/fichas/vista_superior_etr335d.png</code>) muestra <b>esquinas de ~0.17 m</b>, y ese
+  es ahora el valor por defecto del deslizador. Si el culo real es redondeado con radio
   <b>r</b>, el rincón se mete hacia adentro y la diagonal se acorta. Un rincón redondeado es un rincón
   recto encogido r hacia adentro en las dos direcciones, más un círculo de radio r:</p>
   <div class="eq">aporte del rincón recto        a·sin φ + l·cos φ
@@ -155,11 +161,18 @@ aporte del rincón redondeado   (a + r)·sin φ + (l + r)·cos φ − r      ←
 
 lo que se gana  =  <b>r · (sin φ + cos φ − 1)</b>
 
-a 72.8°:  sin + cos − 1 = 0.955 + 0.296 − 1 = 0.251
-r = 0.10 m  →  2.5 cm menos     r = 0.20 m  →  <b>5.0 cm menos</b>  →  3.035 − 0.050 = 2.985 m &lt; 3.00</div>
-  <p>Con un culo de <b>20 cm de radio</b>, el equipo vacío gira <b>sin usar el espacio entre
-  postes</b>. Por eso el radio del culo es, junto con el ángulo de la rueda, la medida que más pesa hoy.
-  Movés el deslizador del radio en el simulador de arriba y lo ves.</p>
+a 72.9°:  sin + cos − 1 = 0.956 + 0.294 − 1 = 0.250
+r = 0.10 m  →  2.5 cm menos     <b>r = 0.17 m (ficha)  →  4.2 cm menos  →  3.003 m</b>     r = 0.24 m  →  6 cm menos
+
+el planificador (anchos_v3), con el máximo exacto:
+  culo     vacío    cargado
+  recto    3.045    3.088
+  0.10     3.021    3.061
+  <b>0.17     3.005    3.043</b>
+  0.24     2.990    3.025</div>
+  <p>Con la esquina de la ficha, <b>el equipo vacío gira justo en 3.00</b> (le falta medio centímetro), y
+  cargado necesita ~2 cm por lado del retranqueo entre postes. Con 24 cm, el vacío ya gira sin usar
+  el retranqueo. Movés el deslizador del radio en el simulador de arriba y lo ves.</p>
 </div>
 
 <!-- ───────────────────────── 4 · los postes ───────────────────────── -->
@@ -168,20 +181,39 @@ r = 0.10 m  →  2.5 cm menos     r = 0.20 m  →  <b>5.0 cm menos</b>  →  3.0
   <p>Los 3.00 m se miden entre los <b>postes de seguridad</b>, el punto más angosto. Entre poste y poste,
   la cara del cubo de N1 queda unos <b>6 cm más atrás</b>, en los dos racks. Ahí caben
   <b>3.00 + 0.06 + 0.06 = 3.12 m</b>.</p>
-  <div class="eq">vacío:    3.12 − 3.035 = <b>8.5 cm</b> de sobra en total
-cargado:  3.12 − 3.078 = <b>4.2 cm</b> de sobra en total
+  <div class="eq">culo de 0.17 (v3):
+vacío:    3.12 − 3.005 = <b>11.5 cm</b> de sobra en total
+cargado:  3.12 − 3.043 = <b>7.7 cm</b> de sobra en total
+
+culo recto y 2.90 (v2, 5-nov):  8.5 cm vacío, 4.2 cm cargado
 
 condición: los dos extremos (culo y punta de uña) tienen que quedar ENTRE postes, no frente a uno.
 Por eso el operador queda "pegado a las dos bahías".</div>
-  <p>El planificador con postes y retranqueo (v2) confirmó la cuenta, pero con menos margen:
-  <b>2 cm por lado vacío y 1 cm cargado</b>. La cinemática se come la mitad (sección 5). Y el
-  retranqueo de N1 depende de dónde dejó el cubo el operador: con menos de 5 cm, el giro cargado
-  no sale.</p>
+  <p><b>v3 (6-nov):</b> el planificador con la silueta de la ficha y la rueda a 90° da <b>5 cm por lado
+  vacío y 3 cm cargado</b>: casi toda la sobra de la cuenta (5.7 y 3.9). Con el culo de 0.17, cargado
+  sale con <b>3 cm</b> de retranqueo y no con 0.</p>
+  <p><i>Antes (v2, 5-nov):</i> el planificador confirmó la cuenta con menos margen, <b>2 cm por lado
+  vacío y 1 cm cargado</b>, porque con δmax 84° la cinemática se comía la mitad (sección 5), y con
+  menos de 5 cm de retranqueo el giro cargado no salía.</p>
 </div>
 
 <!-- ───────────────────────── 5 · la cinemática ───────────────────────── -->
 <div class="panel">
-  <div><div class="tag">Interactivo &middot; por qué el ancho no alcanza</div><h2>5 · Además tiene que poder rotar casi en el lugar</h2></div>
+  <div><div class="tag">Del manual &middot; 6-nov</div><h2>5 · Además tiene que poder rotar casi en el lugar</h2></div>
+  <div class="verdict">
+  <h2>δmax = 90°, del manual</h2>
+  <p>El manual de servicio (eventos <code>1.71</code>/<code>1.72</code>) tiene un <b>modo de dirección
+  180°/360°</b>: en 180° la rueda motriz va de −90° a +90°. Con la rueda a 90° el eje de carga no se
+  mueve: <b>el equipo rota en el lugar sobre el centro del eje de carga</b>, R_eje = 0. La cinemática deja
+  de ser el límite y queda solo el ancho de la sección 2. El planificador v3 lo confirma: en las 36
+  combinaciones de radio del culo, XPIV y retranqueo, el giro sale exactamente cuando la cuenta de
+  ancho dice que cabe.</p>
+  <p>Rotar no es gratis: la rueda motriz recorre <b>WB·Δθ = 1.562 × π/2 = 2.45 m</b> para 90°, unos
+  7 s a velocidad de maniobra. El eje de carga se mueve solo 5 cm (vacío) o 10 cm (cargado).</p>
+  </div>
+  <p><i>Lo que sigue es historia (5-nov):</i> lo que pedía el video antes de leer el manual, cuando
+  δmax salía de una fórmula de ficha. Se conserva porque fue esta cuenta la que dijo que el tope
+  derivado (78°) no alcanzaba.</p>
   <p>Que la silueta quepa a cada rumbo es <b>necesario, no suficiente</b>. Para pasar de un rumbo al
   siguiente, el equipo tiene que <b>moverse</b>, y un reach truck no rota en el lugar: el eje de carga
   describe un arco de radio mínimo. De la clase 1:</p>
@@ -204,19 +236,23 @@ para girar Δθ, el eje de carga recorre  ds = R_eje · Δθ</div>
   <p>Con el <b>XPIV 1.50</b> que se derivó en agosto, δmax = 78°: el eje de carga necesita ~14.5 cm y hay 8.
   <b>El giro sin reversa no existe.</b> La cuenta de bolsillo cruza los 8 cm cerca de XPIV 1.59; el
   planificador, que hace la cuenta exacta, encontró el umbral en <b>1.58</b>. Como el operador sí gira
-  sin retroceder (el video), <b>el video es evidencia de que δmax ≥ ~83°</b>. Hay que medirlo.</p>
+  sin retroceder (el video), <b>el video era evidencia de que δmax ≥ ~83°</b>. El manual dijo 90°: la
+  cuenta apuntaba bien. Y la fórmula estaba al revés: con δ = 90°, <code>XPIV</code> no da δmax; sale del
+  largo y de la ficha (2.91 − 1.20 + 0.219 = <b>1.93</b>, derivado).</p>
 </div>
 
 <div class="verdict">
   <h2>Lo que hay que medir, y por qué</h2>
   <ol>
-    <li><b>El ángulo de la rueda de dirección a tope</b>, con un transportador. Decide si el giro sin
-      reversa existe en el modelo (sección 5).</li>
-    <li><b>El radio del culo</b>, desde arriba con escuadra o foto con cinta. Con ~20 cm, el vacío
-      gira sin usar el retranqueo (sección 3).</li>
-    <li><b>El retranqueo poste → cara del cubo de N1</b> en varias bahías de los dos racks. Con menos de
-      5 cm el giro cargado no sale (sección 4).</li>
-    <li><b>W_MAX</b>, el ancho pata a pata. Entra en la fórmula de δmax.</li>
+    <li><b>El radio del culo</b>, desde arriba con escuadra o foto con cinta. La ficha da ~0.17 ±3 cm;
+      con 0.10 el giro cargado ya no sale con 3 cm de retranqueo, con 0.24 el vacío gira dentro de los
+      3.00 (sección 3).</li>
+    <li><b>El retranqueo poste → cara del cubo de N1</b> en varias bahías de los dos racks. Con el culo de
+      0.17, cargado pide más de 2 cm por lado (sección 4).</li>
+    <li><b>Que la rueda llegue a 90°</b>: mirarla a tope con el selector de modo. Lo dice el manual; no
+      se vio en este equipo.</li>
+    <li><b>El compartimento de batería</b> (o la configuración por la serie): explica los 13 cm de más
+      del 2.91 y de él sale <code>XPIV</code>.</li>
   </ol>
   <p><b style="color:var(--amber)">Entrega:</b> con los cuatro números, mové los deslizadores de esta
   página y decí cuánto margen queda de verdad, vacío y cargado. Si el margen sale negativo con los datos
@@ -231,8 +267,9 @@ para girar Δθ, el eje de carga recorre  ds = R_eje · Δθ</div>
 
 </div>
 <script>
-// ───── geometría (la de planificador_rutas.py: capó, patas, uñas, IBC) ─────
-const LCH=1.70, L_ANCHO=0.48, FLEN=1.20, W_CAPO=1.065, W_MAX=1.315, UNA_C=0.30, UNA_W=0.13,
+// ───── geometría (la de planificador_rutas.py v3: capó, patas, uñas, IBC) ─────
+// LCH culo → dorso de uñas: 2.91 medido − 1.20 de uña = 1.71 (v2 usaba 1.70)
+const LCH=1.71, L_ANCHO=0.48, FLEN=1.20, W_CAPO=1.065, W_MAX=1.315, UNA_C=0.30, UNA_W=0.13,
       IBC_F=1.20, IBC_W=1.00, WB=1.562, WA=1.797, PASO_POSTE=2.47, POSTE=0.12, HALF=1.50;
 const A_PATA=LCH+L_ANCHO, A_PUN=LCH+FLEN;           // marco del equipo: a=0 en el culo
 const $=id=>document.getElementById(id);

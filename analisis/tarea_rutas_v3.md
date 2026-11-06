@@ -1,5 +1,7 @@
 # Encargo — rutas v3: la silueta de la ficha, con 2.91 de culo a punta
 
+> **HECHO 06-nov-2026 en la i3.** Sección «v3» de `rutas_resultados.md`; `rutas_v3.json` y `ruta_3L_5R_v3.png`.
+
 **Para la sesión de i3.** Sigue a `tarea_rutas_v2.md`. Leé `CLAUDE.md`, `herramientas/fichas/LEEME.md`
 (entero) y las secciones del final de `analisis/rutas_resultados.md` («Del manual y de la ficha» y
 «Las fichas técnicas»). Mirá `herramientas/fichas/vista_superior_etr335d.png`.
