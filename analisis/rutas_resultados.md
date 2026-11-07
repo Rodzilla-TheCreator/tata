@@ -538,6 +538,67 @@ silueta v3 cambiando solo el culo:
 | Ancho a rumbo vacío | 3.005 | **2.967**: cabe en 3.00 **sin retranqueo** |
 | Ancho a rumbo cargado | 3.042 | **3.005**: pide **3 mm por lado** del retranqueo |
 
-Falta correrlo en el planificador (encargo `tarea_rutas_v3b.md`). Si la regla de v3 se sostiene
-(«sale exactamente cuando la cuenta de ancho dice que cabe»), vacío sale con retranqueo 0 y cargado
-con cualquier retranqueo ≥ 1 cm.
+~~Falta correrlo en el planificador (encargo `tarea_rutas_v3b.md`).~~ **Corrido: v3b, abajo.** Lo que
+decía antes de correrlo: si la regla de v3 se sostiene («sale exactamente cuando la cuenta de ancho dice
+que cabe»), vacío sale con retranqueo 0 y cargado con cualquier retranqueo ≥ 1 cm. **Se sostuvo.**
+
+## v3b — el culo de la ficha en el planificador (07-nov-2026, en la i3)
+
+`py analisis/planificador_rutas.py` (default v3b; `--v3` es lo de antes). Silueta v3 con el culo del
+`culo_ficha.csv` escalado al capó (`r_culo='ficha'`, ahora el default de v3). Datos en
+`rutas_v3b.json`, figura `ruta_3L_5R_v3b.png`. Una hora de corrida en la i3.
+
+**Regresión:** v1 (anchos), v2 (video) y v3 con `r_culo=0.17` (anchos, video, control) dan **idéntico**
+a `rutas_tabla.json`, `rutas_v2.json` y `rutas_v3.json`.
+
+| | Decía (v3, esquinas de 0.17) | **Es (v3b, culo de la ficha)** | Qué lo tumbó |
+|---|---|---|---|
+| Ancho a rumbo vacío / cargado | 3.005 / 3.042 | **2.967 a 74.5° / 3.005 a 72.0°** | la cara es un arco, no un rectángulo |
+| Margen nominal (6 cm de retranqueo), 6 combinaciones | 5 cm vacío / 3 cargado | **7 cm vacío / 5 cargado**, las 6 salen | idem |
+| Retranqueo que pide vacío | > 0 (con 0 no salía; solo con culo 0.24) | **0: sale sin retranqueo** | idem |
+| Retranqueo que pide cargado | > 2 cm (con 3 sí) | **1 cm** (con 0 no) | idem |
+| Cambio de carril giro→giro | no sale con 15 000 expansiones | **sale con 19 576**: 11.3 m, 1 cambio, 14 s | más presupuesto (60 000); no cambió el modelo |
+| Caso de maje y barrido | Ra 7.8 m 15 s · Rb 8.9 m 16 s; vuelta 20 / 21 s; 28/28, 0 cambios | **igual** (libre y central) | — no cambia: el culo solo pesa en el giro |
+
+**Sensibilidad** (holgura 0, las 3 combinaciones de `COMBOS3`; S = sale):
+
+| retranqueo | 0 | 1 cm | 2 cm | 3 cm | 6 cm |
+|---|---|---|---|---|---|
+| vacío | **SSS** | SSS | SSS | SSS | SSS |
+| cargado | **···** | **SSS** | SSS | SSS | SSS |
+
+Confirma la predicción de la cuenta al centímetro. El equipo gira cuando el ancho a rumbo cabe en
+3.00 + 2·retranqueo, y no antes.
+
+**Control de falsación:** culo en ángulo recto, retranqueo 0: **0/6 cargado, 0/6 vacío**, como en v3. El
+planificador sí puede decir que no.
+
+**Cambio de carril.** El de `tabla_fsm` (carril R en x = 10 → carril L en x = 14) sale con ~20 000
+expansiones: en v3 no le faltaba un camino, le faltaba presupuesto. **Sí se usa**: los cruces de
+lado los hacen con un TRASLADO de 1.00 m lateral, y salen los tres:
+
+| cruce | ruta | traslado |
+|---|---|---|
+| 4 La → 5 Ra | 9.3 m, 3 cambios, 24 s | Δy 1.00 en Δx 2.47 |
+| 3 La → 5 Ra | 10.7 m, 1 cambio, 23 s | Δy 1.00 en Δx 4.94 |
+| 2 La → 5 Ra | 13.4 m, 1 cambio, 24 s | Δy 1.00 en Δx 7.41 |
+
+Con una bahía de avance (2.47 m) el cambio de lado cuesta 2 reversas más. El barrido de las 28 no lo
+usa (0 cambios). Si la FSM vuelve a pedir carril a carril con 15 000, hay que subirle el presupuesto.
+
+**Entre ejes (batería larga, no medido).** `WB` es parámetro (`con_wb`); el ancho a rumbo no cambia.
+Solo los tiempos del caso de maje:
+
+| WB | 5 3 Ra ida / vuelta | 5 3 Rb ida / vuelta |
+|---|---|---|
+| 1.562 | 7.8 m 15 s / 16.3 m 20 s | 8.9 m 16 s / 17.4 m 21 s |
+| 1.688 | 7.9 m 15 s / 16.4 m 21 s | 9.0 m 16 s / 17.6 m 21 s |
+
+La batería larga suma 0.1–0.2 m y a lo sumo 1 s por tramo. No decide nada.
+
+**Qué queda por medir**, en orden:
+
+1. El retranqueo poste → cara del cubo de N1. Ahora el umbral es 1 cm cargado; con 6 cm sobra.
+2. Que el culo sea el de la ficha: una foto desde arriba con cinta.
+3. Culo → rueda motriz y entre ejes, por la batería. Pesa en los tiempos, no en si gira.
+4. Que la rueda llegue a 90°.

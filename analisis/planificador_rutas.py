@@ -1,7 +1,9 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Planificador de rutas del EDR18N2 entre bahías — Hybrid A* general, CON UÑAS
 #
-#   py analisis/planificador_rutas.py          # v3 (06-nov): silueta de la ficha → rutas_v3.json, ruta_3L_5R_v3.png
+#   py analisis/planificador_rutas.py          # v3b (07-nov): el culo de los vectores de la ficha → rutas_v3b.json,
+#                                              # ruta_3L_5R_v3b.png
+#   py analisis/planificador_rutas.py --v3     # v3 (06-nov): culo con esquinas de 0.17 → rutas_v3.json, ruta_3L_5R_v3.png
 #   py analisis/planificador_rutas.py --v2     # v2 (05-nov, tarde): postes + retranqueo → rutas_v2.json
 #   py analisis/planificador_rutas.py --v1     # v1 (05-nov): casos 1–3 y controles → ruta_3L_5R.png y
 #                                              # rutas_tabla.json (la usa la FSM)
@@ -9,6 +11,7 @@
 # v3: 2.91 culo → punta (medido), culo con esquinas de 0.17 (ficha VDI), δmax = 90° (manual, modo
 # 180°/360°) y XPIV 1.93 (derivado). Con δ = 90° tan δ explota: en v3 los ds de las primitivas son de la
 # RUEDA MOTRIZ (step(..., rueda=True)), así una rotación en el lugar tiene largo y tiempo.
+# v3b: lo mismo, con el culo exacto de la hoja VDI (r_culo='ficha', herramientas/fichas/culo_ficha.csv).
 #
 # Qué agrega sobre analisis/planificador_giro.py (que se deja como está):
 #   · pose inicial y final CUALQUIERA, con cambios de sentido (costo parámetro)
@@ -30,6 +33,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 import heapq
 import json
+from contextlib import contextmanager
 import math
 import os
 import sys
@@ -88,7 +92,13 @@ def _muestrear(poly, paso=0.05):
 
 def _cuerpo(a_culo, a_mast, a_pata, hc, hp, r_culo=0.0):
     """Capó del culo a la torre y patas; con r_culo > 0 los dos rincones del culo van redondeados
-    (v3: 0.17 del dibujo de la ficha VDI, herramientas/fichas/LEEME.md)."""
+    (v3: 0.17 del dibujo de la ficha VDI, herramientas/fichas/LEEME.md). Con r_culo = 'ficha' el culo
+    es el contorno de los vectores de la hoja (v3b, culo_ficha)."""
+    if r_culo == 'ficha':
+        c = culo_ficha(hc)                               # de +hc a −hc; se recorre de −hc a +hc
+        return ([(a_culo + c[0][0], hc), (a_mast, hc), (a_mast, hp), (a_pata, hp),
+                 (a_pata, -hp), (a_mast, -hp), (a_mast, -hc), (a_culo + c[-1][0], -hc)]
+                + [(a_culo + a, y) for a, y in reversed(c[1:-1])])
     out = [(a_culo + r_culo, hc), (a_mast, hc), (a_mast, hp), (a_pata, hp),
            (a_pata, -hp), (a_mast, -hp), (a_mast, -hc), (a_culo + r_culo, -hc)]
     if r_culo > 0:
@@ -196,7 +206,35 @@ LARGO_V3 = 2.91               # culo → punta de uña, MEDIDO por maje. Manda s
 LCH_V3 = LARGO_V3 - B.FLEN    # culo → dorso de las uñas: 1.71 (uñas adaptadas de 1.20)
 X_FICHA = 0.219               # eje de carga → dorso de las uñas, retraído (VDI 1.8)
 XPIV_V3 = LCH_V3 + X_FICHA    # 1.929: DERIVADO (2.91 − 1.20 + 0.219). Se barre 1.80–1.95
-R_CULO_V3 = 0.17              # esquinas del culo, del dibujo VDI (±3 cm, esquemático)
+R_CULO_V3 = 0.17              # esquinas del culo, del dibujo VDI (±3 cm, esquemático). La batería v3 lo usa
+R_CULO_V3B = 'ficha'          # v3b (07-nov): el culo de los VECTORES de la hoja VDI, escalado en y al capó medido.
+                              # Es el default de modelo='v3'; r_culo=0.17 reproduce v3
+CULO_CSV = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'herramientas', 'fichas',
+                        'culo_ficha.csv')
+_CULO = {}
+
+
+def culo_ficha(hc=W_CAPO / 2):
+    """Contorno del culo de herramientas/fichas/culo_ficha.csv (lo escribe culo_de_la_ficha.py): [(a desde
+    el culo, y)] de +y a −y, con y escalado para que el semiancho del dibujo (0.522) sea el del capó."""
+    if hc not in _CULO:
+        c = np.loadtxt(CULO_CSV, delimiter=',')
+        ey = hc / c[:, 1].max()
+        _CULO[hc] = [(float(a), float(y) * ey) for a, y in c]
+    return _CULO[hc]
+
+
+@contextmanager
+def con_wb(wb):
+    """WB (entre ejes) es global del módulo: lo usan step(), la heurística y el arco final del traslado.
+    Para una corrida con otro (batería larga: 1.562 + 0.126 = 1.688) se cambia acá y se restaura.
+    El Planificador hay que construirlo ADENTRO: las primitivas se calculan al crearlo."""
+    global WB
+    viejo, WB = WB, wb
+    try:
+        yield
+    finally:
+        WB = viejo
 PEN_FR_V3 = 0.005             # castigo por timón en el A* (v1/v2: 0.02). Con 0.02 y ds de rueda, rotar en el
                               # lugar parecía 67 % más caro y el giro no salía en 6000 expansiones (sí en 22 700)
 
@@ -610,7 +648,8 @@ class Planificador:
         """modelo 'v1': pared + uñas en la bahía (PROF_BAHIA). 'v2': postes + retranqueo `rec` en
         los dos lados, timón fino, giro SIN cambios de sentido (como el video), holgura chica.
         'v3': el mundo y las reglas de v2 con la silueta de la ficha: 2.91 culo → punta (LCH_V3),
-        culo con esquinas de `r_culo` (R_CULO_V3), δmax = 90° y XPIV_V3 si no se da otro.
+        culo `r_culo` (default R_CULO_V3B = 'ficha', el de los vectores; 0.17 reproduce v3), δmax = 90° y
+        XPIV_V3 si no se da otro.
         central=True: el tránsito va por el carril central y solo se baja al de giro para alinearse."""
         v3 = modelo == 'v3'
         v2 = modelo in ('v2', 'v3')
@@ -621,7 +660,7 @@ class Planificador:
         self.lch = LCH_V3 if v3 else B.LCH
         self.gap = B.GAP_OBJ if gap is None else gap        # punta de uña → cara del cubo, en el hueco
         self.k_th = WB if v3 else 0.33
-        self.r_culo = (R_CULO_V3 if r_culo is None else r_culo) if v3 else 0.0
+        self.r_culo = (R_CULO_V3B if r_culo is None else r_culo) if v3 else 0.0
         geo = dict(lch=self.lch, r_culo=self.r_culo, d_max=math.pi / 2, rueda=True, pen_fr=PEN_FR_V3) if v3 else {}
         self.hol = (HOLGURA_V2 if v2 else B.HOLGURA) if holgura is None else holgura
         self.sin_reversa = v2 if sin_reversa is None else sin_reversa
@@ -1227,6 +1266,10 @@ def giro_v3(d, r, cargado, xpiv=XPIV_V3, r_culo=R_CULO_V3, rec=B.REC_L, hol=0.0,
     return pl.salida(d, r, cargado)
 
 
+def _rc(r):
+    return r if isinstance(r, str) else f"{r:.2f}"
+
+
 def anchos_v3(radios=(0.0, 0.10, 0.17, 0.24)):
     """La cuenta de herramientas/fichas/LEEME.md con la silueta del planificador: ancho a rumbo
     máximo (no depende de XPIV: es la forma)."""
@@ -1238,7 +1281,7 @@ def anchos_v3(radios=(0.0, 0.10, 0.17, 0.24)):
             fino = [(k / 4, ancho_a_rumbo(sil, math.radians(k / 4))) for k in range(361)]
             mx = max(fino, key=lambda f: f[1])
             fila['cargado' if c else 'vacío'] = dict(max=round(float(mx[1]), 3), en=mx[0])
-        out[f"{r:.2f}"] = fila
+        out[_rc(r)] = fila
     return out
 
 
@@ -1251,7 +1294,7 @@ def _forma_giro(x):
                 fr_max=round(max(abs(fr) for _, fr, _ in x['prims']), 2))
 
 
-def validar_video_v3(log):
+def validar_video_v3(log, r_culo=R_CULO_V3):
     """Nominal (XPIV 1.93, culo 0.17, retranqueo 6 cm): ¿sale sin reversa?, con qué margen, y cómo.
     Para medir el margen la punta arranca a max(3 cm, holgura + 0.5 cm) del cubo: con la de siempre
     (3 cm), una holgura de 4 cm ya hace chocar la pose de arranque y el margen topaba en 3."""
@@ -1260,13 +1303,13 @@ def validar_video_v3(log):
         for c in (False, True):
             mejor, res = None, None
             for h in (0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.10):
-                x = giro_v3(d, r, c, hol=h, gap=max(B.GAP_OBJ, h + 0.005))
+                x = giro_v3(d, r, c, r_culo=r_culo, hol=h, gap=max(B.GAP_OBJ, h + 0.005))
                 if not x['ok']:
                     break
                 mejor, res = h, x
             fila = dict(ok=mejor is not None, margen_cm=None if mejor is None else round(100 * mejor))
             if res is not None:
-                f = giro_v3(d, r, c, hol=HOLGURA_V2) if mejor >= HOLGURA_V2 else res
+                f = giro_v3(d, r, c, r_culo=r_culo, hol=HOLGURA_V2) if mejor >= HOLGURA_V2 else res
                 fila.update(_forma_giro(f), largo=round(resumen(f, None)['largo'], 2),
                             y_fin=round(f['poses'][-1][1], 3))
             out[f"{d}→{_rt(r)} {'cargado' if c else 'vacío'}"] = fila
@@ -1284,8 +1327,8 @@ def sensibilidad_v3(log, radios=(0.10, 0.17, 0.24), xps=(1.80, 1.93), recs=(0.0,
         for xp in xps:
             for r in radios:
                 fila = {f"{rec:.2f}": [giro_v3(d, rr, c, xp, r, rec)['ok'] for d, rr in COMBOS3] for rec in recs}
-                out[f"{'cargado' if c else 'vacío'} · XPIV {xp:.2f} · culo {r:.2f}"] = fila
-                log(f"  sensibilidad · {'cargado' if c else 'vacío '} XPIV {xp:.2f} culo {r:.2f}: " +
+                out[f"{'cargado' if c else 'vacío'} · XPIV {xp:.2f} · culo {_rc(r)}"] = fila
+                log(f"  sensibilidad · {'cargado' if c else 'vacío '} XPIV {xp:.2f} culo {_rc(r)}: " +
                     ' '.join(f"rec {k}:" + ''.join('S' if v else '·' for v in f) for k, f in fila.items()))
     return out
 
@@ -1313,10 +1356,10 @@ def control_v3(log):
     return out
 
 
-def rutas_v3(log):
+def rutas_v3(log, r_culo=R_CULO_V3, tag='v3'):
     out, pls = {}, {}
     for central in (False, True):
-        pl = Planificador(modelo='v3', central=central, n_vueltas=2)
+        pl = Planificador(modelo='v3', central=central, n_vueltas=2, r_culo=r_culo)
         nom = 'central' if central else 'libre'
         caso = {}
         p0 = B.pose_en_pasillo('3L', 'descarga')
@@ -1324,7 +1367,7 @@ def rutas_v3(log):
             ida = pl.ruta(p0, h)
             vuelta = pl.ruta(None, B.pose_descarga(pl.xpiv, pl.lch), origen=h, cargado=True)
             caso[h] = dict(ida=_ruta_txt(ida, pl), vuelta=_ruta_txt(vuelta, pl), _ida=ida, _vuelta=vuelta)
-            log(f"  rutas v3 {nom} · {h}: ida {_corto(ida)} · vuelta {_corto(vuelta)}")
+            log(f"  rutas {tag} {nom} · {h}: ida {_corto(ida)} · vuelta {_corto(vuelta)}")
         filas = []
         for x in range(1, B.N + 1):
             for s in 'LR':
@@ -1332,7 +1375,7 @@ def rutas_v3(log):
                     r = pl.ruta((0.0, 0.0, 0.0), f"{x} {s}{p}")
                     filas.append(dict(dir=f"{x} {s}{p}", llega=_ruta_txt(r, pl)))
         ok = [f for f in filas if f['llega']['ok']]
-        log(f"  rutas v3 {nom} · barrido: llegan {len(ok)}/{len(filas)} · cambios de sentido "
+        log(f"  rutas {tag} {nom} · barrido: llegan {len(ok)}/{len(filas)} · cambios de sentido "
             f"{sorted(set(f['llega']['cambios'] for f in ok))}")
         out[nom] = dict(caso1=caso, barrido=filas, tabla_fsm=tabla_fsm(pl))
         pls[nom] = pl
@@ -1371,10 +1414,113 @@ def main_v3():
     log("rutas_v3.json escrito")
 
 
+# ── v3b: el culo exacto, de los vectores de la hoja VDI (07-nov, tarea_rutas_v3b.md) ──
+def sensibilidad_v3b(log, recs=(0.0, 0.01, 0.02, 0.03, 0.06)):
+    """Holgura 0, culo de la ficha, XPIV nominal. Predicción de la cuenta (2.967 / 3.005): vacío sale con
+    retranqueo 0; cargado no con 0 y sí con 1 cm o más."""
+    out = {}
+    for c in (False, True):
+        fila = {f"{rec:.2f}": [giro_v3(d, rr, c, r_culo=R_CULO_V3B, rec=rec)['ok'] for d, rr in COMBOS3]
+                for rec in recs}
+        out['cargado' if c else 'vacío'] = fila
+        log(f"  sensibilidad v3b · {'cargado' if c else 'vacío '}: " +
+            ' '.join(f"rec {k}:" + ''.join('S' if v else '·' for v in f) for k, f in fila.items()))
+    return out
+
+
+CRUCES = (('4 La', '5 Ra'), ('3 La', '5 Ra'), ('2 La', '5 Ra'))   # de una cara a la otra, 1 a 3 bahías
+
+
+def cambio_carril_v3b(log, presupuestos=(15000, 60000)):
+    """El cambio de carril de giro a giro (±0.80, 4 m de pasillo) que en v3 no salía con 15 000, y si las
+    rutas lo necesitan: con el giro v3 el eje de carga termina a ~0.5 m del eje, del lado de la bahía, así
+    que pasar de una cara a la otra es un corrimiento de ~1 m. Se prueban rutas reales de cara a cara."""
+    out = dict(tabla_fsm={}, cruces={})
+    for me in presupuestos:
+        pl = Planificador(modelo='v3', max_exp=me)
+        r = pl.traslado((10.0, B.carril('R'), 0.0), (14.0, B.carril('L'), 0.0))
+        out['tabla_fsm'][str(me)] = dict(_res_txt(r), expansiones=r.get('expansiones'))
+        log(f"  carril giro→giro (como tabla_fsm) con {me}: " +
+            (_corto(dict(ok=True, total=r)) + f", {r.get('expansiones')} exp." if r['ok']
+             else f"NO ({r.get('motivo', '')}, {r.get('expansiones')} exp.)"))
+    pl = Planificador(modelo='v3')
+    for o, d in CRUCES:
+        r = pl.ruta(origen=o, objetivo=d)
+        fila = _ruta_txt(r, pl)
+        if r['ok']:
+            tr = [x for n, x in r['partes'] if n == 'TRASLADO']
+            if tr:
+                a, b = tr[0]['poses'][0], tr[0]['poses'][-1]
+                fila['traslado'] = dict(dy=round(abs(b[1] - a[1]), 3), dx=round(abs(b[0] - a[0]), 3),
+                                        **{k: v for k, v in _res_txt(tr[0]).items() if k != 'tramos'})
+            fila['partes'] = [n for n, _ in r['partes']]
+        out['cruces'][f"{o} → {d}"] = fila
+        log(f"  cruce {o} → {d}: {_corto(r) if r['ok'] else 'NO'}"
+            + (f" · partes {fila['partes']} · traslado Δy {fila.get('traslado', {}).get('dy')} m en "
+               f"Δx {fila.get('traslado', {}).get('dx')} m" if r['ok'] else ''))
+    return out
+
+
+def tiempos_wb(log, wbs=(1.562, 1.688)):
+    """Solo los tiempos del caso de maje con el entre ejes de serie y con la batería larga (+0.126).
+    No cambia el ancho a rumbo (es forma); sí cuánto recorre la rueda motriz al rotar (WB·π/2)."""
+    out = {}
+    for wb in wbs:
+        with con_wb(wb):
+            pl = Planificador(modelo='v3', central=True, n_vueltas=2)
+            p0 = B.pose_en_pasillo('3L', 'descarga')
+            fila = {}
+            for h in ('5 3 Ra', '5 3 Rb'):
+                ida = pl.ruta(p0, h)
+                vuelta = pl.ruta(None, B.pose_descarga(pl.xpiv, pl.lch), origen=h, cargado=True)
+                fila[h] = dict(ida=_corto(ida), vuelta=_corto(vuelta),
+                               ida_s=round(resumen(ida['total'], None)['tiempo'], 1) if ida['ok'] else None,
+                               vuelta_s=round(resumen(vuelta['total'], None)['tiempo'], 1) if vuelta['ok'] else None)
+                log(f"  WB {wb} · {h}: ida {fila[h]['ida']} · vuelta {fila[h]['vuelta']}")
+        out[f"{wb:.3f}"] = fila
+    return out
+
+
+def main_v3b():
+    import time
+    t0 = time.time()
+    aqui = os.path.dirname(os.path.abspath(__file__))
+    log = lambda s: print(f"[{time.time() - t0:6.0f} s] {s}", flush=True)
+    R = dict(supuestos=dict(LARGO_V3=LARGO_V3, LCH_V3=round(LCH_V3, 3), X_FICHA=X_FICHA, XPIV_V3=round(XPIV_V3, 3),
+                            R_CULO='ficha: herramientas/fichas/culo_ficha.csv, y escalado al capó 1.065',
+                            DMAX=90, WB=WB, REC=(B.REC_L, B.REC_R), POSTE=B.POSTE, PASO_POSTE=B.PASO_POSTE,
+                            HOLGURA_V2=HOLGURA_V2, DS_GIRO=DS_GIRO, FRACS_FINO=FRACS_FINO, W_MAX=W_MAX,
+                            W_CAPO=W_CAPO, L_ANCHO=L_ANCHO, cinematica='ds de la rueda motriz'))
+    R['anchos'] = anchos_v3(radios=(0.0, 0.17, R_CULO_V3B))
+    for r, f in R['anchos'].items():
+        log(f"ancho a rumbo · culo {r}: vacío {f['vacío']['max']} a {f['vacío']['en']}° · "
+            f"cargado {f['cargado']['max']} a {f['cargado']['en']}°")
+    R['video'] = validar_video_v3(log, r_culo=R_CULO_V3B)
+    R['control'] = control_v3(log)
+    R['sensibilidad'] = sensibilidad_v3b(log)
+    R['carril'] = cambio_carril_v3b(log)
+    R['rutas'], pls = rutas_v3(log, r_culo=R_CULO_V3B, tag='v3b')
+    pl = pls['central']
+    figura(R['rutas']['central']['caso1'], pl, os.path.join(aqui, 'ruta_3L_5R_v3b.png'),
+           pie=f"v3b: 2.91 culo → punta, culo de los vectores de la ficha VDI, XPIV {pl.xpiv:.3f} (derivado), "
+               f"δmax 90°, postes cada {B.PASO_POSTE} m, retranqueo {B.REC_L * 100:.0f} cm, holgura "
+               f"{HOLGURA_V2 * 100:.0f} cm, carril central. SUPUESTOS: {B.N} bahías, X0 {B.X0} m.")
+    log("figura lista")
+    for nom in R['rutas']:
+        for h in ('5 3 Ra', '5 3 Rb'):
+            R['rutas'][nom]['caso1'][h].pop('_ida'); R['rutas'][nom]['caso1'][h].pop('_vuelta')
+    R['wb'] = tiempos_wb(log)
+    with open(os.path.join(aqui, 'rutas_v3b.json'), 'w', encoding='utf-8') as f:
+        json.dump(R, f, ensure_ascii=False, indent=1, default=str)
+    log("rutas_v3b.json escrito")
+
+
 if __name__ == "__main__":
     if '--v1' in sys.argv:
         main()          # lo del 05-nov a la mañana: pared + uñas en la bahía (rutas_tabla.json v1)
     elif '--v2' in sys.argv:
         main_v2()       # postes + retranqueo + giro sin reversa (rutas_v2.json)
+    elif '--v3' in sys.argv:
+        main_v3()       # la silueta de la ficha con esquinas de 0.17 (rutas_v3.json)
     else:
-        main_v3()       # la silueta de la ficha: 2.91, culo redondeado, δmax 90° (rutas_v3.json)
+        main_v3b()      # el culo de los vectores de la ficha (rutas_v3b.json)

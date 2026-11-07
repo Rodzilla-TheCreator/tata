@@ -40,6 +40,8 @@ canvas{width:100%;height:auto;display:block;background:var(--surf2);border-radiu
 .row input[type=range]{flex:1;accent-color:var(--amber);min-width:120px}
 .row span,.row output{color:var(--mut)}
 .row label{min-width:150px}
+.row select{flex:1;min-width:120px;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--mut);border-radius:4px;padding:4px 6px}
+.row input[type=range]:disabled{opacity:.35}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 .st{background:var(--surf2);border-radius:2px;padding:9px 11px}
 .st b{display:block;font:600 18px/1.2 "IBM Plex Mono",monospace;color:var(--ink)}
@@ -70,7 +72,9 @@ mide <b>3.00 m</b> de poste a poste. De frente al rack sobran 4.5 cm por lado. Y
 el equipo <b>no cabe</b>. Esta clase es la cuenta, paso por paso, y lo que el 5-nov se descubrió al meterle
 las uñas al planificador (<code>analisis/planificador_rutas.py</code>, <code>analisis/rutas_resultados.md</code>).
 <b>6-nov:</b> con las fichas técnicas (<code>herramientas/fichas/</code>) el culo tiene esquinas de
-<b>~0.17 m</b> y la rueda de dirección llega a <b>90°</b>; la clase se actualizó a eso (modelo v3).</p>
+<b>~0.17 m</b> y la rueda de dirección llega a <b>90°</b>; la clase se actualizó a eso (modelo v3).
+<b>7-nov:</b> el culo sale exacto de los <b>vectores</b> de la hoja: la cara es un arco, y con él el equipo
+<b>vacío ya gira dentro de los 3.00</b> (modelo v3b, sección 3).</p>
 
 <div class="verdict">
   <h2>La idea en una línea</h2>
@@ -83,6 +87,9 @@ las uñas al planificador (<code>analisis/planificador_rutas.py</code>, <code>an
   <div><div class="tag">Interactivo &middot; la silueta del planificador, vista desde arriba</div>
   <h2>1 · Girá el equipo y mirá cuánto ocupa a lo ancho</h2></div>
   <div class="row"><label>rumbo φ</label><input type="range" id="phi" min="0" max="90" step="0.5" value="75"><output id="phiO"></output></div>
+  <div class="row"><label>forma del culo</label><select id="cmodo">
+    <option value="ficha" selected>ficha (vectores) &middot; 7-nov</option>
+    <option value="radio">esquinas de radio r (0 = ángulo recto)</option></select><output></output></div>
   <div class="row"><label>radio del culo</label><input type="range" id="rc" min="0" max="0.35" step="0.01" value="0.17"><output id="rcO"></output></div>
   <div class="row"><label>retranqueo entre postes</label><input type="range" id="rec" min="0" max="0.10" step="0.005" value="0.06"><output id="recO"></output></div>
   <div class="sw">
@@ -150,7 +157,25 @@ el máximo es R, y pasa cuando  tan φ = Δa / Δl  →  φ = atan(2.91 / 0.8975
 
 <!-- ───────────────────────── 3 · el culo redondo ───────────────────────── -->
 <div class="panel">
-  <div><div class="tag">De la ficha VDI &middot; 6-nov (±3 cm, no medido)</div><h2>3 · El culo redondeado</h2></div>
+  <div><div class="tag">De los vectores de la ficha VDI &middot; 7-nov</div><h2>3 · El culo redondeado</h2></div>
+  <div class="verdict">
+  <h2>7-nov: el culo de la ficha, de los vectores. Vacío ya entra en 3.00</h2>
+  <p>La vista de arriba de la hoja VDI no es una imagen: es <b>dibujo vectorial a escala</b> (el ancho del
+  chasis y <code>Wa</code> dan la misma escala con 0.1 %). Del vector sale el culo tal cual: <b>la cara es un
+  arco de R 1.747</b> centrado 5 cm detrás del eje de carga, con dos esquinas de transición; a ±0.40 del
+  eje ya retrocede 46 mm. No son esquinas de 0.17 en un rectángulo: es una curva en todo el ancho
+  (<code>herramientas/fichas/culo_de_la_ficha.py</code>, <code>culo_ficha.csv</code>). Es el modo
+  <b>«ficha (vectores)»</b> del simulador de arriba, y el default.</p>
+  <div class="eq">  culo                     vacío    cargado
+  esquinas de 0.17 (v3)    3.005    3.043
+  <b>ficha, vectores (v3b)    2.967    3.005</b></div>
+  <p><b>Vacío entra en los 3.00 sin usar el retranqueo</b>: sobran 1.6 cm por lado. Cargado pide 3 mm por
+  lado de los 6 cm que hay entre postes. El planificador (v3b) lo confirma tal cual: vacío sale con
+  retranqueo 0; cargado no sale con 0 y sí con 1 cm o más. Con los 6 cm, el margen es <b>7 cm por lado
+  vacío y 5 cm cargado</b>.</p>
+  </div>
+  <p><i>Lo que sigue es lo del 6-nov</i>, con las esquinas de 0.17 ajustadas a 8 puntos de la imagen.
+  La cuenta del rincón redondeado sigue valiendo para entender por qué redondear acorta la diagonal.</p>
   <p>Hasta v2 el modelo dibujaba el culo con esquinas en ángulo recto. El dibujo de la ficha técnica
   (<code>herramientas/fichas/vista_superior_etr335d.png</code>) muestra <b>esquinas de ~0.17 m</b>, y ese
   es ahora el valor por defecto del deslizador. Si el culo real es redondeado con radio
@@ -170,8 +195,8 @@ el planificador (anchos_v3), con el máximo exacto:
   0.10     3.021    3.061
   <b>0.17     3.005    3.043</b>
   0.24     2.990    3.025</div>
-  <p>Con la esquina de la ficha, <b>el equipo vacío gira justo en 3.00</b> (le falta medio centímetro), y
-  cargado necesita ~2 cm por lado del retranqueo entre postes. Con 24 cm, el vacío ya gira sin usar
+  <p><i>(6-nov)</i> Con la esquina de 0.17, <b>el equipo vacío gira justo en 3.00</b> (le falta medio
+  centímetro), y cargado necesita ~2 cm por lado del retranqueo entre postes. Con 24 cm, el vacío ya gira sin usar
   el retranqueo. Movés el deslizador del radio en el simulador de arriba y lo ves.</p>
 </div>
 
@@ -181,7 +206,11 @@ el planificador (anchos_v3), con el máximo exacto:
   <p>Los 3.00 m se miden entre los <b>postes de seguridad</b>, el punto más angosto. Entre poste y poste,
   la cara del cubo de N1 queda unos <b>6 cm más atrás</b>, en los dos racks. Ahí caben
   <b>3.00 + 0.06 + 0.06 = 3.12 m</b>.</p>
-  <div class="eq">culo de 0.17 (v3):
+  <div class="eq">culo de la ficha, vectores (v3b, 7-nov):
+vacío:    3.12 − 2.967 = <b>15.3 cm</b> de sobra en total   (y 3.3 cm sin contar el retranqueo)
+cargado:  3.12 − 3.005 = <b>11.5 cm</b> de sobra en total
+
+culo de 0.17 (v3, 6-nov):
 vacío:    3.12 − 3.005 = <b>11.5 cm</b> de sobra en total
 cargado:  3.12 − 3.043 = <b>7.7 cm</b> de sobra en total
 
@@ -189,6 +218,8 @@ culo recto y 2.90 (v2, 5-nov):  8.5 cm vacío, 4.2 cm cargado
 
 condición: los dos extremos (culo y punta de uña) tienen que quedar ENTRE postes, no frente a uno.
 Por eso el operador queda "pegado a las dos bahías".</div>
+  <p><b>v3b (7-nov):</b> con el culo de los vectores, <b>7 cm por lado vacío y 5 cm cargado</b>; vacío
+  gira sin retranqueo y cargado con 1 cm.</p>
   <p><b>v3 (6-nov):</b> el planificador con la silueta de la ficha y la rueda a 90° da <b>5 cm por lado
   vacío y 3 cm cargado</b>: casi toda la sobra de la cuenta (5.7 y 3.9). Con el culo de 0.17, cargado
   sale con <b>3 cm</b> de retranqueo y no con 0.</p>
@@ -244,15 +275,15 @@ para girar Δθ, el eje de carga recorre  ds = R_eje · Δθ</div>
 <div class="verdict">
   <h2>Lo que hay que medir, y por qué</h2>
   <ol>
-    <li><b>El radio del culo</b>, desde arriba con escuadra o foto con cinta. La ficha da ~0.17 ±3 cm;
-      con 0.10 el giro cargado ya no sale con 3 cm de retranqueo, con 0.24 el vacío gira dentro de los
-      3.00 (sección 3).</li>
     <li><b>El retranqueo poste → cara del cubo de N1</b> en varias bahías de los dos racks. Con el culo de
-      0.17, cargado pide más de 2 cm por lado (sección 4).</li>
+      la ficha, cargado pide <b>1 cm por lado</b>; vacío no lo usa (sección 4).</li>
+    <li><b>Culo → eje de la rueda motriz</b> (la ficha da 0.240) y <b>entre ejes</b>: dicen si el equipo
+      tiene el compartimento de batería largo (entre ejes 1.688 en vez de 1.562), que explicaría los 13 cm
+      de más del 2.91 y fija <code>XPIV</code>. No cambia si gira; sí los tiempos.</li>
+    <li><b>Que el culo sea el de la ficha</b>: una foto desde arriba con una cinta. <i>(6-nov decía: el
+      radio de las esquinas; con los vectores la forma ya está, falta confirmarla.)</i></li>
     <li><b>Que la rueda llegue a 90°</b>: mirarla a tope con el selector de modo. Lo dice el manual; no
       se vio en este equipo.</li>
-    <li><b>El compartimento de batería</b> (o la configuración por la serie): explica los 13 cm de más
-      del 2.91 y de él sale <code>XPIV</code>.</li>
   </ol>
   <p><b style="color:var(--amber)">Entrega:</b> con los cuatro números, mové los deslizadores de esta
   página y decí cuánto margen queda de verdad, vacío y cargado. Si el margen sale negativo con los datos
@@ -275,8 +306,16 @@ const A_PATA=LCH+L_ANCHO, A_PUN=LCH+FLEN;           // marco del equipo: a=0 en 
 const $=id=>document.getElementById(id);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
+// el culo de los VECTORES de la hoja VDI (herramientas/fichas/culo_ficha.csv, cada 10 puntos, y escalado
+// al capó de 1.065): a desde el culo, l; de +hc a −hc. Con esto el ancho a rumbo da 2.967 / 3.005
+const CULO_FICHA=[[0.191,0.532],[0.18,0.532],[0.171,0.531],[0.161,0.529],[0.151,0.527],[0.142,0.524],[0.133,0.52],[0.124,0.516],[0.116,0.511],[0.108,0.506],[0.1,0.5],[0.093,0.494],[0.086,0.487],[0.079,0.48],[0.073,0.472],[0.068,0.464],[0.063,0.456],[0.058,0.447],[0.055,0.437],[0.051,0.428],[0.049,0.419],[0.04,0.377],[0.031,0.336],[0.024,0.294],[0.018,0.252],[0.012,0.209],[0.008,0.167],[0.004,0.125],[0.002,0.083],[0.0,0.04],[0.0,-0.002],[0.001,-0.045],[0.002,-0.087],[0.005,-0.129],[0.008,-0.171],[0.013,-0.214],[0.018,-0.256],[0.025,-0.298],[0.032,-0.34],[0.04,-0.381],[0.049,-0.419],[0.052,-0.429],[0.055,-0.438],[0.059,-0.448],[0.063,-0.456],[0.068,-0.465],[0.074,-0.473],[0.08,-0.481],[0.086,-0.488],[0.093,-0.495],[0.101,-0.501],[0.109,-0.507],[0.117,-0.512],[0.125,-0.517],[0.134,-0.521],[0.143,-0.524],[0.152,-0.527],[0.162,-0.53],[0.172,-0.531],[0.181,-0.532],[0.191,-0.532]];
 function piezas(rc, carg){
   const hc=W_CAPO/2, hp=W_MAX/2, out=[];
+  if(rc==='ficha'){
+    const c=CULO_FICHA, body=[c[c.length-1],[LCH,-hc],[LCH,-hp],[A_PATA,-hp],[A_PATA,hp],[LCH,hp],[LCH,hc]].concat(c.slice(0,-1));
+    out.push({p:body,k:'chasis'});
+    return conUnas(out, carg);
+  }
   // cuerpo con el culo redondeado (radio rc en los dos rincones del culo)
   const r=Math.min(rc,hc-0.01);
   // armado explícito: recorre el contorno en sentido antihorario
@@ -289,6 +328,9 @@ function piezas(rc, carg){
     for(let k=0;k<=8;k++){const t=Math.PI/2+(Math.PI/2)*k/8; body.push([r+r*Math.cos(t), hc-r+r*Math.sin(t)]);}
   } else body.push([0,hc]);
   out.push({p:body,k:'chasis'});
+  return conUnas(out, carg);
+}
+function conUnas(out, carg){
   for(const s of [1,-1]){const e0=UNA_C-UNA_W/2,e1=UNA_C+UNA_W/2;
     out.push({p:[[A_PATA,s*e0],[A_PUN,s*e0],[A_PUN,s*e1],[A_PATA,s*e1]],k:'una'});}
   if(carg) out.push({p:[[A_PUN-IBC_F,-IBC_W/2],[A_PUN,-IBC_W/2],[A_PUN,IBC_W/2],[A_PUN-IBC_F,IBC_W/2]],k:'ibc'});
@@ -310,7 +352,7 @@ const deg=x=>x*Math.PI/180;
 function dibujarA(){
   const cv=$('cA'), g=cv.getContext('2d'), W=cv.width, H=cv.height;
   const phi=deg(+$('phi').value), rc=+$('rc').value, rec=+$('rec').value, carg=$('carg').checked;
-  const ps=piezas(rc,carg); const [w,pm,pM,ymn,ymx]=ancho(ps,phi);
+  const ps=piezas($('cmodo').value==='ficha'?'ficha':rc,carg); const [w,pm,pM,ymn,ymx]=ancho(ps,phi);
   g.clearRect(0,0,W,H);
   const S=100, cx=W/2, cy=H/2;                       // 100 px por metro; y del mundo hacia arriba
   const X=x=>cx+x*S, Y=y=>cy-y*S;
@@ -408,12 +450,13 @@ function dibujarC(){
 }
 function todo(){
   $('phiO').textContent=(+$('phi').value).toFixed(1)+'°';
-  $('rcO').textContent=(+$('rc').value*100).toFixed(0)+' cm';
+  const fic=$('cmodo').value==='ficha'; $('rc').disabled=fic;
+  $('rcO').textContent=fic?'(no se usa)':(+$('rc').value*100).toFixed(0)+' cm';
   $('recO').textContent=(+$('rec').value*100).toFixed(1)+' cm';
   $('xpO').textContent=(+$('xp').value).toFixed(3)+' m';
   const ps=dibujarA(); dibujarB(ps); dibujarC();
 }
-for(const id of ['phi','rc','rec','carg','diag','xp']) $(id).addEventListener('input',todo);
+for(const id of ['phi','cmodo','rc','rec','carg','diag','xp']) $(id).addEventListener('input',todo);
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',todo);
 todo();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(todo);

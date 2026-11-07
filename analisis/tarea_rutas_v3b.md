@@ -1,5 +1,8 @@
 # Encargo — rutas v3b: el culo exacto de la ficha (vectores)
 
+> **HECHO 07-nov-2026 en la i3.** Sección «v3b» de `rutas_resultados.md`; `rutas_v3b.json` y `ruta_3L_5R_v3b.png`.
+> Confirma la cuenta: vacío gira con retranqueo 0, cargado con 1 cm; margen nominal 7 / 5 cm. El cambio de carril sale con ~20 000 expansiones.
+
 **Para la sesión de i3.** Sigue a `tarea_rutas_v3.md` (hecho 06-nov). Leé la última sección de
 `herramientas/fichas/LEEME.md` («El culo, de los VECTORES de la hoja») y corré:
 
