@@ -526,3 +526,18 @@ de la FSM pasan**; la prueba 3 cambia solo sus números (paro en EXTIENDE con 0.
    este equipo.
 4. **El compartimento de batería** (o la configuración por la serie `82824121`): explica los 13 cm de
    más del 2.91 y fija `XPIV`, que ya no decide si gira pero sí dónde queda el eje de carga.
+
+## El culo exacto, de los vectores de la ficha (07-nov-2026)
+
+La hoja VDI es dibujo vectorial a escala: el culo sale exacto (`herramientas/fichas/culo_de_la_ficha.py`,
+`culo_ficha.csv`). **La cara es un arco de R 1.747, no un rectángulo con esquinas de 0.17.** Con la
+silueta v3 cambiando solo el culo:
+
+| | Decía (v3, esquinas de 0.17) | **Es (culo de la ficha)** |
+|---|---|---|
+| Ancho a rumbo vacío | 3.005 | **2.967**: cabe en 3.00 **sin retranqueo** |
+| Ancho a rumbo cargado | 3.042 | **3.005**: pide **3 mm por lado** del retranqueo |
+
+Falta correrlo en el planificador (encargo `tarea_rutas_v3b.md`). Si la regla de v3 se sostiene
+(«sale exactamente cuando la cuenta de ancho dice que cabe»), vacío sale con retranqueo 0 y cargado
+con cualquier retranqueo ≥ 1 cm.

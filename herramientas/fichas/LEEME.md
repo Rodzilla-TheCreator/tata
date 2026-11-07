@@ -90,3 +90,47 @@ del ancho del chasis `b2` = 1,054 mm (303 px → 1 px = 3.48 mm). El dibujo es e
 
 **Con la esquina de la ficha, vacío gira justo en 3.00, y cargado necesita ~2 cm por lado del
 retranqueo entre postes (hay 6).** Calza con el video.
+
+## El culo, de los VECTORES de la hoja (07-nov) — reemplaza el ajuste de arriba
+
+La pág. 2 de `jungheinrich_etr_hoja_tecnica.pdf` **no es una imagen: es dibujo vectorial, y está a
+escala.** El ancho del chasis `b2` (1,054) y `Wa` (1,801) dan la misma escala con 0.1 %
+(24.13 mm/pt). `culo_de_la_ficha.py` saca las curvas del contorno del culo tal cual las dibujó
+Jungheinrich y escribe `culo_ficha.csv`.
+
+| | Del vector |
+|---|---|
+| Forma del culo | **la cara es un arco de R = 1.747 m** (centro 5 cm detrás del eje de carga), con dos esquinas de transición hasta los lados |
+| Retiro del contorno respecto del punto del eje | 12 mm a ±0.20 · 26 a ±0.30 · 46 a ±0.40 · 65 a ±0.45 · 113 a ±0.50 · 166 a ±0.52 |
+| Distancia máxima del culo al eje de carga | **1.801 = `Wa`, sobre el eje**: el culo está diseñado para quedar dentro del círculo de `Wa` |
+| Culo → eje de la rueda motriz | **240** (cota del dibujo de costado) |
+| Culo → eje de carga, de serie | **240 + `y` 1,562 = 1,802**, y `l2` + `x` = 1,582 + 219 = **1,801**: dos caminos, mismo número |
+
+**Ancho a rumbo** con la silueta v3 (2.91 de culo a punta, capó 1.065), cambiando solo el culo
+(`python herramientas/fichas/culo_de_la_ficha.py --ancho`):
+
+| Culo | Vacío | Con el IBC |
+|---|---|---|
+| ángulo recto | 3.045 | 3.088 |
+| esquinas de 0.17 (ajuste del píxel, 06-nov) | 3.005 | 3.042 |
+| **el de la ficha, del vector** | **2.967** | **3.005** |
+
+**Vacío gira dentro de los 3.00 sin usar el retranqueo (sobran 1.6 cm por lado). Cargado pide
+3 mm por lado** de los 6 cm que hay entre postes.
+
+### Decía / es / qué lo tumbó
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| 06-nov, primero: el culo es un arco de radio `Wa` | **casi**: la cara es un arco de 1.747 centrado 5 cm detrás del eje de carga, y todo el culo cabe en el círculo de `Wa` | los vectores |
+| 06-nov, después: rectángulo con esquinas de 0.17 (ajuste de círculo a 8 puntos de la imagen) | **un arco en todo el ancho**, no esquinas: a ±0.40 ya retrocede 46 mm, y en la esquina 166 | el ajuste de 8 puntos no podía ver la curva de la cara; el vector sí |
+| vacío 3.005, cargado 3.043 | **vacío 2.967, cargado 3.005** | la forma del culo |
+
+### Lo que queda en tensión
+
+- **Es el dibujo del modelo de serie.** Si el equipo tiene el compartimento de batería largo (los
+  13 cm), la batería está entre la rueda motriz y la torre: el culo (la forma de atrás) no cambia,
+  pero `y` sí (1,562 + 126 = 1,688) y con ella `XPIV` (240 + 1,688 = **1,928**, el mismo 1.93 que
+  sale del largo). Confirmar midiendo **culo → eje de la rueda motriz (240)** y **entre ejes**.
+- **El dibujo es de catálogo**, no un plano de fabricación. Pero está a escala con 0.1 %, y lo que
+  dice coincide con `Wa`. Una foto desde arriba del culo con una cinta lo confirma.
