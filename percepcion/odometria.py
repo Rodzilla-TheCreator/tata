@@ -42,6 +42,22 @@ def avanzar(pose, v, delta, dt):
     return (x + ds * math.cos(thm), y + ds * math.sin(thm), th + dth)
 
 
+def avanzar_rueda(pose, v_rueda, delta, dt):
+    """Lo mismo que avanzar(), pero con la velocidad de la RUEDA MOTRIZ (lo que mide el encoder de
+    tracción) en vez de la del eje de carga. Es la cinemática v3 del planificador
+    (planificador_rutas.step con rueda=True): con δ = 90° el equipo rota sobre el eje de carga y
+    tan δ, que usa avanzar(), es infinita. Para δ < 90° es idéntica a avanzar(v_rueda·cos δ, δ).
+
+        ds_eje = ds_rueda · cos δ          dθ = −(ds_rueda / WB) · sin δ
+    """
+    x, y, th = pose
+    dsr = v_rueda * dt
+    ds = dsr * math.cos(delta)
+    dth = -(dsr / WB) * math.sin(delta)
+    thm = th + dth * 0.5
+    return (x + ds * math.cos(thm), y + ds * math.sin(thm), th + dth)
+
+
 def comparar_con_planificador(n=200):
     """Control: la fórmula copiada da lo mismo que step() del planificador (sin importarlo)."""
     import random

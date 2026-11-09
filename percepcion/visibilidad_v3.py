@@ -7,10 +7,10 @@ que no se habían probado, y marcas sobre los postes cada 1 o 2 bahías.
 
     python percepcion/visibilidad_v3.py          # escribe percepcion/visibilidad_v3.json
 
-NO corre el EKF: odometria.py y ekf.py integran con tan(δ) y la velocidad del eje de carga, que con el
-timón a 90° (rotación sobre el eje de carga) es infinita. Hay que pasarlos a la velocidad de la rueda
-motriz antes. Mientras tanto, lo que se compara es cobertura: cuánto tiempo y cuántos metros en
-movimiento no ve marcas ninguna cámara, por fase.
+    python percepcion/visibilidad_v3.py --ekf    # + el error al llegar con el EKF (rueda motriz), ~10 min
+
+El EKF corre con la odometría de la RUEDA MOTRIZ (ekf.py rueda=True, validado en prueba_ekf_rueda.py):
+la vieja integraba con tan(δ) y la velocidad del eje de carga, que con el timón a 90° no sirve.
 """
 import json
 import math
@@ -134,6 +134,126 @@ def evaluar(M, cams, ms):
     return res
 
 
+# ── el EKF con la rueda motriz (ekf.py, rueda=True; validado en prueba_ekf_rueda.py) ─────────────────
+LLEGADAS = ('EXTIENDE',)              # se mide el error al empezar a extender: el equipo ya no se mueve
+SEMILLAS = 6
+
+
+def verdad(d):
+    """Trayectoria verdadera en pasos de ≤ 2 cm de rueda, reproduciendo las muestras del turno con
+    avanzar_rueda (la cinemática v3). Devuelve arreglos t, dt, pose, v (rueda), δ, fase, y las llegadas."""
+    from odometria import avanzar_rueda
+    S = d['S']
+    T, DTS, POS, VV, DD, FASE, LLEG = [], [], [], [], [], [], []
+    pose = tuple(S[0][1:4])
+    t = S[0][0]
+    salto = 0.0
+    for a, b in zip(S, S[1:]):
+        dt_tot = b[0] - a[0]
+        if dt_tot <= 0:
+            continue
+        dsw = 0.5 * (a[6] + b[6]) * dt_tot if a[5] != 0 else 0.0
+        n = max(1, int(math.ceil(abs(dsw) / 0.02)), int(math.ceil(dt_tot / 0.1)))
+        vw, dd, dt = dsw / dt_tot, a[4], dt_tot / n
+        if a[7] in LLEGADAS and (not FASE or FASE[-1] != a[7]):
+            LLEG.append(len(T) - 1)
+        for _ in range(n):
+            pose = avanzar_rueda(pose, vw, dd, dt)
+            t += dt
+            T.append(t); DTS.append(dt); POS.append(pose); VV.append(vw); DD.append(dd)
+            FASE.append(a[7])
+        e = math.hypot(pose[0] - b[1], pose[1] - b[2])
+        salto = max(salto, e)
+        pose = (b[1], b[2], b[3])                     # se re-ancla a la muestra (el salto se informa)
+        POS[-1] = pose
+    T = np.array(T)
+    cuadros = set(np.searchsorted(T, np.arange(0.1, T[-1], 0.1)).tolist())
+    return dict(t=T, dt=np.array(DTS), pose=np.array(POS), v=np.array(VV), d=np.array(DD), fase=FASE,
+                llegadas=LLEG, cuadros=cuadros, salto=salto)
+
+
+def correr_ekf(tr, camaras, M, semilla):
+    """Como visibilidad.correr_ekf, con el EKF de la rueda motriz. Devuelve el error lateral (a lo
+    largo del pasillo, que es lo que alinea las uñas con los huecos del IBC) en cada llegada."""
+    from ekf import EKF, ColocacionMarcas, R_pose, marca_vista_desde, pose_desde_marca
+    r = np.random.default_rng(semilla)
+    rmed = np.random.default_rng(semilla + 10_000)
+    E = V._esquinas(M)
+    creido = {int(m[5]): (m[0] + r.normal(0, V.SIG_COLOCACION), m[1] + r.normal(0, V.SIG_COLOCACION), m[3]) for m in M}
+    p0 = tr['pose'][0]
+    f = EKF(p0 + r.normal(0, [0.05, 0.05, math.radians(1.0)]),
+            np.diag([0.10 ** 2, 0.10 ** 2, math.radians(3) ** 2]), rueda=True)
+    coloc = ColocacionMarcas(V.SIG_COLOCACION)
+    errores, lleg = [], set(tr['llegadas'])
+    for i in range(1, len(tr['t'])):
+        v, dd, dt = tr['v'][i], tr['d'][i], tr['dt'][i]
+        moviendo = abs(v) > 1e-6
+        k = math.sqrt(V.DT / dt)
+        f.predict(v * V.SESGO_V + (r.normal(0, V.RUIDO_V * k) if moviendo else 0.0),
+                  dd + V.SESGO_D + (r.normal(0, V.RUIDO_D * k) if moviendo else 0.0), dt)
+        ver = tr['pose'][i]
+        if i in tr['cuadros']:
+            for cam in camaras:
+                vis, px, dist = V.visibles(ver, cam, M, E)
+                for j in vis:
+                    mk = M[j]
+                    dz = marca_vista_desde(ver, (mk[0], mk[1], mk[3]), cam.montaje2d)
+                    sg = V.sigmas(dist[j], px[j])
+                    z = np.array(dz) + rmed.normal(0, sg)
+                    cid = int(mk[5])
+                    f.update_aruco(pose_desde_marca(creido[cid], *z, cam.montaje2d),
+                                   R_pose(creido[cid], *z, cam.montaje2d, np.diag(sg ** 2)) + coloc.R(cid, tr['t'][i]))
+        if i in lleg:
+            e = f.pose - ver
+            th = ver[2]
+            errores.append(-math.sin(th) * e[0] + math.cos(th) * e[1])
+    return errores
+
+
+def main_ekf(nombres=('A2', 'A2-der', 'A2-esp', 'B', 'V90', 'A', 'D', 'A2+F90'), pasos=(1, 2)):
+    with open(os.path.join(RAIZ, 'sim', 'sim_datos.json'), encoding='utf-8') as f:
+        d = json.load(f)
+    ruta = os.path.join(RAIZ, 'percepcion', 'visibilidad_v3.json')
+    with open(ruta, encoding='utf-8') as f:
+        out = json.load(f)
+    with B.geometria('dxf'):
+        tr = verdad(d)
+        print(f"verdad: {len(tr['t'])} pasos, {len(tr['llegadas'])} llegadas, salto máx contra las muestras "
+              f"{1000 * tr['salto']:.2f} mm", flush=True)
+        mons = montajes(d['supuestos']['XPIV'])
+        for paso in pasos:
+            M = mapa_postes(paso)
+            for nombre in nombres:
+                errs = []
+                for s in range(SEMILLAS):
+                    errs += correr_ekf(tr, mons[nombre][1], M, s)
+                e = np.abs(np.array(errs))
+                r = dict(max_cm=round(100 * e.max(), 2), p95_cm=round(100 * np.percentile(e, 95), 2),
+                         fuera=int((e >= V.REQ_LAT).sum()), n=len(e))
+                out['montajes'][nombre].setdefault(f'cada_{paso}', {})['ekf'] = r
+                print(f"EKF {nombre:7s} cada {paso}: error al llegar máx {r['max_cm']:5.2f} cm · p95 {r['p95_cm']:5.2f} · "
+                      f"fuera de ±4.5 cm: {r['fuera']}/{r['n']}", flush=True)
+        # control de falsación: con una sola marca por cara (a mitad del pasillo) tiene que salirse de ±4.5 cm
+        M1 = mapa_postes(1)
+        xs = sorted(set(M1[:, 0]))
+        Mc = M1[np.isclose(M1[:, 0], xs[len(xs) // 2])]
+        Mc = np.c_[Mc[:, :5], np.arange(len(Mc))]
+        errs = []
+        for s in range(SEMILLAS):
+            errs += correr_ekf(tr, mons['A2'][1], Mc, s)
+        e = np.abs(np.array(errs))
+        ctl = dict(max_cm=round(100 * e.max(), 2), fuera=int((e >= V.REQ_LAT).sum()), n=len(e),
+                   falla_como_debe=bool((e >= V.REQ_LAT).any()))
+        out['control_una_por_cara_A2'] = ctl
+        print(f"CONTROL A2 con una marca por cara: máx {ctl['max_cm']} cm, fuera {ctl['fuera']}/{ctl['n']} → "
+              f"{'falla como debe' if ctl['falla_como_debe'] else 'NO FALLA: la prueba no mide nada'}", flush=True)
+    out['supuestos']['ekf'] = dict(semillas=SEMILLAS, odometria='rueda motriz (ekf.py rueda=True)',
+                                   SESGO_V=V.SESGO_V, SESGO_D_grados=round(math.degrees(V.SESGO_D), 2),
+                                   salto_verdad_mm=round(1000 * tr['salto'], 3))
+    with open(ruta, 'w', encoding='utf-8') as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+
+
 def main():
     with open(os.path.join(RAIZ, 'sim', 'sim_datos.json'), encoding='utf-8') as f:
         d = json.load(f)
@@ -158,4 +278,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main_ekf() if '--ekf' in sys.argv else main()

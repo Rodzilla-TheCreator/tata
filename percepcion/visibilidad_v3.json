@@ -7,7 +7,14 @@
   "L_MARCA": 0.15,
   "X_CAPO": -0.75,
   "turno_s": 430.26,
-  "geometria": "dxf"
+  "geometria": "dxf",
+  "ekf": {
+   "semillas": 6,
+   "odometria": "rueda motriz (ekf.py rueda=True)",
+   "SESGO_V": 1.02,
+   "SESGO_D_grados": 0.5,
+   "salto_verdad_mm": 3.891
+  }
  },
  "montajes": {
   "A2": {
@@ -39,7 +46,13 @@
     "por_camara": [
      25.6,
      53.8
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.4,
+     "p95_cm": 1.36,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -64,7 +77,13 @@
     "por_camara": [
      12.0,
      24.3
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.82,
+     "p95_cm": 2.11,
+     "fuera": 0,
+     "n": 48
+    }
    }
   },
   "A2-esp": {
@@ -96,7 +115,13 @@
     "por_camara": [
      25.6,
      43.0
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.8,
+     "p95_cm": 1.37,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -121,7 +146,13 @@
     "por_camara": [
      12.0,
      19.4
-    ]
+    ],
+    "ekf": {
+     "max_cm": 6.24,
+     "p95_cm": 1.59,
+     "fuera": 1,
+     "n": 48
+    }
    }
   },
   "A": {
@@ -153,7 +184,13 @@
     "por_camara": [
      25.6,
      12.2
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.48,
+     "p95_cm": 1.33,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -178,7 +215,13 @@
     "por_camara": [
      12.0,
      5.4
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.68,
+     "p95_cm": 1.73,
+     "fuera": 0,
+     "n": 48
+    }
    }
   },
   "A-der": {
@@ -267,7 +310,13 @@
     "por_camara": [
      25.6,
      35.3
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.22,
+     "p95_cm": 1.07,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -292,7 +341,13 @@
     "por_camara": [
      12.0,
      22.9
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.56,
+     "p95_cm": 1.39,
+     "fuera": 0,
+     "n": 48
+    }
    }
   },
   "V90": {
@@ -324,7 +379,13 @@
     "por_camara": [
      43.0,
      53.8
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.84,
+     "p95_cm": 1.43,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -349,7 +410,13 @@
     "por_camara": [
      19.4,
      24.3
-    ]
+    ],
+    "ekf": {
+     "max_cm": 3.06,
+     "p95_cm": 1.7,
+     "fuera": 0,
+     "n": 48
+    }
    }
   },
   "A2-der": {
@@ -381,7 +448,13 @@
     "por_camara": [
      35.3,
      43.0
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.16,
+     "p95_cm": 1.68,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -406,7 +479,13 @@
     "por_camara": [
      22.9,
      19.4
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.45,
+     "p95_cm": 2.08,
+     "fuera": 0,
+     "n": 48
+    }
    }
   },
   "D": {
@@ -438,7 +517,13 @@
     "por_camara": [
      1.0,
      25.6
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.88,
+     "p95_cm": 1.33,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -463,7 +548,13 @@
     "por_camara": [
      1.0,
      12.0
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.6,
+     "p95_cm": 1.85,
+     "fuera": 0,
+     "n": 48
+    }
    }
   },
   "A2+F": {
@@ -557,7 +648,13 @@
      25.6,
      53.8,
      33.2
-    ]
+    ],
+    "ekf": {
+     "max_cm": 1.43,
+     "p95_cm": 1.09,
+     "fuera": 0,
+     "n": 48
+    }
    },
    "cada_2": {
     "tránsito": [
@@ -583,8 +680,20 @@
      12.0,
      24.3,
      22.8
-    ]
+    ],
+    "ekf": {
+     "max_cm": 2.36,
+     "p95_cm": 1.25,
+     "fuera": 0,
+     "n": 48
+    }
    }
   }
+ },
+ "control_una_por_cara_A2": {
+  "max_cm": 25.18,
+  "fuera": 14,
+  "n": 48,
+  "falla_como_debe": true
  }
 }

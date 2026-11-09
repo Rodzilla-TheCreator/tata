@@ -451,11 +451,54 @@ corto lo da A2 en espejo, 3.6 m · 118°). Números completos en `visibilidad_v3
   cuarto de la toma. Con la óptica de la C920 (54°) no alcanza: las marcas de los postes quedan a ~44° del
   eje.
 
-### Lo que este análisis NO hace, y por qué
+### El EKF con la rueda motriz, y el error al llegar (09-nov, después)
 
-- **No corre el EKF.** `odometria.py` y `ekf.py` integran con `tan(δ)` y la velocidad del eje de carga;
-  con el timón a 90° (el giro v3) eso es infinito. **Pendiente: pasar la odometría y el EKF a la velocidad
-  de la rueda motriz** (`ds_eje = ds·cos δ`, `dθ = −(ds/WB)·sin δ`, lo que ya hace `planificador_rutas.step`
-  con `rueda=True`), que además es lo que mide el encoder real. Sin eso, el error al llegar con v3 no se
-  puede calcular.
-- Montajes, alturas, `PX_MIN` 20 px y `ANG_MAX` 60° siguen siendo supuestos.
+`odometria.py` y `ekf.py` integraban con `tan(δ)` y la velocidad del eje de carga: con el timón a 90° (el
+giro v3, rotación sobre el eje de carga) eso no sirve. **Ahora tienen un modo `rueda=True`**: la entrada es
+la velocidad de la **rueda motriz** (lo que mide el encoder), `ds_eje = ds·cos δ`, `dθ = −(ds/WB)·sin δ`.
+Por defecto todo sigue igual: **`sim_sintetico.py` da idéntico, línea por línea, y PASA 30/30**.
+
+`prueba_ekf_rueda.py`, con sus controles:
+
+| Prueba | Resultado | Control de falsación |
+|---|---|---|
+| odometría contra `planificador_rutas.step(rueda=True)` | 0.0 (idéntica); contra la vieja con v·cos δ, 4e−16 | la vieja en 90°: Δθ = 10¹⁴ rad |
+| jacobianos F y G contra diferencias finitas, con δ = 90° | 6e−10 | con ∂/∂b de signo cambiado: 0.14 |
+| giro de 90° a ciegas (8 s), sesgo 0.5° y escala 2 %, 30 semillas | máx **1.3 cm**, 100 % dentro de 3σ | el filtro viejo: mediana 17.8 cm, máx 33 cm |
+
+**Dato en tensión con lo esperado:** el control del filtro viejo se escribió esperando que «no diera número».
+Da número, pero se va 5–33 cm: cerca de 90° el término `1 + tan²δ` de su jacobiano vale ~10⁴, la covarianza
+explota y deja de usar las marcas. El control se corrigió a «no cumple ±4.5 cm».
+
+**El error al llegar a la bahía** (`visibilidad_v3.py --ekf`): el turno del DXF, 8 llegadas (4 tomas, 4
+dejadas), 6 semillas = 48, medido al empezar EXTIENDE, a lo largo del pasillo (lo que alinea las uñas
+con los huecos del IBC):
+
+| Montaje | Marcas cada 1 bahía: máx · p95 | Cada 2 bahías: máx · p95 · fuera de ±4.5 |
+|---|---|---|
+| **A2** | 1.40 · 1.36 cm | 2.82 · 2.11 cm · 0/48 |
+| A2-der | 2.16 · 1.68 | 2.45 · 2.08 · 0/48 |
+| A2 en espejo | 1.80 · 1.37 | **6.24** · 1.59 · **1/48** |
+| B (dos laterales) | 2.22 · 1.07 | **1.56 · 1.39** · 0/48 |
+| V90 | 1.84 · 1.43 | 3.06 · 1.70 · 0/48 |
+| A (a 90°) | 1.48 · 1.33 | 2.68 · 1.73 · 0/48 |
+| D (a 90°) | 1.88 · 1.33 | 2.60 · 1.85 · 0/48 |
+| A2 + frontal gran angular | 1.43 · 1.09 | 2.36 · 1.25 · 0/48 |
+
+**Control de falsación: A2 con una sola marca por cara → máx 25 cm, 14/48 fuera.** La prueba sí puede fallar.
+Con sesgos 4 veces mayores (2° de dirección, 5 % de escala), A2, B y D a 2 bahías siguen en 0/48 (máx 3.2 cm):
+el EKF estima los sesgos mientras ve marcas.
+
+### Lo que cambia
+
+- **Con la odometría bien modelada, todos los montajes llegan dentro de ±4.5 cm con marcas cada 1 o 2
+  bahías** (salvo A2 en espejo, 1/48 a 2 bahías). La cobertura decía que A y D eran de los peores, y lo son
+  en *cuánto ven*; pero lo que se ve alcanza para estimar los sesgos, y los tramos ciegos (≤ 8 m de rueda)
+  son cortos para que la odometría corregida se vaya.
+- **El montaje deja de ser la decisión crítica para la precisión al llegar**; pasa a decidir por robustez
+  (cuánto tiempo sin marcas, una cámara tapada) y por lo práctico de montarlo. A2 sigue siendo el mejor
+  balance de cobertura; **B es el más preciso a 2 bahías**.
+- **No hace falta la tercera cámara para llegar**, según este modelo. Sí sería la única que ve el hueco.
+- **En tensión:** todo depende de supuestos (montajes, `PX_MIN`, `ANG_MAX`, ruido de la medición escalado con
+  la distancia, sesgos). Y la verdad del recorrido se re-ancla a las muestras del planificador cada tramo
+  (salto máx 3.9 mm), un error extra que la odometría no ve: hace el resultado un poco pesimista.

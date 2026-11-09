@@ -14,7 +14,8 @@
 #   error real de 1.75°, rechazaba toda marca que reaparecía y no se volvía a enganchar nunca.
 #   Estimando b y s mientras ve marcas, la odometría llega corregida a la oclusión.
 #
-# predict(v, δ, dt): propaga con odometria.avanzar (la cinemática del planificador). Ruido de
+# predict(v, δ, dt): propaga con odometria.avanzar (la cinemática del planificador), o con
+#   avanzar_rueda si rueda=True (09-nov: v de la rueda motriz, aguanta el timón a 90° del giro v3). Ruido de
 #   proceso Q = G·M·Gᵀ desde la incertidumbre de las entradas, más una deriva lenta de b y s.
 #
 # update_aruco(pose, R): corrige con una pose absoluta (H = [I₃ 0]). Ángulo envuelto.
@@ -26,7 +27,7 @@ import math
 
 import numpy as np
 
-from odometria import WB, avanzar
+from odometria import WB, avanzar, avanzar_rueda
 
 CHI2_3_99 = 11.345          # χ² con 3 grados de libertad al 99 %
 RECHAZOS_PARA_REABRIR = 10  # ≈ 0.5 s de marcas que contradicen al filtro, con dos cámaras a 10 Hz
@@ -40,14 +41,19 @@ def envolver(a):
 class EKF:
     def __init__(self, pose0, P0, sigma_v_rel=0.01, sigma_v_abs=0.01, sigma_delta=math.radians(0.5),
                  sigma_b0=math.radians(1.0), sigma_s0=0.05,
-                 deriva_b=math.radians(0.01), deriva_s=1e-4):
+                 deriva_b=math.radians(0.01), deriva_s=1e-4, rueda=False):
         """
         pose0, P0     pose inicial [x, y, θ] y su covarianza 3×3
         sigma_v_*     ruido aleatorio de la velocidad (relativo a v, y piso en m/s)
         sigma_delta   ruido aleatorio del ángulo de dirección, rad
         sigma_b0/s0   duda inicial sobre el sesgo de dirección (rad) y la escala de velocidad
         deriva_b/s    cuánto pueden cambiar b y s por segundo (raíz): casi constantes
+        rueda         False (02-nov, validado): v es la velocidad del EJE DE CARGA y se integra con
+                      tan δ. True (09-nov): v es la de la RUEDA MOTRIZ, que es lo que mide el encoder,
+                      y se integra con cos δ / sin δ: aguanta δ = 90° (el giro v3, rotación sobre el
+                      eje de carga), donde tan δ es infinita. s es la escala de esa velocidad.
         """
+        self.rueda = rueda
         self.x = np.r_[np.asarray(pose0, float), 0.0, 1.0]
         self.P = np.zeros((5, 5))
         self.P[:3, :3] = P0
@@ -69,16 +75,19 @@ class EKF:
     def predict(self, v, delta, dt):
         x, y, th, b, s = self.x
         de = delta - b
-        t = math.tan(de)
-        ds = s * v * dt
-        dth = -(ds / WB) * t
+        dsw = s * v * dt                                 # lo que recorre el punto de la velocidad medida
+        if self.rueda:                                   # v de la rueda motriz (v3, aguanta δ = 90°)
+            cd, sd = math.cos(de), math.sin(de)
+            ds, dth = dsw * cd, -(dsw / WB) * sd
+            dds_dsw, ddth_dsw = cd, -sd / WB             # ∂(ds, dθ)/∂ds_rueda
+            dds_dde, ddth_dde = -dsw * sd, -(dsw / WB) * cd
+        else:                                            # v del eje de carga (02-nov, con tan δ)
+            t = math.tan(de)
+            ds, dth = dsw, -(dsw / WB) * t
+            dds_dsw, ddth_dsw = 1.0, -t / WB
+            dds_dde, ddth_dde = 0.0, -(ds / WB) * (1 + t * t)
         thm = th + 0.5 * dth
         c, sn = math.cos(thm), math.sin(thm)
-
-        # derivadas de (ds, dθ) respecto de lo que mueve el paso
-        dds_ds, dds_dv = v * dt, s * dt
-        ddth_dds = -t / WB
-        ddth_dde = -(ds / WB) * (1 + t * t)
 
         def fila(dds, ddth):          # cómo cambia (x', y', θ') si ds y dθ cambian en (dds, ddth)
             return np.array([dds * c - ds * sn * 0.5 * ddth,
@@ -87,11 +96,11 @@ class EKF:
 
         F = np.eye(5)
         F[0, 2], F[1, 2] = -ds * sn, ds * c
-        F[:3, 3] = fila(0.0, -ddth_dde)                         # ∂/∂b  (δ_real = δ − b)
-        F[:3, 4] = fila(dds_ds, ddth_dds * dds_ds)              # ∂/∂s
+        F[:3, 3] = fila(-dds_dde, -ddth_dde)                    # ∂/∂b  (δ_real = δ − b)
+        F[:3, 4] = fila(dds_dsw * v * dt, ddth_dsw * v * dt)    # ∂/∂s
         G = np.zeros((5, 2))
-        G[:3, 0] = fila(dds_dv, ddth_dds * dds_dv)              # ∂/∂v medida
-        G[:3, 1] = fila(0.0, ddth_dde)                          # ∂/∂δ medida
+        G[:3, 0] = fila(dds_dsw * s * dt, ddth_dsw * s * dt)    # ∂/∂v medida
+        G[:3, 1] = fila(dds_dde, ddth_dde)                      # ∂/∂δ medida
         moviendo = abs(v) > 1e-3
         sv = self.sv_rel * abs(v) + self.sv_abs if moviendo else 0.0
         M = np.diag([sv ** 2, self.sd ** 2 if moviendo else 0.0])
@@ -99,9 +108,10 @@ class EKF:
         Q[3, 3] += self.qb * dt
         Q[4, 4] += self.qs * dt
 
-        nx, ny, nth = avanzar((x, y, th), s * v, de, dt)
+        nx, ny, nth = (avanzar_rueda if self.rueda else avanzar)((x, y, th), s * v, de, dt)
         self.x = np.array([nx, ny, envolver(nth), b, s])
         self.P = F @ self.P @ F.T + Q
+        self.ultimo = (F, G)                             # para la prueba de jacobianos (prueba_ekf_rueda.py)
 
     def update_aruco(self, pose_medida, R):
         H = np.zeros((3, 5)); H[:, :3] = np.eye(3)
