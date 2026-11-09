@@ -33,11 +33,16 @@ T_MIN = 0.8                 # SUPUESTO: cada etapa quieta dura al menos esto (as
 INSERTA = B.IBC_FONDO + B.GAP_OBJ - EXT_MAX   # lo que falta meter con el equipo (APROXIMA): 0.163 m
 DT_VIS = 0.25               # s entre cálculos de visibilidad
 
-PEDIDOS = [  # (de dónde arranca, hueco). El primero es el caso de maje (3L → 5 3 Ra → descarga)
-    ('3L', '5 3 Ra'),
-    ('descarga', '2 1A Lb'),
-    ('descarga', '7 5 Rb'),
-    ('descarga', '4 2 La'),
+# El turno, con el flujo de RETHINK (docs/09): el montacargas humano deja los cubos que ENTRAN en la zona de
+# carga del fondo (junto al último rack R, maje 09-nov) y recoge los que SALEN al principio del pasillo.
+#   ('salida', desde, hueco)   desde (pose '3L', 'principio' o una bahía) → toma en hueco → deja en el principio
+#   ('entrada', desde, hueco)  desde → toma en la zona de carga → deja en hueco
+ZONA = None                 # se arma adentro de geometria('dxf'): la «bahía» N + 1, lado R, al piso
+PEDIDOS = [
+    ('salida', '3L', '5 3 Ra'),            # el caso de maje
+    ('entrada', 'principio', '11 2 Lb'),
+    ('salida', '11 2 Lb', '9 5 Rb'),
+    ('entrada', 'principio', '3 1B La'),
 ]
 
 
@@ -102,90 +107,146 @@ def nombre_parte(n, ida):
     return n
 
 
-def pedido(pl, desde, hueco, log):
-    """Ida vacío → toma → vuelta cargado → deja. Devuelve (muestras, etapas verticales, resumen)."""
-    p0 = B.pose_en_pasillo(desde, 'descarga') if desde != 'descarga' else B.pose_descarga(pl.xpiv, pl.lch)
+def _pose(pl, lugar):
+    if lugar == 'principio':
+        return B.pose_descarga(pl.xpiv, pl.lch)
+    return B.pose_en_pasillo(lugar, 'descarga')
+
+
+def _ruta(pl, desde, hasta, cargado, log, txt):
+    """Ruta del planificador entre poses o direcciones (str con espacio = dirección de bahía)."""
     t = time.time()
-    ida = pl.ruta(p0, hueco)
-    log(f'   ida a {hueco}: {"ok" if ida["ok"] else "NO"} ({time.time() - t:.0f} s)')
-    t = time.time()
-    vuelta = pl.ruta(None, B.pose_descarga(pl.xpiv, pl.lch), origen=hueco, cargado=True)
-    log(f'   vuelta: {"ok" if vuelta["ok"] else "NO"} ({time.time() - t:.0f} s)')
-    if not (ida['ok'] and vuelta['ok']):
-        raise RuntimeError(f'sin ruta para {hueco}')
-    return ida, vuelta
+    es_dir = lambda v: isinstance(v, B.Direccion) or (isinstance(v, str) and ' ' in v)
+    if es_dir(desde):
+        objetivo = hasta if es_dir(hasta) else _pose(pl, hasta)
+        r = pl.ruta(None, objetivo, origen=desde, cargado=cargado)
+    else:
+        r = pl.ruta(_pose(pl, desde), hasta if es_dir(hasta) else _pose(pl, hasta), cargado=cargado)
+    log(f'   {txt}: {"ok" if r["ok"] else "NO"} ({time.time() - t:.0f} s)')
+    if not r['ok']:
+        raise RuntimeError(f'sin ruta: {txt}')
+    return r
+
+
+def planificar_turno(pl, log):
+    """Las rutas de cada pedido: [(tipo, desde, hueco, ida, vuelta)]."""
+    out = []
+    for tipo, desde, hueco in PEDIDOS:
+        log(f'pedido {len(out) + 1}: {tipo} {desde} → {hueco}')
+        if tipo == 'salida':
+            ida = _ruta(pl, desde, hueco, False, log, f'{desde} → {hueco}, vacío')
+            vuelta = _ruta(pl, hueco, 'principio', True, log, f'{hueco} → principio, cargado')
+        else:
+            ida = _ruta(pl, desde, ZONA, False, log, f'{desde} → zona de carga, vacío')
+            vuelta = _ruta(pl, ZONA, hueco, True, log, f'zona de carga → {hueco}, cargado')
+        out.append((tipo, desde, hueco, ida, vuelta))
+    return out
 
 
 def armar(pl, rutas):
-    """La línea de tiempo completa del turno: muestras de pose y la parte vertical (h, ext, ibc)."""
-    S, Vt = [], []                  # muestras de pose; eventos verticales (t, h, ext, ibc)
-    t = 0.0
-    h, ext = H_VIAJE, 0.0
-    pedidos = []
+    """La línea de tiempo del turno: muestras de pose (S), parte vertical (V: h, ext, ibc, etapa) y los
+    cubos que se ven quietos (en el rack, en la zona de carga, recién dejados en el principio)."""
+    S, Vt, cubos, pedidos = [], [], [], []
+    t, h, ext = 0.0, H_VIAJE, 0.0
+    a_ibc = B.a_punta(pl.xpiv, pl.lch) + EXT_MAX - 0.6        # centro del cubo con las uñas extendidas
 
-    def vert(t, h, ext, ibc, e):
+    def vert(e, ibc):
         Vt.append(dict(t=t, h=h, ext=ext, ibc=ibc, e=e))
 
-    vert(0.0, h, ext, 'ninguno', 'LIBRE')
-    for n, (desde, hueco, ida, vuelta) in enumerate(rutas):
-        t_ini = t
-        d = B.leer(hueco)
-        h_ent, h_agr = B.altura_uña(hueco, 'entrada'), B.altura_uña(hueco, 'agarre')
-        # ── ida, vacío ──
-        for nom, res in ida['partes']:
-            m, t = mover(res, nombre_parte(nom, True), t, False)
-            S += m
-            vert(t, h, ext, 'rack', nombre_parte(nom, True))
-        pose = ida['total']['poses'][-1]
-        # ── la toma ──
-        for etapa, dur, h1, e1, ibc in (
-                ('ELEVA', abs(h_ent - h) / V_SUBE[0], h_ent, 0.0, 'rack'),
-                ('APROXIMA', None, h_ent, 0.0, 'rack'),
-                ('EXTIENDE', EXT_MAX / V_EMPUJE[0], h_ent, EXT_MAX, 'rack'),
-                ('TOMA', (h_agr - h_ent) / V_SUBE[1], h_agr, EXT_MAX, 'uñas'),
-                ('RETRAE', EXT_MAX / V_EMPUJE[1], h_agr, 0.0, 'uñas'),
-                ('RETROCEDE', None, h_agr, 0.0, 'uñas'),
-                ('BAJA', abs(h_agr - H_VIAJE) / V_BAJA[1], H_VIAJE, 0.0, 'uñas')):
+    def mundo_de(pose, a):
+        return [pose[0] + a * math.cos(pose[2]), pose[1] + a * math.sin(pose[2]), pose[2]]
+
+    def mover_ruta(r, ida, cargado):
+        nonlocal t
+        for nom, res in r['partes']:
+            m, t = mover(res, nombre_parte(nom, ida), t, cargado)
+            S.extend(m)
+            vert(nombre_parte(nom, ida), 'uñas' if cargado else 'nada')
+
+    def etapas(pose, lugar, tomar):
+        """Toma (tomar=True) o deja en un hueco o en la zona de carga, con el equipo ya enfrentado."""
+        nonlocal t, h, ext
+        d = lugar
+        h_ent, h_agr = B.altura_uña(d, 'entrada'), B.altura_uña(d, 'agarre')
+        car0 = not tomar
+        h_ini = h_ent if tomar else h_agr                      # para dejar, se entra por arriba
+        pasos = [('ELEVA', abs(h_ini - h) / (V_SUBE[0] if tomar else V_SUBE[1]), h_ini, 0.0, car0),
+                 ('APROXIMA', None, h_ini, 0.0, car0),
+                 ('EXTIENDE', EXT_MAX / V_EMPUJE[0 if tomar else 1], h_ini, EXT_MAX, car0)]
+        if tomar:
+            pasos.append(('TOMA', (h_agr - h_ent) / V_SUBE[1], h_agr, EXT_MAX, True))
+        else:
+            pasos.append(('DEPOSITA', (h_agr - h_ent) / V_BAJA[1], h_ent, EXT_MAX, False))
+        car1 = tomar
+        h_sal = h_agr if tomar else h_ent
+        pasos += [('RETRAE', EXT_MAX / V_EMPUJE[1 if tomar else 0], h_sal, 0.0, car1),
+                  ('RETROCEDE', None, h_sal, 0.0, car1),
+                  ('BAJA', abs(h_sal - H_VIAJE) / V_BAJA[1 if tomar else 0], H_VIAJE, 0.0, car1)]
+        t_cubo = None
+        for etapa, dur, h1, e1, car in pasos:
+            ibc = 'uñas' if car else 'nada'
             if etapa in ('APROXIMA', 'RETROCEDE'):
                 dist = INSERTA if etapa == 'APROXIMA' else -INSERTA
-                m, t1 = mover(recta_local(pose, dist), etapa, t, etapa == 'RETROCEDE')
-                m[-1]['x'], m[-1]['y'] = (m[-1]['x'], m[-1]['y'])
-                S += m
+                m, t1 = mover(recta_local(pose, dist), etapa, t, car)
+                S.extend(m)
                 pose = (pose[0] + dist * math.cos(pose[2]), pose[1] + dist * math.sin(pose[2]), pose[2])
-                vert(t, h, ext, ibc, etapa)
+                vert(etapa, ibc)
                 t = max(t1, t + T_MIN)
+                vert(etapa, ibc)
             else:
-                m, t1 = quieto(pose, etapa, t, max(dur, T_MIN), ibc == 'uñas')
-                S += m
-                vert(t, h, ext, ibc, etapa)
+                if etapa == 'TOMA':
+                    t_cubo = t                                  # desde acá el cubo va en las uñas
+                    ibc = 'uñas'
+                m, t1 = quieto(pose, etapa, t, max(dur, T_MIN), car)
+                S.extend(m)
+                vert(etapa, 'uñas' if etapa in ('TOMA', 'DEPOSITA') else ibc)
                 t = t1
                 h, ext = h1, e1
-            vert(t, h, ext, ibc, etapa)
-        # ── vuelta, cargado ──
-        for nom, res in vuelta['partes']:
-            m, t = mover(res, nombre_parte(nom, False), t, True)
-            S += m
-            vert(t, h, ext, 'uñas', nombre_parte(nom, False))
+                if etapa == 'DEPOSITA':
+                    t_cubo = t                                  # desde acá el cubo queda en el rack
+                vert(etapa, 'uñas' if etapa == 'TOMA' else ('nada' if etapa == 'DEPOSITA' else ibc))
+            if etapa == 'EXTIENDE':
+                donde = mundo_de(pose, a_ibc)
+        return donde, t_cubo
+
+    for n, (tipo, desde, hueco, ida, vuelta) in enumerate(rutas):
+        t_ini = t
+        mover_ruta(ida, True, False)
+        lugar_toma = B.leer(hueco) if tipo == 'salida' else ZONA
+        donde, t_toma = etapas(ida['total']['poses'][-1], lugar_toma, True)
+        cubos.append(dict(x=donde[0], y=donde[1], th=donde[2], t0=-1.0 if tipo == 'salida' else t_ini,
+                          t1=t_toma, tipo='rack' if tipo == 'salida' else 'zona'))
+        mover_ruta(vuelta, False, True)
         pose = vuelta['total']['poses'][-1]
-        m, t1 = quieto(pose, 'DEJA', t, max(H_VIAJE / V_BAJA[1], T_MIN), True)
-        S += m
-        vert(t, h, ext, 'uñas', 'DEJA')
-        t = t1
-        h = 0.0
-        vert(t, h, ext, 'descarga', 'DEJA')
-        h = H_VIAJE
-        vert(t + 0.4, h, ext, 'descarga', 'LIBRE')
-        S.append(dict(t=t, x=pose[0], y=pose[1], th=pose[2], d=0.0, sg=0, v=0.0, e='LIBRE', c=False))
-        pedidos.append(dict(n=n + 1, desde=desde, hueco=hueco, t0=round(t_ini, 2), t1=round(t, 2),
+        if tipo == 'salida':                                  # deja en el piso del principio
+            m, t1 = quieto(pose, 'DEJA', t, max(H_VIAJE / V_BAJA[1], T_MIN), True)
+            S.extend(m)
+            vert('DEJA', 'uñas')
+            t = t1
+            h = 0.0
+            vert('DEJA', 'nada')
+            cubos.append(dict(x=pose[0] + (B.a_punta(pl.xpiv, pl.lch) - 0.6) * math.cos(pose[2]),
+                              y=pose[1] + (B.a_punta(pl.xpiv, pl.lch) - 0.6) * math.sin(pose[2]), th=pose[2],
+                              t0=t, t1=t + 8.0, tipo='principio'))
+            h = H_VIAJE
+            t += 0.4
+            vert('LIBRE', 'nada')
+            S.append(dict(t=t, x=pose[0], y=pose[1], th=pose[2], d=0.0, sg=0, v=0.0, e='LIBRE', c=False))
+        else:
+            donde, t_dep = etapas(pose, B.leer(hueco), False)
+            cubos.append(dict(x=donde[0], y=donde[1], th=donde[2], t0=t_dep, t1=1e9, tipo='rack'))
+            p = S[-1]
+            S.append(dict(t=t, x=p['x'], y=p['y'], th=p['th'], d=0.0, sg=0, v=0.0, e='LIBRE', c=False))
+        d = B.leer(hueco)
+        R1, R2 = P.resumen(ida['total'], None), P.resumen(vuelta['total'], None)
+        pedidos.append(dict(n=n + 1, tipo=tipo, desde=desde, hueco=hueco, t0=round(t_ini, 2), t1=round(t, 2),
                             lado=d.s, nivel=d.y, x_bahia=d.x, pos=d.p,
-                            ida=dict(largo=round(P.resumen(ida['total'], None)['largo'], 2),
-                                     cambios=P.resumen(ida['total'], None)['cambios']),
-                            vuelta=dict(largo=round(P.resumen(vuelta['total'], None)['largo'], 2),
-                                        cambios=P.resumen(vuelta['total'], None)['cambios'])))
-    return S, Vt, pedidos
+                            ida=dict(largo=round(R1['largo'], 2), cambios=R1['cambios']),
+                            vuelta=dict(largo=round(R2['largo'], 2), cambios=R2['cambios'])))
+    return S, Vt, cubos, pedidos
 
 
-EN_EL_CUBO = ('APROXIMA', 'EXTIENDE', 'TOMA', 'RETRAE', 'RETROCEDE')   # las uñas van dentro del IBC
+EN_EL_CUBO = ('APROXIMA', 'EXTIENDE', 'TOMA', 'DEPOSITA', 'RETRAE', 'RETROCEDE')   # las uñas van dentro del IBC
 
 
 def holguras(pl, S):
@@ -198,14 +259,18 @@ def holguras(pl, S):
         X, Y = eq.huella((s['x'], s['y'], s['th']))
         if s['e'] in EN_EL_CUBO:
             X, Y = X[~eq.frente], Y[~eq.frente]
-        rel = X - B.X0
-        k = np.floor(rel / B.PASO_POSTE)
-        off = rel - k * B.PASO_POSTE
-        luz = (k >= 0) & (k < B.N) & (off >= B.POSTE) & (off <= B.PASO_POSTE)
-        en_rack = (X >= B.X0) & (X <= B.fin_rack())
+        luz = B.en_luz(X)
+        en_rack = (X >= B.X0) & (X <= B.x_fondo())
         sup = np.where(luz, B.HALF + pl.rec[0], B.HALF)
         inf = np.where(luz, -(B.HALF + pl.rec[1]), -B.HALF)
+        if B.ZONA_CARGA:                         # la zona de carga: piso hasta el fondo del rack (Mundo)
+            zc = X >= B.fin_rack()
+            if B.ZONA_CARGA == 'R':
+                inf = np.where(zc, -(B.HALF + B.FONDO_RACK + B.REC_R), inf)
+            else:
+                sup = np.where(zc, B.HALF + B.FONDO_RACK + B.REC_L, sup)
         hol = np.minimum(sup - Y, Y - inf)
+        hol = np.minimum(hol, B.x_fondo() - X)   # la pared del fondo
         hol = np.where(en_rack, hol, np.inf)
         j = int(np.argmin(hol))
         out.append(None if not np.isfinite(hol[j]) else [round(float(hol[j]), 4), round(float(X[j]), 3),
@@ -215,7 +280,15 @@ def holguras(pl, S):
 
 def vista(pl, S):
     """Qué marcas ve cada cámara del montaje A2, cada DT_VIS (interpolando la pose)."""
-    M = V.mapa(2)
+    # marcas sobre los postes cada 2 bahías, en los dos tramos y las dos caras (lo de V.mapa(2), pero
+    # siguiendo los postes reales: con el hueco del DXF los postes no van a paso fijo)
+    filas, n1 = [], B.CORTE or B.N
+    xs = [x for k, x in enumerate(B.postes()) if (k <= n1 and k % 2 == 0) or (k > n1 and (k - n1 - 1) % 2 == 0)]
+    for x in xs:
+        xc = x + B.POSTE / 2
+        filas.append((xc, +B.HALF, V.H_MARCA, -math.pi / 2, V.L_MARCA))
+        filas.append((xc, -B.HALF, V.H_MARCA, +math.pi / 2, V.L_MARCA))
+    M = np.c_[np.array(filas), np.arange(len(filas))]
     E = V._esquinas(M)
     cams = V.montajes(pl.xpiv)['A2'][1]
     ts = np.array([s['t'] for s in S])
@@ -236,43 +309,53 @@ def vista(pl, S):
 
 
 def main():
+    global ZONA
     log = lambda s: print(s, flush=True)
     t0 = time.time()
-    pl = P.Planificador(modelo='v3')
-    rutas = []
-    for desde, hueco in PEDIDOS:
-        log(f'pedido {len(rutas) + 1}: {desde} → {hueco} → descarga')
-        rutas.append((desde, hueco, *pedido(pl, desde, hueco, log)))
-    S, Vt, pedidos = armar(pl, rutas)
-    log(f'{len(S)} muestras de pose, turno de {S[-1]["t"]:.0f} s; holguras y visibilidad…')
-    hol = holguras(pl, S)
-    vis, marcas, camaras = vista(pl, S)
-    piezas = {}
-    for c in (False, True):
-        pol = P.poligonos(pl.xpiv, cargado=c, lch=pl.lch, r_culo=pl.r_culo)
-        piezas['cargado' if c else 'vacio'] = [[[round(a, 4), round(y, 4)] for a, y in p] for p in pol]
-    a_mast = pl.lch - pl.xpiv
-    datos = dict(
-        generado=time.strftime('%Y-%m-%d %H:%M'),
-        supuestos=dict(modelo='v3b (planificador_rutas.py, modelo=v3, culo de la ficha)', XPIV=round(pl.xpiv, 3),
-                       WB=P.WB, DMAX=90, REC=list(pl.rec), VMAX=P.VMAX, VMAN=P.VMAN, ACC=P.ACC,
-                       V_SUBE=V_SUBE, V_BAJA=V_BAJA, V_EMPUJE=V_EMPUJE, EXT_MAX=EXT_MAX, H_VIAJE=H_VIAJE,
-                       T_MIN=T_MIN, INSERTA=round(INSERTA, 3), montaje='A2', marcas_cada=2,
-                       PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)),
-                       nota='VMAX/VMAN/ACC, H_VIAJE, T_MIN, PX_MIN, ANG_MAX y la geometría del rack son SUPUESTOS'),
-        geo=dict(PASILLO=B.PASILLO, X0=B.X0, N=B.N, POSTE=B.POSTE, BAHIA=B.BAHIA, PASO=B.PASO_POSTE,
-                 FONDO_RACK=B.FONDO_RACK, ZONA_ANCHO=B.ZONA_ANCHO, ZONA_ATRAS=B.ZONA_ATRAS, X_FONDO=B.x_fondo(),
-                 FIN_RACK=B.fin_rack(), IBC=[B.IBC_CARA, B.IBC_FONDO], ALTURAS=B.ALTURAS,
-                 descarga=list(B.pose_descarga(pl.xpiv, pl.lch))),
-        equipo=dict(piezas=piezas, xpiv=pl.xpiv, a_mast=a_mast, a_pata=a_mast + P.L_ANCHO,
-                    a_punta=B.a_punta(pl.xpiv, pl.lch), wb=P.WB, rueda=[0.343, 0.140], w_capo=P.W_CAPO,
-                    w_max=P.W_MAX),
-        pedidos=pedidos,
-        S=[[round(s['t'], 3), round(s['x'], 4), round(s['y'], 4), round(s['th'], 4), round(s['d'], 3), s['sg'],
-            round(s['v'], 3), s['e'], int(s['c'])] for s in S],
-        H=hol,
-        V=[[round(v['t'], 3), round(v['h'], 3), round(v['ext'], 3), v['ibc'], v['e']] for v in Vt],
-        vis=vis, marcas=marcas, camaras=camaras)
+    with B.geometria('dxf'):
+        ZONA = B.Direccion(B.N + 1, '1A', B.ZONA_CARGA, 'c')
+        pl = P.Planificador(modelo='v3')
+        rutas = planificar_turno(pl, log)
+        S, Vt, cubos, pedidos = armar(pl, rutas)
+        log(f'{len(S)} muestras de pose, turno de {S[-1]["t"]:.0f} s; holguras y visibilidad…')
+        hol = holguras(pl, S)
+        vis, marcas, camaras = vista(pl, S)
+        piezas = {}
+        for c in (False, True):
+            pol = P.poligonos(pl.xpiv, cargado=c, lch=pl.lch, r_culo=pl.r_culo)
+            piezas['cargado' if c else 'vacio'] = [[[round(a, 4), round(y, 4)] for a, y in p] for p in pol]
+        a_mast = pl.lch - pl.xpiv
+        geo = dict(PASILLO=B.PASILLO, X0=B.X0, N=B.N, POSTE=B.POSTE, BAHIA=B.BAHIA, PASO=B.PASO_POSTE,
+                   FONDO_RACK=B.FONDO_RACK, ZONA_ANCHO=B.ZONA_ANCHO, ZONA_ATRAS=B.ZONA_ATRAS, X_FONDO=B.x_fondo(),
+                   FIN_RACK=B.fin_rack(), IBC=[B.IBC_CARA, B.IBC_FONDO], ALTURAS=B.ALTURAS,
+                   descarga=list(B.pose_descarga(pl.xpiv, pl.lch)),
+                   bahias=[[round(v, 3) for v in B.bahia_x(n)] for n in range(1, B.N + 1)],
+                   postes=[round(x, 3) for x in B.postes()],
+                   zona_carga=dict(lado=B.ZONA_CARGA, x0=round(B.fin_rack(), 3), x1=round(B.x_fondo(), 3)),
+                   hueco=[round(B.bahia_x(B.CORTE)[1] + B.POSTE, 3), round(B.bahia_x(B.CORTE + 1)[0] - B.POSTE, 3)],
+                   fuente='datos/sectorA.json (pasillo B: verde | azul) + zona de carga de maje')
+        datos = dict(
+            generado=time.strftime('%Y-%m-%d %H:%M'),
+            supuestos=dict(modelo='v3b (planificador_rutas.py, modelo=v3, culo de la ficha), geometría del DXF',
+                           XPIV=round(pl.xpiv, 3), WB=P.WB, DMAX=90, REC=list(pl.rec), VMAX=P.VMAX, VMAN=P.VMAN,
+                           ACC=P.ACC, V_SUBE=V_SUBE, V_BAJA=V_BAJA, V_EMPUJE=V_EMPUJE, EXT_MAX=EXT_MAX,
+                           H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), montaje='A2', marcas_cada=2,
+                           PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)),
+                           nota='VMAX 1.5 m/s = sobre del kit, dentro de los 5–8 km/h que dicen los operadores. '
+                                'SUPUESTOS: VMAN, ACC, H_VIAJE, T_MIN, PX_MIN, ANG_MAX, X0 (principio → primer '
+                                'poste), y el hueco entre tramos tratado como cara de rack'),
+            geo=geo,
+            equipo=dict(piezas=piezas, xpiv=pl.xpiv, a_mast=a_mast, a_pata=a_mast + P.L_ANCHO,
+                        a_punta=B.a_punta(pl.xpiv, pl.lch), wb=P.WB, rueda=[0.343, 0.140], w_capo=P.W_CAPO,
+                        w_max=P.W_MAX),
+            pedidos=pedidos,
+            cubos=[dict(x=round(c['x'], 3), y=round(c['y'], 3), th=round(c['th'], 4), t0=round(c['t0'], 2),
+                        t1=round(c['t1'], 2), tipo=c['tipo']) for c in cubos],
+            S=[[round(s['t'], 3), round(s['x'], 4), round(s['y'], 4), round(s['th'], 4), round(s['d'], 3),
+                s['sg'], round(s['v'], 3), s['e'], int(s['c'])] for s in S],
+            H=hol,
+            V=[[round(v['t'], 3), round(v['h'], 3), round(v['ext'], 3), v['ibc'], v['e']] for v in Vt],
+            vis=vis, marcas=marcas, camaras=camaras)
     with open(os.path.join(RAIZ, 'sim', 'sim_datos.json'), 'w', encoding='utf-8') as f:
         json.dump(datos, f, ensure_ascii=False, separators=(',', ':'))
     log(f'listo en {time.time() - t0:.0f} s → sim/sim_datos.json')
@@ -283,9 +366,10 @@ def solo_holguras():
     ruta = os.path.join(RAIZ, 'sim', 'sim_datos.json')
     with open(ruta, encoding='utf-8') as f:
         d = json.load(f)
-    pl = P.Planificador(modelo='v3')
-    S = [dict(t=r[0], x=r[1], y=r[2], th=r[3], e=r[7], c=bool(r[8])) for r in d['S']]
-    d['H'] = holguras(pl, S)
+    with B.geometria('dxf'):
+        pl = P.Planificador(modelo='v3')
+        S = [dict(t=r[0], x=r[1], y=r[2], th=r[3], e=r[7], c=bool(r[8])) for r in d['S']]
+        d['H'] = holguras(pl, S)
     with open(ruta, 'w', encoding='utf-8') as f:
         json.dump(d, f, ensure_ascii=False, separators=(',', ':'))
     print('H recalculado')

@@ -183,12 +183,15 @@ class Mundo:
         sup = np.where(en_zona, B.ZONA_ANCHO / 2 - m, h - m)
         inf = -sup
         if self.rec is not None:
-            rel = X - B.X0
-            k = np.floor(rel / B.PASO_POSTE)
-            off = rel - k * B.PASO_POSTE                   # desde la cara de atrás del poste k
-            luz = (k >= 0) & (k < B.N) & (off >= B.POSTE + m) & (off <= B.PASO_POSTE - m)
+            luz = B.en_luz(X, m)                           # entre caras de poste (los dos tramos, con el DXF)
             sup = np.where(luz & ~en_zona, h + self.rec[0] - m, sup)
             inf = np.where(luz & ~en_zona, -(h + self.rec[1] - m), inf)
+            if B.ZONA_CARGA:                               # al fondo, junto al último rack: piso hasta el fondo del rack
+                zc = (X >= B.fin_rack() + m) & ~en_zona
+                if B.ZONA_CARGA == 'R':
+                    inf = np.where(zc, -(h + B.FONDO_RACK + B.REC_R - m), inf)
+                else:
+                    sup = np.where(zc, h + B.FONDO_RACK + B.REC_L - m, sup)
         for x0, x1, sg, prof in self.abiertas:
             dentro = (X >= x0 + m) & (X <= x1 - m) & frente
             if sg > 0:

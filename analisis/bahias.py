@@ -49,6 +49,17 @@ ZONA_ANCHO = 6.00               # SUPUESTO
 ZONA_ATRAS = 3.00               # SUPUESTO
 VEL_ELEV = 0.55                 # SUPUESTO (sim-web)
 
+# ── la geometría del DXF (09-nov): el pasillo B real, no solo su primer tramo ──
+# datos/sectorA.json, filas verde (y −811.55) y azul (−807.39): 14 posiciones (7 bahías) de x 718.93 a
+# 736.34, un HUECO de 2.66 m sin rack, 12 posiciones (6 bahías) de 739.00 a 753.91, y la pared del fondo
+# en x 756.96 → 3.05 m libres después del último poste. Ahí, junto al último rack del lado R, está la
+# ZONA DE CARGA (maje, 09-nov): el montacargas humano deja los cubos que entran (docs/09: «deja los cubos
+# que entran al final del rack»). Por defecto todo queda como antes (un tramo de 7); `geometria('dxf')`
+# cambia a esto mientras dura el `with`.
+CORTE = None                    # bahías del primer tramo (None = un solo tramo)
+HUECO = 0.0                     # m libres entre el último poste del tramo 1 y el primero del tramo 2
+ZONA_CARGA = None               # 'L' o 'R': piso libre al fondo, junto al último rack de ese lado
+
 # ── v2 (05-nov, el video del operador y el afinado de maje) ───────────────────
 # Los 3.00 m son de CARA DE POSTE a cara de poste: el punto más angosto. Hay un poste en cada borde
 # de bahía. Entre postes (la luz de 2.35 m), la cara del cubo de N1 queda REC más atrás, en los DOS
@@ -128,25 +139,78 @@ def leer(texto):
     return Direccion(x, y, s, p)
 
 
+def _extra(x):
+    """Corrimiento de la bahía x por el hueco entre tramos (0 en la geometría de siempre)."""
+    return HUECO + POSTE if (CORTE and x > CORTE) else 0.0
+
+
 def bahia_x(x):
-    """(inicio, fin) de la luz de la bahía x a lo largo del pasillo."""
+    """(inicio, fin) de la luz de la bahía x a lo largo del pasillo. Con ZONA_CARGA, la «bahía» N + 1
+    es la zona de carga: del último poste a la pared del fondo."""
+    if ZONA_CARGA and x == N + 1:
+        return fin_rack(), x_fondo()
     if not 1 <= x <= N:
         raise ValueError(f"bahía {x} fuera del pasillo (1…{N})")
-    x0 = X0 + POSTE + (x - 1) * (BAHIA + POSTE)
+    x0 = X0 + POSTE + (x - 1) * (BAHIA + POSTE) + _extra(x)
     return x0, x0 + BAHIA
 
 
 def centro_posicion(x, p='a'):
     """Centro de la posición a/b dentro de la bahía: tres huelgos iguales con los 35 cm."""
-    x0, _ = bahia_x(x)
+    x0, x1 = bahia_x(x)
     if p == 'c':
-        return x0 + BAHIA / 2
+        return (x0 + x1) / 2
     g = (BAHIA - 2 * IBC_CARA) / 3
     return x0 + g + IBC_CARA / 2 if p == 'a' else x0 + 2 * g + 1.5 * IBC_CARA
 
 
 def fin_rack():
-    return X0 + POSTE + N * (BAHIA + POSTE)
+    return X0 + POSTE + N * (BAHIA + POSTE) + (HUECO + POSTE if CORTE else 0.0)
+
+
+def postes():
+    """x de la cara de atrás (hacia la descarga) de cada poste, en los dos tramos."""
+    n1 = CORTE or N
+    out = [X0 + k * (BAHIA + POSTE) for k in range(n1 + 1)]
+    if CORTE:
+        x2 = X0 + CORTE * (BAHIA + POSTE) + POSTE + HUECO
+        out += [x2 + k * (BAHIA + POSTE) for k in range(N - CORTE + 1)]
+    return out
+
+
+def en_luz(X, m=0.0):
+    """Arreglo bool: X cae en la luz de alguna bahía (entre caras de poste, con margen m).
+    Con un solo tramo es exactamente la cuenta de siempre del Mundo v2."""
+    import numpy as np
+    paso = BAHIA + POSTE
+    n1 = CORTE or N
+    rel = X - X0
+    k = np.floor(rel / paso)
+    off = rel - k * paso
+    luz = (k >= 0) & (k < n1) & (off >= POSTE + m) & (off <= paso - m)
+    if CORTE:
+        rel = X - (X0 + CORTE * paso + POSTE + HUECO)
+        k = np.floor(rel / paso)
+        off = rel - k * paso
+        luz |= (k >= 0) & (k < N - CORTE) & (off >= POSTE + m) & (off <= paso - m)
+    return luz
+
+
+from contextlib import contextmanager
+
+
+@contextmanager
+def geometria(cual='dxf'):
+    """`with geometria('dxf'):` el pasillo B del DXF (13 bahías por lado en dos tramos, 3.05 m al fondo
+    y la zona de carga junto al último rack R). Restaura la geometría de siempre al salir."""
+    global N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA
+    viejo = (N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA)
+    if cual == 'dxf':
+        N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA = 13, 7, 2.66, 3.05, 'R'
+    try:
+        yield
+    finally:
+        N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA = viejo
 
 
 def x_fondo():
