@@ -134,3 +134,81 @@ Jungheinrich y escribe `culo_ficha.csv`.
   sale del largo). Confirmar midiendo **culo → eje de la rueda motriz (240)** y **entre ejes**.
 - **El dibujo es de catálogo**, no un plano de fabricación. Pero está a escala con 0.1 %, y lo que
   dice coincide con `Wa`. Una foto desde arriba del culo con una cinta lo confirma.
+
+## Escaneo completo de las dos fichas (09-nov)
+
+`escaneo_fichas.py` mide las cotas en los **dibujos vectoriales** y las cruza con las tablas. Las dos
+fichas son vectoriales: la hoja Jungheinrich (pág. 2) y también el brochure Mitsubishi (pág. 7, la
+vista del ESR15N2–EDR18N2).
+
+### 1 · El culo lo confirman los dos dibujos
+
+El contorno del culo de Mitsubishi, escalado al mismo ancho, **calza con el de Jungheinrich con 0–4 mm
+de diferencia** hasta ±0.50 m del eje (3/3 · 12/12 · 26/26 · 46/48 · 65/68 · 113/117 mm). El culo es
+de serie (maje, 09-nov: no es custom), así que **el contorno de `culo_ficha.csv` es el del equipo**.
+
+La vista de arriba de Mitsubishi **no** sirve para largos: es un dibujo genérico de la familia y sus
+cotas `l2`/`l7` no salen a la misma escala que su `b2` (±4 %). Solo se usa su forma.
+
+### 2 · La vista de costado de Jungheinrich, cota por cota (escala por `y`)
+
+| Cota | Dibujo | Tabla |
+|---|---|---|
+| culo → eje de la rueda motriz | 241 | 240 |
+| `l2` culo → dorso de uñas | 1,587 | 1,582 |
+| `x` dorso de uñas → eje de carga | 215 | 219 |
+| `l7` culo → punta de las patas | 1,985 | 1,983 |
+| **`l1` culo → punta de uñas** | **2,658** | **2,999** |
+
+**El `l1` = 2,999 de la tabla está mal** para ETR 235/340/345/335d: es un copiar-pegar. El dibujo da
+2,658 = `l2` + uñas de 1,067 (2,649), y el ETR 230 sí cumple esa suma en la tabla (1,315 + 1,067 =
+2,382). **De serie, culo → punta = 2.65 m.**
+
+### 3 · Los 13 cm son el compartimento de batería, y eso mueve el entre ejes
+
+Las dos fichas muestran que **el compartimento de batería se suma tal cual al entre ejes**:
+
+| Modelo | Compartimento (MCFA 51) | Entre ejes `y` | `Wa` |
+|---|---|---|---|
+| ESR15N2 / ETR 230 | 362 | 1,511 | 1,746 / 1,750 |
+| ESR18N2 · EDR18N2 / ETR 235–335d | 413 | 1,562 | 1,797 / 1,801 |
+| diferencia | **+51** | **+51** | **+51** |
+
+La ficha MCFA da compartimentos de 413, 463 y **539** («estándar con elevación > 8,430», nota 7). Con
+el culo de serie y uñas de 1.20, el 2.91 medido pide **+128 mm**: el de 539 da **+126**. Si es ese:
+
+| | De serie (413) | Con 539 (lo que pide el 2.91) |
+|---|---|---|
+| `l2` culo → dorso de uñas | 1,582 | **1,708** |
+| culo → punta (uñas de 1.20) | 2,782 | **2,908** ✓ medido 2,91 |
+| entre ejes `y` | 1,562 | **1,688** |
+| culo → eje de carga (240 + `y`) | 1,802 | **1,928** (= el `XPIV` 1.93 derivado por otro camino) |
+
+La placa (batería de 1,050–1,180 kg, más que el máximo de 1,050 de la ficha para 413) apunta a lo mismo.
+**No cambia el giro** (el ancho a rumbo es forma: 2.967 / 3.005); cambia `WB` en la cinemática y los
+tiempos (v3b: ≤ 1 s). **Se confirma midiendo el entre ejes**: 1.56 o 1.69.
+
+### 4 · Lo que corrige de `CLAUDE.md`
+
+La «cota dura» de septiembre, `XPIV < √(Wa² − (W/2)²) = 1.672`, **suponía esquinas en ángulo recto**.
+Con el culo de la ficha (todo dentro del círculo de `Wa`), la distancia máxima al eje de carga es la
+del punto del eje: **`XPIV` = `Wa`**. La cota no existe, y la estación 282 (`XPIV` 1.862) deja de ser
+una contradicción: queda entre 1.80 (de serie) y 1.93 (batería larga).
+
+### 5 · Otros datos de las fichas, para no volver a buscarlos
+
+| | Valor | Fuente |
+|---|---|---|
+| Rueda motriz | **343 × 140** (perímetro 1.078 m: la escala de la odometría) | VDI 3.2 · MCFA 41 |
+| Rueda estabilizadora (caster) | 180 × 100 | VDI 3.4 · MCFA 42 |
+| Ruedas de carga | 127 × 92; trocha **966** (335d) | VDI 3.3, 3.7 |
+| Patas | 127 de ancho (5"), 127 de alto (`h8`); entre patas 1,067 de serie → **`b1` 1,321** (el repo usa 1.315, sin medir) | VDI 4.10, 4.21 · MCFA 14 |
+| Batería (de serie) | 968 × 404 × 782, 36 V 775 Ah, 907 kg | VDI 6.4–6.5 |
+| Compartimento | 413 × 976 × 804 (opciones 463 / 539) | MCFA 51–53 |
+| Velocidad de empuje (pantógrafo) | **0.28 / 0.30 m/s** con / sin carga → 1.067 m en ~3.6–3.8 s | VDI 5.4 |
+| Elevación / descenso | 0.55 / 0.84 · 0.53 / 0.57 m/s | VDI 5.2–5.3 |
+| Marcha | 12.1 / 12.9 km/h (catálogo; en campo 7.9) | VDI 5.1 |
+| Tejadillo | alto 2,413; ancho 1,043 | VDI 4.7 · MCFA |
+| Chasis | alto 1,270; escalón 250; despeje 51–61 | MCFA · VDI 4.8, 4.32 |
+| Carro portahorquillas | 826 de ancho; uñas abiertas 305–802 | VDI 4.24–4.25 |
+| Dirección | eléctrica | VDI 8.6 |
