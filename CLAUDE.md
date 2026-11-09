@@ -47,23 +47,20 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `analisis/` | El cálculo detrás de casi todo lo de `docs/`. Si vas a contradecir un número, corré el script. **Rutas entre bahías con uñas (05-nov):** `bahias.py` (direcciones `x y s` + `a`/`b`), `planificador_rutas.py` (Hybrid A* de cualquier pose a cualquier bahía), resultados en **`rutas_resultados.md`**. **Con uñas, el 90° solo existe metiendo las uñas a la luz de la bahía** (ancho a rumbo 3.04 m > 3.00); a la posición `a` se entra con las uñas hacia adentro y a la `b` hacia la descarga. **v2 (05-nov, tarde, con el video):** postes cada 2.47 m y 6 cm de retranqueo en los dos lados; el giro **sin reversa** del operador **solo existe con δmax ≥ ~83° (XPIV ≥ 1.58)**: con los 78° derivados no sale. Margen: 2 cm vacío, **1 cm cargado**; retranqueo mínimo 4–5 cm. **06-nov: el manual de servicio tiene modo de dirección 180°/360° → δmax ≥ 90°**, y `XPIV` sale de `Wa` y la forma del culo (1.72–1.80), ver el final de `rutas_resultados.md`. **v3 (06-nov, fichas): 2.91 + culo de 0.17 + δmax 90° → el giro es una rotación sobre el eje de carga y solo manda el ancho** (3.005 vacío, 3.042 cargado): margen 5 / 3 cm por lado con 6 cm de retranqueo; cargado pide > 2 cm de retranqueo; `XPIV` (1.93, derivado) ya no decide si gira. Lo que más pesa medir: el radio del culo. **07-nov: el culo sale exacto de los vectores de la ficha (arco de 1.747): vacío 2.967 (cabe en 3.00 sin retranqueo), cargado 3.005 (3 mm por lado)**; `herramientas/fichas/LEEME.md`. **v3b (07-nov, en el planificador): lo confirma; margen 7 / 5 cm por lado, cargado pide 1 cm de retranqueo**; el cambio de carril sale con ~20 000 expansiones |
 | `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control)**, y la **FSM de coordinación A/B** (reserva, deadlock, falla; `sim_coordinacion.py`): `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real**. **Visibilidad de ArUco por montaje (05-nov, `visibilidad.py`):** con marcas solo en las caras, lateral + trasera **en diagonal** llega a ±4.5 cm con marcas cada 3 bahías; la trasera recta no ve nada en el tránsito; la frontal de `docs/03` es el peor montaje; en la alineación final ninguna cámara ve marcas ~90 % del tiempo. Depende de `PX_MIN`/`ANG_MAX`, que mide maje. **Con las rutas v2 (por el eje, giro casi en el lugar) baja: A2 cada 2 bahías, B cada 1** (cada 2 alternando las marcas entre caras); cada 1 bahía cumplen los dos |
 
-## ✔ Hecha — tarea para la i3 (07-nov-2026)
-
-**Resultado:** v3b corrido. El planificador confirma la cuenta del culo de la ficha: vacío gira con retranqueo 0, cargado con ≥ 1 cm; margen nominal **7 / 5 cm**; control 0/6; rutas y barrido iguales (28/28); batería larga ≤ 1 s. Ver `analisis/rutas_resultados.md`, v3b.
-
+## ▶ Tarea pendiente para la i3 (09-nov-2026)
 
 Si te dicen «tenés un nuevo task en el CLAUDE.md», es esto:
 
-1. Actualizá y validá la entrada (en la raíz del repo):
-   ```
-   git pull origin main
-   py -m pip install pymupdf
-   py herramientas/fichas/culo_de_la_ficha.py --ancho
-   ```
-   Tiene que dar **2.967 vacío / 3.005 cargado**. Si no da eso, pará y anotá por qué.
-2. Hacé **`analisis/tarea_rutas_v3b.md`** entero (el culo exacto de la ficha en el planificador).
+1. Actualizá (en la raíz del repo): `git pull origin main`
+2. Hacé **`herramientas/rig/tarea_firmware.md`** entero: el firmware del rig integrado (un ESP32 con
+   CAN, timón y pie con watchdog), `rig.py` en la laptop y las pruebas de banco con sus controles.
+   Las piezas del CAN aislado llegan el 11-nov: lo que no se pueda probar sin ellas o sin el hardware
+   enchufado queda «pendiente de banco», nunca como pasado.
 3. Al terminar: marcá el encargo como HECHO, **cambiá el título de esta sección a «✔ Hecha»** con una
    línea de resultado, y commit + push a `main`.
+
+**Anteriores:** ✔ 07-nov, rutas v3b (`analisis/tarea_rutas_v3b.md`): el planificador confirma el culo
+de la ficha; vacío gira sin retranqueo, cargado con ≥ 1 cm, margen 7 / 5 cm.
 
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
