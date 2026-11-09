@@ -59,6 +59,8 @@ VEL_ELEV = 0.55                 # SUPUESTO (sim-web)
 CORTE = None                    # bahías del primer tramo (None = un solo tramo)
 HUECO = 0.0                     # m libres entre el último poste del tramo 1 y el primero del tramo 2
 ZONA_CARGA = None               # 'L' o 'R': piso libre al fondo, junto al último rack de ese lado
+ZONA_DESCARGA = None            # 'L' o 'R': piso libre al principio, junto al primer rack (maje 09-nov: del mismo
+                                # ancho que la de carga, lado R, con pared a ~3 m como al fondo). Es la «bahía» 0
 
 # ── v2 (05-nov, el video del operador y el afinado de maje) ───────────────────
 # Los 3.00 m son de CARA DE POSTE a cara de poste: el punto más angosto. Hay un poste en cada borde
@@ -149,6 +151,8 @@ def bahia_x(x):
     es la zona de carga: del último poste a la pared del fondo."""
     if ZONA_CARGA and x == N + 1:
         return fin_rack(), x_fondo()
+    if ZONA_DESCARGA and x == 0:
+        return -ZONA_ATRAS, X0
     if not 1 <= x <= N:
         raise ValueError(f"bahía {x} fuera del pasillo (1…{N})")
     x0 = X0 + POSTE + (x - 1) * (BAHIA + POSTE) + _extra(x)
@@ -202,15 +206,19 @@ from contextlib import contextmanager
 @contextmanager
 def geometria(cual='dxf'):
     """`with geometria('dxf'):` el pasillo B del DXF (13 bahías por lado en dos tramos, 3.05 m al fondo
-    y la zona de carga junto al último rack R). Restaura la geometría de siempre al salir."""
-    global N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA
-    viejo = (N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA)
+    y la zona de carga junto al último rack R; pared al principio a 3.07 m y la zona de descarga junto al
+    primer rack R). Restaura la geometría de siempre al salir."""
+    global N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA, ZONA_DESCARGA, X0, ZONA_ATRAS, ZONA_ANCHO
+    viejo = (N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA, ZONA_DESCARGA, X0, ZONA_ATRAS, ZONA_ANCHO)
     if cual == 'dxf':
+        # principio: pared a 3.07 m del primer poste (DXF: muro en x 715.86, rack desde 718.93); la zona de
+        # descarga es ese hueco, del lado R, como la de carga al fondo. Sin piso abierto detrás.
         N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA = 13, 7, 2.66, 3.05, 'R'
+        ZONA_DESCARGA, X0, ZONA_ATRAS, ZONA_ANCHO = 'R', 3.07, 0.0, PASILLO
     try:
         yield
     finally:
-        N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA = viejo
+        N, CORTE, HUECO, LIBRE_FONDO, ZONA_CARGA, ZONA_DESCARGA, X0, ZONA_ATRAS, ZONA_ANCHO = viejo
 
 
 def x_fondo():

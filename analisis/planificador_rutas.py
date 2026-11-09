@@ -186,6 +186,12 @@ class Mundo:
             luz = B.en_luz(X, m)                           # entre caras de poste (los dos tramos, con el DXF)
             sup = np.where(luz & ~en_zona, h + self.rec[0] - m, sup)
             inf = np.where(luz & ~en_zona, -(h + self.rec[1] - m), inf)
+            if B.ZONA_DESCARGA:                            # al principio, junto al primer rack: lo mismo
+                zd = en_zona & (X <= B.X0 - m)
+                if B.ZONA_DESCARGA == 'R':
+                    inf = np.where(zd, -(h + B.FONDO_RACK + B.REC_R - m), inf)
+                else:
+                    sup = np.where(zd, h + B.FONDO_RACK + B.REC_L - m, sup)
             if B.ZONA_CARGA:                               # al fondo, junto al último rack: piso hasta el fondo del rack
                 zc = (X >= B.fin_rack() + m) & ~en_zona
                 if B.ZONA_CARGA == 'R':

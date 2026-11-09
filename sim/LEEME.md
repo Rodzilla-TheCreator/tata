@@ -14,19 +14,27 @@ repo sabe hoy del pasillo de 3.00 m:
 
 **El pasillo es el B de RETHINK según el DXF** (`datos/sectorA.json`, filas verde | azul), no el tramo
 de 7 bahías que usaba el planificador hasta ahora: **7 bahías, un hueco de 2.66 m sin rack, 6 bahías** por
-lado, y **3.05 m** del último poste a la pared del fondo. Ahí, **junto al último rack del lado R, está la
-zona de carga** (maje, 09-nov): el montacargas humano deja los cubos que entran. Los que salen los recoge en
-el principio del pasillo (`docs/09`). Se activa con `bahias.geometria('dxf')`; sin eso, todo el repo sigue
-con la geometría de siempre y da los mismos números.
+lado, **cerrado con pared en las dos puntas**: 3.07 m antes del primer poste y 3.05 m después del último.
+En esos dos huecos, **del lado R**, están las zonas del montacargas humano (maje, 09-nov):
+
+- **zona de descarga**, junto al primer rack: ahí TaTa deja lo que sale y el humano lo recoge;
+- **zona de carga**, junto al último rack, del mismo ancho: ahí el humano deja lo que entra.
+
+Se activa con `bahias.geometria('dxf')`: la descarga es la «bahía» 0 y la carga la 14, las dos al piso.
+Sin eso, todo el repo sigue con la geometría de siempre y da los mismos números.
+
+**Lo que sale del modelo:** en la zona de descarga el equipo **solo entra y sale con las uñas hacia la
+pared del principio**. Girando al revés, el culo (a 1.93 m del eje de carga) pega en la pared, que está a
+1.5 m del centro del cubo. El planificador lo encuentra solo.
 
 El turno son cuatro pedidos con ese flujo:
 
 | # | Tipo | Qué hace |
 |---|---|---|
-| 1 | salida | el caso de maje: el equipo en 3L va a **5 3 Ra** y lo deja en el principio |
-| 2 | entrada | del principio a la zona de carga, toma el cubo y lo deja en **11 2 Lb** (tramo 2) |
-| 3 | salida | de 11 2 Lb a **9 5 Rb** (N5) y al principio |
-| 4 | entrada | del principio a la zona de carga y a **3 1B La** (sobre el cubo de N1) |
+| 1 | salida | el caso de maje: el equipo en 3L va a **5 3 Ra** y lo deja en la zona de descarga |
+| 2 | entrada | de la zona de descarga a la de carga, toma el cubo y lo deja en **11 2 Lb** (tramo 2) |
+| 3 | salida | de 11 2 Lb a **9 5 Rb** (N5) y a la zona de descarga |
+| 4 | entrada | de la zona de descarga a la de carga y a **3 1B La** (sobre el cubo de N1) |
 
 ## Regenerar
 
@@ -44,8 +52,6 @@ python sim/build.py         # escribe sim/simulacion.html con los datos adentro
 - Altura de viaje de las uñas 0.05 m; cada etapa quieta dura al menos 0.8 s.
 - APROXIMA / RETROCEDE: el equipo avanza 0.163 m para que las uñas entren los 1.20 del IBC (1.067 de
   pantógrafo no alcanzan con la punta a 3 cm de la cara).
-- `X0` 3.00 m (del punto donde se deja la salida al primer poste) y la zona del principio (6 × 3 m): el DXF
-  tiene muros con aberturas a 3.07 m del primer poste y no se sabe por dónde pasa el humano.
 - El hueco de 2.66 m entre tramos se trata como si fuera cara de rack (conservador): no se sabe si es un
   pasillo cruzado o una columna. El segundo tramo mide 14.94 en el modelo y 14.91 en el DXF.
 - `PX_MIN` 20 px, `ANG_MAX` 60°.

@@ -165,7 +165,7 @@ input[type=range]{width:100%;accent-color:var(--amarillo)}
   </div>
 
   <div class="pie">
-    <div>Pasillo B de RETHINK según el DXF (<code>datos/sectorA.json</code>): 7 bahías, un hueco de 2.66 m y 6 bahías por lado, y 3.05 m hasta la pared del fondo, donde está la zona de carga junto al último rack R. El humano deja ahí lo que entra y recoge lo que sale en el principio (<code>docs/09</code>). Rutas del planificador Hybrid A* (<code>analisis/planificador_rutas.py</code>, modelo v3b): 2.91 m de culo a punta, culo de la ficha, timón a 90°, 6 cm de retranqueo. Elevación y empuje de la ficha VDI. Marcha a 1.5 m/s como máximo, el sobre del kit, dentro de los 5–8 km/h de los operadores; maniobra, aceleración y freno son supuestos. Datos: <code>sim/exportar.py</code> · <span id="gen"></span>.</div>
+    <div>Pasillo B de RETHINK según el DXF (<code>datos/sectorA.json</code>): 7 bahías, un hueco de 2.66 m y 6 bahías por lado, con pared en las dos puntas (3.07 m antes del primer poste y 3.05 m después del último). Junto al primer rack R está la zona de descarga, donde el humano recoge lo que sale; junto al último rack R, la de carga, donde deja lo que entra (maje, 09-nov). Rutas del planificador Hybrid A* (<code>analisis/planificador_rutas.py</code>, modelo v3b): 2.91 m de culo a punta, culo de la ficha, timón a 90°, 6 cm de retranqueo. Elevación y empuje de la ficha VDI. Marcha a 1.5 m/s como máximo, el sobre del kit, dentro de los 5–8 km/h de los operadores; maniobra, aceleración y freno son supuestos. Datos: <code>sim/exportar.py</code> · <span id="gen"></span>.</div>
   </div>
 </div>
 
@@ -206,7 +206,7 @@ let seguir = true, verCam = true;
 function dimensiones(c){ const r = c.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
   c.width = Math.round(r.width*dpr); c.height = Math.round(r.height*dpr); return {w:r.width,h:r.height,dpr}; }
 let V = dimensiones(cv);
-const X_MIN = -G.ZONA_ATRAS, X_MAX = G.X_FONDO + 0.4, Y_LIM = G.PASILLO/2 + G.FONDO_RACK + 0.25;
+const X_MIN = -G.ZONA_ATRAS - 0.6, X_MAX = G.X_FONDO + 0.4, Y_LIM = G.PASILLO/2 + G.FONDO_RACK + 0.25;
 function camara(e){
   const kY = V.h / (2*Y_LIM + 0.4);
   if (!seguir){ const k = Math.min(V.w/(X_MAX-X_MIN), kY); return {k, cx:(X_MIN+X_MAX)/2, cy:0}; }
@@ -238,10 +238,14 @@ function dibujar(e){
   const H2 = G.PASILLO/2;
   // el principio del pasillo (salidas: ahí las recoge el montacargas humano) y la zona de carga del fondo
   const ZC = G.zona_carga, sz = ZC.lado==='L'?1:-1, fRot = `600 ${Math.max(10,Math.min(14,CAM.k*.28))}px Barlow Condensed`;
-  rect(-G.ZONA_ATRAS, -G.ZONA_ANCHO/2, G.X0, G.ZONA_ANCHO/2, C.zona, null);
+  const ZD = G.zona_descarga, sd = ZD && ZD.lado==='L'?1:-1;
+  if (ZD){ rect(ZD.x0, sd*H2, ZD.x1, sd*(H2+G.FONDO_RACK+D.supuestos.REC[0]), C.zona, C.am, 1.2);
+    rect(ZD.x0-0.25, -H2-G.FONDO_RACK, ZD.x0, H2+G.FONDO_RACK, C.rack, null); }
+  else rect(-G.ZONA_ATRAS, -G.ZONA_ANCHO/2, G.X0, G.ZONA_ANCHO/2, C.zona, null);
   rect(ZC.x0, sz*H2, ZC.x1, sz*(H2+G.FONDO_RACK+D.supuestos.REC[0]), C.zona, C.am, 1.2);
   cx.fillStyle=C.tenue; cx.font=fRot; cx.textAlign='center';
-  cx.fillText('PRINCIPIO · SALIDAS', sx(-G.ZONA_ATRAS/2+G.X0/2), sy(G.ZONA_ANCHO/2-0.35));
+  if (ZD) cx.fillText('ZONA DE DESCARGA', sx((ZD.x0+ZD.x1)/2), sy(sd*(H2+G.FONDO_RACK+0.2))+(sd<0?10:0));
+  else cx.fillText('PRINCIPIO · SALIDAS', sx(-G.ZONA_ATRAS/2+G.X0/2), sy(G.ZONA_ANCHO/2-0.35));
   cx.fillText('ZONA DE CARGA', sx((ZC.x0+ZC.x1)/2), sy(sz*(H2+G.FONDO_RACK+0.2))+(sz<0?10:0));
   // racks
   for (const s of [1,-1]){
@@ -269,6 +273,7 @@ function dibujar(e){
     // el hueco objetivo (y la zona de carga, en las entradas)
     const yc = (P.lado==='L'?1:-1)*(H2+D.supuestos.REC[0]+G.IBC[1]/2), xc = centroPos(P.x_bahia, P.pos);
     rect(xc-.56, yc-.66, xc+.56, yc+.66, null, C.am, 2.2);
+    if (P.tipo==='salida' && ZD){ const xz=(ZD.x0+ZD.x1)/2, yz=sd*(H2+D.supuestos.REC[0]+G.IBC[1]/2); rect(xz-.56, yz-.66, xz+.56, yz+.66, null, C.am, 2.2); }
     if (P.tipo==='entrada'){ const xz=(ZC.x0+ZC.x1)/2, yz=sz*(H2+D.supuestos.REC[0]+G.IBC[1]/2); rect(xz-.56, yz-.66, xz+.56, yz+.66, null, C.am, 2.2); }
   }
   // marcas ArUco y lo que ven las cámaras
@@ -340,10 +345,10 @@ const tr = $('tramos');
 D.pedidos.forEach((P,n)=>{ const d=document.createElement('div'); d.style.left=(P.t0/T_FIN*100)+'%'; d.style.width=((P.t1-P.t0)/T_FIN*100)+'%';
   d.style.background = n%2? 'color-mix(in srgb, var(--amarillo) 45%, var(--panel))' : 'color-mix(in srgb, var(--amarillo) 70%, var(--panel))';
   d.textContent = P.tipo==='entrada' ? `↓ ${P.hueco}` : `${P.hueco} ↑`;
-  d.title = P.tipo==='entrada' ? `Pedido ${P.n}, entrada: zona de carga → ${P.hueco}` : `Pedido ${P.n}, salida: ${P.hueco} → principio`; d.onclick=()=>{ irA(P.t0); }; tr.appendChild(d); });
+  d.title = P.tipo==='entrada' ? `Pedido ${P.n}, entrada: zona de carga → ${P.hueco}` : `Pedido ${P.n}, salida: ${P.hueco} → zona de descarga`; d.onclick=()=>{ irA(P.t0); }; tr.appendChild(d); });
 $('t').max = T_FIN.toFixed(2);
 function textoHueco(P){ const nv = P.nivel==='1A'?'N1 al piso':P.nivel==='1B'?'N1 sobre el cubo':'N'+P.nivel;
-  const que = P.tipo==='entrada' ? `Entrada: de la zona de carga a ${P.hueco}` : `Salida: de ${P.hueco} al principio`;
+  const que = P.tipo==='entrada' ? `Entrada: de la zona de carga a ${P.hueco}` : `Salida: de ${P.hueco} a la zona de descarga`;
   return `Pedido ${P.n} de ${D.pedidos.length}. ${que} (bahía ${P.x_bahia}, ${nv}, lado ${P.lado}, posición ${P.pos}). Vacío ${P.ida.largo} m (${P.ida.cambios} cambio${P.ida.cambios===1?'':'s'}), cargado ${P.vuelta.largo} m.`; }
 let ultEtapa = '', sinMarca = 0;
 function parte(e){

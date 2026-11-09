@@ -107,15 +107,24 @@ def nombre_parte(n, ida):
     return n
 
 
+DESCARGA = None             # la zona de descarga como «bahía» 0 (lado R, al piso): se arma adentro de geometria('dxf')
+
+
 def _pose(pl, lugar):
     if lugar == 'principio':
         return B.pose_descarga(pl.xpiv, pl.lch)
     return B.pose_en_pasillo(lugar, 'descarga')
 
 
+def _lugar(v):
+    """'principio' es la zona de descarga cuando la geometría la tiene."""
+    return DESCARGA if (v == 'principio' and DESCARGA) else v
+
+
 def _ruta(pl, desde, hasta, cargado, log, txt):
     """Ruta del planificador entre poses o direcciones (str con espacio = dirección de bahía)."""
     t = time.time()
+    desde, hasta = _lugar(desde), _lugar(hasta)
     es_dir = lambda v: isinstance(v, B.Direccion) or (isinstance(v, str) and ' ' in v)
     if es_dir(desde):
         objetivo = hasta if es_dir(hasta) else _pose(pl, hasta)
@@ -218,7 +227,12 @@ def armar(pl, rutas):
                           t1=t_toma, tipo='rack' if tipo == 'salida' else 'zona'))
         mover_ruta(vuelta, False, True)
         pose = vuelta['total']['poses'][-1]
-        if tipo == 'salida':                                  # deja en el piso del principio
+        if tipo == 'salida' and DESCARGA:                     # deja en la zona de descarga, al piso
+            donde, t_dep = etapas(pose, DESCARGA, False)
+            cubos.append(dict(x=donde[0], y=donde[1], th=donde[2], t0=t_dep, t1=t_dep + 10.0, tipo='principio'))
+            p = S[-1]
+            S.append(dict(t=t, x=p['x'], y=p['y'], th=p['th'], d=0.0, sg=0, v=0.0, e='LIBRE', c=False))
+        elif tipo == 'salida':                                # deja en el piso del principio (sin zona)
             m, t1 = quieto(pose, 'DEJA', t, max(H_VIAJE / V_BAJA[1], T_MIN), True)
             S.extend(m)
             vert('DEJA', 'uñas')
@@ -260,9 +274,16 @@ def holguras(pl, S):
         if s['e'] in EN_EL_CUBO:
             X, Y = X[~eq.frente], Y[~eq.frente]
         luz = B.en_luz(X)
-        en_rack = (X >= B.X0) & (X <= B.x_fondo())
+        en_rack = (X >= (-B.ZONA_ATRAS if B.ZONA_DESCARGA else B.X0)) & (X <= B.x_fondo())
         sup = np.where(luz, B.HALF + pl.rec[0], B.HALF)
         inf = np.where(luz, -(B.HALF + pl.rec[1]), -B.HALF)
+        if B.ZONA_DESCARGA:                      # la zona de descarga, al principio (Mundo)
+            zd = X <= B.X0
+            if B.ZONA_DESCARGA == 'R':
+                inf = np.where(zd, -(B.HALF + B.FONDO_RACK + B.REC_R), inf)
+            else:
+                sup = np.where(zd, B.HALF + B.FONDO_RACK + B.REC_L, sup)
+            hol_pared = X + B.ZONA_ATRAS
         if B.ZONA_CARGA:                         # la zona de carga: piso hasta el fondo del rack (Mundo)
             zc = X >= B.fin_rack()
             if B.ZONA_CARGA == 'R':
@@ -271,6 +292,8 @@ def holguras(pl, S):
                 sup = np.where(zc, B.HALF + B.FONDO_RACK + B.REC_L, sup)
         hol = np.minimum(sup - Y, Y - inf)
         hol = np.minimum(hol, B.x_fondo() - X)   # la pared del fondo
+        if B.ZONA_DESCARGA:
+            hol = np.minimum(hol, hol_pared)     # la pared del principio
         hol = np.where(en_rack, hol, np.inf)
         j = int(np.argmin(hol))
         out.append(None if not np.isfinite(hol[j]) else [round(float(hol[j]), 4), round(float(X[j]), 3),
@@ -309,10 +332,11 @@ def vista(pl, S):
 
 
 def main():
-    global ZONA
+    global ZONA, DESCARGA
     log = lambda s: print(s, flush=True)
     t0 = time.time()
     with B.geometria('dxf'):
+        DESCARGA = repr(B.Direccion(0, '1A', B.ZONA_DESCARGA, 'c'))   # '0 1A Rc'
         ZONA = repr(B.Direccion(B.N + 1, '1A', B.ZONA_CARGA, 'c'))     # '14 1A Rc': el planificador pide texto
         pl = P.Planificador(modelo='v3')
         rutas = planificar_turno(pl, log)
@@ -332,6 +356,7 @@ def main():
                    bahias=[[round(v, 3) for v in B.bahia_x(n)] for n in range(1, B.N + 1)],
                    postes=[round(x, 3) for x in B.postes()],
                    zona_carga=dict(lado=B.ZONA_CARGA, x0=round(B.fin_rack(), 3), x1=round(B.x_fondo(), 3)),
+                   zona_descarga=dict(lado=B.ZONA_DESCARGA, x0=-B.ZONA_ATRAS, x1=round(B.X0, 3)),
                    hueco=[round(B.bahia_x(B.CORTE)[1] + B.POSTE, 3), round(B.bahia_x(B.CORTE + 1)[0] - B.POSTE, 3)],
                    fuente='datos/sectorA.json (pasillo B: verde | azul) + zona de carga de maje')
         datos = dict(
@@ -342,8 +367,8 @@ def main():
                            H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), montaje='A2', marcas_cada=2,
                            PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)),
                            nota='VMAX 1.5 m/s = sobre del kit, dentro de los 5–8 km/h que dicen los operadores. '
-                                'SUPUESTOS: VMAN, ACC, H_VIAJE, T_MIN, PX_MIN, ANG_MAX, X0 (principio → primer '
-                                'poste), y el hueco entre tramos tratado como cara de rack'),
+                                'SUPUESTOS: VMAN, ACC, H_VIAJE, T_MIN, PX_MIN, ANG_MAX, y el hueco entre tramos tratado '
+                                'como cara de rack'),
             geo=geo,
             equipo=dict(piezas=piezas, xpiv=pl.xpiv, a_mast=a_mast, a_pata=a_mast + P.L_ANCHO,
                         a_punta=B.a_punta(pl.xpiv, pl.lch), wb=P.WB, rueda=[0.343, 0.140], w_capo=P.W_CAPO,
