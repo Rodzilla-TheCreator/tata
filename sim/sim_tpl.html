@@ -1,0 +1,419 @@
+<title>Pasillo de 3.00 m</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Plan view of the aisle across the full width with its timeline; the instruments sit below it in a dash grid. */
+:root{
+  --suelo:#e9ebe7; --tinta:#1c2328; --tenue:#5d676e; --linea:#c7ccc8; --panel:#f6f7f4;
+  --rack:#7b8790; --amarillo:#f2b705; --acero:#3b4349; --ibc:#c9d3d8; --ibc-borde:#7e8e98;
+  --cam:#0f8b8d; --cam-suave:rgba(15,139,141,.13); --ok:#2f8a3e; --aviso:#c77700; --mal:#c62f2f;
+  --zona:rgba(242,183,5,.13); --sombra:rgba(28,35,40,.08);
+  --f-titulo:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-texto:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-dato:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --suelo:#171b1e; --tinta:#e6e9e6; --tenue:#98a2a8; --linea:#323a40; --panel:#1f2428;
+  --rack:#8a96a0; --amarillo:#f5bd1f; --acero:#cfd6da; --ibc:#3a4850; --ibc-borde:#8fa1ab;
+  --cam:#3cc2c4; --cam-suave:rgba(60,194,196,.14); --ok:#55b465; --aviso:#e39a2a; --mal:#ef5b5b;
+  --zona:rgba(245,189,31,.10); --sombra:rgba(0,0,0,.3); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --suelo:#171b1e; --tinta:#e6e9e6; --tenue:#98a2a8; --linea:#323a40; --panel:#1f2428;
+  --rack:#8a96a0; --amarillo:#f5bd1f; --acero:#cfd6da; --ibc:#3a4850; --ibc-borde:#8fa1ab;
+  --cam:#3cc2c4; --cam-suave:rgba(60,194,196,.14); --ok:#55b465; --aviso:#e39a2a; --mal:#ef5b5b;
+  --zona:rgba(245,189,31,.10); --sombra:rgba(0,0,0,.3); color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--suelo);color:var(--tinta);font-family:var(--f-texto);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 28px}
+.envoltura{max-width:1280px;margin:0 auto;display:grid;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px}
+h1{font-family:var(--f-titulo);font-weight:700;font-size:30px;letter-spacing:.01em;margin:0;text-wrap:balance}
+.modelo{font-family:var(--f-dato);font-size:12px;color:var(--tenue)}
+.principal{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.lienzo{background:var(--panel);border:1px solid var(--linea);border-radius:6px;overflow:hidden;min-width:0}
+.barra{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--linea)}
+.barra .sep{flex:1}
+canvas{display:block;width:100%}
+#plano{height:440px}
+@media (max-width:600px){#plano{height:300px}}
+button,select{font:500 13px var(--f-texto);color:var(--tinta);background:var(--suelo);border:1px solid var(--linea);
+  border-radius:4px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--tenue)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--amarillo);outline-offset:1px}
+button[aria-pressed="true"]{background:var(--tinta);color:var(--suelo);border-color:var(--tinta)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.linea-tiempo{padding:10px 12px 12px;display:grid;gap:6px}
+.lt-fila{display:flex;align-items:center;gap:10px}
+#reloj{font:500 13px var(--f-dato);font-variant-numeric:tabular-nums;min-width:118px}
+input[type=range]{width:100%;accent-color:var(--amarillo)}
+#tramos{position:relative;height:16px;border-radius:3px;overflow:hidden;background:var(--linea)}
+#tramos div{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;
+  font:600 11px var(--f-titulo);letter-spacing:.06em;color:var(--tinta);border-right:1px solid var(--panel);cursor:pointer}
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;min-width:0;align-items:start}
+.caja{background:var(--panel);border:1px solid var(--linea);border-radius:6px;padding:12px}
+.caja h2{font:600 13px var(--f-titulo);letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);margin:0 0 8px}
+.etapa{font:700 34px/1 var(--f-titulo);letter-spacing:.02em}
+.pedido{font-size:13px;color:var(--tenue);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.chip{font:600 11px var(--f-titulo);letter-spacing:.06em;padding:2px 6px;border-radius:3px;border:1px solid var(--linea);color:var(--tenue)}
+.chip.hecha{color:var(--tinta);border-color:var(--tenue)}
+.chip.ahora{background:var(--amarillo);border-color:var(--amarillo);color:#1c2328}
+.datos{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.dato .n{font:500 22px/1.1 var(--f-dato);font-variant-numeric:tabular-nums}
+.dato .u{font-size:12px;color:var(--tenue)}
+.dato .l{font-size:12px;color:var(--tenue)}
+.margen{display:flex;align-items:center;gap:10px}
+.pill{font:600 12px var(--f-titulo);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff}
+.pill.ok{background:var(--ok)} .pill.aviso{background:var(--aviso)} .pill.mal{background:var(--mal)} .pill.nada{background:var(--tenue)}
+.dos{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:stretch}
+#mastil{height:210px}
+.camfila{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:3px 0;border-bottom:1px dashed var(--linea)}
+.camfila:last-of-type{border-bottom:0}
+.camfila b{font:500 13px var(--f-dato)}
+.nota{font-size:12px;color:var(--tenue);margin:8px 0 0}
+.rig{display:grid;gap:8px}
+.rig .estado{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rig .grande{font:700 20px var(--f-titulo);letter-spacing:.04em}
+.botones{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#hongo{background:var(--mal);color:#fff;border-color:var(--mal);font-weight:600}
+#latidoBar{height:6px;border-radius:3px;background:var(--linea);overflow:hidden}
+#latidoBar i{display:block;height:100%;width:0;background:var(--ok)}
+#bitacora{font:12px/1.5 var(--f-dato);max-height:118px;overflow:auto;margin:0;padding:0;list-style:none;color:var(--tenue)}
+#bitacora li b{color:var(--tinta);font-weight:500}
+.pie{font-size:12px;color:var(--tenue);display:grid;gap:4px}
+.pie code{font-family:var(--f-dato)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="envoltura">
+  <header>
+    <h1>Pasillo de 3.00 m · un turno del EDR18N2</h1>
+    <span class="modelo" id="modelo"></span>
+  </header>
+
+  <div class="principal">
+    <div class="lienzo">
+      <div class="barra">
+        <button id="play" aria-pressed="false">▶ Correr</button>
+        <select id="vel" aria-label="Velocidad de la simulación">
+          <option value="1">1×</option><option value="2">2×</option><option value="4" selected>4×</option><option value="8">8×</option><option value="16">16×</option>
+        </select>
+        <span class="sep"></span>
+        <button id="vista" aria-pressed="true" title="Seguir al equipo o ver el pasillo completo">Seguir al equipo</button>
+        <button id="vercam" aria-pressed="true">Cámaras</button>
+      </div>
+      <canvas id="plano" aria-label="Vista de planta del pasillo con el montacargas"></canvas>
+      <div class="linea-tiempo">
+        <div class="lt-fila"><span id="reloj">0.0 s</span><input id="t" type="range" min="0" max="1" step="0.05" value="0" aria-label="Tiempo"></div>
+        <div id="tramos" aria-label="Pedidos del turno"></div>
+      </div>
+    </div>
+
+    <div class="dash">
+      <section class="caja" aria-live="polite">
+        <h2>Etapa de la FSM</h2>
+        <div class="etapa" id="etapa">LIBRE</div>
+        <div class="pedido" id="pedido"></div>
+        <div class="chips" id="chips"></div>
+      </section>
+
+      <section class="caja">
+        <h2>Al pasar por los postes</h2>
+        <div class="margen"><span class="pill nada" id="mPill">—</span><span class="dato"><span class="n" id="mNum">—</span> <span class="u">cm</span></span></div>
+        <p class="nota" id="mDonde">Margen del punto más cercano contra la cara del poste, o contra la cara del cubo de N1 en la luz de la bahía (6 cm más atrás).</p>
+        <div class="datos" style="margin-top:10px">
+          <div class="dato"><div class="l">Velocidad</div><span class="n" id="vNum">0.00</span> <span class="u">m/s</span></div>
+          <div class="dato"><div class="l">Timón (rueda motriz)</div><span class="n" id="dNum">0</span> <span class="u">°</span></div>
+          <div class="dato"><div class="l">Rumbo de las uñas</div><span class="n" id="thNum">0</span> <span class="u">°</span></div>
+          <div class="dato"><div class="l">Sentido</div><span class="n" id="sNum" style="font-size:16px">quieto</span></div>
+        </div>
+      </section>
+
+      <section class="caja">
+        <h2>Mástil y pantógrafo</h2>
+        <div class="dos">
+          <canvas id="mastil" aria-label="Altura de las uñas con los niveles del rack"></canvas>
+          <div class="datos" style="grid-template-columns:1fr;align-content:start">
+            <div class="dato"><div class="l">Altura de las uñas</div><span class="n" id="hNum">0.00</span> <span class="u">m</span></div>
+            <div class="dato"><div class="l">Empuje</div><span class="n" id="eNum">0.00</span> <span class="u">/ 1.067 m</span></div>
+            <div class="dato"><div class="l">Carga</div><span class="n" id="cNum" style="font-size:16px">vacío</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="caja">
+        <h2>ArUco a la vista · montaje A2</h2>
+        <div class="camfila"><span>Lateral (capota, izquierda)</span><b id="camL">—</b></div>
+        <div class="camfila"><span>Trasera en diagonal</span><b id="camT">—</b></div>
+        <div class="camfila"><span>Sin ninguna marca hace</span><b id="camSin">—</b></div>
+        <p class="nota">Marcas de 15 cm sobre los postes cada 2 bahías, en las dos caras. Ve una marca si mide ≥ 20 px y la mira a ≤ 60° (supuestos de <code>visibilidad.py</code>).</p>
+      </section>
+
+      <section class="caja rig">
+        <h2>El rig: latido y pie</h2>
+        <div class="estado"><span class="grande" id="pieTxt">Pie pisado</span><span class="pill ok" id="piePill">latido ok</span></div>
+        <div id="latidoBar" title="Tiempo desde el último latido, sobre 200 ms"><i></i></div>
+        <div class="botones">
+          <button id="cortar">Cortar latido</button>
+          <button id="hongo">Paro de hongo</button>
+          <button id="volver" disabled>Volver el latido</button>
+          <button id="rearme" disabled>Rearmar (GPIO32)</button>
+        </div>
+        <ul id="bitacora" aria-label="Bitácora"></ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="pie">
+    <div>Rutas del planificador Hybrid A* (<code>analisis/planificador_rutas.py</code>, modelo v3b): 2.91 m de culo a punta, culo de la ficha, timón a 90°, postes cada 2.47 m con 6 cm de retranqueo. Tiempos de elevación y empuje de la ficha VDI. Velocidades de marcha, aceleración y freno: supuestos. Datos: <code>sim/exportar.py</code> · <span id="gen"></span>.</div>
+  </div>
+</div>
+
+<script>
+const D = /*DATOS*/null;
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const G = D.geo, EQ = D.equipo, S = D.S, VV = D.V, HH = D.H;
+const T_FIN = S[S.length-1][0];
+const ETAPAS_IDA = ['RECTA','GIRO','ELEVA','APROXIMA','EXTIENDE','TOMA','RETRAE','RETROCEDE','BAJA','DESGIRA','VUELTA','TRANSITO','DEJA'];
+const DEC_FRENO = 1.2;      // m/s², SUPUESTO: el freno de resorte al soltar el pie
+const WD_MS = 200;
+const HFOV = 54.3*Math.PI/180, RANGO_CAM = 623.4*0.15/20;   // donde la marca baja de 20 px
+
+$('modelo').textContent = `v3b · XPIV ${D.supuestos.XPIV} · δmax 90° · retranqueo ${Math.round(D.supuestos.REC[0]*100)} cm · ${D.pedidos.length} pedidos · ${T_FIN.toFixed(0)} s`;
+$('gen').textContent = 'generado ' + D.generado;
+
+// ── interpolación ───────────────────────────────────────────────
+function busca(arr, t){ let lo=0, hi=arr.length-1; while(lo<hi){ const m=(lo+hi+1)>>1; if(arr[m][0]<=t) lo=m; else hi=m-1; } return lo; }
+function angInterp(a,b,f){ let d=b-a; while(d>Math.PI) d-=2*Math.PI; while(d<-Math.PI) d+=2*Math.PI; return a+d*f; }
+function estado(t){
+  const i = busca(S,t), a = S[i], b = S[Math.min(i+1,S.length-1)];
+  const f = b[0]>a[0] ? Math.min(1,Math.max(0,(t-a[0])/(b[0]-a[0]))) : 0;
+  const e = { t, i, x:a[1]+(b[1]-a[1])*f, y:a[2]+(b[2]-a[2])*f, th:angInterp(a[3],b[3],f), d:a[4], sg:a[5],
+    v:a[6]+(b[6]-a[6])*f, etapa:a[7], cargado:!!a[8], hol:HH[i] };
+  const j = busca(VV,t), p = VV[j], q = VV[Math.min(j+1,VV.length-1)];
+  const g = q[0]>p[0] ? Math.min(1,Math.max(0,(t-p[0])/(q[0]-p[0]))) : 1;
+  e.h = p[1]+(q[1]-p[1])*g; e.ext = p[2]+(q[2]-p[2])*g; e.ibc = p[3];
+  if (['ELEVA','EXTIENDE','TOMA','RETRAE','BAJA','DEJA','APROXIMA','RETROCEDE'].includes(p[4]) && q[4]===p[4] && q[0]>p[0] && t<q[0]) e.etapa = p[4];
+  e.ped = D.pedidos.findIndex(P => t>=P.t0-1e-6 && t<P.t1+1e-6);
+  if (e.ped<0) e.ped = D.pedidos.length-1;
+  return e;
+}
+// pose del equipo al empezar la TOMA de cada pedido → dónde está el cubo en el rack
+const tomas = D.pedidos.map(P => { const k = S.findIndex(s => s[0]>=P.t0 && s[7]==='TOMA'); return k>=0 ? S[k] : null; });
+
+// ── plano ───────────────────────────────────────────────────────
+const cv = $('plano'), cx = cv.getContext('2d');
+let seguir = true, verCam = true;
+function dimensiones(c){ const r = c.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
+  c.width = Math.round(r.width*dpr); c.height = Math.round(r.height*dpr); return {w:r.width,h:r.height,dpr}; }
+let V = dimensiones(cv);
+const X_MIN = -G.ZONA_ATRAS, X_MAX = G.X_FONDO + 0.4, Y_LIM = G.PASILLO/2 + G.FONDO_RACK + 0.25;
+function camara(e){
+  const kY = V.h / (2*Y_LIM + 0.4);
+  if (!seguir){ const k = Math.min(V.w/(X_MAX-X_MIN), kY); return {k, cx:(X_MIN+X_MAX)/2, cy:0}; }
+  const k = kY;
+  const medio = V.w/(2*k);
+  return {k, cx:Math.min(Math.max(e.x, X_MIN+medio), X_MAX-medio), cy:0};
+}
+let CAM;
+const sx = x => (x-CAM.cx)*CAM.k + V.w/2, sy = y => V.h/2 - (y-CAM.cy)*CAM.k;
+function poly(pts, fill, stroke, lw){ cx.beginPath(); pts.forEach((p,i)=> i?cx.lineTo(sx(p[0]),sy(p[1])):cx.moveTo(sx(p[0]),sy(p[1]))); cx.closePath();
+  if(fill){cx.fillStyle=fill;cx.fill();} if(stroke){cx.strokeStyle=stroke;cx.lineWidth=lw||1;cx.stroke();} }
+function rect(x0,y0,x1,y1,fill,stroke,lw){ poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]],fill,stroke,lw); }
+function local(e, a, b){ const c=Math.cos(e.th), s=Math.sin(e.th); return [e.x+a*c-b*s, e.y+a*s+b*c]; }
+function ibcEn(e0, a, color, borde){            // el IBC: base de tarima con la jaula en cruz
+  const pts=[[a-0.6,-0.5],[a+0.6,-0.5],[a+0.6,0.5],[a-0.6,0.5]].map(p=>local(e0,p[0],p[1]));
+  poly(pts,color,borde,1.2); cx.beginPath(); cx.moveTo(sx(pts[0][0]),sy(pts[0][1])); cx.lineTo(sx(pts[2][0]),sy(pts[2][1]));
+  cx.moveTo(sx(pts[1][0]),sy(pts[1][1])); cx.lineTo(sx(pts[3][0]),sy(pts[3][1])); cx.strokeStyle=borde; cx.lineWidth=.6; cx.stroke();
+}
+function bahiaX(n){ const x0 = G.X0 + G.POSTE + (n-1)*G.PASO; return [x0, x0+G.BAHIA]; }
+function centroPos(n,p){ const [x0]=bahiaX(n); if(p==='c') return x0+G.BAHIA/2; const g=(G.BAHIA-2*G.IBC[0])/3; return p==='a'? x0+g+G.IBC[0]/2 : x0+2*g+1.5*G.IBC[0]; }
+
+function dibujar(e){
+  CAM = camara(e);
+  const C = {suelo:css('--suelo'),tinta:css('--tinta'),tenue:css('--tenue'),linea:css('--linea'),panel:css('--panel'),rack:css('--rack'),
+    am:css('--amarillo'),acero:css('--acero'),ibc:css('--ibc'),ibcB:css('--ibc-borde'),cam:css('--cam'),camS:css('--cam-suave'),
+    ok:css('--ok'),aviso:css('--aviso'),mal:css('--mal'),zona:css('--zona')};
+  cx.setTransform(V.dpr,0,0,V.dpr,0,0); cx.clearRect(0,0,V.w,V.h);
+  cx.fillStyle=C.panel; cx.fillRect(0,0,V.w,V.h);
+  const H2 = G.PASILLO/2;
+  // zona de descarga
+  rect(-G.ZONA_ATRAS, -G.ZONA_ANCHO/2, G.X0, G.ZONA_ANCHO/2, C.zona, null);
+  cx.fillStyle=C.tenue; cx.font=`600 ${Math.max(10,Math.min(14,CAM.k*.28))}px Barlow Condensed`; cx.textAlign='center';
+  cx.fillText('ZONA DE DESCARGA', sx(-G.ZONA_ATRAS/2+G.X0/2), sy(G.ZONA_ANCHO/2-0.35));
+  // racks
+  for (const s of [1,-1]){
+    rect(G.X0, s*H2, G.FIN_RACK, s*(H2+G.FONDO_RACK), C.suelo, C.rack, 1);
+    for (let n=1;n<=G.N;n++){ for (const p of ['a','b']){
+      if (D.pedidos.some((Q,k)=>Q.nivel==='1A' && Q.x_bahia===n && Q.pos===p && (Q.lado==='L'?1:-1)===s && tomas[k] && e.t>=tomas[k][0])) continue;
+      const xc = centroPos(n,p), y0 = s*(H2+D.supuestos.REC[0]), y1 = s*(H2+D.supuestos.REC[0]+G.IBC[1]);
+      rect(xc-.5,y0,xc+.5,y1,C.ibc,C.ibcB,.8);
+    }}
+    for (let k=0;k<=G.N;k++){ const x0 = G.X0 + k*G.PASO; rect(x0, s*H2, x0+G.POSTE, s*(H2+0.10), C.rack, C.tinta, .6);
+      rect(x0, s*(H2+G.FONDO_RACK-0.10), x0+G.POSTE, s*(H2+G.FONDO_RACK), C.rack, null); }
+    cx.fillStyle=C.tenue; cx.textAlign='center'; cx.font=`500 ${Math.max(9,Math.min(12,CAM.k*.2))}px IBM Plex Mono`;
+    for (let n=1;n<=G.N;n++){ const [a,b]=bahiaX(n); cx.fillText(`${n}${s>0?'L':'R'}`, sx((a+b)/2), sy(s*(H2+G.FONDO_RACK+0.14))+4); }
+  }
+  // eje del pasillo y pared del fondo
+  cx.setLineDash([6,6]); cx.strokeStyle=C.linea; cx.lineWidth=1; cx.beginPath(); cx.moveTo(sx(G.X0),sy(0)); cx.lineTo(sx(G.X_FONDO),sy(0)); cx.stroke(); cx.setLineDash([]);
+  rect(G.X_FONDO, -H2-G.FONDO_RACK, G.X_FONDO+0.25, H2+G.FONDO_RACK, C.rack, null);
+  // recorrido del pedido
+  const P = D.pedidos[e.ped];
+  if (P){ cx.beginPath(); let primero=true;
+    for (const s of S){ if (s[0]<P.t0-1e-6||s[0]>P.t1) continue; const X=sx(s[1]),Y=sy(s[2]); if(primero){cx.moveTo(X,Y);primero=false;} else cx.lineTo(X,Y); }
+    cx.strokeStyle=C.tenue; cx.globalAlpha=.45; cx.lineWidth=1.2; cx.setLineDash([3,4]); cx.stroke(); cx.setLineDash([]); cx.globalAlpha=1;
+    // el hueco objetivo
+    const yc = (P.lado==='L'?1:-1)*(H2+D.supuestos.REC[0]+G.IBC[1]/2), xc = centroPos(P.x_bahia, P.pos);
+    rect(xc-.56, yc-.66, xc+.56, yc+.66, null, C.am, 2.2);
+  }
+  // marcas ArUco y lo que ven las cámaras
+  const vis = D.vis[Math.min(D.vis.length-1, Math.floor(e.t/0.25))] || [0,[],[]];
+  const visL = new Set(vis[1]), visT = new Set(vis[2]);
+  for (const m of D.marcas){ const s = m.y>0?1:-1, ve = visL.has(m.id)||visT.has(m.id);
+    rect(m.x-0.075, m.y, m.x+0.075, m.y+s*0.03, ve?C.cam:C.tinta, null);
+    if (ve){ cx.beginPath(); cx.arc(sx(m.x), sy(m.y), 7, 0, 2*Math.PI); cx.strokeStyle=C.cam; cx.lineWidth=2; cx.stroke(); } }
+  if (verCam) for (const c of D.camaras){
+    const [px,py] = local(e,c.cx,c.cy), a = e.th + c.yaw;
+    cx.beginPath(); cx.moveTo(sx(px),sy(py));
+    for (let k=0;k<=16;k++){ const b=a-HFOV/2+HFOV*k/16; cx.lineTo(sx(px+RANGO_CAM*Math.cos(b)), sy(py+RANGO_CAM*Math.sin(b))); }
+    cx.closePath(); cx.fillStyle=C.camS; cx.fill(); cx.strokeStyle=C.cam; cx.globalAlpha=.5; cx.lineWidth=1; cx.stroke(); cx.globalAlpha=1;
+    cx.beginPath(); cx.arc(sx(px),sy(py),3.5,0,2*Math.PI); cx.fillStyle=C.cam; cx.fill();
+  }
+  // cubos en el rack, en las uñas o dejados en la descarga
+  D.pedidos.forEach((Q,n)=>{ const tm = tomas[n]; if(!tm) return;
+    const e0 = {x:tm[1],y:tm[2],th:tm[3]}, aIbc = EQ.a_punta + D.supuestos.EXT_MAX - 0.6;
+    if (e.t < tm[0]) { if (n===e.ped) ibcEn(e0, aIbc, C.ibc, C.am); }
+    else if (e.t > Q.t1 && e.t < Q.t1 + 6) { cx.globalAlpha = Math.max(0, 1-(e.t-Q.t1)/6); ibcEn({x:G.descarga[0],y:G.descarga[1],th:G.descarga[2]}, EQ.a_punta-0.6, C.ibc, C.ibcB); cx.globalAlpha=1; }
+  });
+  // el equipo
+  const pz = e.ibc==='uñas' ? D.equipo.piezas.cargado : D.equipo.piezas.vacio;
+  const L = (a,b)=>local(e,a,b);
+  cx.save(); cx.shadowColor=css('--sombra'); cx.shadowBlur=6;
+  poly(pz[0].map(p=>L(p[0],p[1])), C.am, C.tinta, 1.3); cx.restore();
+  // rueda motriz y ruedas de carga
+  const rr = EQ.rueda[0]/2, rw = EQ.rueda[1]/2, ad = -EQ.wb;
+  const ca = Math.cos(e.d), sa = Math.sin(e.d);
+  poly([[-rr,-rw],[rr,-rw],[rr,rw],[-rr,rw]].map(p=>L(ad+p[0]*ca-p[1]*sa, p[0]*sa+p[1]*ca)), C.tinta, null);
+  for (const s of [1,-1]) poly([[-.064,-.046],[.064,-.046],[.064,.046],[-.064,.046]].map(p=>L(p[0], s*0.483+p[1])), C.tinta, null);
+  // torre, pantógrafo, carro y uñas
+  const am = EQ.a_mast, ext = e.ext;
+  poly([[am-0.02,-0.408],[am+0.18,-0.408],[am+0.18,0.408],[am-0.02,0.408]].map(p=>L(p[0],p[1])), C.acero, null);
+  if (ext>0.01){ cx.beginPath(); for (const s of [1,-1]){ const p1=L(am+0.18,s*0.3), p2=L(EQ.a_pata+ext-0.08,-s*0.3); cx.moveTo(sx(p1[0]),sy(p1[1])); cx.lineTo(sx(p2[0]),sy(p2[1])); }
+    cx.strokeStyle=C.acero; cx.lineWidth=2; cx.stroke(); }
+  poly([[EQ.a_pata+ext-0.08,-0.413],[EQ.a_pata+ext,-0.413],[EQ.a_pata+ext,0.413],[EQ.a_pata+ext-0.08,0.413]].map(p=>L(p[0],p[1])), C.acero, null);
+  for (let k=1;k<=2;k++) poly(pz[k].map(p=>L(p[0]+ext,p[1])), C.acero, null);
+  if (e.ibc==='uñas') ibcEn(e, EQ.a_punta+ext-0.6, C.ibc, C.ibcB);
+  // el punto que pasa más cerca
+  if (e.hol && e.v!==undefined){ const col = e.hol[0]<0.02?C.mal:e.hol[0]<0.05?C.aviso:C.ok;
+    cx.beginPath(); cx.arc(sx(e.hol[1]),sy(e.hol[2]),6,0,2*Math.PI); cx.strokeStyle=col; cx.lineWidth=2.4; cx.stroke(); }
+  // escala
+  cx.fillStyle=C.tenue; cx.strokeStyle=C.tenue; cx.lineWidth=1; const m1 = CAM.k;
+  cx.beginPath(); cx.moveTo(12,V.h-14); cx.lineTo(12+m1,V.h-14); cx.moveTo(12,V.h-18); cx.lineTo(12,V.h-10); cx.moveTo(12+m1,V.h-18); cx.lineTo(12+m1,V.h-10); cx.stroke();
+  cx.textAlign='left'; cx.font='500 11px IBM Plex Mono'; cx.fillText('1 m', 16+m1, V.h-10);
+}
+
+// ── mástil ──────────────────────────────────────────────────────
+const mc = $('mastil'), mx = mc.getContext('2d'); let MV = dimensiones(mc);
+function dibujarMastil(e){
+  const C = {tinta:css('--tinta'),tenue:css('--tenue'),linea:css('--linea'),am:css('--amarillo'),ibc:css('--ibc'),ibcB:css('--ibc-borde'),acero:css('--acero'),panel:css('--panel')};
+  mx.setTransform(MV.dpr,0,0,MV.dpr,0,0); mx.clearRect(0,0,MV.w,MV.h);
+  const top = 8, bot = MV.h-8, Hm = 7.2, yy = h => bot - (h/Hm)*(bot-top);
+  const P = D.pedidos[e.ped], obj = P ? P.nivel : null;
+  mx.font='500 10px IBM Plex Mono'; mx.textAlign='left';
+  for (const [nv, val] of Object.entries(G.ALTURAS)){
+    const y = yy(val[0]); mx.strokeStyle = nv===obj ? C.am : C.linea; mx.lineWidth = nv===obj ? 2 : 1;
+    mx.beginPath(); mx.moveTo(34,y); mx.lineTo(MV.w-4,y); mx.stroke();
+    mx.fillStyle = nv===obj ? C.tinta : C.tenue; mx.fillText('N'+nv, 2, y+3);
+  }
+  mx.fillStyle=C.acero; mx.fillRect(40, yy(Math.max(2.72, e.h+1.3)), 6, bot-yy(Math.max(2.72,e.h+1.3)));
+  const yh = yy(e.h), x0 = 46 + e.ext*22;
+  mx.fillStyle=C.tinta; mx.fillRect(x0, yh-2, 40, 3); mx.fillRect(x0-3, yh-18, 3, 18);
+  if (e.ibc==='uñas'){ const hb = (1.16/Hm)*(bot-top); mx.fillStyle=C.ibc; mx.strokeStyle=C.ibcB; mx.fillRect(x0+2, yh-2-hb, 36, hb); mx.strokeRect(x0+2, yh-2-hb, 36, hb); }
+}
+
+// ── la FSM, los datos y la línea de tiempo ─────────────────────
+const tr = $('tramos');
+D.pedidos.forEach((P,n)=>{ const d=document.createElement('div'); d.style.left=(P.t0/T_FIN*100)+'%'; d.style.width=((P.t1-P.t0)/T_FIN*100)+'%';
+  d.style.background = n%2? 'color-mix(in srgb, var(--amarillo) 45%, var(--panel))' : 'color-mix(in srgb, var(--amarillo) 70%, var(--panel))';
+  d.textContent = P.hueco; d.title = `Pedido ${P.n}: ${P.desde} → ${P.hueco} → descarga`; d.onclick=()=>{ irA(P.t0); }; tr.appendChild(d); });
+$('t').max = T_FIN.toFixed(2);
+function textoHueco(P){ const nv = P.nivel==='1A'?'N1 al piso':P.nivel==='1B'?'N1 sobre el cubo':'N'+P.nivel;
+  return `Pedido ${P.n} de ${D.pedidos.length}: ${P.hueco} — bahía ${P.x_bahia}, ${nv}, lado ${P.lado}, posición ${P.pos}. Ida ${P.ida.largo} m (${P.ida.cambios} cambio${P.ida.cambios===1?'':'s'}), vuelta ${P.vuelta.largo} m.`; }
+let ultEtapa = '', sinMarca = 0;
+function parte(e){
+  if (!e.hol) return 'fuera del rack';
+  const dx=e.hol[1]-e.x, dy=e.hol[2]-e.y, a=dx*Math.cos(e.th)+dy*Math.sin(e.th), b=-dx*Math.sin(e.th)+dy*Math.cos(e.th);
+  if (a < -EQ.xpiv+0.3) return 'el culo'; if (a > EQ.a_pata-0.02) return (e.ibc==='uñas' && Math.abs(b)>0.37) ? 'el IBC' : 'una uña'; return 'el chasis';
+}
+function panel(e){
+  $('etapa').textContent = enParo ? 'PARO' : e.etapa;
+  const P = D.pedidos[e.ped]; $('pedido').textContent = P ? textoHueco(P) : '';
+  const cs = $('chips'); if (cs.dataset.ped != e.ped){ cs.innerHTML=''; cs.dataset.ped=e.ped; for (const s of ETAPAS_IDA){ const c=document.createElement('span'); c.className='chip'; c.textContent=s; c.dataset.s=s; cs.appendChild(c);} }
+  let paso = true; for (const c of cs.children){ c.classList.toggle('ahora', c.dataset.s===e.etapa); }
+  const orden = ETAPAS_IDA.indexOf(e.etapa); [...cs.children].forEach((c,k)=> c.classList.toggle('hecha', k<orden));
+  if (e.etapa!==ultEtapa){ if (ultEtapa) log(`${e.t.toFixed(1)} s`, e.etapa); ultEtapa=e.etapa; }
+  const pill=$('mPill');
+  if (e.hol){ const cm=e.hol[0]*100; $('mNum').textContent=cm.toFixed(1); pill.className='pill '+(cm<2?'mal':cm<5?'aviso':'ok'); pill.textContent=cm<0?'choque':cm<2?'justo':cm<5?'ajustado':'holgado';
+    $('mDonde').textContent=`Lo da ${parte(e)}, contra ${Math.abs(e.hol[2])>G.PASILLO/2+0.001?'la cara del cubo de N1, dentro de la luz de la bahía':'la cara del poste'}.`; }
+  else { $('mNum').textContent='—'; pill.className='pill nada'; pill.textContent='zona'; $('mDonde').textContent='En la zona de descarga no hay postes.'; }
+  $('vNum').textContent=Math.abs(e.v*factor).toFixed(2); $('dNum').textContent=Math.round(e.d*180/Math.PI);
+  $('thNum').textContent=Math.round(((e.th*180/Math.PI)%360+360)%360);
+  $('sNum').textContent = Math.abs(e.v*factor)<0.01?'quieto': e.v>0?'uñas primero':'culo primero';
+  $('hNum').textContent=e.h.toFixed(2); $('eNum').textContent=e.ext.toFixed(2); $('cNum').textContent=e.ibc==='uñas'?'IBC 1000 L':'vacío';
+  const vis = D.vis[Math.min(D.vis.length-1, Math.floor(e.t/0.25))] || [0,[],[]];
+  $('camL').textContent = vis[1].length? vis[1].map(i=>'#'+i).join(' ') : 'nada';
+  $('camT').textContent = vis[2].length? vis[2].map(i=>'#'+i).join(' ') : 'nada';
+  $('camSin').textContent = sinMarcaHasta(e.t);
+  $('reloj').textContent = `${e.t.toFixed(1)} / ${T_FIN.toFixed(0)} s`;
+}
+const sinMarcaDesde = (()=>{ const out=[]; let desde=0; for (const v of D.vis){ if (v[1].length||v[2].length) desde=v[0]; out.push(desde);} return out; })();
+function sinMarcaHasta(t){ const k=Math.min(D.vis.length-1, Math.floor(t/0.25)); const s = t - sinMarcaDesde[k]; return s<0.3 ? 've una ahora' : s.toFixed(1)+' s'; }
+
+// ── el rig: latido, watchdog de 200 ms, pie, rearme manual ────
+let latidoVivo = true, msSinLatido = 0, pieSuelto = false, enParo = false, factor = 1, pendienteDeshacer = null;
+function log(t, txt){ const li=document.createElement('li'); li.innerHTML=`${t} · <b>${txt}</b>`; const b=$('bitacora'); b.prepend(li); while(b.children.length>40) b.lastChild.remove(); }
+function soltarPie(motivo){ if (pieSuelto) return; pieSuelto=true; enParo=true; log(`${tSim.toFixed(1)} s`, `pie suelto: ${motivo}`);
+  const e = estado(tSim); if (['EXTIENDE','TOMA','RETRAE'].includes(e.etapa)) { pendienteDeshacer = e.etapa; log('', `${e.etapa} no es reanudable: al rearmar se deshace y se reintenta`); }
+  rig(); }
+function rig(){
+  $('pieTxt').textContent = pieSuelto ? (factor>0.001?'Frenando':'Pie suelto · frenado') : 'Pie pisado';
+  const p=$('piePill'); p.className='pill '+(latidoVivo?(pieSuelto?'aviso':'ok'):'mal'); p.textContent = latidoVivo?(pieSuelto?'esperando rearme':'latido ok'):'sin latido';
+  $('cortar').disabled=!latidoVivo; $('volver').disabled=latidoVivo; $('rearme').disabled=!(pieSuelto && latidoVivo && factor<=0.001);
+}
+$('cortar').onclick=()=>{ latidoVivo=false; msSinLatido=0; log(`${tSim.toFixed(1)} s`, 'la laptop deja de mandar el latido'); rig(); if(!corriendo) alternar(); };
+$('volver').onclick=()=>{ latidoVivo=true; msSinLatido=0; log(`${tSim.toFixed(1)} s`, 'vuelve el latido (el pie sigue suelto)'); rig(); };
+$('hongo').onclick=()=>{ soltarPie('paro de hongo (corta la bobina, sin esperar)'); };
+$('rearme').onclick=()=>{ if(!(pieSuelto&&latidoVivo)) return; pieSuelto=false; enParo=false; factor=1; log(`${tSim.toFixed(1)} s`, 'rearme manual con latido fresco: pie pisado');
+  if (pendienteDeshacer){ const P=D.pedidos[estado(tSim).ped]; const k=VV.findIndex(v=>v[0]>=P.t0 && v[4]==='EXTIENDE'); if(k>=0){ tSim = VV[k][0]; log('', `deshecho: retrae y vuelve a EXTIENDE`);} pendienteDeshacer=null; }
+  rig(); };
+
+// ── el bucle ───────────────────────────────────────────────────
+let tSim = 0, corriendo = false, tPrev = 0;
+function irA(t){ tSim = Math.max(0, Math.min(T_FIN, t)); pintar(); }
+function alternar(){ corriendo=!corriendo; $('play').setAttribute('aria-pressed', corriendo); $('play').textContent = corriendo?'❚❚ Pausa':'▶ Correr'; tPrev=performance.now(); if(corriendo) requestAnimationFrame(bucle); }
+$('play').onclick=alternar;
+$('t').oninput=ev=>{ irA(parseFloat(ev.target.value)); };
+$('vista').onclick=()=>{ seguir=!seguir; $('vista').setAttribute('aria-pressed',seguir); $('vista').textContent=seguir?'Seguir al equipo':'Pasillo completo'; pintar(); };
+$('vercam').onclick=()=>{ verCam=!verCam; $('vercam').setAttribute('aria-pressed',verCam); pintar(); };
+function bucle(now){
+  if (!corriendo) return;
+  const dtR = Math.min(0.1, (now - tPrev)/1000); tPrev = now;
+  const vel = parseFloat($('vel').value), dt = dtR*vel;
+  if (!latidoVivo && !pieSuelto){ msSinLatido += dtR*1000*Math.min(vel,1); if (msSinLatido >= WD_MS) soltarPie(`${WD_MS} ms sin latido (watchdog del ESP32)`); }
+  if (pieSuelto){ const e = estado(tSim), v = Math.abs(e.v);
+    factor = v < 0.02 ? 0 : Math.max(0, factor - DEC_FRENO*dt/Math.max(v,0.05)); }
+  tSim = Math.min(T_FIN, tSim + dt*factor);
+  if (tSim >= T_FIN) { alternar(); }
+  pintar();
+  requestAnimationFrame(bucle);
+}
+function pintar(){ const e = estado(tSim); dibujar(e); dibujarMastil(e); panel(e); $('t').value = tSim.toFixed(2);
+  $('latidoBar').firstElementChild.style.width = (latidoVivo? 25 : Math.min(100, msSinLatido/WD_MS*100))+'%';
+  $('latidoBar').firstElementChild.style.background = latidoVivo? 'var(--ok)' : 'var(--mal)'; if(pieSuelto) rig(); }
+window.addEventListener('resize', ()=>{ V=dimensiones(cv); MV=dimensiones(mc); pintar(); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar);
+new MutationObserver(pintar).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+// arranca en el caso de maje, justo antes del giro a la 5 3 Ra
+irA((S.find(s=>s[7]==='GIRO')||[0])[0] - 1.5); rig(); log('0.0 s','turno cargado: 4 pedidos');
+</script>
