@@ -408,3 +408,54 @@ veredicto. Con marcas cada **1 bahía, cumplen los dos montajes con cualquier di
 |---|---|---|
 | A2 llega a ±4.5 cm con marcas cada 3 bahías; B, cada 2 | **A2 cada 2, B cada 1** (cada 2 si las marcas se alternan entre caras) | las rutas v2 van por el eje y giran casi en el lugar |
 | Las dos laterales de B son mejor que una (v1) | **Por el eje, con marcas a la misma x, son redundantes**: ven las dos o ninguna | la simetría del montaje y del mapa |
+
+## Montajes de cámaras con el modelo v3b y el pasillo del DXF (09-nov, `visibilidad_v3.py`)
+
+Pregunta de maje: ¿por qué las cámaras de A2 no están a 90° entre sí? Se rehizo la comparación con el
+turno de `sim/sim_datos.json`: rutas del planificador v3b (2.91 m, culo de la ficha, timón a 90°), el
+pasillo B del DXF (13 bahías por lado, pared en las dos puntas, zonas de descarga y carga del lado R), y
+cuatro pedidos (2 salidas, 2 entradas, 430 s). Marcas sobre los postes reales. **Lo ciego se mide en
+metros de rueda motriz y en grados girados**: con el giro sobre el eje de carga, ese eje casi no se mueve
+y «metros» escondía 8–15 s girando sin ver nada.
+
+Con marcas en cada poste (cada 1 bahía):
+
+| Montaje | Entre sí | Sin marcas en el tránsito | Sin marcas en el giro | Tramo ciego más largo | Alineación y toma |
+|---|---|---|---|---|---|
+| **A2** · lateral izq. + trasera diagonal −135° | 135° | **19 %** | 53 % | 2.4 m de rueda · 75° · 7.9 s | nada (0 %) |
+| A2 en espejo (diagonal +135°) | 45° | 40 % | 52 % | 2.7 m · 86° | nada |
+| A2-der · lateral der. + diagonal +135° | 135° | 33 % | 56 % | **2.2 m** · 69° | nada |
+| **A** · lateral + trasera recta (la idea original) | **90°** | 70 % | 57 % | 2.9 m · 65° | nada |
+| A-der · lateral der. + trasera recta | **90°** | 56 % | 56 % | 3.1 m · 70° | nada |
+| **V90** · dos traseras diagonales ±135° | **90°** | **12 %** | 53 % | 3.5 m · **115°** · 11 s | nada |
+| B · dos laterales ±90° | 180° | 44 % | 59 % | 2.4 m · 75° | nada |
+| **D** · frontal alta + lateral (`docs/03`) | **90°** | 73 % | 73 % | **7.0 m · 203°** · 21 s | nada |
+| A2 + frontal en la torre, 54° | — | 17 % | 44 % | 2.4 m · 75° | nada |
+| **A2 + frontal en la torre, gran angular 90°** | — | 15 % | **38 %** | 2.4 m · 75° | **ve el 35 % de la alineación y el 25 % de la toma** |
+
+Con marcas cada 2 bahías todo empeora (A2: 55 % ciego en el tránsito, 4.6 m · 155°; el tramo ciego más
+corto lo da A2 en espejo, 3.6 m · 118°). Números completos en `visibilidad_v3.json`.
+
+### Lo que dice
+
+- **Estar a 90° no es lo que importa; importa adónde miran respecto de las caras.** De los pares a 90°, el
+  que tiene una cámara mirando a lo largo del pasillo (A y D: trasera recta o frontal) es de los peores,
+  porque ve las caras de refilón. V90 (dos diagonales a 90°) es el que más ve en el tránsito, pero deja el
+  tramo ciego más largo en el giro (115°).
+- **A2 sigue siendo el mejor par en el balance**, y queda como está en la simulación. A2-der es casi igual,
+  con el tramo ciego un poco más corto; se decide con las marcas reales y cuando el EKF corra con v3.
+- **Ningún par de cámaras ve una marca en la alineación ni en la toma** (0 %, todos los montajes). Es lo
+  que ya decía la visibilidad v1 (~90 %), ahora en 100 %. El equipo llega al hueco con lo que traiga la
+  odometría desde la última marca, que se vio en el giro.
+- **Lo único que ve algo frente al hueco es una tercera cámara en la torre con gran angular** (90°): un
+  cuarto de la toma. Con la óptica de la C920 (54°) no alcanza: las marcas de los postes quedan a ~44° del
+  eje.
+
+### Lo que este análisis NO hace, y por qué
+
+- **No corre el EKF.** `odometria.py` y `ekf.py` integran con `tan(δ)` y la velocidad del eje de carga;
+  con el timón a 90° (el giro v3) eso es infinito. **Pendiente: pasar la odometría y el EKF a la velocidad
+  de la rueda motriz** (`ds_eje = ds·cos δ`, `dθ = −(ds/WB)·sin δ`, lo que ya hace `planificador_rutas.step`
+  con `rueda=True`), que además es lo que mide el encoder real. Sin eso, el error al llegar con v3 no se
+  puede calcular.
+- Montajes, alturas, `PX_MIN` 20 px y `ANG_MAX` 60° siguen siendo supuestos.
