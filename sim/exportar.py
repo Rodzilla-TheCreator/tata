@@ -313,7 +313,7 @@ def main():
     log = lambda s: print(s, flush=True)
     t0 = time.time()
     with B.geometria('dxf'):
-        ZONA = B.Direccion(B.N + 1, '1A', B.ZONA_CARGA, 'c')
+        ZONA = repr(B.Direccion(B.N + 1, '1A', B.ZONA_CARGA, 'c'))     # '14 1A Rc': el planificador pide texto
         pl = P.Planificador(modelo='v3')
         rutas = planificar_turno(pl, log)
         S, Vt, cubos, pedidos = armar(pl, rutas)
