@@ -49,7 +49,7 @@ input[type=range]{width:100%;accent-color:var(--amarillo)}
 #tramos{position:relative;height:16px;border-radius:3px;overflow:hidden;background:var(--linea)}
 #tramos div{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;
   font:600 11px var(--f-titulo);letter-spacing:.06em;color:var(--tinta);border-right:1px solid var(--panel);cursor:pointer}
-.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;min-width:0;align-items:start}
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;min-width:0;align-items:start}
 .caja{background:var(--panel);border:1px solid var(--linea);border-radius:6px;padding:12px}
 .caja h2{font:600 13px var(--f-titulo);letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);margin:0 0 8px}
 .etapa{font:700 34px/1 var(--f-titulo);letter-spacing:.02em}
@@ -355,7 +355,10 @@ function panel(e){
   if (e.etapa!==ultEtapa){ if (ultEtapa) log(`${e.t.toFixed(1)} s`, e.etapa); ultEtapa=e.etapa; }
   const pill=$('mPill');
   if (e.hol){ const cm=e.hol[0]*100; $('mNum').textContent=cm.toFixed(1); pill.className='pill '+(cm<2?'mal':cm<5?'aviso':'ok'); pill.textContent=cm<0?'choque':cm<2?'justo':cm<5?'ajustado':'holgado';
-    $('mDonde').textContent=`Lo da ${parte(e)}, contra ${Math.abs(e.hol[2])>G.PASILLO/2+0.001?'la cara del cubo de N1, dentro de la luz de la bahía':'la cara del poste'}.`; }
+    const cubo = ['APROXIMA','EXTIENDE','TOMA','RETRAE','RETROCEDE'].includes(e.etapa);
+    $('mDonde').textContent = (cubo ? 'Las uñas están dentro del cubo; se mide el resto del equipo. ' : '') +
+      `Lo da ${parte(e)}, contra ${Math.abs(e.hol[2])>G.PASILLO/2+0.001?'la cara del cubo de N1, dentro de la luz de la bahía':'la cara del poste'}.` +
+      (['GIRO','DESGIRA'].includes(e.etapa) ? ' El planificador acepta giros con 1 cm o más y no busca el más centrado: el mejor posible deja 7 cm vacío y 5 cargado.' : ''); }
   else { $('mNum').textContent='—'; pill.className='pill nada'; pill.textContent='zona'; $('mDonde').textContent='En la zona de descarga no hay postes.'; }
   $('vNum').textContent=Math.abs(e.v*factor).toFixed(2); $('dNum').textContent=Math.round(e.d*180/Math.PI);
   $('thNum').textContent=Math.round(((e.th*180/Math.PI)%360+360)%360);

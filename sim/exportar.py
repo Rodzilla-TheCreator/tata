@@ -185,13 +185,19 @@ def armar(pl, rutas):
     return S, Vt, pedidos
 
 
+EN_EL_CUBO = ('APROXIMA', 'EXTIENDE', 'TOMA', 'RETRAE', 'RETROCEDE')   # las uñas van dentro del IBC
+
+
 def holguras(pl, S):
     """Margen (m) entre la silueta y el límite más cercano (cara de poste, o cara del cubo de N1 en la
-    luz de la bahía, 6 cm atrás), con holgura 0, y el punto que lo da. Fuera del rack (zona), None."""
+    luz de la bahía, 6 cm atrás), con holgura 0, y el punto que lo da. Fuera del rack (zona), None.
+    En la toma (EN_EL_CUBO) las uñas y el cubo entran al hueco a propósito: se mide el resto."""
     out = []
     for s in S:
         eq = pl.eq[s['c']]
         X, Y = eq.huella((s['x'], s['y'], s['th']))
+        if s['e'] in EN_EL_CUBO:
+            X, Y = X[~eq.frente], Y[~eq.frente]
         rel = X - B.X0
         k = np.floor(rel / B.PASO_POSTE)
         off = rel - k * B.PASO_POSTE
@@ -272,5 +278,18 @@ def main():
     log(f'listo en {time.time() - t0:.0f} s → sim/sim_datos.json')
 
 
+def solo_holguras():
+    """Recalcula H sobre el sim_datos.json ya hecho, sin volver a planificar (10 min)."""
+    ruta = os.path.join(RAIZ, 'sim', 'sim_datos.json')
+    with open(ruta, encoding='utf-8') as f:
+        d = json.load(f)
+    pl = P.Planificador(modelo='v3')
+    S = [dict(t=r[0], x=r[1], y=r[2], th=r[3], e=r[7], c=bool(r[8])) for r in d['S']]
+    d['H'] = holguras(pl, S)
+    with open(ruta, 'w', encoding='utf-8') as f:
+        json.dump(d, f, ensure_ascii=False, separators=(',', ':'))
+    print('H recalculado')
+
+
 if __name__ == '__main__':
-    main()
+    solo_holguras() if '--solo-holguras' in sys.argv else main()
