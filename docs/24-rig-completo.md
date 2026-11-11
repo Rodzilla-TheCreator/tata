@@ -261,6 +261,21 @@ para el TWAI que ya está validado. El TJA1050 queda para escuchar y para el ban
 > aguanta 5.5); óhmetro GND1↔GND2 **abierto**; `prueba_can.ino` con su control; en el equipo,
 > CANH↔CANL ≈ 60 Ω.
 
+> **LLEGÓ 11-nov.** Las tres piezas, como se pidieron. La serigrafía del ADuM1201 (CJMCU) confirma los
+> canales corregidos: lado 1 `VDD1 · VOA · VIB · GND1`, lado 2 `VDD2 · VIA · VOB · GND2`. El SH-C30G dice
+> «Base on Canable 1.0» (v1.5-20241005), con interruptores **R120** y **BOOT**, bornera `GND · CAN-H · CAN-L`
+> y cabezal SWD (`GND 3V3 NRST CLK DIO`).
+>
+> **En tensión: ¿el SH-C30G es aislado?** Acá quedó anotado como «CANable 1.0 Pro aislado», pero en la
+> foto no se ve un transceptor aislado (SOIC-16 ancho) ni un DC-DC aislado. **Se cierra con el óhmetro,
+> antes de enchufarlo al equipo:** carcasa del USB ↔ borne `GND`. Abierto = aislado. ~0 Ω = **no aislado**:
+> en el equipo solo con la laptop a batería y sin nada más a tierra, o no se usa ahí.
+>
+> **El banco de hoy:** (1) aislamiento del DSD; (2) cómo aparece en Windows (COM = slcan; sin COM =
+> candleLight); (3) B0505S con el TJA de carga, 4.75–5.25 V y pin 1 ↔ 3 abierto; (4) ADuM1201 cableado,
+> `GND1` ↔ `GND2` abierto; (5) rig contra el DSD con `prueba_can.ino`, bus ≈ 60 Ω, y el control: sin
+> `VDD2` no pasa nada.
+
 > **Decidido 02-nov (maje): `TD301DCANH3` por LCSC, ×3, envío exprés a Wellington.**
 > Descartados por precio: la placa `EVAL-ADM3053EBZ` de Mouser (~$100, hace lo mismo que el
 > módulo de ~$4) y el `PCAN-USB` aislado (~$300; queda para capturar el bus completo cuando haya
