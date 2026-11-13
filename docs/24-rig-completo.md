@@ -366,6 +366,22 @@ repara.**
 **Queda en la pieza, sin riesgo:** la matriz de ohmios de la caja (pines 5–10, 15 pares) y el azul
 contra cada pin de la caja.
 
+> **Corregido el mismo día (lo vio maje): «azul abierto» no está demostrado.** Lo de arriba se apuró.
+>
+> | Decía | Es | Qué lo tumbó |
+> |---|---|---|
+> | azul sin lectura en ohmios = azul abierto, es el daño | **no concluye**: un sensor **sano** apagado también puede dar nada | en ohmios el multímetro mete muy poco voltaje; el − llega al resto por semiconductores (regulador, transistor de salida, diodo de protección), que con eso no conducen. Los 47 k sí se leen porque son resistencias |
+> | se cancela la prueba alimentada | **vuelve**, con **10 kΩ** (≤ 1.2 mA, sin riesgo ni con la polaridad invertida) | es la única que decide si hay camino al azul |
+>
+> **Lo que decide, sin riesgo:**
+>
+> 1. **Modo diodo** azul–café, azul–blanco, azul–negro, en los dos sentidos. Si aparece 0.4–0.8 V en
+>    alguno, hay un componente y el azul **sí** está conectado. Si no aparece nada, todavía no concluye.
+> 2. **12 V con 10 kΩ en serie**, café al +, azul al −; caída en la de 10 kΩ. Varios voltios: el sensor
+>    consume, el azul está conectado. **0 V: no hay camino, azul abierto** (recién ahí).
+>
+> Lo del `E0106` (1/1 con el azul abierto) y lo del emulador siguen como hipótesis.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
