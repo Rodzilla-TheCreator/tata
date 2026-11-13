@@ -382,6 +382,29 @@ contra cada pin de la caja.
 >
 > Lo del `E0106` (1/1 con el azul abierto) y lo del emulador siguen como hipótesis.
 
+**13-nov, modo diodo café–azul (maje): aparece ~1600 mV y en un segundo se va a «1».** Una
+resistencia o un diodo darían un número fijo y un hilo cortado no daría nada. **Una lectura que sube y
+desaparece es un capacitor cargándose**: el filtro de la alimentación entre + y −, que trae casi todo
+sensor. **Se toma como capacitor** (decisión de maje; el control de repetirla tras descargar no se hizo).
+
+- **El «azul abierto» queda descartado.** El azul llega a la electrónica. La lectura vacía en ohmios era
+  lo que se espera de un sensor sano apagado.
+- Lo del `E0106` por 1/1 con el azul abierto **se cae** como explicación. Si el sensor está roto, el
+  daño está en la cara (la tapa que le falta) o en la electrónica. Solo lo dice la prueba alimentada.
+
+**Siguiente: la prueba alimentada, por escalones** (cada uno solo si el anterior dio lo esperado):
+
+```
+café al + , azul al − , fuente a 12 V, resistencia en serie en el +; medir la caída en ella
+□ 10 kΩ (≤ 1.2 mA): tiene que haber caída de varios voltios → hay consumo
+□ 1 kΩ  (≤ 12 mA)
+□ 100 Ω (≤ 120 mA): acá arranca de verdad. Caída esperada 1–3 V (10–30 mA); > 6 V → desconectar
+□ con 100 Ω: blanco y negro contra el azul, sin objetivo y con el destornillador a < 4 mm
+    una alta y otra baja, y se invierten   → el sensor SIRVE
+    las dos iguales y no cambian           → no detecta (la cara)
+    una fija y la otra cambia              → un canal muerto
+```
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
