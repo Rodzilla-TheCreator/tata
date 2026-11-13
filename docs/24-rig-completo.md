@@ -272,6 +272,20 @@ cilindro solo**, y la caja es otra cosa. Se confirma en el banco: café a +12 V 
 cada salida al azul (PNP; si las dos dan 0 V siempre, al café: NPN). Sin objetivo una salida alta y la otra
 baja; con el destornillador a < 4 mm, **se invierten**. Las dos iguales = una salida muerta = el `E0106`.
 
+**13-nov, medido (maje): pin 1 (café) ↔ pin 3 (azul), sin continuidad.** Sin alimentar, con el
+multímetro. **Dato, no conclusión:**
+
+- en un sensor activo es común que el modo diodo dé abierto en los dos sentidos: un diodo de protección
+  en serie con el + bloquea un sentido, y en el otro los ~2 V del multímetro no alcanzan para que
+  conduzca la electrónica;
+- también puede ser un hilo cortado adentro del cilindro, o que 1 y 3 no sean + y −.
+
+**Siguiente, en este orden:** (1) modo diodo, **en los dos sentidos**, entre todos los pares del cilindro
+(1-2, 1-3, 1-4, 2-3, 2-4, 3-4) y anotar cuál da 0.4–0.8 V. Las salidas suelen mostrar una juntura
+contra el − o el +, y eso ubica los rieles. (2) Recién ahí, la prueba alimentada de arriba (café a +12 V
+por 100 Ω, azul a −): es la que decide. Si con 12 V la corriente es **0 mA** (se mide como caída en los
+100 Ω) y ningún par mostró juntura, el cilindro está abierto por dentro.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
