@@ -286,6 +286,54 @@ contra el − o el +, y eso ubica los rieles. (2) Recién ahí, la prueba alimen
 por 100 Ω, azul a −): es la que decide. Si con 12 V la corriente es **0 mA** (se mide como caída en los
 100 Ω) y ningún par mostró juntura, el cilindro está abierto por dentro.
 
+**13-nov, medido (maje), cilindro sin alimentar:**
+
+| Par | Ohmios (escala 200k) | Modo diodo |
+|---|---|---|
+| café (1) – blanco (2) | **47 k** | rojo en café, negro en blanco/negro: **la lectura varía**, no pita · al revés: **nada** |
+| café (1) – negro (4) | **47 k** | (idem) |
+| blanco (2) – negro (4) | **94 k** = 47 + 47 | — |
+| café (1) – azul (3) | sin continuidad (medida anterior) | — |
+
+**Lo que dicen los números (dato):** cada salida llega al café por **47 k**, y entre las dos salidas
+solo hay camino **a través del café** (94 = 47 + 47). Las dos ramas son iguales: ninguna está en corto
+ni abierta contra el café. Y el modo diodo es **asimétrico**, así que no es solo una resistencia:
+hay algo con polaridad (una juntura, o un capacitor que carga y hace variar la lectura).
+
+**Sospechosos, sin elegir:**
+
+1. **Salidas NPN con resistencia de pull-up interna de 47 k al +** (café = +, como se suponía). Es un
+   armado común. Si es esto, las salidas están sanas y el problema, si lo hay, está en el lado del azul.
+2. **Azul abierto adentro** (hilo o tierra de la electrónica cortados). Casi todo sensor activo muestra
+   *algo* entre + y −. Si el azul no conecta con nada, el sensor no tiene tierra: no funciona, y las dos
+   salidas quedan altas por los 47 k = **1/1 = el `E0106`**. Cuadraría con «roto».
+3. 47 k medido a través de junturas y no de resistencias: se descarta o confirma con la polaridad
+   invertida (abajo).
+
+**Siguiente, sin alimentar (5 min):**
+
+```
+□ ohmios con la polaridad INVERTIDA: negro del multímetro en café, rojo en blanco y en negro
+    da 47 k otra vez → son resistencias de verdad (sospechoso 1)
+    da otra cosa u OL → hay junturas en serie (sospechoso 3)
+□ azul contra café, blanco y negro, en LOS DOS sentidos, escalas 200k y 2M
+    (dejar las puntas unos segundos: si hay un capacitor, la lectura sube y se va a OL)
+    azul abierto contra todo, en las dos escalas → sospechoso 2
+```
+
+**Después, la prueba alimentada** (café a +12 V por 100 Ω, azul a −). **Si son pull-ups internos, no
+hace falta poner 10 k:** se mide cada salida contra el azul con el multímetro solo.
+
+| Resultado | Lectura |
+|---|---|
+| una salida ≈ 12 V y la otra ≈ 0, y se **invierten** con el destornillador | el cilindro sirve |
+| las dos ≈ 12 V siempre, y **0 mA** en los 100 Ω | **no tiene tierra (azul abierto)**: es el roto |
+| las dos ≈ 12 V, con corriente | la electrónica prende pero no conmuta (la cara dañada) |
+| una fija, la otra conmuta | un canal muerto |
+
+**Predicción que se puede tumbar:** si el azul resulta abierto, alimentado van a dar las dos salidas
+altas sin importar el objetivo. Si en cambio conmutan, el sospechoso 2 queda descartado.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
