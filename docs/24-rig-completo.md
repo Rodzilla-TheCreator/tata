@@ -223,6 +223,34 @@ el paro a mano y `campo_nodo2.py` cerrado.** Pisarlo con mando es el paso 5, no 
        se va → el sensor sirve y lo que faltaba era la placa
 ```
 
+**13-nov, más tarde: lo que falta en el cilindro (maje, con foto).** El chino dice que al cilindro le
+falta algo. Las fotos del `51297587` en internet no traen tuercas. La punta hoy es un cilindro de **dos
+escalones, el segundo con la punta redondeada, no plana**.
+
+- **Las tuercas no faltan:** un sensor cilíndrico roscado (parece M12) siempre trae dos, una a cada lado
+  de la placa donde se monta, y sirven para ajustar a qué distancia queda del objetivo. Los vendedores
+  suelen fotografiarlo sin ellas.
+- **Hipótesis, sin verificar:** es un sensor **inductivo «no enrasado» al que se le salió la tapa de la
+  cara**. Esa tapa es plana, de plástico, sobresale de la rosca y cubre la bobina; sin ella queda la bobina
+  en su resina, escalonada y redonda. Sin la tapa puede seguir detectando, o la bobina puede estar dañada.
+
+**Prueba de banco del cilindro** (multímetro, 9–12 V, 100 Ω, 10 kΩ, un destornillador de acero, un imán):
+
+```
+1. cuántos hilos van al cilindro y de qué color (café +, azul −, negro salida, lo típico)
+2. 2 hilos → pasivo: óhmetro (decenas de Ω a kΩ = bobina); imán → abierto/cerrado = reed;
+   bobina: mV AC moviendo el imán rápido delante
+3. 3 hilos → activo:
+   a. SIN alimentar: modo diodo entre pares → + y − (0.5–0.7 V en un solo sentido)
+   b. alimentar: + por 100 Ω en serie (protege si la polaridad estaba mal), − directo
+   c. salida con 10 kΩ a + (NPN) o a − (PNP)
+   d. salida sin nada enfrente y con el destornillador a < 4 mm; ¿prende un LED?
+4. el bloque, igual; si es IR, la cámara trasera del celular ve la luz
+```
+
+**Control:** alimentado y sin objetivo, la salida no cambia sola; si cambia, mide ruido. **Nada al ESP ni
+a la batería del equipo** hasta tener el pinout.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
