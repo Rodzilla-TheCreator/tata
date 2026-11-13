@@ -391,6 +391,11 @@ sensor. **Se toma como capacitor** (decisión de maje; el control de repetirla t
   lo que se espera de un sensor sano apagado.
 - Lo del `E0106` por 1/1 con el azul abierto **se cae** como explicación. Si el sensor está roto, el
   daño está en la cara (la tapa que le falta) o en la electrónica. Solo lo dice la prueba alimentada.
+- **Y el `E0106` nunca fue evidencia de este sensor** (maje): en el equipo salía porque **el pedal no
+  estaba conectado** y porque sale **al pedir un movimiento sin pisar el hombre muerto**. Dice que el
+  equipo no ve el pedal, no cómo está el sensor. Que el sensor esté «roto» es solo el testimonio de los
+  mecánicos, sin medir. Lo deciden el banco (abajo) y, después, el equipo: sensor conectado, sin pedir
+  movimiento, con y sin objetivo enfrente.
 
 **Siguiente: la prueba alimentada, por escalones** (cada uno solo si el anterior dio lo esperado):
 
