@@ -168,6 +168,71 @@ Martes, con el pedal enfrente, **nada se alimenta en banco sin saber el voltaje*
      que darle al emulador
 ```
 
+### El sensor en mano — 13-nov
+
+maje ya tiene el sensor que se quitó del pedal. **Ojo: maje lo trabaja desde maquinon, con fotos
+del celular.** Lo que se sabe, y qué es dato y qué es suposición:
+
+| Qué | Dato | De dónde |
+|---|---|---|
+| Etiqueta | `JUNGHEINRICH 51297587-D 800053 02/26 2412714` | la pieza |
+| Número de parte | **`51297587`**: pieza 12 del «pedal doble», «Montaje; **sensores**» (plural), 10 −2 Nm | manual de servicio, *Especificaciones técnicas* pág. 10 (06.14); `herramientas/componentes/pedal_doble-015.png` |
+| `-D` · `02/26` · `2412714` | probablemente revisión · fecha de fabricación (feb-2026) · serie | **suposición**, no verificado |
+| Conector | **`XS160`**, enchufa en el **conector suelto del EDR** | la pieza y maje |
+| Forma | **dos sensores en un arnés**: un **bloque rectangular** (cable negro, dos agujeros de montaje) y un **cilindro** tipo sensor de proximidad (cable gris), los dos a una ficha negra de dos filas | foto de internet buscando `51297587-D` (no se versiona: es de un vendedor) |
+| Estado | «roto, le falta algo» (mecánicos); antes: «roto del infrarrojo, no detecta» | testimonio, sin medir |
+
+**Lo que eso cierra o mueve:**
+
+- **Dos sensores = los dos canales del `1.06`.** El evento pide combinaciones `0/1` o `1/0`; con
+  `0/0` o `1/1` durante 2 s marca `E0106.02`, que **solo se borra reiniciando**. Lo más probable
+  es un canal por sensor; **no está medido** (puede ser que un sensor dé los dos).
+- **El `XS160` va directo al conector suelto:** para la primera prueba no hace falta arnés en Y
+  ni selector. El Y sigue haciendo falta para el rig (manual ↔ teleop).
+- **«Le falta algo» — hipótesis, sin verificar:** estos sensores no se pisan, detectan la
+  **placa del pedal** que el pie mueve frente a ellos. Lo que falta puede ser esa placa (o el
+  pedal entero). Para probar no hace falta: al cilindro un **fierro** (si es inductivo), al
+  bloque una **tarjeta o la mano** (si es óptico).
+- **El `XS160` no está en el manual** que tenemos: los esquemas no vienen. El pinout sale de
+  medir (o del `99515375`, que sigue pedido).
+
+**Seguridad:** este sensor es lo único que faltaba para que el equipo se mueva con nuestro nodo 2
+(22-oct: el Master toma el `0x182` y solo pide el pedal). **Conectarlo con la rueda en el aire,
+el paro a mano y `campo_nodo2.py` cerrado.** Pisarlo con mando es el paso 5, no esta medición.
+
+**Orden de medición** (las fotos van al celular y de ahí a maquinon):
+
+```
+1. BANCO, sin alimentar
+   □ foto de frente del XS160 (cara de los pines) y de la etiqueta
+   □ cuántos pines; qué hilos y colores van al bloque y cuáles al cilindro
+     (un sensor de 3 hilos suele ser café = +, azul = −, negro = salida; se confirma midiendo)
+   □ óhmetro entre todos los pines, con y sin fierro / tarjeta enfrente
+       si nada cambia → es electrónico, no hay contacto que medir apagado
+2. EQUIPO, llave ON, sensor DESCONECTADO (retro-sondeo en el conector suelto del EDR)
+   □ voltaje de cada pin contra NEGATIVO DE BATERÍA (no chasis)
+     → cuál alimenta y a cuánto, cuáles son entradas y a qué voltaje quedan sueltas
+3. ¿PRENDE EL INFRARROJO?
+   □ sensor conectado y alimentado: mirar el bloque con la cámara del celular
+     (la trasera; algunas frontales filtran el IR). Si no se ve la luz, ahí está lo «roto»
+   □ el cilindro suele tener un LED que prende al detectar: anotar si prende con el fierro
+4. EQUIPO, rueda en el aire, sensor CONECTADO, sin mando
+   □ retro-sondeo: voltaje de cada salida sin objetivo y con objetivo
+   □ en la pantalla: ¿se va el E0106 cuando las dos salidas quedan opuestas?
+       sigue 0/0 o 1/1 → el canal que no cambia es el roto
+       se va → el sensor sirve y lo que faltaba era la placa
+```
+
+**Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
+importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
+o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
+(si las entradas ven los ~40 V de batería, contactos de **≥ 60 V DC**).
+
+**Control de falsación del paso 4:** con el sensor desconectado el equipo tiene que dar
+`E0106` (es lo que da hoy). Si al conectarlo y poner el objetivo **no cambia nada**, o el sensor
+está muerto o la medición no está leyendo lo que creemos: se mira el paso 3 antes de culpar al
+sensor.
+
 ### Detalle a saber del timón
 
 Al **resetear** el ESP, los DAC caen a 0 V → la salida queda en ≈ `o` (0.13 V), **fuera del
