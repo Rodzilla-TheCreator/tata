@@ -334,6 +334,38 @@ hace falta poner 10 k:** se mide cada salida contra el azul con el multímetro s
 **Predicción que se puede tumbar:** si el azul resulta abierto, alimentado van a dar las dos salidas
 altas sin importar el objetivo. Si en cambio conmutan, el sospechoso 2 queda descartado.
 
+**13-nov, medido con puntas fijas (alambre + caimanes), sin alimentar:**
+
+- **Control:** café–blanco = **47 k** otra vez. El armado mide.
+- **Azul (pin 3) contra café, blanco y negro, en los dos sentidos: nada.**
+- La lectura suelta de antes entre café y azul no reapareció ni invirtiendo ni descargando. Lo más
+  probable es que la punta tocara el pin de al lado: el azul está entre el 2 y el 4.
+- El cable dice `AWM 2464 80 °C 300 V VW-1`. Es cable genérico y no identifica al sensor.
+
+**Lectura: el azul está abierto. Gana el sospechoso 2.** Con el control pasando, no es el armado. Sin
+tierra la electrónica no funciona, y las dos salidas quedan colgadas del + por los 47 k: altas las dos,
+**1/1**, que es justo lo que dispara el `E0106`. Cuadra con «roto, no detecta». Falta saber **dónde** se
+abrió: en el cable (aplastado o tirado) o adentro, en la soldadura (cuadraría con la cara dañada). Lo
+dice doblar el cable mientras se mide. **No hace falta para el proyecto: el sensor se emula, no se
+repara.**
+
+**Lo que cambia:**
+
+- **Ya no tiene sentido alimentar el cilindro.** Con el azul abierto no hay camino: 0 mA, y no se aprende
+  nada. Se cancela la prueba alimentada (ni con 10 kΩ ni con 100 Ω).
+- **Pinout del cilindro:** 1 café = + (deducido: las dos salidas cuelgan de él), 2 blanco y 4 negro =
+  las dos salidas (medido: simétricas, 47 k cada una al café), 3 azul = − (**solo por el código de
+  colores**: abierto, no se puede medir en el sensor).
+- **Lo que confirma + y −** es el conector del equipo: llave ON, sensor desconectado, voltaje de cada pin
+  contra el negativo de batería (paso 2 de arriba). Riesgo cero para el sensor.
+- **Para el emulador (hipótesis, sin verificar):** si los 47 k son pull-ups internos al +, cada salida
+  queda alta y el sensor la «tira» al − para marcar. Emularlo sería conectar cada salida al − por
+  turno: un contacto por canal, opuestos (el DPDT). Se confirma con los voltajes del lado del equipo,
+  no antes.
+
+**Queda en la pieza, sin riesgo:** la matriz de ohmios de la caja (pines 5–10, 15 pares) y el azul
+contra cada pin de la caja.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
