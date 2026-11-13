@@ -251,6 +251,27 @@ escalones, el segundo con la punta redondeada, no plana**.
 **Control:** alimentado y sin objetivo, la salida no cambia sola; si cambia, mide ruido. **Nada al ESP ni
 a la batería del equipo** hasta tener el pinout.
 
+**El `XS160` por colores (maje, 13-nov):** 10 pines, todos con hilo.
+
+| Pin | Color | Va a | Lo más probable (código estándar de sensores de 4 hilos; **sin medir**) |
+|---|---|---|---|
+| 1 | café | cilindro | + alimentación |
+| 2 | blanco | cilindro | salida 2 (complementaria) |
+| 3 | azul | cilindro | − (0 V) |
+| 4 | negro | cilindro | salida 1 |
+| 5 | café | caja | ? |
+| 6 | amarillo | caja | ? |
+| 7 | negro | caja | ? |
+| 8 | verde | caja | ? |
+| 9 | naranja | caja | ? |
+| 10 | rojo | caja | ? |
+
+**Lo que sugiere:** un cilindro de 4 hilos con **salidas complementarias** (NO + NC) da justo lo que pide
+el `1.06`: dos canales siempre opuestos, 0/1 o 1/0. **Probablemente los dos canales del pedal salen del
+cilindro solo**, y la caja es otra cosa. Se confirma en el banco: café a +12 V por 100 Ω, azul a −, 10 kΩ de
+cada salida al azul (PNP; si las dos dan 0 V siempre, al café: NPN). Sin objetivo una salida alta y la otra
+baja; con el destornillador a < 4 mm, **se invierten**. Las dos iguales = una salida muerta = el `E0106`.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
