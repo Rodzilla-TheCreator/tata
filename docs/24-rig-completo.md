@@ -451,6 +451,21 @@ café al + , azul al − , fuente a 12 V, resistencia en serie en el +; medir la
 - **Siguiente, sin riesgo:** un imán contra la cara, por los dos polos; la cámara del celular apuntando a
   la cara (si hay emisor IR se ve una luz morada); y una foto de la cara.
 
+**16-nov, decisión (maje): no más pruebas en el banco sobre los pines del cilindro.** Sujetar cables a
+los pines es poco estable y lo que falta lo dice mejor el equipo. Se salta la prueba de carga (10 k en
+cada salida). Con lo medido basta para diseñar:
+
+- Las salidas son **un cambio completo**, no analógico: complementarias, y el `1.06` solo acepta 0/1 y 1/0.
+- Lo más probable es que cada salida tenga **47 k hacia el +** (ohmios café–blanco y café–negro, 47 k
+  cada uno) y un **transistor que la jala al −** (el bajo de 0.3 V).
+- **El emulador se arma con las dos opciones y un puente:** el relé lleva cada salida al **−** del equipo
+  (pin 3), y para el alto, o directo al **+** del equipo (pin 1) o por **47 k** al +. Nunca voltaje propio.
+  El puente se elige con la medición en el equipo: **sensor desconectado, llave en ON, pines 2 y 4
+  contra el 3**. A 0 V, el equipo espera que el sensor ponga el alto: directo. Con voltaje propio: por 47 k.
+- **La caja (pines 5–10) se deja para el equipo:** se enchufa el conjunto real, sin pedir movimiento y con
+  la rueda en el aire, y se ve qué eventos quedan aparte del `1.06`. Si hace falta, la matriz de ohmios
+  de la caja (sin alimentar; resbalar la punta no daña nada).
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
