@@ -97,6 +97,20 @@ Es lo más fácil de conseguir. Un polo por módulo, las dos entradas juntas:
 | Paro de hongo NC | ya en el BOM del rig (`docs/24`) |
 | **Clavija para el conector suelto** | ver «El conector» |
 
+### En C&D (sps.cdtechnologia.net, revisado 16-nov; precios de la web, inventario sin confirmar)
+
+| Qué | Producto | Precio |
+|---|---|---|
+| 3 × módulo de relé (2 + repuesto) | «Modulo Rele 5-24V 10A 1 - 8 canales», variante **1 CANAL 5V**. La foto muestra relé SRD-05VDC-SL-C, optoacoplador y **jumper H/L**: verificarlo en la tienda | L80 c/u |
+| 47 kΩ | «Resistencias de Filamento de Carbon 1/4W 1 Valor (10 Unidades)», valor 47-K | L31 |
+| J1/J2 | «Pines de conexion macho - hembra 2.54mm» + «Mini Jumpers 2.54mm 2 pin (Set de 10)» | L50 + L30 |
+| Bornera de 4 | «Borneras de 4 - 5 y 12 Canales», 4 canales | ~L100 |
+| Paro de hongo (si no está ya) | «Boton industrial parada de emergencia rojo tipo hongo». **Tiene que traer contacto NC** (bornes 11–12); verificarlo en la tienda | L150 |
+
+**No sirve de ahí:** el G2RL-2 DPDT solo viene con bobina de 12 o 24 V. No hacen falta 2N2222 ni 1N4148: los
+trae el módulo. El SRD dice 10 A / 30 V DC, que es para cortar carga; acá pasa menos de 1 mA, así que con ~40 V
+en el pin 1 sirve igual (aislamiento de 250 V AC).
+
 ## El conector
 
 El emulador tiene que enchufar en el `XS160` suelto del equipo. Dos caminos:
