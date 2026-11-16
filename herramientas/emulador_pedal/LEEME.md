@@ -64,6 +64,27 @@ comprueba en el equipo (`docs/24`, 16-nov).
 **El firmware no cambia:** es el pie de `herramientas/rig/tarea_firmware.md` (GPIO27, latido de 200 ms,
 rearme con GPIO32). Para el banco no hace falta ESP: la bobina se prende con 5 V a mano.
 
+## Con dos módulos de relé de 1 canal (revisado 16-nov)
+
+Es lo más fácil de conseguir. Un polo por módulo, las dos entradas juntas:
+
+| Módulo | COM | NC (sin activar) | NO (activado) |
+|---|---|---|---|
+| A | bornera **2** (blanco) | bornera **3** (−) | centro de **J1** |
+| B | bornera **4** (negro) | centro de **J2** | bornera **3** (−) |
+
+- `IN` de A y B juntos a **GPIO27** (en el banco, 5 V a mano). `VCC` de los dos módulos **a través del paro de
+  hongo** (NC): apretarlo suelta los dos. `GND` de los módulos = GND del ESP (amarillo).
+- J1/J2: un extremo directo a la bornera **1**, el otro a la bornera 1 por **47 kΩ**; el jumper elige.
+
+> **Ojo, no estaba en el diseño: muchos módulos son «activos en bajo»** (`IN` en 0 = relé activado). Con
+> uno así, **un ESP muerto, reiniciando o con GPIO27 al aire deja el relé ACTIVADO = «pisado»**: lo
+> contrario de a prueba de fallas. Usar solo módulos **activos en alto** (jumper H/L en **H**), y
+> comprobarlo antes de cablear: `IN` al aire y `IN` a GND tienen que dejar el relé **sin activar**. Si el
+> módulo no tiene jumper y activa en bajo, no sirve: relé suelto con el 2N2222 (el circuito de arriba).
+> **Control:** con todo cableado, desenchufar el ESP (o dejar `IN` al aire) tiene que dar la fila «sin
+> bobina» de la tabla (blanco bajo, negro alto).
+
 ## Piezas
 
 | Pieza | Nota |
