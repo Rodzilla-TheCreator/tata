@@ -403,7 +403,7 @@ sensor. **Se toma como capacitor** (decisión de maje; el control de repetirla t
 café al + , azul al − , fuente a 12 V, resistencia en serie en el +; medir la caída en ella
 ☑ 10 kΩ (≤ 1.2 mA): tiene que haber caída de varios voltios → hay consumo
 ☑ 1 kΩ  (≤ 12 mA)
-□ 100 Ω (≤ 120 mA): acá arranca de verdad. Caída esperada 1–3 V (10–30 mA); > 6 V → desconectar
+☑ 100 Ω (≤ 120 mA): acá arranca de verdad. Caída esperada 1–3 V (10–30 mA); > 6 V → desconectar
 □ con 100 Ω: blanco y negro contra el azul, sin objetivo y con el destornillador a < 4 mm
     una alta y otra baja, y se invierten   → el sensor SIRVE
     las dos iguales y no cambian           → no detecta (la cara)
@@ -416,11 +416,15 @@ café al + , azul al − , fuente a 12 V, resistencia en serie en el +; medir la
 |---|---|---|---|---|---|
 | 10 kΩ | 9 V | 2.8 V | 11.8 | 0.9 mA | 3.1 kΩ |
 | 1 kΩ | 5.3 V | 6.67 V | 12.0 | 5.3 mA | 1.26 kΩ |
+| 100 Ω (16-nov, subiendo la fuente de 7 a 12 V) | 0.94 V | 11.22 V | 12.2 | 9.4 mA | 1.2 kΩ |
 
 - **No hay corto y el sensor consume**: los dos escalones cuadran con la fuente (a + b ≈ 12).
 - **No es una resistencia**: al subir el voltaje la corriente crece mucho más que en proporción
   (de 2.8 a 6.7 V, la corriente se multiplica por 6). Es lo que hace una electrónica que «arranca» a
   partir de cierto voltaje (regulador, oscilador o emisor IR). Coherente con un sensor vivo.
+- **100 Ω: 9.4 mA con 11.2 V en el sensor**, justo lo extrapolado; no hay recorte. El sensor
+  **prende una luz amarilla** que se ve por debajo, donde entra el cable. El amperímetro DROK se
+  quedó en 0: no resuelve ~10 mA, no es que no haya corriente (lo dice la caída en la resistencia).
 - **Extrapolando** (≈ 880 Ω incrementales), con 100 Ω a 12 V daría ~10 mA, b ≈ 11 V, a ≈ 1 V. **Pero si
   tiene un recorte (zener) cerca de 7 V**, con 100 Ω podría pedir hasta ~50 mA. Por eso el escalón de
   100 Ω **se hace subiendo la fuente desde ~7 V** y mirando a: si pasa de **3 V (30 mA)**, se baja y se para.
