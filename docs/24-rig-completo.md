@@ -429,6 +429,28 @@ café al + , azul al − , fuente a 12 V, resistencia en serie en el +; medir la
   tiene un recorte (zener) cerca de 7 V**, con 100 Ω podría pedir hasta ~50 mA. Por eso el escalón de
   100 Ω **se hace subiendo la fuente desde ~7 V** y mirando a: si pasa de **3 V (30 mA)**, se baja y se para.
 
+**16-nov, las salidas (maje, 100 Ω en serie, 12 V, negra en el azul):**
+
+| | blanco (pin 2) | negro (pin 4) | luz amarilla |
+|---|---|---|---|
+| nada enfrente | 10.7 V | 0.3 V | prendida |
+| destornillador / pinzas a la cara | 10.70–10.72 | 0.28–0.32 | no cambia |
+| la mano | igual | igual | no cambia |
+
+- Las salidas **están en un estado válido** (una alta, otra baja: complementarias, el 1/0 del `1.06`).
+  Las dos salidas y la alimentación funcionan.
+- **Pero no cambian con nada**: con lo probado (acero y mano), **no detecta**.
+- **Sospechosos, sin concluir:**
+  1. **Es inductivo y la bobina de la cara está dañada** (la tapa que falta). En un inductivo, «detectar»
+     es que el objetivo frene el oscilador; con la bobina abierta el oscilador no arranca y el sensor
+     queda **clavado en «detectando»**. Calzaría con la luz amarilla prendida sin nada enfrente, **si** esa
+     luz es la de salida (en muchos es la de salida; en otros, la de alimentación).
+  2. **No es inductivo sino magnético** (Hall): ni el acero ni la mano lo mueven, solo un **imán**. El
+     pedal traería el imán.
+  3. **Es óptico** y la mano no basta (distancia o reflectividad), o el emisor está muerto.
+- **Siguiente, sin riesgo:** un imán contra la cara, por los dos polos; la cámara del celular apuntando a
+  la cara (si hay emisor IR se ve una luz morada); y una foto de la cara.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
