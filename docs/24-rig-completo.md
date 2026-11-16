@@ -124,6 +124,17 @@ con bobina:  NC abierto · NA cerrado   = «pedal pisado»
 - El relé va en el **arnés en Y con selector manual/teleop** (`docs/21` §3.4): en manual, el pedal
   real pasa directo y el equipo queda de fábrica. No se corta nada.
 
+> **16-nov: el pedal no es un interruptor seco, es un sensor activo de 4 hilos** (cilindro del
+> `51297587`, medido en banco más abajo). El emulador está en
+> [`herramientas/emulador_pedal/LEEME.md`](../herramientas/emulador_pedal/LEEME.md).
+>
+> | Decía | Es | Qué lo tumbó |
+> |---|---|---|
+> | el DPDT **reemplaza los dos contactos** NC y NA del pedal | el DPDT lleva cada salida (pin 2 blanco, pin 4 negro) **al + o al − del propio equipo** (pines 1 y 3), siempre opuestas; el alto directo o por 47 k, con un puente | el banco: + / −, dos salidas complementarias 10.7 / 0.3 V con 11.2 V, 47 k del café a cada salida |
+> | sin bobina = «suelto» por construcción (NC cerrado) | sin bobina = blanco bajo / negro alto, y **cuál es «suelto» se confirma en el equipo** con el `E1903.01`; si sale al revés se cruzan 2 y 4 | el sensor real quedó clavado y no se sabe qué estado es «pisado» |
+>
+> El circuito de la bobina (GPIO27, 2N2222, paro de hongo, rearme) no cambia.
+
 ### Lo que falta medir para cerrar el relé — 5 min en el equipo
 
 | Qué | Por qué |
