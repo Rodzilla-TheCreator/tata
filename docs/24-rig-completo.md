@@ -466,6 +466,23 @@ cada salida). Con lo medido basta para diseñar:
   la rueda en el aire, y se ve qué eventos quedan aparte del `1.06`. Si hace falta, la matriz de ohmios
   de la caja (sin alimentar; resbalar la punta no daña nada).
 
+**16-nov, la caja, desde el manual (sin medir).** El `51297587` es el ítem 12 del **pedal doble**
+(pág. 10, «sensores», en plural): el cilindro y la caja son los sensores de las dos placas. Y el evento
+**`1.13`** trata el pedal doble como **fuente de sentido de marcha**, igual que el interruptor de sentido
+del multipiloto:
+
+- dos señales, sentido 1 y sentido 2; **válidas 0/0, 0/1 y 1/0**; solo **1/1 por 500 ms** da falla, y se
+  borra sola al volver a una combinación válida (no pide reiniciar, a diferencia del `1.06`);
+- `1.13.2`: si hay **más de una fuente de sentido instalada** (multipiloto, sensor externo o pedal doble) y
+  el equipo se mueve, falla.
+
+**Lectura (hipótesis):** el cilindro es el **hombre muerto** (`1.06`, sus dos canales complementarios), y
+la caja da el **sentido de marcha por pedal**, una opción. Seis hilos calzan con **dos sensores de tres
+hilos** (+, −, salida), uno por sentido. **Si es así, para el emulador la caja no hace falta:** en este
+equipo el sentido sale del multipiloto (y del bus), y la caja desenchufada debería leerse **0/0**, que es
+válido. **Se comprueba en el equipo:** el emulador del cilindro enchufado y los pines 5–10 al aire, sin
+pedir movimiento; si **no aparece el `1.13`**, la caja se queda fuera.
+
 **Qué decide para el pie del rig** (la tabla de arriba): salidas que conmutan a + o a − sin
 importar la corriente → el **DPDT** tal cual; salidas que el controlador lee con cierta corriente
 o voltaje → **optoacopladores / transistores**. Con los voltajes del paso 2 se elige el relé
