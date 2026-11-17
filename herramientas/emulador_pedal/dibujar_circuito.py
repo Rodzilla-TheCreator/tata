@@ -72,7 +72,7 @@ A=modulo(190,'Módulo A'); B=modulo(420,'Módulo B')
 # riel + (café): pin1 -> x=230 vertical hasta 580 ; arriba hasta x=450
 line([P[1],(420,160)],CAFE,3.5); dot(230,160,CAFE)
 vhop(230,160,580,[260,490],CAFE,3.5)
-line([(230,580),(450,580)],CAFE,3.5)
+line([(230,580),(420,580)],CAFE,3.5)
 # riel − (azul): pin3 -> x=470 vertical hasta NC A
 line([P[3],(470,630)],AZUL,3.5)
 vhop(470,630,300,[],AZUL,3.5)  # placeholder, se redibuja con saltos abajo
@@ -84,25 +84,18 @@ line([(470,450),(520,450)],AZUL,3.5); dot(470,450,AZUL)   # NO B al −
 # salidas
 line([P[2],(520,260)],BLANCO,4)    # pin 2 -> COM A (cruza la + en x=230 con salto ya hecho)
 line([P[4],(520,490)],NEGRO,3.5)    # pin 4 -> COM B
-# J1: + (160) -> nodo 212 -> NO A
-line([(330,160),(330,176)],CAFE,3); gapv(330,181,199,CAFE); line([(330,204),(330,212)],'#7a4a1f',3); dot(330,160,CAFE)
-line([(420,160),(420,164)],CAFE,3); resv(420,164,190,CAFE); gapv(420,195,206,CAFE); dot(420,160,CAFE)
-line([(330,212),(495,212),(495,220),(520,220)],'#7a4a1f',3); dot(420,212,'#7a4a1f')
-t(340,195,'directo',11,c='#6b5537'); t(432,182,'47 kΩ',11,w='bold',c='#6b5537')
-t(372,238,'J1: poné UNO de los dos',11,'middle',w='bold',c='#6b5537')
-# J2: + (580) -> NC B (530)
-line([(330,580),(330,566)],CAFE,3); gapv(330,561,545,CAFE); line([(330,540),(330,530)],'#7a4a1f',3); dot(330,580,CAFE)
-line([(420,580),(420,570)],CAFE,3); resv(420,570,548,CAFE); gapv(420,543,531,CAFE); dot(420,580,CAFE)
-line([(420,526),(420,515),(330,515),(330,530)],'#7a4a1f',3)
-line([(420,515),(500,515),(500,530),(520,530)],'#7a4a1f',3)
-O.pop(); O.pop()
-# redibujo J2 más limpio: nodo en y=515
-line([(330,540),(330,515),(500,515),(500,530),(520,530)],'#7a4a1f',3)
-line([(420,526),(420,515)],'#7a4a1f',3); dot(420,515,'#7a4a1f')
-t(337,560,'directo',11,c='#6b5537'); t(430,566,'47 kΩ',11,w='bold',c='#6b5537')
-t(372,606,'J2: poné UNO de los dos',11,'middle',w='bold',c='#6b5537')
-t(250,660,'arrancá con J1 y J2 en «47 kΩ»',12,w='bold',c='#6b5537')
-
+# J1: + (160) -> 47k -> NO A
+line([(420,160),(420,166)],CAFE,3); resv(420,166,200,CAFE); dot(420,160,CAFE)
+line([(420,200),(420,212),(495,212),(495,220),(520,220)],'#7a4a1f',3)
+t(434,186,'47 kΩ',12,w='bold',c='#6b5537')
+t(440,130,'o un cable Dupont en su lugar,',11,c='#6b5537',it=True)
+t(440,144,'solo si en el equipo el alto sale bajo',11,c='#6b5537',it=True)
+# J2: + (580) -> 47k -> NC B
+line([(420,580),(420,574)],CAFE,3); resv(420,574,540,CAFE); dot(420,580,CAFE)
+line([(420,540),(420,515),(500,515),(500,530),(520,530)],'#7a4a1f',3)
+t(434,562,'47 kΩ',12,w='bold',c='#6b5537')
+t(260,604,'o un cable Dupont en su lugar,',11,c='#6b5537',it=True)
+t(260,618,'solo si en el equipo el alto sale bajo',11,c='#6b5537',it=True)
 # lado del ESP: buses
 IN,GN,V5=830,880,930
 line([(760,220),(IN,220)],GPIO,3); line([(760,450),(IN,450)],GPIO,3); dot(IN,450,GPIO)
@@ -135,8 +128,8 @@ y0=720
 a(f'<rect x="20" y="{y0-12}" width="770" height="236" rx="10" fill="#fafafa" stroke="#ddd"/>')
 t(34,y0+10,'Qué ve el equipo',15,w='bold')
 rows=[('','pin 2 (blanco)','pin 4 (negro)','estado'),
-      ('relés SIN activar (IN bajo, paro o ESP muerto)','− (bajo)','+ por J2 (alto)','tiene que ser «suelto»'),
-      ('relés activados (IN alto)','+ por J1 (alto)','− (bajo)','«pisado»')]
+      ('relés SIN activar (IN bajo, paro o ESP muerto)','− (bajo)','+ por 47 kΩ (alto)','tiene que ser «suelto»'),
+      ('relés activados (IN alto)','+ por 47 kΩ (alto)','− (bajo)','«pisado»')]
 xs=[34,370,505,640]
 for i,r in enumerate(rows):
     for x,s in zip(xs,r): t(x,y0+36+i*22,s,12.5,w='bold' if i==0 else 'normal')

@@ -68,6 +68,12 @@ rearme con GPIO32). Para el banco no hace falta ESP: la bobina se prende con 5 V
 
 **Esquema: `circuito_modulos.svg`** (y `.png`; lo dibuja `dibujar_circuito.py`).
 
+> **17-nov: J1/J2 ya no son tiras de pines.** Cada uno es **la 47 kΩ fija** entre el pin 1 y el contacto; el
+> «directo» es **un cable Dupont en lugar de la resistencia**, solo si en el equipo el alto sale bajo (medir
+> 2 o 4 contra 3 con el relé en alto: tiene que dar cerca del pin 1). El sensor real usaba 47 k en ese mismo
+> equipo, así que casi seguro queda la resistencia. Las tablas de abajo dicen «centro de J1/J2»: es el
+> extremo de la resistencia del lado del relé.
+
 Es lo más fácil de conseguir. Un polo por módulo, las dos entradas juntas:
 
 | Módulo | COM | NC (sin activar) | NO (activado) |

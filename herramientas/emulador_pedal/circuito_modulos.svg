@@ -71,7 +71,7 @@
 <path d="M170,160 L420,160" fill="none" stroke="#8b5a2b" stroke-width="3.5" stroke-linejoin="round"/>
 <circle cx="230" cy="160" r="5" fill="#8b5a2b"/>
 <path d="M230,160 V253 A7,7 0 0 1 230,267 V483 A7,7 0 0 1 230,497 V580" fill="none" stroke="#8b5a2b" stroke-width="3.5"/>
-<path d="M230,580 L450,580" fill="none" stroke="#8b5a2b" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M230,580 L420,580" fill="none" stroke="#8b5a2b" stroke-width="3.5" stroke-linejoin="round"/>
 <path d="M170,630 L470,630" fill="none" stroke="#1f63d6" stroke-width="3.5" stroke-linejoin="round"/>
 <path d="M470,630 V537 A7,7 0 0 0 470,523 V497 A7,7 0 0 0 470,483 V300" fill="none" stroke="#1f63d6" stroke-width="3.5"/>
 <path d="M470,300 L520,300" fill="none" stroke="#1f63d6" stroke-width="3.5" stroke-linejoin="round"/>
@@ -80,42 +80,20 @@
 <circle cx="470" cy="450" r="5" fill="#1f63d6"/>
 <path d="M170,260 L520,260" fill="none" stroke="#8a9099" stroke-width="4" stroke-linejoin="round"/>
 <path d="M170,490 L520,490" fill="none" stroke="#111" stroke-width="3.5" stroke-linejoin="round"/>
-<path d="M330,160 L330,176" fill="none" stroke="#8b5a2b" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="330" cy="181" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<circle cx="330" cy="199" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<path d="M321,185 Q314,190.0 321,195" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="3 3"/>
-<path d="M330,204 L330,212" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="330" cy="160" r="5" fill="#8b5a2b"/>
-<path d="M420,160 L420,164" fill="none" stroke="#8b5a2b" stroke-width="3" stroke-linejoin="round"/>
-<path d="M420,164 L428,166.16666666666666 L412,170.5 L428,174.83333333333334 L412,179.16666666666666 L428,183.5 L412,187.83333333333334 L420,190" fill="none" stroke="#8b5a2b" stroke-width="2.5" stroke-linejoin="round"/>
-<circle cx="420" cy="195" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<circle cx="420" cy="206" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<path d="M411,199 Q404,200.5 411,202" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path d="M420,160 L420,166" fill="none" stroke="#8b5a2b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M420,166 L428,168.83333333333334 L412,174.5 L428,180.16666666666666 L412,185.83333333333334 L428,191.5 L412,197.16666666666666 L420,200" fill="none" stroke="#8b5a2b" stroke-width="2.5" stroke-linejoin="round"/>
 <circle cx="420" cy="160" r="5" fill="#8b5a2b"/>
-<path d="M330,212 L495,212 L495,220 L520,220" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="420" cy="212" r="5" fill="#7a4a1f"/>
-<text x="340" y="195" font-size="11" text-anchor="start" font-weight="normal" fill="#6b5537">directo</text>
-<text x="432" y="182" font-size="11" text-anchor="start" font-weight="bold" fill="#6b5537">47 kΩ</text>
-<text x="372" y="238" font-size="11" text-anchor="middle" font-weight="bold" fill="#6b5537">J1: poné UNO de los dos</text>
-<path d="M330,580 L330,566" fill="none" stroke="#8b5a2b" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="330" cy="561" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<circle cx="330" cy="545" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<path d="M321,565 Q314,553.0 321,541" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="3 3"/>
-<path d="M330,540 L330,530" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="330" cy="580" r="5" fill="#8b5a2b"/>
-<path d="M420,580 L420,570" fill="none" stroke="#8b5a2b" stroke-width="3" stroke-linejoin="round"/>
-<path d="M420,570 L428,568.1666666666666 L412,564.5 L428,560.8333333333334 L412,557.1666666666666 L428,553.5 L412,549.8333333333334 L420,548" fill="none" stroke="#8b5a2b" stroke-width="2.5" stroke-linejoin="round"/>
-<circle cx="420" cy="543" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<circle cx="420" cy="531" r="5" fill="#fff" stroke="#8b5a2b" stroke-width="2.5"/>
-<path d="M411,547 Q404,537.0 411,527" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="3 3"/>
+<path d="M420,200 L420,212 L495,212 L495,220 L520,220" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
+<text x="434" y="186" font-size="12" text-anchor="start" font-weight="bold" fill="#6b5537">47 kΩ</text>
+<text x="440" y="130" font-size="11" text-anchor="start" font-weight="normal" fill="#6b5537" font-style="italic">o un cable Dupont en su lugar,</text>
+<text x="440" y="144" font-size="11" text-anchor="start" font-weight="normal" fill="#6b5537" font-style="italic">solo si en el equipo el alto sale bajo</text>
+<path d="M420,580 L420,574" fill="none" stroke="#8b5a2b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M420,574 L428,571.1666666666666 L412,565.5 L428,559.8333333333334 L412,554.1666666666666 L428,548.5 L412,542.8333333333334 L420,540" fill="none" stroke="#8b5a2b" stroke-width="2.5" stroke-linejoin="round"/>
 <circle cx="420" cy="580" r="5" fill="#8b5a2b"/>
-<path d="M330,540 L330,515 L500,515 L500,530 L520,530" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
-<path d="M420,526 L420,515" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="420" cy="515" r="5" fill="#7a4a1f"/>
-<text x="337" y="560" font-size="11" text-anchor="start" font-weight="normal" fill="#6b5537">directo</text>
-<text x="430" y="566" font-size="11" text-anchor="start" font-weight="bold" fill="#6b5537">47 kΩ</text>
-<text x="372" y="606" font-size="11" text-anchor="middle" font-weight="bold" fill="#6b5537">J2: poné UNO de los dos</text>
-<text x="250" y="660" font-size="12" text-anchor="start" font-weight="bold" fill="#6b5537">arrancá con J1 y J2 en «47 kΩ»</text>
+<path d="M420,540 L420,515 L500,515 L500,530 L520,530" fill="none" stroke="#7a4a1f" stroke-width="3" stroke-linejoin="round"/>
+<text x="434" y="562" font-size="12" text-anchor="start" font-weight="bold" fill="#6b5537">47 kΩ</text>
+<text x="260" y="604" font-size="11" text-anchor="start" font-weight="normal" fill="#6b5537" font-style="italic">o un cable Dupont en su lugar,</text>
+<text x="260" y="618" font-size="11" text-anchor="start" font-weight="normal" fill="#6b5537" font-style="italic">solo si en el equipo el alto sale bajo</text>
 <path d="M760,220 L830,220" fill="none" stroke="#e07b00" stroke-width="3" stroke-linejoin="round"/>
 <path d="M760,450 L830,450" fill="none" stroke="#e07b00" stroke-width="3" stroke-linejoin="round"/>
 <circle cx="830" cy="450" r="5" fill="#e07b00"/>
@@ -158,10 +136,10 @@
 <text x="640" y="756" font-size="12.5" text-anchor="start" font-weight="bold" fill="#111">estado</text>
 <text x="34" y="778" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">relés SIN activar (IN bajo, paro o ESP muerto)</text>
 <text x="370" y="778" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">− (bajo)</text>
-<text x="505" y="778" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">+ por J2 (alto)</text>
+<text x="505" y="778" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">+ por 47 kΩ (alto)</text>
 <text x="640" y="778" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">tiene que ser «suelto»</text>
 <text x="34" y="800" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">relés activados (IN alto)</text>
-<text x="370" y="800" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">+ por J1 (alto)</text>
+<text x="370" y="800" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">+ por 47 kΩ (alto)</text>
 <text x="505" y="800" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">− (bajo)</text>
 <text x="640" y="800" font-size="12.5" text-anchor="start" font-weight="normal" fill="#111">«pisado»</text>
 <text x="34" y="832" font-size="12.2" text-anchor="start" font-weight="normal" fill="#333">• Siempre una salida alta y la otra baja: nunca 0/0 ni 1/1 (evento 1.06). El + nunca toca el −: cada salida va al COM.</text>
