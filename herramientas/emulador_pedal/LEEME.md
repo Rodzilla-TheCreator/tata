@@ -66,6 +66,8 @@ rearme con GPIO32). Para el banco no hace falta ESP: la bobina se prende con 5 V
 
 ## Con dos módulos de relé de 1 canal (revisado 16-nov)
 
+**Esquema: `circuito_modulos.svg`** (y `.png`; lo dibuja `dibujar_circuito.py`).
+
 Es lo más fácil de conseguir. Un polo por módulo, las dos entradas juntas:
 
 | Módulo | COM | NC (sin activar) | NO (activado) |
