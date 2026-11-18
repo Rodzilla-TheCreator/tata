@@ -136,11 +136,13 @@ Fuente + a la bornera **1**, − a la **3**. Las conexiones son a la bornera, no
 
 | # | Prueba | Esperado | Control de falsación |
 |---|---|---|---|
+| 0a | **Módulos solos** (5 V al DC+/DC−, nada del lado del equipo): IN al aire, IN a DC−, IN a 3.3 V, IN a 5 V | al aire y a DC−: relé **suelto** (sin clic, LED apagado) · 3.3 V y 5 V: **clic** | si al aire o a DC− hace clic: módulo activo en bajo o jumper en L → no sirve así |
+| 0b | Óhmetro entre el lado del ESP (DC−, IN, DC+) y la bornera 1–4 | **abierto** en todos | tocar DC− con DC−: ~0 Ω |
 | 1 | **Fuente apagada**, óhmetro entre bornera 1 y 3, relé sin bobina y con bobina (5 V a mano) | **abierto** (o > 40 k) en los dos | puentear 1–3 con un cable: tiene que dar ~0 Ω |
 | 2 | Fuente a 12 V, sin bobina: voltaje 2–3 y 4–3 | 2 ≈ 0 V · 4 ≈ 12 V | — |
 | 3 | Con bobina | 2 ≈ 12 V · 4 ≈ 0 V | quitar la bobina: vuelve a la fila 2 |
-| 4 | J en «47k», 10 kΩ de la salida alta al 3 | ≈ 2.1 V (12 × 10/57) | J en «directo»: ≈ 12 V. Si las dos dan igual, el puente no está cableado |
-| 5 | Paro de hongo apretado con la bobina alimentada | vuelve a la fila 2 | soltarlo: vuelve a la fila 3 |
+| 4 | 10 kΩ de la salida alta al 3 (en los dos estados) | ≈ 2.1 V (12 × 10/57) | puentear la 47 kΩ con un Dupont: ≈ 12 V. Si las dos dan igual, la resistencia no está en el camino |
+| 5 | Paro (o el botón, en banco) apretado con la bobina alimentada | vuelve a la fila 2 | soltarlo: vuelve a la fila 3 |
 | 6 | Prender y apagar la bobina 20 veces | siempre una alta y una baja, nunca las dos iguales al quedar quieto | — |
 
 ## En el equipo — orden
