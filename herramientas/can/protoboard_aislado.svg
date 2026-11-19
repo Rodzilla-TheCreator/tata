@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 900" width="1240" height="900" font-family="Segoe UI, Arial, sans-serif">
+<rect width="1240" height="900" fill="#fafafa"/>
+<text x="30" y="34" font-size="22" text-anchor="start" font-weight="bold" fill="#222">CAN aislado en protoboard — ADuM1201 + B0505S + TJA1050</text>
+<text x="30" y="56" font-size="13" text-anchor="start" font-weight="normal" fill="#444">Rieles de ARRIBA = lado ESP (GND = amarillo). Rieles de ABAJO = lado bus (GND_bus = negativo de batería). Ningún cable une arriba con abajo.</text>
+<rect x="330" y="120" width="860" height="650" rx="10" fill="#f1ece2" stroke="#b9ad97" stroke-width="1.5"/>
+<rect x="340" y="182" width="840" height="238" fill="#e8f0fb" rx="6"/>
+<rect x="340" y="450" width="840" height="240" fill="#fdeedd" rx="6"/>
+<line x1="350" y1="142" x2="1170" y2="142" stroke="#d62728" stroke-width="3" stroke-dasharray="2 6"/>
+<text x="1166" y="137" font-size="11" text-anchor="end" font-weight="bold" fill="#d62728">+5 V del ESP</text>
+<line x1="350" y1="164" x2="1170" y2="164" stroke="#222" stroke-width="3" stroke-dasharray="2 6"/>
+<text x="1166" y="159" font-size="11" text-anchor="end" font-weight="bold" fill="#222">GND del ESP = amarillo</text>
+<line x1="350" y1="718" x2="1170" y2="718" stroke="#ff7f0e" stroke-width="3" stroke-dasharray="2 6"/>
+<text x="1166" y="713" font-size="11" text-anchor="end" font-weight="bold" fill="#ff7f0e">+5 V AISLADO (sale del B0505S)</text>
+<line x1="350" y1="740" x2="1170" y2="740" stroke="#8a8a8a" stroke-width="3" stroke-dasharray="2 6"/>
+<text x="1166" y="735" font-size="11" text-anchor="end" font-weight="bold" fill="#8a8a8a">GND_bus = negativo de batería</text>
+<text x="352" y="200" font-size="13" text-anchor="start" font-weight="bold" fill="#3a5f8f">LADO ESP</text>
+<text x="352" y="684" font-size="13" text-anchor="start" font-weight="bold" fill="#a8590c">LADO BUS</text>
+<rect x="340" y="424" width="840" height="22" fill="#d9cfbd"/>
+<line x1="330" y1="435" x2="1190" y2="435" stroke="#c0392b" stroke-width="2.5" stroke-dasharray="10 6"/>
+<text x="380" y="431" font-size="12" text-anchor="start" font-weight="bold" fill="#c0392b">BARRERA</text>
+<rect x="40" y="140" width="200" height="230" rx="6" fill="#20242c" stroke="#000" stroke-width="1.5"/>
+<text x="140" y="166" font-size="20" text-anchor="middle" font-weight="bold" fill="#fff">ESP32</text>
+<text x="140" y="352" font-size="11" text-anchor="middle" font-weight="normal" fill="#bbb">(el mismo de COM6)</text>
+<circle cx="240" cy="190" r="6" fill="#ffd54a" stroke="#000"/>
+<text x="228" y="194" font-size="13" text-anchor="end" font-weight="bold" fill="#fff">GPIO22</text>
+<circle cx="240" cy="220" r="6" fill="#ffd54a" stroke="#000"/>
+<text x="228" y="224" font-size="13" text-anchor="end" font-weight="bold" fill="#fff">GPIO21</text>
+<circle cx="240" cy="250" r="6" fill="#ffd54a" stroke="#000"/>
+<text x="228" y="254" font-size="13" text-anchor="end" font-weight="bold" fill="#fff">3V3</text>
+<circle cx="240" cy="290" r="6" fill="#ffd54a" stroke="#000"/>
+<text x="228" y="294" font-size="13" text-anchor="end" font-weight="bold" fill="#fff">5V</text>
+<circle cx="240" cy="320" r="6" fill="#ffd54a" stroke="#000"/>
+<text x="228" y="324" font-size="13" text-anchor="end" font-weight="bold" fill="#fff">GND</text>
+<rect x="380" y="230" width="170" height="64" rx="6" fill="#2b2b2b" stroke="#000" stroke-width="1.5"/>
+<text x="465" y="256" font-size="15" text-anchor="middle" font-weight="bold" fill="#fff">B0505S-1WR3</text>
+<text x="465" y="274" font-size="11" text-anchor="middle" font-weight="normal" fill="#ccc">DC-DC aislado 5→5 V</text>
+<text x="386" y="289" font-size="10" text-anchor="start" font-weight="normal" fill="#ccc">● = pata 1</text>
+<line x1="405" y1="294" x2="405" y2="312" stroke="#999" stroke-width="3"/>
+<circle cx="405" cy="312" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="412" y="308" font-size="10" text-anchor="start" font-weight="bold" fill="#222">1</text>
+<line x1="445" y1="294" x2="445" y2="312" stroke="#999" stroke-width="3"/>
+<circle cx="445" cy="312" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="452" y="308" font-size="10" text-anchor="start" font-weight="bold" fill="#222">2</text>
+<line x1="485" y1="294" x2="485" y2="312" stroke="#999" stroke-width="3"/>
+<circle cx="485" cy="312" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="492" y="308" font-size="10" text-anchor="start" font-weight="bold" fill="#222">3</text>
+<line x1="525" y1="294" x2="525" y2="312" stroke="#999" stroke-width="3"/>
+<circle cx="525" cy="312" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="532" y="308" font-size="10" text-anchor="start" font-weight="bold" fill="#222">4</text>
+<rect x="700" y="290" width="200" height="290" rx="6" fill="#1d5d34" stroke="#0b3a1e" stroke-width="1.5"/>
+<text x="800" y="430" font-size="17" text-anchor="middle" font-weight="bold" fill="#fff">ADuM1201</text>
+<text x="800" y="450" font-size="11" text-anchor="middle" font-weight="normal" fill="#cfe">(módulo CJMCU)</text>
+<text x="800" y="468" font-size="10" text-anchor="middle" font-weight="normal" fill="#cfe">lado 1 arriba · lado 2 abajo</text>
+<circle cx="725" cy="290" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="725" y="310" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VDD1</text>
+<circle cx="775" cy="290" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="775" y="310" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VOA</text>
+<circle cx="825" cy="290" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="825" y="310" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VIB</text>
+<circle cx="875" cy="290" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="875" y="310" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">GND1</text>
+<circle cx="725" cy="580" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="725" y="568" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VDD2</text>
+<circle cx="775" cy="580" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="775" y="568" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VIA</text>
+<circle cx="825" cy="580" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="825" y="568" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VOB</text>
+<circle cx="875" cy="580" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="875" y="568" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">GND2</text>
+<rect x="960" y="560" width="190" height="95" rx="6" fill="#1b4f8a" stroke="#0d2b4d" stroke-width="1.5"/>
+<text x="1045" y="615" font-size="17" text-anchor="middle" font-weight="bold" fill="#fff">TJA1050</text>
+<text x="1045" y="633" font-size="11" text-anchor="middle" font-weight="normal" fill="#cde">(el nuevo, 20/20)</text>
+<circle cx="985" cy="560" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="985" y="580" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">VCC</text>
+<circle cx="1032" cy="560" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="1032" y="580" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">TX</text>
+<circle cx="1079" cy="560" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="1079" y="580" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">RX</text>
+<circle cx="1126" cy="560" r="5" fill="#ffd54a" stroke="#333"/>
+<text x="1126" y="580" font-size="11" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<rect x="1142" y="587" width="16" height="16" fill="#3a8f4a" stroke="#000"/>
+<text x="1138" y="599" font-size="11" text-anchor="end" font-weight="bold" fill="#fff">CANH</text>
+<rect x="1142" y="622" width="16" height="16" fill="#3a8f4a" stroke="#000"/>
+<text x="1138" y="634" font-size="11" text-anchor="end" font-weight="bold" fill="#fff">CANL</text>
+<text x="1150" y="676" font-size="11" text-anchor="end" font-weight="normal" fill="#a8590c" font-style="italic">CANH / CANL al aire en el banco</text>
+<path d="M240,190 L255,190 L255,76 L825,76 L825,290" fill="none" stroke="#1f77b4" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="240" cy="190" r="4" fill="#1f77b4"/>
+<circle cx="825" cy="290" r="4" fill="#1f77b4"/>
+<path d="M240,220 L268,220 L268,90 L775,90 L775,290" fill="none" stroke="#2ca02c" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="240" cy="220" r="4" fill="#2ca02c"/>
+<circle cx="775" cy="290" r="4" fill="#2ca02c"/>
+<path d="M240,250 L281,250 L281,104 L725,104 L725,290" fill="none" stroke="#8e44ad" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="240" cy="250" r="4" fill="#8e44ad"/>
+<circle cx="725" cy="290" r="4" fill="#8e44ad"/>
+<path d="M240,290 L300,290 L300,142 L345,142" fill="none" stroke="#d62728" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="240" cy="290" r="4" fill="#d62728"/>
+<circle cx="345" cy="142" r="4" fill="#d62728"/>
+<path d="M240,320 L312,320 L312,164 L345,164" fill="none" stroke="#222" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="240" cy="320" r="4" fill="#222"/>
+<circle cx="345" cy="164" r="4" fill="#222"/>
+<path d="M405,312 L405,322 L365,322 L365,164" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="405" cy="312" r="4" fill="#222"/>
+<circle cx="365" cy="164" r="4" fill="#222"/>
+<path d="M445,312 L445,334 L352,334 L352,142" fill="none" stroke="#d62728" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="445" cy="312" r="4" fill="#d62728"/>
+<circle cx="352" cy="142" r="4" fill="#d62728"/>
+<path d="M875,290 L875,164" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="875" cy="290" r="4" fill="#222"/>
+<circle cx="875" cy="164" r="4" fill="#222"/>
+<path d="M485,312 L485,740" fill="none" stroke="#8a8a8a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="485" cy="312" r="4" fill="#8a8a8a"/>
+<circle cx="485" cy="740" r="4" fill="#8a8a8a"/>
+<path d="M525,312 L525,718" fill="none" stroke="#ff7f0e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="525" cy="312" r="4" fill="#ff7f0e"/>
+<circle cx="525" cy="718" r="4" fill="#ff7f0e"/>
+<path d="M725,580 L725,718" fill="none" stroke="#ff7f0e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="725" cy="580" r="4" fill="#ff7f0e"/>
+<circle cx="725" cy="718" r="4" fill="#ff7f0e"/>
+<path d="M875,580 L875,740" fill="none" stroke="#8a8a8a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="875" cy="580" r="4" fill="#8a8a8a"/>
+<circle cx="875" cy="740" r="4" fill="#8a8a8a"/>
+<path d="M985,560 L985,548 L945,548 L945,718" fill="none" stroke="#ff7f0e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="985" cy="560" r="4" fill="#ff7f0e"/>
+<circle cx="945" cy="718" r="4" fill="#ff7f0e"/>
+<path d="M1126,560 L1126,545 L1172,545 L1172,740" fill="none" stroke="#8a8a8a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="1126" cy="560" r="4" fill="#8a8a8a"/>
+<circle cx="1172" cy="740" r="4" fill="#8a8a8a"/>
+<path d="M825,580 L825,600 L900,600 L900,532 L1032,532 L1032,560" fill="none" stroke="#1f77b4" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="825" cy="580" r="4" fill="#1f77b4"/>
+<circle cx="1032" cy="560" r="4" fill="#1f77b4"/>
+<path d="M775,580 L775,625 L915,625 L915,518 L1079,518 L1079,560" fill="none" stroke="#2ca02c" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="775" cy="580" r="4" fill="#2ca02c"/>
+<circle cx="1079" cy="560" r="4" fill="#2ca02c"/>
+<text x="30" y="800" font-size="13" text-anchor="start" font-weight="bold" fill="#222">Cables:</text>
+<line x1="95" y1="796" x2="121" y2="796" stroke="#d62728" stroke-width="5"/>
+<text x="127" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">+5 V ESP</text>
+<line x1="201.8" y1="796" x2="227.8" y2="796" stroke="#222" stroke-width="5"/>
+<text x="233.8" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">GND ESP (amarillo)</text>
+<line x1="374.6" y1="796" x2="400.6" y2="796" stroke="#8e44ad" stroke-width="5"/>
+<text x="406.6" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">3V3 ESP → VDD1</text>
+<line x1="521.0" y1="796" x2="547.0" y2="796" stroke="#1f77b4" stroke-width="5"/>
+<text x="553.0" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">TX</text>
+<line x1="588.2" y1="796" x2="614.2" y2="796" stroke="#2ca02c" stroke-width="5"/>
+<text x="620.2" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">RX</text>
+<line x1="655.4000000000001" y1="796" x2="681.4000000000001" y2="796" stroke="#ff7f0e" stroke-width="5"/>
+<text x="687.4000000000001" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">+5 V aislado</text>
+<line x1="788.6000000000001" y1="796" x2="814.6000000000001" y2="796" stroke="#8a8a8a" stroke-width="5"/>
+<text x="820.6000000000001" y="800" font-size="12" text-anchor="start" font-weight="normal" fill="#222">GND_bus</text>
+<text x="30" y="824" font-size="12" text-anchor="start" font-weight="normal" fill="#222">• VDD1 a 3V3, NUNCA a 5 V: VOA sale al GPIO21 con lo que haya en VDD1.   • TX: GPIO22 → VIB → VOB → TX.   • RX: RX → VIA → VOA → GPIO21.   • B0505S: 1 GND · 2 Vin · 3 0V · 4 +Vo.</text>
+<text x="30" y="844" font-size="12" text-anchor="start" font-weight="normal" fill="#222">• En el montacargas (no hoy): CANH → DB9 8, CANL → DB9 3, GND_bus → negativo de batería (ficha del multipiloto, pin 7). El GND del ESP nunca va ahí.</text>
+<text x="30" y="864" font-size="12" text-anchor="start" font-weight="normal" fill="#222">• Si el ADuM no entra a caballo del canal, ponelo donde quepa: cuentan las conexiones, y que nada del lado 2 toque un riel de arriba. La barrera solo la cruzan el B0505S y el ADuM1201.</text>
+</svg>
