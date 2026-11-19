@@ -6,11 +6,14 @@
 //   GPIO32 -> botón de rearme a GND (pull-up interno)
 //   GPIO2  -> LED: fijo = pisando · parpadeo = disparado, esperando rearme · apagado = sin pisar
 //   GPIO34 <- puente desde GPIO27, SOLO para medir el tiempo de suelta (prueba P2). Opcional.
+//   GPIO35 <- el paro: VCC de los módulos (después del paro) por un divisor 10 k arriba / 20 k abajo.
+//             Con 5 V lee ~3120 mV, sin 5 V ~140 mV (medido 19-nov). Si cae, el pie queda DISPARADO.
 //
 // Protocolo serie, 115200: la laptop manda una línea cada 50 ms, que es a la vez mando y latido.
 //   "L ... pie=1"  (pisar)   ·   "L ... pie=0"  (soltar)
 //   Solo cuenta como latido una línea que empieza con 'L' y trae pie=0 o pie=1. Lo demás se ignora.
-// El ESP manda cada 1 s:  E est=<SIN_ARMAR|ARMADO|DISPARADO> pie=<0|1> lat=<ms> loopmax=<us> disparos=<n>
+//   "R" = pedido de rearme desde el teclado, SOLO si REARME_POR_SERIE = 1 (banco).
+// El ESP manda cada 1 s:  E est=<SIN_ARMAR|ARMADO|DISPARADO> pie=<0|1> lat=<ms> paro=<mV> loopmax=<us> disparos=<n>
 // y en cada evento:       EV <texto>
 
 #include <esp_task_wdt.h>
@@ -20,11 +23,17 @@
 #define USAR_TASK_WDT    1     // P5, control: compilar con 0 y el cuelgue deja el pie pisado
 #define PRUEBA_CUELGUE   0     // P5: con 1, la línea "HANG" cuelga el loop a propósito
 #define TASK_WDT_MS      1000
+// Banco: la tecla r de pie.py rearma (además del botón del GPIO32). En el montacargas va en 0:
+// el rearme tiene que ser un botón en el fierro, no algo que la laptop pueda mandar sola.
+#define REARME_POR_SERIE 1
 
 const int PIN_PIE    = 27;
 const int PIN_REARME = 32;
 const int PIN_LED    = 2;
 const int PIN_MIDE   = 34;   // entrada solamente
+const int PIN_PARO   = 35;   // entrada solamente
+const int PARO_ALTO_MV = 2000;   // arriba de esto: módulos CON 5 V
+const int PARO_BAJO_MV = 1200;   // abajo de esto: módulos SIN 5 V (en medio, se queda como estaba)
 
 enum Estado { SIN_ARMAR, ARMADO, DISPARADO };
 Estado estado = SIN_ARMAR;
@@ -48,6 +57,16 @@ uint32_t tUltLineaUs = 0;
 char     buf[128];
 uint8_t  nbuf = 0;
 
+bool     paroOk      = false;   // los módulos tienen 5 V
+int      mvParo      = 0;
+bool     pideRearme  = false;   // llegó "R" por serie (solo con REARME_POR_SERIE)
+
+static void leerParo() {
+  mvParo = analogReadMilliVolts(PIN_PARO);
+  if (mvParo > PARO_ALTO_MV) paroOk = true;
+  else if (mvParo < PARO_BAJO_MV) paroOk = false;
+}
+
 static inline void pie(bool pisar) { digitalWrite(PIN_PIE, pisar ? HIGH : LOW); }
 
 static const char* nombre(Estado e) {
@@ -61,6 +80,9 @@ static bool latidoFresco(uint32_t ahora) {
 static void procesarLinea(const char* s) {
 #if PRUEBA_CUELGUE
   if (strcmp(s, "HANG") == 0) { Serial.println("EV cuelgue a proposito"); Serial.flush(); while (1) { } }
+#endif
+#if REARME_POR_SERIE
+  if (s[0] == 'R' && s[1] == 0) { pideRearme = true; return; }
 #endif
   if (s[0] != 'L') return;
   const char* p = strstr(s, "pie=");
@@ -90,8 +112,10 @@ void setup() {
   digitalWrite(PIN_LED, LOW);
   pinMode(PIN_REARME, INPUT_PULLUP);
   pinMode(PIN_MIDE, INPUT);
+  pinMode(PIN_PARO, INPUT);
 
   Serial.begin(115200);
+  leerParo();
 
 #if USAR_TASK_WDT
   esp_task_wdt_config_t cfg = { .timeout_ms = TASK_WDT_MS, .idle_core_mask = 0, .trigger_panic = true };
@@ -99,7 +123,9 @@ void setup() {
   esp_task_wdt_add(NULL);
 #endif
 
-  Serial.printf("EV arranque WATCHDOG_MS=%d TASK_WDT=%d CUELGUE=%d\n", WATCHDOG_MS, USAR_TASK_WDT, PRUEBA_CUELGUE);
+  Serial.printf("EV arranque WATCHDOG_MS=%d TASK_WDT=%d CUELGUE=%d REARME_SERIE=%d paro=%d mV (%s)\n",
+                WATCHDOG_MS, USAR_TASK_WDT, PRUEBA_CUELGUE, REARME_POR_SERIE, mvParo,
+                paroOk ? "modulos CON 5 V" : "modulos SIN 5 V");
   tAntLoop = micros();
 }
 
@@ -128,21 +154,39 @@ void loop() {
                   (unsigned long)(ahora - tUltLinea));
   }
 
-  // Regla 3: rearme manual. Botón 50 ms abajo + latido fresco. Nunca se re-pisa solo.
+  // El paro: si los módulos se quedan sin 5 V, el pie suelta y queda DISPARADO.
+  // Al volver los 5 V no se re-pisa: hace falta el rearme (ISO 13850).
+  bool paroAntes = paroOk;
+  leerParo();
+  if (paroAntes && !paroOk) {
+    pie(false);
+    if (estado == ARMADO) { estado = DISPARADO; disparos++; }
+    Serial.printf("EV paro: modulos sin 5 V (%d mV) -> pie suelto, %s\n", mvParo,
+                  estado == DISPARADO ? "DISPARADO, esperando rearme" : nombre(estado));
+  } else if (!paroAntes && paroOk) {
+    Serial.printf("EV paro liberado: modulos con 5 V (%d mV). El pie sigue suelto hasta el rearme\n", mvParo);
+  }
+
+  // Regla 3: rearme manual. Botón 50 ms abajo (o r en el banco) + latido fresco + paro liberado.
+  // Nunca se re-pisa solo.
   bool boton = (digitalRead(PIN_REARME) == LOW);
-  if (boton && !botonPrevio) tBotonBajo = ahora;
+  static bool botonUsado = false;          // un pedido por apretada
+  if (boton && !botonPrevio) { tBotonBajo = ahora; botonUsado = false; }
   botonPrevio = boton;
-  if (boton && (ahora - tBotonBajo) >= 50 && estado != ARMADO) {
-    if (fresco) {
-      estado = ARMADO;
-      Serial.println("EV rearmado");
-    } else if ((ahora - tBotonBajo) < 70) {
-      Serial.println("EV rearme rechazado: no hay latido fresco");
-    }
+  bool botonListo = boton && !botonUsado && (ahora - tBotonBajo) >= 50;
+  if (botonListo) botonUsado = true;
+  bool pedido = botonListo || pideRearme;
+  pideRearme = false;
+  if (pedido && estado == ARMADO) {
+    Serial.println("EV rearme: ya estaba armado");
+  } else if (pedido) {
+    if (!paroOk)      Serial.println("EV rearme rechazado: el paro esta cortando (modulos sin 5 V)");
+    else if (!fresco) Serial.println("EV rearme rechazado: no hay latido fresco");
+    else { estado = ARMADO; Serial.println("EV rearmado"); }
   }
 
   // Salida
-  bool pisar = (estado == ARMADO) && fresco && pideMando;
+  bool pisar = (estado == ARMADO) && fresco && pideMando && paroOk;
   pie(pisar);
 
   // P2: tiempo desde la última línea hasta que GPIO34 (puenteado a 27) lee bajo
@@ -165,7 +209,8 @@ void loop() {
   // Reporte cada 1 s
   if (ahora - tReporte >= 1000) {
     tReporte = ahora;
-    Serial.printf("E est=%s pie=%d lat=%ld loopmax=%lu disparos=%lu\n", nombre(estado), pisar ? 1 : 0,
-                  hayLatido ? (long)(ahora - tUltLinea) : -1L, (unsigned long)loopMaxUs, (unsigned long)disparos);
+    Serial.printf("E est=%s pie=%d lat=%ld paro=%d loopmax=%lu disparos=%lu\n", nombre(estado), pisar ? 1 : 0,
+                  hayLatido ? (long)(ahora - tUltLinea) : -1L, mvParo, (unsigned long)loopMaxUs,
+                  (unsigned long)disparos);
   }
 }

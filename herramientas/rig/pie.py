@@ -6,8 +6,10 @@ Embrión de rig.py: la línea de estado completo cada 50 ms es mando y latido a 
     python pie.py COM5            (Windows)      python pie.py /dev/ttyUSB0   (Linux)
 
 Teclas:  p = pisar   s = soltar   m = matar el latido (prueba del watchdog)   v = volver a mandar
+         r = rearmar (SOLO banco: pie.ino compilado con REARME_POR_SERIE 1)
          q o Ctrl-C = pie suelto y salir
-El rearme NO está en el teclado a propósito: es el botón del GPIO32 (regla 3, rearme manual).
+En el montacargas el rearme es el botón del GPIO32 (regla 3, rearme manual) y pie.ino va con
+REARME_POR_SERIE 0: ahí la r no hace nada.
 """
 import sys
 import time
@@ -71,7 +73,7 @@ def main():
     threading.Thread(target=lector, args=(ser, alto), daemon=True).start()
 
     pie, latido = False, True
-    print("p pisar · s soltar · m matar latido · v volver · q salir  (rearme: botón GPIO32)")
+    print("r rearmar · p pisar · s soltar · m matar latido · v volver · q salir")
     proximo = time.monotonic()
     try:
         with Teclado() as t:
@@ -81,6 +83,7 @@ def main():
                 elif k == "s": pie = False; print(">> soltar")
                 elif k == "m": latido = False; print(">> latido MUERTO (el ESP tiene que soltar en <= 200 ms)")
                 elif k == "v": latido = True;  print(">> latido de vuelta (el pie sigue suelto hasta el rearme)")
+                elif k == "r": ser.write(b"R\n"); print(">> pedido de rearme")
                 elif k in ("q", "\x03"): break
                 if latido:
                     ser.write(linea(pie))
