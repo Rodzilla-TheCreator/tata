@@ -3,7 +3,7 @@
 // Si el paro corta, el pedal queda SUELTO y no vuelve a pisar solo: hay que apretar n otra vez.
 // Sin watchdog: solo para probar el emulador en el escritorio, nunca en el montacargas.
 const int PIN_PIE  = 27;
-const int PIN_PARO = 35;   // solo entrada; alto = los modulos tienen 5 V (paro sin apretar)
+const int PIN_PARO = 35;   // solo entrada; alto = los modulos tienen 5 V. En el banco el pulsador es NA (apretado = 5 V); en el montacargas el hongo es NC (apretado = corta)
 
 bool pisado = false;
 bool paroOk = false;
@@ -17,8 +17,8 @@ void setup() {
   pinMode(PIN_PARO, INPUT);
   Serial.begin(115200);
   paroOk = leeParo();
-  Serial.printf("Pedal SUELTO. Paro: %s (GPIO35 = %d mV). Apreta n para alternar.\n",
-                paroOk ? "OK, modulos con 5 V" : "APRETADO, modulos sin 5 V", analogReadMilliVolts(PIN_PARO));
+  Serial.printf("Pedal SUELTO. %s (GPIO35 = %d mV). Apreta n para alternar.\n",
+                paroOk ? "modulos CON 5 V" : "modulos SIN 5 V (cortado)", analogReadMilliVolts(PIN_PARO));
 }
 
 void loop() {
@@ -32,10 +32,10 @@ void loop() {
         bool estaba = pisado;
         pisado = false;
         digitalWrite(PIN_PIE, LOW);
-        Serial.println(estaba ? "PARO: modulos sin 5 V -> pedal SUELTO. No vuelve a pisar solo."
-                              : "PARO: modulos sin 5 V.");
+        Serial.println(estaba ? "CORTE: modulos SIN 5 V -> pedal SUELTO. No vuelve a pisar solo."
+                              : "CORTE: modulos SIN 5 V.");
       } else {
-        Serial.println("Paro liberado: modulos con 5 V. El pedal sigue SUELTO; apreta n para pisar.");
+        Serial.println("Volvieron los 5 V a los modulos. El pedal sigue SUELTO; apreta n para pisar.");
       }
     }
   } else {
@@ -46,7 +46,7 @@ void loop() {
     char c = Serial.read();
     if (c == 'n' || c == 'N') {
       if (!pisado && !paroOk) {
-        Serial.println("Paro apretado: no se puede pisar.");
+        Serial.println("Modulos SIN 5 V: no se puede pisar.");
       } else {
         pisado = !pisado;
         digitalWrite(PIN_PIE, pisado ? HIGH : LOW);
