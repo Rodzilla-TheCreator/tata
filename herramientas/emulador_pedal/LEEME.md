@@ -175,6 +175,12 @@ desenchufar el ESP = clic y suelto. **Todo como se diseñó.**
 > bus), pero el rearme manual del rig queda incompleto. Arreglo barato: leer el VCC de los módulos con un
 > divisor (5 V → 10 k / 20 k → 3.3 V) en un GPIO de entrada (p. ej. 35); si cae, el firmware pasa a
 > DISPARADO y pide el rearme del GPIO32. Va en `pie.ino` / `rig.ino`.
+>
+> **Hecho en `pedal_n.ino` (19-nov, banco):** divisor 10 k / 20 k del VCC de los módulos (después del
+> pulsador) al GPIO35, leído en mV con histéresis (con 5 V > 2000 mV, sin 5 V < 1200). Medido: **con 5 V
+> 3120–3129 mV, sin 5 V 142 mV**. Avisa cada corte y cada vuelta de los 5 V; al volver, el pedal **queda
+> suelto** hasta apretar n, y con los módulos sin 5 V la n no pisa. Falta pasarlo a `pie.ino` / `rig.ino`
+> (ahí el corte pasa a DISPARADO y pide el rearme del GPIO32).
 
 ## En el equipo — orden
 
