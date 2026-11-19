@@ -9,7 +9,15 @@ bool pisado = false;
 bool paroOk = false;
 uint32_t tCambio = 0;
 
-bool leeParo() { return digitalRead(PIN_PARO) == HIGH; }
+// Lectura analogica con histeresis: CON 5 V arriba de 2000 mV, SIN 5 V abajo de 1200 mV.
+// Con 5 V el divisor da ~3300 mV; sin 5 V, ~0.
+int mvParo = 0;
+bool leeParo() {
+  mvParo = analogReadMilliVolts(PIN_PARO);
+  if (mvParo > 2000) return true;
+  if (mvParo < 1200) return false;
+  return paroOk;   // zona muerta: se queda como estaba
+}
 
 void setup() {
   pinMode(PIN_PIE, OUTPUT);
@@ -32,10 +40,10 @@ void loop() {
         bool estaba = pisado;
         pisado = false;
         digitalWrite(PIN_PIE, LOW);
-        Serial.println(estaba ? "CORTE: modulos SIN 5 V -> pedal SUELTO. No vuelve a pisar solo."
-                              : "CORTE: modulos SIN 5 V.");
+        Serial.printf(estaba ? "CORTE (%d mV): modulos SIN 5 V -> pedal SUELTO. No vuelve a pisar solo.\n"
+                             : "CORTE (%d mV): modulos SIN 5 V.\n", mvParo);
       } else {
-        Serial.println("Volvieron los 5 V a los modulos. El pedal sigue SUELTO; apreta n para pisar.");
+        Serial.printf("5 V DE VUELTA (%d mV). El pedal sigue SUELTO; apreta n para pisar.\n", mvParo);
       }
     }
   } else {
@@ -44,6 +52,10 @@ void loop() {
 
   if (Serial.available()) {
     char c = Serial.read();
+    if (c == 'v' || c == 'V') {
+      Serial.printf("GPIO35 = %d mV -> modulos %s, pedal %s\n", mvParo, paroOk ? "CON 5 V" : "SIN 5 V",
+                    pisado ? "PISADO" : "SUELTO");
+    }
     if (c == 'n' || c == 'N') {
       if (!pisado && !paroOk) {
         Serial.println("Modulos SIN 5 V: no se puede pisar.");
