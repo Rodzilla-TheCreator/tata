@@ -181,6 +181,11 @@ desenchufar el ESP = clic y suelto. **Todo como se diseñó.**
 > 3120–3129 mV, sin 5 V 142 mV**. Avisa cada corte y cada vuelta de los 5 V; al volver, el pedal **queda
 > suelto** hasta apretar n, y con los módulos sin 5 V la n no pisa. Falta pasarlo a `pie.ino` / `rig.ino`
 > (ahí el corte pasa a DISPARADO y pide el rearme del GPIO32).
+>
+> **Probado el caso que importa:** pisado → se suelta el pulsador → `CORTE ... pedal SUELTO` → vuelven los 5 V
+> (3132 mV) → **sigue suelto** hasta la n. Al volver los 5 V salió una ráfaga de basura en la terminal, sin
+> reinicio del ESP (no apareció el arranque): probablemente el pico de corriente de los módulos al encender
+> baja el 5 V del USB y ensucia el serie. Inofensivo en el banco; si algún día reinicia el ESP, es esto.
 
 ## En el equipo — orden
 
