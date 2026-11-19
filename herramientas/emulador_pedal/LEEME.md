@@ -145,6 +145,24 @@ Fuente + a la bornera **1**, − a la **3**. Las conexiones son a la bornera, no
 | 5 | Paro (o el botón, en banco) apretado con la bobina alimentada | vuelve a la fila 2 | soltarlo: vuelve a la fila 3 |
 | 6 | Prender y apagar la bobina 20 veces | siempre una alta y una baja, nunca las dos iguales al quedar quieto | — |
 
+### Resultado en el banco — 19-nov (maje, en casa, DROK a 12 V con límite de corriente bajo)
+
+Armado con dos módulos SRD (jumper en H), 47 k fija, pulsador **NA** en el VCC de los módulos (en banco,
+apretado = «paro sin apretar»; para el equipo va el hongo NC). Sin bornera: café = 1, blanco = 2,
+amarillo = 3, negro = 4. Punta negra en el amarillo; GND del ESP **sin unir** al lado del equipo.
+
+| Prueba | Qué se hizo | Resultado |
+|---|---|---|
+| A (fila 2) | ESP desenchufado | blanco **0 V**, negro **12 V** · pasa |
+| 0a / B1 | ESP enchufado, sin código en GPIO27 (al aire), pulsador apretado | sin clic, igual que A · pasa |
+| 0a / B2 | igual, con EN apretado (reset) | sin clic, igual que A · pasa |
+| 3 | IN al 3V3 | clic, blanco ≈ 12 / negro ≈ 0 · pasa |
+| 5 | soltar el pulsador con el IN en 3V3 | vuelve a A · pasa |
+| 1 | no se hizo con óhmetro; lo cubre en parte el límite de corriente del DROK | — |
+| 0b, 4, 6 | pendientes | — |
+
+B1, B2, 3 y 5: maje los reportó «all good», sin los números anotados.
+
 ## En el equipo — orden
 
 0. **Antes de cortar nada**, con el conjunto real enchufado, llave en ON, rueda en el aire, sin pedir
