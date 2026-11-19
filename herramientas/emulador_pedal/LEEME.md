@@ -163,6 +163,19 @@ amarillo = 3, negro = 4. Punta negra en el amarillo; GND del ESP **sin unir** al
 
 B1, B2, 3 y 5: maje los reportó «all good», sin los números anotados.
 
+**19-nov, con el ESP (`herramientas/rig/pedal_n/`, la tecla n alterna GPIO27; sin watchdog, solo banco):**
+suelto = negro ~12 / blanco ~0; `n` = blanco ~12 / negro ~0; soltar el pulsador (sin 5 V a los módulos) =
+suelto aunque el programa siga diciendo «pisado»; volver a apretarlo = **vuelve a pisar solo**;
+desenchufar el ESP = clic y suelto. **Todo como se diseñó.**
+
+> **Hallazgo, para decidir (no es un defecto del armado):** el paro corta los módulos por hardware y el
+> firmware **no lo ve**. Al soltar el paro (en el equipo: girar el hongo para destrabarlo), si el firmware
+> sigue mandando «pisar», **el pie vuelve a pisar sin rearme**. La norma de paros (ISO 13850) pide que
+> destrabar el paro no rearranque nada por sí solo. Pisar no es moverse (falta el mando de marcha por el
+> bus), pero el rearme manual del rig queda incompleto. Arreglo barato: leer el VCC de los módulos con un
+> divisor (5 V → 10 k / 20 k → 3.3 V) en un GPIO de entrada (p. ej. 35); si cae, el firmware pasa a
+> DISPARADO y pide el rearme del GPIO32. Va en `pie.ino` / `rig.ino`.
+
 ## En el equipo — orden
 
 0. **Antes de cortar nada**, con el conjunto real enchufado, llave en ON, rueda en el aire, sin pedir
