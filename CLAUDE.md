@@ -49,17 +49,20 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 | `sim/` | **La simulación del pasillo (09-nov): `simulacion.html`, un turno de 4 pedidos (2 entradas desde la zona de carga del fondo, 2 salidas al principio) en el pasillo B del DXF: 7 + hueco de 2.66 + 6 bahías por lado, 3.05 m al fondo** (`bahias.geometria('dxf')`; sin eso todo da lo de siempre), con las rutas v3b del planificador, las etapas de la FSM, el mástil y el pantógrafo con los tiempos de la ficha, el margen a postes en cada instante, lo que ven las cámaras A2 y el rig (latido, watchdog de 200 ms, pie, paro, rearme). `exportar.py` + `build.py`. Ver `LEEME.md` |
 | `percepcion/` | **El stack de percepción/localización que corre en maquinón, SIN montacargas.** `detector_aruco.py` mide ArUco en vivo con una webcam (el par de campo de `analisis/aruco_precision.py`). **EKF odometría+ArUco HECHO y validado en sintético (02-nov, 31/31 con control)**, y la **FSM de coordinación A/B** (reserva, deadlock, falla; `sim_coordinacion.py`): `ekf.py` estima también el sesgo de dirección y la escala de velocidad; la colocación de marcas se trata como error correlacionado. Clase interactiva de lo que falló y funcionó: `clases/ekf.html`. Sigue el lazo en Isaac. Ver `LEEME.md`. **El fierro solo bloquea marcha/dirección y capturar odometría real**. **Visibilidad de ArUco por montaje (05-nov, `visibilidad.py`):** con marcas solo en las caras, lateral + trasera **en diagonal** llega a ±4.5 cm con marcas cada 3 bahías; la trasera recta no ve nada en el tránsito; la frontal de `docs/03` es el peor montaje; en la alineación final ninguna cámara ve marcas ~90 % del tiempo. Depende de `PX_MIN`/`ANG_MAX`, que mide maje. **Con las rutas v2 (por el eje, giro casi en el lugar) baja: A2 cada 2 bahías, B cada 1** (cada 2 alternando las marcas entre caras); cada 1 bahía cumplen los dos. **09-nov (`visibilidad_v3.py`, turno v3b del DXF): los pares a 90° no ganan (A y D, de los peores); A2 sigue siendo el mejor balance; ningún par ve marcas en la alineación ni en la toma (0 %): solo una tercera cámara gran angular en la torre ve el 25 % de la toma. Y `ekf.py`/`odometria.py` usaban tan(δ): con el timón a 90° no integran.** **Hecho el mismo día: `rueda=True` (velocidad de la rueda motriz), validado con controles (`prueba_ekf_rueda.py`); `sim_sintetico.py` da idéntico. Con eso, al llegar a la bahía todos los montajes cumplen ±4.5 cm con marcas cada 1 o 2 bahías (A2 máx 2.8 cm; control con una marca por cara: 25 cm). El montaje deja de decidir la precisión** |
 
-## ▶ Tarea pendiente para la i3 (09-nov-2026)
+## ▶ Tarea pendiente para la i3 (19-nov-2026) — en el banco, con maje
 
 Si te dicen «tenés un nuevo task en el CLAUDE.md», es esto:
 
 1. Actualizá (en la raíz del repo): `git pull origin main`
-2. Hacé **`herramientas/rig/tarea_firmware.md`** entero: el firmware del rig integrado (un ESP32 con
-   CAN, timón y pie con watchdog), `rig.py` en la laptop y las pruebas de banco con sus controles.
-   Las piezas del CAN aislado llegan el 11-nov: lo que no se pueda probar sin ellas o sin el hardware
-   enchufado queda «pendiente de banco», nunca como pasado.
-3. Al terminar: marcá el encargo como HECHO, **cambiá el título de esta sección a «✔ Hecha»** con una
-   línea de resultado, y commit + push a `main`.
+2. Hacé **`herramientas/rig/tarea_banco_19nov.md`** con maje enfrente, una prueba a la vez:
+   (1) las pruebas de banco del **emulador del pedal** (`herramientas/emulador_pedal/`);
+   (2) el **firmware del pie** (watchdog de 200 ms, rearme manual) y `pie.py`, probados contra el emulador;
+   (3) el **CAN aislado** (ADuM1201 + B0505S + TJA1050) en protoboard, por etapas y con su dibujo.
+3. Al terminar: **cambiá el título de esta sección a «✔ Hecha»** con una línea de resultado (o qué
+   quedó pendiente de banco), y commit + push a `main`.
+
+**Sigue pendiente (09-nov):** `herramientas/rig/tarea_firmware.md`, el `rig.ino` completo (CAN, timón y
+pie en un ESP). El pie y el CAN aislado de esta tarea son sus dos primeras piezas.
 
 **Anteriores:** ✔ 07-nov, rutas v3b (`analisis/tarea_rutas_v3b.md`): el planificador confirma el culo
 de la ficha; vacío gira sin retranqueo, cargado con ≥ 1 cm, margen 7 / 5 cm.
