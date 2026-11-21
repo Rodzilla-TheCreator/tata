@@ -63,6 +63,15 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 
 ## Notas / errores tal cual
 
+- **Arranque con llave, escuchado (13:32; log local, no versionado: `herramientas/can/logs/escucha_llave_20261121-133231.log`):** con la
+  llave en OFF solo habla el **Display (nodo 3)**: latido `703 7F` (pre-operacional) repetido cada ~0.7 ms. Es
+  una trama que nadie confirma (los demás apagados, el ESP en LISTEN_ONLY no da ACK) y el display la reintenta;
+  las «perdidas» del resumen (30 492) son el buffer del ESP desbordado por eso, **err RX 0**. Al prender (t = 20.9 s):
+  `6EF/6F1/69D/6E9/6E3` (los mismos del 06-oct), boot-ups **4, 30, 7, 8, 1, 2**, el Master lee `0x1000` de 2, 4, 30, 7, 8,
+  NMT start al **28**, y en 2.3 s el bus completo (52 IDs). **Nada nuevo respecto del 06-oct**; 5, 6, 10 y 31 no se anuncian.
+- **El USB del ESP se cayó a las 13:33:06** (a ~10 s de prender la llave; `Access is denied` al leer). A las 13:33:29
+  COM6 estaba de vuelta. Causa sin saber: ¿se movió el cable o fue la llave?
+
 - **G1, comparado con los logs anteriores (`herramientas/can/logs/`):** ningún ID nuevo. Los 38 de hoy están
   todos en los del 06-oct (56). Mismos nodos que transmiten: 1, 2, 3, 4, 7, 8, 30. **5, 6 y 10 siguen sin
   transmitir nada en un equipo completo**: solo aparecen los PDO que el Master les manda (`205/206/20A`,
