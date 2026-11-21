@@ -9,3 +9,6 @@ sec/giro.json
 .venv/
 calib.npz
 percepcion/corridas/
+
+# Las capturas del bus son evidencia de campo: SÍ se versionan (auditoria/ciclo1.md, hallazgo 2)
+!herramientas/can/logs/*.log
