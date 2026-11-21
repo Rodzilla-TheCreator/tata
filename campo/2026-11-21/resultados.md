@@ -43,8 +43,8 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 | 3.0 GND ESP ↔ GND_bus | | |
 | 3.1 B0505S 4–3 | | |
 | 3.2 VOA | | |
-| 3.3 prueba_can | /20 | |
-| 3.4 control sin VDD2 | recibidas: | |
+| 3.3 prueba_can | **20/20** transmitidas, recibidas e idénticas; errores TX 0 / RX 0 (21-nov, COM6) | sí |
+| 3.4 control sin VDD2 | recibidas: **0** (transmitió 1 de 20, errores TX 128: nadie confirma la trama) | sí, el control falla como debe |
 
 ## Prueba 4 · Los tres juntos
 
