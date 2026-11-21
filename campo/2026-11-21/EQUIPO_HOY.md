@@ -1,9 +1,14 @@
 # 21-nov · maje está en el EQUIPO (con la i3, sin maquinon). Solo medir, mirar y escuchar
 
-**Regla de hoy:** el rig **no** se conecta al equipo. Las 4 pruebas de banco (`LEEME.md`) no están hechas,
-`rig.ino` va con `REARME_POR_SERIE 1` y el equipo todavía no está completo. Es el **nivel 1** de
-`docs/25`: medir y mirar. Nada irreversible, no se corta nada. Los números van a `resultados.md`, sección
-«Equipo».
+> **Corregido (maje, 21-nov):** decía «las 4 pruebas de banco no están hechas». **Es:** el timón (26-oct),
+> el pedal (19-nov, con el paro) y el circuito del CAN aislado ya están hechos y probados por separado. Lo
+> único sin probar en hardware es **`rig.ino`** (el integrado): ese **no** va hoy. Cada pieza con **su
+> sketch de siempre**, sí, en el orden de la sección G.
+
+**Regla de hoy:** primero medir y mirar (A–E, nivel 1 de `docs/25`). Después, si el equipo prende, cada
+pieza **por separado** (G). **Nada se mueve hoy:** para movimiento (nivel 3) hace falta el hongo NC de
+verdad (no el pulsador) y la rueda en el aire. Nada irreversible, no se corta nada. Los números van a
+`resultados.md`, sección «Equipo».
 
 Para el Claude de campo: **una medición a la vez**, esperá el número, anotalo, commit cada tanto.
 
@@ -56,8 +61,18 @@ pisar. Si sale al revés, se cruzan los cables 2 y 4 del emulador.
 | E2 | **¿Las ruedas de carga tienen sensor?** Mirar en el brazo o el cubo de cada rueda de carga: un sensor con cable, o imanes. Foto | odometría que no patina (manual: eventos `1.41.x`) |
 | E3 | Si el equipo prende y la dirección funciona: **vueltas de volante de tope a tope**, contadas a mano | el `0x2414` (fábrica 5.5) |
 
-## F · CAN: solo si sobra tiempo, y solo escuchar
+## F · (reemplazado por G)
 
-Solo si se hace antes, en una mesa ahí mismo, la **prueba 3** de `LEEME.md` (`prueba_can`, 20/20 y su
-control) y pasa. Entonces se puede cargar `escucha_can.ino` (**LISTEN_ONLY**) y escuchar el DB9: CANH al
-8, CANL al 3, **GND_bus al negativo de batería**. Si no se hizo la prueba 3, no se escucha hoy.
+## G · Si el equipo prende: cada pieza por separado, con su sketch de siempre
+
+Una pieza a la vez; **restituir lo original entre una y otra**. Si aparece una falla que no se borra
+apagando y prendiendo, **parar** y anotarla.
+
+| # | Pieza | Sketch | Antes | Qué se busca | Nivel |
+|---|---|---|---|---|---|
+| G1 | **CAN aislado, escuchar** | `escucha_can.ino` (LISTEN_ONLY) | `prueba_can` 20/20 + control sin VDD2 = 0 (si no tiene números, 5 min en una mesa). CANH → DB9 8, CANL → DB9 3, **GND_bus → negativo de batería**. ≈ 60 Ω entre 8 y 3, llave OFF | el bus por la cadena aislada, 0 errores | 1 |
+| G2 | **Multipiloto** (nodo 2 falso) | `multipiloto_campo.ino` + `campo_nodo2.py` | lo del 22-oct: CAN del multipiloto real FUERA, el puente en el mazo, el repuesto solo para alimentar | `E4809` desaparece; `a 100` → `E1903.01` (pide el pedal). **Con el pedal real sin pisar: nada se mueve** | 2 |
+| G3 | **Pedal emulado** | `pie.ino` + `pie.py` (con watchdog; **no** `pedal_n`) | C y D hechos (qué estado es «suelto»). Cables a los pines 1–4 **por número grabado**. Multipiloto **real** puesto, sin tocarlo | sin pisar: lo mismo que el pedal real suelto en D3. `r` + `p`: lo mismo que el real pisado, sin `1.06`. `m`: vuelve a suelto | 2 |
+| G4 | **Timón emulado** | `emulador_timon.ino` + `rueda_timon.py` | **rueda motriz en el aire**. `docs/23` Track B: saber cómo se borra una falla del nodo 4 (¿apagar y prender?) antes de enchufar | el nodo 4 acepta el sensor emulado sin falla; mover despacio y ver el sentido de la rueda | 2 |
+
+**G2 + G3 juntos = movimiento. Hoy no.**

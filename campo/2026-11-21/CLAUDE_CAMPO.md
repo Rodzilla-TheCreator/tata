@@ -1,7 +1,8 @@
 # Instrucciones para el Claude Code de campo (i3, usuario rodm_) · 21-nov-2026
 
 > **Si maje te dice que está en el EQUIPO (no en el banco): seguí `EQUIPO_HOY.md`, no las 4 pruebas.** Hoy
-> el rig no se conecta al equipo: solo medir, mirar y escuchar.
+> `rig.ino` (el integrado, nunca probado en hardware) no se conecta. Primero medir (A–E); después, si el
+> equipo prende, cada pieza por separado con su sketch de siempre (G). Nada se mueve hoy.
 
 Estás en la compu de maje (Windows, `C:\Users\rodm_\Desktop\tata_repo`), con el ESP32 enchufado por USB y
 maje en el banco. **Tu trabajo hoy: guiar las 4 pruebas de `LEEME.md` (esta carpeta), una a la vez,

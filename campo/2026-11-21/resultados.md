@@ -81,3 +81,7 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 | E1 entre ejes izq / der | |
 | E2 sensores en ruedas de carga | |
 | E3 vueltas tope a tope | |
+| G1 CAN aislado escuchando (errores) | |
+| G2 multipiloto: E4809 se va / a 100 → E1903 | |
+| G3 pedal emulado: suelto = real suelto / pisado sin 1.06 / m suelta | |
+| G4 timón emulado: nodo 4 acepta / sentido | |
