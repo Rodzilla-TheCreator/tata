@@ -71,6 +71,15 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
   NMT start al **28**, y en 2.3 s el bus completo (52 IDs). **Nada nuevo respecto del 06-oct**; 5, 6, 10 y 31 no se anuncian.
 - **El USB del ESP se cayó a las 13:33:06** (a ~10 s de prender la llave; `Access is denied` al leer). A las 13:33:29
   COM6 estaba de vuelta. Causa sin saber: ¿se movió el cable o fue la llave?
+- **Arranque completo, segunda vez (13:39, paro levantado y llave; log local `escucha_llave_20261121-133911.log`):**
+  mismo arranque que el anterior, al milisegundo de orden: `6EF/6F1/69D/6E9/6E3`, boot-ups 4, 30, 7, 8, 1, 2, el
+  Master lee `0x1000` de 2, 4, 30, 7, 8, NMT start al 28, bus completo en 2.2 s. 52 IDs, **ninguno nuevo** contra el
+  06-oct. **Sin EMCY en el arranque** (el 06-oct hubo `084/087/088/09E`). err RX 0.
+- **El USB se volvió a cortar dos veces (13:39:31 y 13:39:33), ~1–3 s después de levantar el paro y antes de la
+  llave.** El ESP **no se reinició** (su reloj sigue de corrido, 68 → 122 s): se cae el enlace USB, no el ESP. Coincide
+  con la ráfaga del display (`703 7F` cada ~0.7 ms, miles de líneas por segundo por el serie). Sospechosos, sin
+  concluir: (1) la ráfaga satura el chip USB-serie; (2) un transitorio del equipo al dar corriente. Se distingue
+  con `IMPRIMIR_CADA_TRAMA = false` (solo resúmenes): si igual se corta, no es la ráfaga.
 
 - **G1, comparado con los logs anteriores (`herramientas/can/logs/`):** ningún ID nuevo. Los 38 de hoy están
   todos en los del 06-oct (56). Mismos nodos que transmiten: 1, 2, 3, 4, 7, 8, 30. **5, 6 y 10 siguen sin
