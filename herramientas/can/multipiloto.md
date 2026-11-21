@@ -50,6 +50,9 @@ de `0x1000` con `43 00 10 00 00 00 00 00`, y tras el NMT START mandar `0x182` + 
 - El master manda NMT START al nodo 28 (CanCode) aunque no haya teclado
 - Con la llave en ON hay ~1000 tramas/s y 39–53 identificadores
 - **Sin el pedal de hombre muerto el timón no publica nada** y el Diagnose de STEER no cambia
+  > **Corregido 21-nov (maje):** eso fue en el equipo del taller, **sin dirección**. En el EDR funcional
+  > prestado **el STEER publica y la rueda de dirección gira sin pisar el pedal**. La dirección **no**
+  > sirve para saber si el pedal está pisado.
 - **Pérdidas:** a 921600 se perdieron 23 252 tramas con el bus más cargado. El diccionario no se
   afecta (cada acción ×3), pero para grabar todo hace falta un formato binario o solo resumen
 
