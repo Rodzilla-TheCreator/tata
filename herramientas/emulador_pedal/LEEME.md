@@ -8,6 +8,8 @@ pedal resultó no ser un interruptor seco sino un sensor activo de 4 hilos (medi
 **La caja** (pines 5–10) queda fuera: sería el sentido de marcha por pedal (`1.13`, válido en 0/0). Se
 comprueba en el equipo (`docs/24`, 16-nov).
 
+**Foto del sensor (13-nov):** `sensor_pedal_13nov.jpg`: la caja con la tarjeta (etiqueta Jungheinrich `51297587`) y el cilindro roscado M12 con sus tuercas. Falta la foto del conector `XS160` de frente.
+
 ## Lo que se emula (medido en banco, `docs/24`)
 
 | Pin | Color | Qué es |
