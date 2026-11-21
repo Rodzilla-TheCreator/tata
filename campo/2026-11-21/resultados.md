@@ -81,6 +81,15 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
   concluir: (1) la ráfaga satura el chip USB-serie; (2) un transitorio del equipo al dar corriente. Se distingue
   con `IMPRIMIR_CADA_TRAMA = false` (solo resúmenes): si igual se corta, no es la ráfaga.
 
+  > **Resuelto (maje, mismo día): fue movimiento físico.** El ESP no está bien sujeto en el equipo y el cable USB
+  > se movió al levantar el paro (y a las 13:33 al dar la llave).
+  >
+  > | Decía | Es | Qué lo tumbó |
+  > |---|---|---|
+  > | ráfaga del display o transitorio del equipo, sin concluir | **cable USB flojo por movimiento** | lo vio maje |
+  >
+  > Para el equipo: **fijar el ESP y el cable** antes de G2–G4 (un corte del USB con `pie.py` es un watchdog).
+
 - **G1, comparado con los logs anteriores (`herramientas/can/logs/`):** ningún ID nuevo. Los 38 de hoy están
   todos en los del 06-oct (56). Mismos nodos que transmiten: 1, 2, 3, 4, 7, 8, 30. **5, 6 y 10 siguen sin
   transmitir nada en un equipo completo**: solo aparecen los PDO que el Master les manda (`205/206/20A`,
