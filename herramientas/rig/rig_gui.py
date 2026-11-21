@@ -333,7 +333,7 @@ class Gui:
                                 bg="#556", fg="white", command=self._pie_toggle)
         self.bt_pie.pack(padx=10, pady=10)
         tk.Button(f, text="Rearmar (R)", width=14, command=lambda: self.enlace.escribir("R\n")).pack(pady=4)
-        tk.Label(f, text="R por serie es solo de BANCO\n(en el equipo: botón GPIO32)", bg=PANEL, fg=AMBAR,
+        tk.Label(f, text="R por serie es solo de BANCO\n(en el equipo: botón GPIO32)\n\nCAN y timón obedecen SOLO\ncon el pie ARMADO", bg=PANEL, fg=AMBAR,
                  font=("Helvetica", 8)).pack()
         self.lbl_pie = tk.Label(f, text="", bg=PANEL, fg=TXT, font=("Consolas", 10), justify="left")
         self.lbl_pie.pack(fill="x", padx=6, pady=8)

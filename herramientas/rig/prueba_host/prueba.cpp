@@ -49,12 +49,21 @@ int main(){
   CHECK(cero, "12 watchdog: 182 todo en cero");
   float a2=angDAC(); corre(300); float a3=angDAC();
   CHECK(fabsf(a3-a2)<2, "13 watchdog: el timon se queda quieto (no salta a 0 ni sigue)");
-  Serial.send("L y=0 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=0 pie=1\n"); corre(20);
+  float a4=angDAC();
+  for(int k=0;k<4;k++){ Serial.send("L y=100 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=-90 pie=1\n"); rx(0x080,{}); corre(50);}
   CHECK(PINS[27]==LOW, "14 vuelve el latido: el pie NO re-pisa solo");
+  p=ult(0x182); cero=true; for(int i=0;i<8;i++) if(p->data[i]) cero=false;
+  CHECK(cero, "14b vuelve el latido sin rearme: el 182 SIGUE en cero aunque se pida y=100");
+  CHECK(fabsf(angDAC()-a4)<2, "14c vuelve el latido sin rearme: el timon NO sigue a th=-90");
   Serial.send("R\n"); Serial.send("L y=0 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=0 pie=1\n"); corre(20);
   CHECK(PINS[27]==HIGH, "15 rearme con latido: pisa");
+  for(int k=0;k<2;k++){ Serial.send("L y=50 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=0 pie=1\n"); rx(0x080,{}); corre(50);}
+  p=ult(0x182); CHECK(p->data[0]==50 && (p->data[4]&0x08), "15b despues del rearme el 182 vuelve a mandar (y=50)");
   ADC_MV=140; Serial.send("L y=0 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=0 pie=1\n"); corre(20);
   CHECK(PINS[27]==LOW, "16 paro (modulos sin 5 V): suelta");
+  for(int k=0;k<2;k++){ Serial.send("L y=50 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=0 pie=1\n"); rx(0x080,{}); corre(50);}
+  p=ult(0x182); cero=true; for(int i=0;i<8;i++) if(p->data[i]) cero=false;
+  CHECK(cero, "16b paro: el 182 tambien va a cero (la hidraulica no sigue)");
   ADC_MV=3120; Serial.send("L y=0 x=0 b=0 n=0 s=0 e=0 w=0 r=0 th=0 pie=1\n"); corre(20);
   CHECK(PINS[27]==LOW, "17 paro liberado: sigue suelto hasta el rearme");
   Serial.send("X\n"); size_t n=TXL.size(); rx(0x080,{}); corre(300);

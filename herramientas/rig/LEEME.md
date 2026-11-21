@@ -5,7 +5,7 @@
 | `rig/rig.ino` | **el firmware integrado** (21-nov). Junta sin cambiar su lógica `multipiloto_campo`, `emulador_timon` y `pie`. Un latido y un watchdog de 200 ms para los tres |
 | `rig_gui.py` | **la consola**: timón que se arrastra o se manda a un ángulo exacto, multipiloto con joystick, palanca, N S E W y pito, y el pedal con su rearme |
 | `master_falso_can.py` | el Master del EDR, de mentira, en el SH-C30G: para probar el CAN del rig en el banco |
-| `prueba_host/` | prueba la **lógica** de `rig.ino` en la compu, con el ESP imitado: 18 pruebas, y su control |
+| `prueba_host/` | prueba la **lógica** de `rig.ino` en la compu, con el ESP imitado: 23 pruebas, y dos controles |
 | `pie/pie.ino`, `pie.py` | el pie solo (19-nov) · `pedal_n/` el pedal con una tecla, sin watchdog (solo banco) |
 | `tarea_firmware.md`, `tarea_banco_19nov.md` | los encargos |
 
@@ -14,12 +14,22 @@
 | Qué | Resultado |
 |---|---|
 | `rig.ino` contra la API del ESP32 imitada (`g++ -Wall -Wformat`) | sin errores. **No se compiló con el core del ESP32** (la sesión no podía bajarlo): compilarlo en maquinon es el primer paso |
-| `prueba_host/correr.sh` | **18/18 PASA**: arranque suelto, sin armar no transmite, el pie no pisa sin rearme, boot-up 702 / 0x1000 / NMT / 182 decodificado, timón con rampa e ignorado antes de `T`, **watchdog: pie suelto ≤ 200 ms, 182 a cero, timón quieto**, no re-pisa solo, paro, `X` |
-| control (`correr.sh control`, `WATCHDOG_MS` 5000) | **FALLA** las pruebas 11, 12 y 14, como debe |
+| `prueba_host/correr.sh` | **23/23 PASA** (21-nov, con la regla del pie ARMADO): arranque suelto, sin armar no transmite, el pie no pisa sin rearme, boot-up 702 / 0x1000 / NMT / 182 decodificado, timón con rampa e ignorado antes de `T`, **watchdog: pie suelto ≤ 200 ms, 182 a cero, timón quieto**, no re-pisa solo, paro, `X` |
+| control (`correr.sh control`, `WATCHDOG_MS` 5000) | **FALLA** 11, 12, 14, 14b, 14c, como debe. Sin la regla del pie ARMADO fallan 14b, 14c y 16b |
+
+> **21-nov, segunda vuelta — decía / es:** decía que el watchdog y el paro **soltaban el pie y ponían el
+> 182 en cero**, y que al volver el latido el 182 volvía a mandar solo. **Es:** el CAN y el timón obedecen
+> **solo con el pie ARMADO**: después de un watchdog o del paro nada vuelve sin rearme manual. **Qué lo
+> tumbó:** el hongo solo corta los relés del pedal; si la hidráulica del ETR no pide el pedal, un mando de
+> elevar seguía saliendo con el hongo apretado.
 | `rig_gui.py --demo` | abre y dibuja (Xvfb) |
 | En banco con el hardware | **pendiente**: lo de abajo |
 
-## Hoy en maquinon
+## Hoy
+
+Las pruebas del 21-nov, paso a paso y con sus controles: **`campo/2026-11-21/LEEME.md`**.
+
+## En maquinon
 
 Preparar (una vez):
 ```bash

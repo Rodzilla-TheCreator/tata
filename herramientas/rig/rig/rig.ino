@@ -11,6 +11,7 @@
 // #  EL CAN TRANSMITE, pero solo después de armarlo ('A'). Antes: LISTEN_ONLY. #
 // #  Requiere el CAN del multipiloto real FUERA: un solo nodo 2 en el bus.     #
 // #  200 ms sin línea L válida → 0x182 a cero, pie suelto, timón quieto.       #
+// #  Y NADA vuelve solo: CAN y timón obedecen SOLO con el pie ARMADO (rearme).  #
 // ############################################################################
 //
 // PINES (docs/24, «El circuito del ESP, pin por pin», + 19-nov)
@@ -84,6 +85,7 @@ bool paroOk = false, pideRearme = false, pisando = false;
 int mvParo = 0;
 uint32_t disparos = 0, tBotonBajo = 0;
 bool botonPrevio = false, botonUsado = false;
+static bool obedece(bool fresco) { return fresco && estPie == ARMADO; }
 static const char* nPie(EstPie e) { return e == SIN_ARMAR ? "SIN_ARMAR" : e == ARMADO ? "ARMADO" : "DISPARADO"; }
 static void leerParo() {
   mvParo = analogReadMilliVolts(PIN_PARO);
@@ -121,10 +123,12 @@ static void mandar(uint32_t id, const uint8_t* d, uint8_t n) {
   if (twai_transmit(&m, pdMS_TO_TICKS(5)) == ESP_OK) enviadas++;
 }
 
-// El 0x182 con la tabla de herramientas/can/multipiloto.md. Sin latido fresco: TODO EN CERO.
+// El 0x182 con la tabla de herramientas/can/multipiloto.md. Sin latido fresco o sin el pie ARMADO: TODO
+// EN CERO. Así el paro y el watchdog también paran la hidráulica (que puede no pedir el pedal), y al
+// volver el latido nada se mueve hasta el rearme manual.
 static void armar182(uint8_t* d, bool fresco) {
   memset(d, 0, 8);
-  if (!fresco) return;
+  if (!obedece(fresco)) return;
   uint8_t b4 = 0, b5 = 0;
   if (mY > 0) { d[0] = mY;  b4 |= 0x08; } else if (mY < 0) { d[0] = -mY; b4 |= 0x10; }
   if (mX < 0) { d[1] = -mX; b4 |= 0x04; } else if (mX > 0) { d[1] = mX;  b4 |= 0x02; }
@@ -329,7 +333,7 @@ void loop() {
   // ---- Timón: sin latido se queda donde está (un salto de ángulo es un giro de la rueda) ----
   static uint32_t tTimonUs = us;
   float dt = (us - tTimonUs) / 1e6f; tTimonUs = us;
-  if (timonArmado && fresco && hayTh) thObjetivo = thPedido;
+  if (timonArmado && obedece(fresco) && hayTh) thObjetivo = thPedido;
   else thObjetivo = thActual;
   float paso = TIMON_MAX_GPS * dt, dif = thObjetivo - thActual;
   if (dif > paso) dif = paso; else if (dif < -paso) dif = -paso;
@@ -338,7 +342,7 @@ void loop() {
 
   // ---- CAN ----
   if (canArmado) {
-    if (enCero && fresco && (mY || mX || mB || mN || mS || mE || mW || mR)) { enCero = false; Serial.println("EV can: primer mando"); }
+    if (enCero && obedece(fresco) && (mY || mX || mB || mN || mS || mE || mW || mR)) { enCero = false; Serial.println("EV can: primer mando"); }
     if (estCan == SIN_BOOT && tGrupo && ahora - tGrupo >= RETARDO_BOOT) bootup();
     if (estCan == SIN_BOOT && !tGrupo && tPrimeraTrama && ahora - tPrimeraTrama >= PLAN_B_MS) {
       Serial.println("EV can: plan B, bus vivo 15 s sin grupo"); bootup();

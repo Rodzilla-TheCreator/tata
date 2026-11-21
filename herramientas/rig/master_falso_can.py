@@ -17,6 +17,9 @@ Linux (maquinon). Si el SH-C30G trae firmware candleLight (aparece como can0):
     python3 master_falso_can.py                       (socketcan, can0)
 Si trae slcan (aparece como /dev/ttyACM0):
     python3 master_falso_can.py --slcan /dev/ttyACM0
+Windows (i3): si aparece como puerto COM es slcan →  py master_falso_can.py --slcan COM9
+Si no aparece COM (candleLight / gs_usb): pip install gs_usb pyusb, driver WinUSB con Zadig, y
+    py master_falso_can.py --gsusb
 Requiere:  pip install python-can
 """
 import argparse
@@ -39,10 +42,15 @@ def decodificar_182(d):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--slcan", help="puerto serie del SH-C30G si usa slcan (p. ej. /dev/ttyACM0)")
+    ap.add_argument("--gsusb", action="store_true", help="SH-C30G con firmware candleLight (gs_usb), Windows")
     ap.add_argument("--canal", default="can0", help="interfaz socketcan (por defecto can0)")
     a = ap.parse_args()
-    bus = (can.Bus(interface="slcan", channel=a.slcan, bitrate=250000) if a.slcan
-           else can.Bus(interface="socketcan", channel=a.canal))
+    if a.slcan:
+        bus = can.Bus(interface="slcan", channel=a.slcan, bitrate=250000)
+    elif a.gsusb:
+        bus = can.Bus(interface="gs_usb", channel=0, index=0, bitrate=250000)
+    else:
+        bus = can.Bus(interface="socketcan", channel=a.canal)
 
     def tx(i, d):
         bus.send(can.Message(arbitration_id=i, data=bytes(d), is_extended_id=False))
