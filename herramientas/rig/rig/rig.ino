@@ -86,7 +86,8 @@ int mvParo = 0;
 uint32_t disparos = 0, tBotonBajo = 0;
 bool botonPrevio = false, botonUsado = false;
 static bool obedece(bool fresco) { return fresco && estPie == ARMADO; }
-static const char* nPie(EstPie e) { return e == SIN_ARMAR ? "SIN_ARMAR" : e == ARMADO ? "ARMADO" : "DISPARADO"; }
+// int y no EstPie: el prototipo que genera Arduino va arriba del enum y no compila (21-nov)
+static const char* nPie(int e) { return e == SIN_ARMAR ? "SIN_ARMAR" : e == ARMADO ? "ARMADO" : "DISPARADO"; }
 static void leerParo() {
   mvParo = analogReadMilliVolts(PIN_PARO);
   if (mvParo > PARO_ALTO_MV) paroOk = true; else if (mvParo < PARO_BAJO_MV) paroOk = false;

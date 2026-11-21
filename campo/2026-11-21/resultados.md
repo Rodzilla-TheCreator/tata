@@ -63,6 +63,15 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 
 ## Notas / errores tal cual
 
+- **Compilación con esp32 3.3.12 (21-nov, antes de ir al equipo):** `pie.ino`, `escucha_can.ino` y
+  `multipiloto_campo.ino` compilan. **`rig.ino` no compilaba:** `'EstPie' was not declared in this scope`
+  y `'nPie' cannot be used as a function` (el prototipo automático de Arduino queda arriba del `enum`).
+  Corregido: `nPie(EstPie e)` → `nPie(int e)`. Solo el nombre del estado para imprimir; la lógica no cambia.
+  Ahora compila (307 KB).
+- **`herramientas/emulador_timon/` no compila como carpeta:** tiene dos `.ino` (`caracterizador_timon` y
+  `emulador_timon`) y Arduino los junta (`redefinition of 'void setup()'`). `emulador_timon.ino` solo, en
+  su propia carpeta, compila. Para cargarlo: copiarlo a una carpeta `emulador_timon/` aparte.
+
 ## Equipo (EQUIPO_HOY.md)
 
 | # | Resultado |
