@@ -76,6 +76,10 @@ pie en un ESP). El pie y el CAN aislado de esta tarea son sus dos primeras pieza
 **Anteriores:** ✔ 07-nov, rutas v3b (`analisis/tarea_rutas_v3b.md`): el planificador confirma el culo
 de la ficha; vacío gira sin retranqueo, cargado con ≥ 1 cm, margen 7 / 5 cm.
 
+> **21-nov-2026 · EL EQUIPO SE MOVIÓ CON NUESTRO MANDO.** En un EDR18N2 funcional prestado, por la cadena
+> CAN aislada, el nodo 2 falso (`multipiloto_campo` + `multipiloto_gui.py`) movió el equipo con maje en el pedal
+> real; el multipiloto real sin CAN no lo movió (control). Falta timón y pedal emulados (lunes). `docs/17`.
+
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
 > abajo manda sobre ellos. Todavía no se reescribieron uno por uno.

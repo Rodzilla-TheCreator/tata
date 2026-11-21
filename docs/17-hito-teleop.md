@@ -9,6 +9,27 @@ fierro y que la cadena de paro llega antes.**
 
 ---
 
+## Checkpoint 21-nov-2026 · EL EQUIPO SE MOVIÓ CON NUESTRO MANDO
+
+En un **EDR18N2 funcional prestado** (no el del taller, que está sin batería):
+
+| Qué | Resultado |
+|---|---|
+| DB9 del equipo, llave OFF | **3↔8 = 60 Ω** (los dos terminadores: bus completo), **2↔7 abierto** → mismo pinout que el otro (CAN_H 8, CAN_L 3) |
+| Cadena CAN **aislada** (ADuM1201 + B0505S + TJA1050) | `prueba_can` 20/20 y control sin VDD2 = 0 · escuchando el equipo: **0 errores, 0 pérdidas**, 38 IDs |
+| **Nodo 2 falso** (`multipiloto_campo.ino` + `multipiloto_gui.py`), CAN del multipiloto real fuera | **maje parado en el pedal real + joystick de la GUI → el equipo se movió** |
+| **Control:** el multipiloto real, conectado pero sin CAN, manipulado con el pie en el pedal | **no se movió ni intentó**: el mando sale solo de nuestro nodo |
+
+**Lo que significa:** la cadena de mando de marcha está probada **con movimiento**, no solo con el
+`E1903.01` del 22-oct. La cadena de paro de esta prueba fue **el pedal real bajo el pie de maje** (levantar
+el pie frena) más el watchdog de 200 ms del ESP. **El hongo NC todavía no está**: va antes de que el pedal
+sea emulado.
+
+**Falta (lunes):** el **timón** emulado en el equipo (G4, rueda en el aire, `docs/23` Track B) y el **pedal
+emulado** (G3). Después, `rig.ino` integrado (ya compila con el core 3.3.12) y el hito de `## Bloque 4`.
+**Sin anotar todavía:** qué equipo era (serie), si se quitó la R3 del TJA (con ella el bus queda en ~40 Ω), y
+qué mandos se probaron además del joystick.
+
 ## Checkpoint 22-oct-2026 · la cadena de mando LLEGA al fierro (comando probado)
 
 La mitad del hito —**que la cadena de mando llega al fierro**— quedó **probada en el equipo
