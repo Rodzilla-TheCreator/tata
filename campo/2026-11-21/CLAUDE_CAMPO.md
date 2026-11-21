@@ -1,5 +1,8 @@
 # Instrucciones para el Claude Code de campo (i3, usuario rodm_) · 21-nov-2026
 
+> **Si maje te dice que está en el EQUIPO (no en el banco): seguí `EQUIPO_HOY.md`, no las 4 pruebas.** Hoy
+> el rig no se conecta al equipo: solo medir, mirar y escuchar.
+
 Estás en la compu de maje (Windows, `C:\Users\rodm_\Desktop\tata_repo`), con el ESP32 enchufado por USB y
 maje en el banco. **Tu trabajo hoy: guiar las 4 pruebas de `LEEME.md` (esta carpeta), una a la vez,
 cargar los sketches, y anotar los resultados.** No hay montacargas hoy.

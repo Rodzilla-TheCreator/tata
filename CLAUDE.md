@@ -55,6 +55,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 Si te dicen «tenés un nuevo task en el CLAUDE.md», es esto. **Leé `campo/2026-11-21/CLAUDE_CAMPO.md`** y
 guiá las 4 pruebas de `campo/2026-11-21/LEEME.md` (pedal, timón, CAN aislado, los tres juntos con
 `herramientas/rig/rig_gui.py`), una a la vez, anotando en `campo/2026-11-21/resultados.md`. Sin montacargas.
+**Cambio: maje está en el EQUIPO con la i3 → seguí `campo/2026-11-21/EQUIPO_HOY.md` (solo medir y mirar; el rig NO se conecta).**
 Al terminar: esta sección a «✔ Hecha» con una línea de resultado, commit + push a `main`.
 
 ## Tarea anterior para la i3 (19-nov-2026) — en el banco, con maje (parcial: ver `emulador_pedal/LEEME.md`)

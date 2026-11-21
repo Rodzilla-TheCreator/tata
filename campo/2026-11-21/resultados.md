@@ -62,3 +62,22 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 | 4.9 USB fuera | | |
 
 ## Notas / errores tal cual
+
+## Equipo (EQUIPO_HOY.md)
+
+| # | Resultado |
+|---|---|
+| A1 estado del equipo | |
+| A2 placa / serie | |
+| A3 foto del conector | |
+| B1 pines 1–4 ubicados | |
+| B2 pin 3 ↔ negativo de batería | |
+| C1 pin 1 vs 3 | V |
+| C2 pin 2 vs 3 | V |
+| C3 pin 4 vs 3 | V |
+| D1 eventos con todo original | |
+| D2 al pisar | |
+| D3 sin pisar: pin 2 / pin 4 · pisado: pin 2 / pin 4 | |
+| E1 entre ejes izq / der | |
+| E2 sensores en ruedas de carga | |
+| E3 vueltas tope a tope | |
