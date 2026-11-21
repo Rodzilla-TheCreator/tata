@@ -63,6 +63,13 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 
 ## Notas / errores tal cual
 
+- **G1, comparado con los logs anteriores (`herramientas/can/logs/`):** ningún ID nuevo. Los 38 de hoy están
+  todos en los del 06-oct (56). Mismos nodos que transmiten: 1, 2, 3, 4, 7, 8, 30. **5, 6 y 10 siguen sin
+  transmitir nada en un equipo completo**: solo aparecen los PDO que el Master les manda (`205/206/20A`,
+  `305/30A/40A`). Lo que faltó hoy y estaba el 06-oct es de arranque o de fallas (NMT `000`, boot-ups `704/707/708/71E`,
+  EMCY `084/087/088/09E`, SDO del arranque `602/61E`, `6E3/6E9/6EF/6F1/69D`): hoy se empezó a escuchar con el equipo
+  ya prendido, y en ~85 s **no hubo ningún EMCY**.
+
 - **Compilación con esp32 3.3.12 (21-nov, antes de ir al equipo):** `pie.ino`, `escucha_can.ino` y
   `multipiloto_campo.ino` compilan. **`rig.ino` no compilaba:** `'EstPie' was not declared in this scope`
   y `'nPie' cannot be used as a function` (el prototipo automático de Arduino queda arriba del `enum`).
