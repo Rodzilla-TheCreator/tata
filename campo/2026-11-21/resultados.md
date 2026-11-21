@@ -40,9 +40,9 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 
 | # | Medido | ¿Pasa? |
 |---|---|---|
-| 3.0 GND ESP ↔ GND_bus | | |
-| 3.1 B0505S 4–3 | | |
-| 3.2 VOA | | |
+| 3.0 GND ESP ↔ GND_bus | maje: «ya quedaron todas», sin números | sí, sin números |
+| 3.1 B0505S 4–3 | maje: «ya quedaron todas», sin números | sí, sin números |
+| 3.2 VOA | maje: «ya quedaron todas», sin números | sí, sin números |
 | 3.3 prueba_can | **20/20** transmitidas, recibidas e idénticas; errores TX 0 / RX 0 (21-nov, COM6) | sí |
 | 3.4 control sin VDD2 | recibidas: **0** (transmitió 1 de 20, errores TX 128: nadie confirma la trama) | sí, el control falla como debe |
 
@@ -90,7 +90,7 @@ Lo llena el Claude de campo con maje. Un número por fila. «—» = no se hizo;
 | E1 entre ejes izq / der | |
 | E2 sensores en ruedas de carga | |
 | E3 vueltas tope a tope | |
-| G1 CAN aislado escuchando (errores) | |
+| G1 CAN aislado escuchando (errores) | **pasa.** `escucha_can.ino` (LISTEN_ONLY, 250k) por la cadena aislada, equipo prendido: **err RX 0 · perdidas 0** en 4 resúmenes seguidos (70–85 s); 38 identificadores; ~1 090 tramas/s (21 861 en 20 s). Nodos vistos: 1 Master, 2 Multi-Pilot 1, 3 Display, 4/5/6 Dirección, 7 Elevación, 8 Tracción, 10 Multi-Pilot 2, 30 PC de servicio; SYNC 080 a ~50 Hz |
 | G2 multipiloto: E4809 se va / a 100 → E1903 | |
 | G3 pedal emulado: suelto = real suelto / pisado sin 1.06 / m suelta | |
 | G4 timón emulado: nodo 4 acepta / sentido | |
