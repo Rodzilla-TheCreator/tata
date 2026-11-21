@@ -52,6 +52,11 @@ Y un programa en la laptop, `herramientas/rig/rig.py`, que junta `campo_nodo2.py
 8. **El paro de hongo es hardware** (corta la bobina, `docs/24`) y el firmware no lo ve ni lo
    necesita. No metas ninguna lógica que dependa de él.
 
+   > **Corregido 19–21-nov:** decía «el firmware no lo ve». **Es:** el paro sigue cortando por hardware
+   > siempre, y además el firmware **lo lee** (GPIO35, divisor del VCC de los módulos) **solo para no
+   > re-pisar sin rearme** al destrabarlo (ISO 13850). Nunca para cortar. **Qué lo tumbó:** en el banco del
+   > 19-nov, destrabar el pulsador volvía a pisar solo (`emulador_pedal/LEEME.md`).
+
 ## Qué hacer
 
 1. `rig.ino` con las 8 reglas. Compilalo con `arduino-cli` (placa `esp32:esp32:esp32`). Si no está
