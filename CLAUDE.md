@@ -35,7 +35,7 @@ Proyecto interno de **Montasa** (distribuidor de montacargas en San Pedro Sula, 
 
 | Carpeta | Qué contiene |
 |---|---|
-| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **El fusible que falta alimentaba el pin 6 del DE-9**; se puso el 30-sep y **no era la causa**: **ningún pin del DB9 tiene tierra** (ver la sección del 30-sep en el `.md`). Tarjeta **Littelfuse 852-023**, y una **placa Jungheinrich en el fierro** (`F.Nr 51540777`, `KD Medi CO 250K Jr.`). `manual_fusibles_p14*.jpg` es la tabla del manual: **el pin 6 cuelga del `4F15`, «autorización de acceso», 2 A**, y hay **tres posiciones de 2 A con fusible de 10 A** |
+| `herramientas/serie/` | **Los sketches y el banco de pruebas del puerto de servicio.** Ver la sección del DE-9. `tabla_fusibles_de9*.jpg` son las fotos del conector en su lugar con la tabla de fusibles; `tabla_fusibles_de9.md` las lee. **El fusible que falta alimentaba el pin 6 del DE-9**; se puso el 30-sep y **no era la causa**: ~~**ningún pin del DB9 tiene tierra**~~ **corregido 23-nov: el pin 2 es la tierra del CAN, aislada del negativo de batería** (por eso no daba continuidad; ver `herramientas/can/LEEME.md`). Tarjeta **Littelfuse 852-023**, y una **placa Jungheinrich en el fierro** (`F.Nr 51540777`, `KD Medi CO 250K Jr.`). `manual_fusibles_p14*.jpg` es la tabla del manual: **el pin 6 cuelga del `4F15`, «autorización de acceso», 2 A**, y hay **tres posiciones de 2 A con fusible de 10 A** |
 | `herramientas/manual_operacion/` | **El índice del manual impreso de operador** (`04.17 US_ES`, familia ESR N2). `indice.md` lo transcribe y dice qué páginas fotografiar: **101–109, acceso sin llave**, que es de donde cuelga el pin 6 del DB9 |
 | `herramientas/pendientes.md` | **Dónde quedó el puerto y qué falta, en banco y en el equipo. Empezar por acá** |
 | `herramientas/componentes/` | **Dónde está cada controlador**, del manual de servicio. El cerebro es el **Maestro `1U16`**, nodo 1; los sensores van a su controlador y la pantalla los pide por el bus |
@@ -558,7 +558,7 @@ Medido por maje en el equipo, llave OFF, óhmetro. **Manda sobre todo lo de arri
 
 - DB9 3 ↔ 8 ≈ **120 Ω**; DB9 ↔ multipiloto 0.1–0.2 Ω por hilo: **el mismo bus**
 - **Un solo terminador** (120, no 60): falta uno, probablemente en algo canibalizado
-- **La carcasa del DB9 no es masa.** La masa se toma del negativo de batería
+- **La carcasa del DB9 no es masa.** ~~La masa se toma del negativo de batería~~ **23-nov: la referencia del CAN es el pin 2 del DB9 (tierra del CAN, aislada de batería −); GND_bus va ahí**
 - El pinout `X200` dejó de ser hipótesis en los pines 3 y 8
 - **En tensión, sin resolver:** el chino usaba un cable FTDI serie en los EDR18N2
 

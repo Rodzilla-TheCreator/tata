@@ -176,6 +176,11 @@ hipótesis.
 
 ## Dato en tensión, anotado
 
+> **RESUELTO 23-nov (maje):** el **pin 2 del DB9 ES la tierra del CAN, y está AISLADA** del negativo de
+> batería: por eso el óhmetro no le encontró continuidad el 30-sep. **GND_bus al pin 2** funcionó en el
+> equipo funcional el 21-nov y el 23-nov (escucha con 0 errores, nodo 2 falso moviendo el equipo). Lo de
+> abajo queda como el camino.
+
 - El módulo de acceso ISM dice (manual del ECR, pág. 360) que **en equipos CANopen 250k
   el 0 V no está separado de batería −**. Si el pin 2 fuera el CAN 0 V, debería tener
   continuidad con el negativo. **El 30-sep no la tuvo.** Puede ser que el 0 V llegue por
