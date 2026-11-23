@@ -176,6 +176,18 @@ septiembre: **batería de 539, `y` = 1.688, `XPIV` = 1.928** (`herramientas/fich
 esquina bajo el timón, del lado opuesto a las uñas; en la otra esquina de ese lado hay una rueda de apoyo.
 Falta: cuánto está corrida la motriz de lado. `percepcion/odometria.py` sigue con `WB = 1.562`.
 
+## Vías (maje, flexómetro)
+
+| Medida | Valor | Lectura |
+|---|---|---|
+| motriz ↔ rueda de apoyo, centro a centro | **0.65 m** | si las dos van parejas a los costados del eje del equipo, **la motriz está corrida 0.325 m** del centro |
+| entre los pares de ruedas de carga, centro a centro | **~1.11 m** | de serie (1,067 entre patas + 127 de pata, ruedas centradas) serían **1.19**: no calza |
+
+**Dato en tensión:** con 1.11 de vía y patas de 127 con la rueda centrada, el ancho pata a pata (`W_MAX`) sería
+~1.24 m, no el 1.315 que usa el repo (nunca medido). Puede ser otra opción de patas (catálogo: 838–1524 en pasos de
+12.7) o que la rueda no vaya centrada en la pata. **Lo cierra medir `W_MAX` directo**: de la cara de afuera de una
+pata a la de afuera de la otra.
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.
