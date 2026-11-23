@@ -5,15 +5,20 @@
   Junta, sin cambiar su lógica:
     · herramientas/can/banco_imitador/multipiloto_campo/multipiloto_campo.ino  (nodo 2 falso; movió el equipo 21-nov)
     · herramientas/emulador_timon/timon_lazo/timon_lazo.ino                     (la rueda llegó a todo, 23-nov)
-  Solo se usa el eje izquierda/derecha del joystick (b1 del 0x182), que en este equipo es la MARCHA
-  (campo/2026-11-23/resultados.md). Elevación, botones y palanca quedan en cero.
+  Funciones (campo/2026-11-23/resultados.md): joystick X (b1) = MARCHA · joystick Y (b0) = ELEVACIÓN
+  (adelante = uñas abajo, atrás = uñas arriba) · palanca trasera (b2) = PANTÓGRAFO · N/S = desplazador
+  izquierda/derecha · W/E = inclinación puntas arriba/abajo · pito.
 
   ARRANQUE: LISTEN_ONLY, no manda ni un bit. 'A' (con la llave en OFF) lo arma: modo normal, espera el boot-up
   del grupo y se presenta como nodo 2. El timón funciona desde el arranque (no es CAN; solo lee el 0x184).
 
   SERIE 115200. La ventana manda cada 50 ms una línea que es mando y latido a la vez:
-    L m=<-255..255> r=<grados|->
+    L m=<-255..255> y=<-255..255> p=<-255..255> b=<0..15> h=<0|1> r=<grados|->
       m  marcha: + = joystick a la DERECHA (b4 0x02, hacia las uñas), - = IZQUIERDA (b4 0x04)
+      y  elevación: + = joystick ADELANTE (b4 0x08, uñas ABAJO), - = ATRÁS (b4 0x10, uñas ARRIBA)
+      p  pantógrafo: + = palanca ADELANTE (b4 0x40), - = ATRÁS (b4 0x20)
+      b  botones de arriba, bits de b5: 8 N (desplazador izq) · 4 S (der) · 2 E (puntas abajo) · 1 W (puntas arriba)
+      h  pito (b4 0x01)
       r  objetivo de la rueda en grados (lazo cerrado con el 0x184), o '-' = sin objetivo (volante quieto)
     A   armar el CAN          X   silencio: vuelve a LISTEN_ONLY, 182 a cero, timón quieto
     S   invertir el sentido del timón
@@ -33,7 +38,7 @@ enum Estado { SIN_BOOT, PREOP, OPERACIONAL, PARADO };
 Estado estado = SIN_BOOT;
 bool armado = false;
 uint32_t tGrupo = 0, tPrimeraTrama = 0, thb = 0, enviadas = 0;
-uint8_t b1 = 0, b4 = 0;                // solo el eje X del joystick
+uint8_t b0 = 0, b1 = 0, b2 = 0, b4 = 0, b5 = 0;   // posiciones del 0x182 (herramientas/can/multipiloto.md)
 int mando = 0;
 
 // ================= timón (timon_lazo) =================
@@ -67,7 +72,13 @@ void mandar(uint32_t id, const uint8_t* d, uint8_t n) {
   twai_message_t m = {}; m.identifier = id; m.data_length_code = n; if (n) memcpy(m.data, d, n);
   if (twai_transmit(&m, pdMS_TO_TICKS(5)) == ESP_OK) enviadas++;
 }
-void aCero() { b1 = 0; b4 = 0; mando = 0; }
+void aCero() { b0 = b1 = b2 = b4 = b5 = 0; mando = 0; }
+void armar182(uint8_t* d) {
+  d[0] = b0; d[1] = b1; d[2] = b2;
+  d[3] = (b5 & 0x03) ? 255 : 0;        // east / west apretados
+  d[4] = b4; d[5] = b5; d[6] = 0;
+  d[7] = (b5 & 0x0C) ? 255 : 0;        // north / south apretados
+}
 void bootup() {
   const uint8_t b = 0x00; mandar(0x700 + NODO, &b, 1);
   estado = PREOP; thb = millis();
@@ -89,7 +100,7 @@ void atender(const twai_message_t& m) {
       const uint8_t ab[8] = {0x80, m.data[1], m.data[2], m.data[3], 0x00, 0x00, 0x02, 0x06}; mandar(0x580 + NODO, ab, 8);
     }
   } else if (id == 0x080 && estado == OPERACIONAL) {
-    uint8_t d[8] = {0, b1, 0, 0, b4, 0, 0, 0};   // PDO síncrono: sale detrás del SYNC
+    uint8_t d[8]; armar182(d);           // PDO síncrono: sale detrás del SYNC
     mandar(0x180 + NODO, d, 8);
   } else if (estado == SIN_BOOT && tGrupo == 0 && m.data_length_code == 1 && m.data[0] == 0x00 &&
              (id == 0x701 || id == 0x704 || id == 0x707 || id == 0x708 || id == 0x71E)) {
@@ -126,13 +137,13 @@ void linea(String s) {
   if (c != 'L') return;
   tLinea = millis(); latidoVivo = true;
   const char* p = s.c_str();
-  const char* pm = strstr(p, "m=");
-  if (pm) {
-    int v = constrain(atoi(pm + 2), -255, 255);
-    mando = v;
-    b1 = (uint8_t)abs(v);
-    b4 = v > 0 ? 0x02 : (v < 0 ? 0x04 : 0);
-  }
+  auto campo = [&](const char* k, int def) { const char* q = strstr(p, k); return q ? atoi(q + strlen(k)) : def; };
+  int vm = constrain(campo(" m=", 0), -255, 255), vy = constrain(campo(" y=", 0), -255, 255);
+  int vp = constrain(campo(" p=", 0), -255, 255), vb = campo(" b=", 0) & 0x0F, vh = campo(" h=", 0) ? 1 : 0;
+  mando = vm;
+  b1 = (uint8_t)abs(vm); b0 = (uint8_t)abs(vy); b2 = (uint8_t)abs(vp); b5 = (uint8_t)vb;
+  b4 = (vm > 0 ? 0x02 : vm < 0 ? 0x04 : 0) | (vy > 0 ? 0x08 : vy < 0 ? 0x10 : 0) |
+       (vp > 0 ? 0x40 : vp < 0 ? 0x20 : 0) | (vh ? 0x01 : 0);
   const char* pr = strstr(p, "r=");
   if (pr) {
     if (pr[2] == '-') { if (hayObj) pararTimon(NULL, "QUIETO"); }
@@ -221,8 +232,10 @@ void loop() {
     twai_status_info_t st; twai_get_status_info(&st);
     char o[12]; if (hayObj) snprintf(o, sizeof o, "%.1f", obj); else strcpy(o, "-");
     const char* ne[] = {"SIN_BOOT", "PREOP", "OPERACIONAL", "PARADO"};
-    Serial.printf("T can=%s arm=%d m=%d ang=%.2f obj=%s gps=%.0f tim=%s hz184=%lu tec=%lu rec=%lu bus=%s\n",
-                  ne[estado], armado ? 1 : 0, mando, isnan(ang) ? 0.0f : ang, o, gps, estTim, (unsigned long)hz184,
+    uint8_t d[8]; armar182(d);
+    Serial.printf("T can=%s arm=%d m=%d x182=%02X%02X%02X%02X%02X%02X%02X%02X ang=%.2f obj=%s gps=%.0f tim=%s hz184=%lu tec=%lu rec=%lu bus=%s\n",
+                  ne[estado], armado ? 1 : 0, mando, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7],
+                  isnan(ang) ? 0.0f : ang, o, gps, estTim, (unsigned long)hz184,
                   (unsigned long)st.tx_error_counter, (unsigned long)st.rx_error_counter,
                   st.state == TWAI_STATE_RUNNING ? "ok" : (st.state == TWAI_STATE_BUS_OFF ? "OFF" : "?"));
   }

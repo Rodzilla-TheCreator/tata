@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""teleop_wasd.py — manejar el equipo con W A S D (teleop_wasd.ino). maje PARADO EN EL PEDAL REAL.
+"""teleop_wasd.py — manejar el equipo con el teclado (teleop_wasd.ino). maje PARADO EN EL PEDAL REAL.
 
     py teleop_wasd.py            (COM6)        py teleop_wasd.py COM7
 
-  W / S   marcha mientras se mantiene apretada, a la velocidad del slider. Al soltar: 0.
-  A / D   gira la rueda (lazo cerrado con el 0x184). Al soltar, la rueda SE QUEDA donde está.
-  ESPACIO PARAR: marcha a 0 y timón sin objetivo. NO reemplaza al pedal: levantar el pie es el paro.
-  Si la ventana pierde el foco: marcha a 0.
+  W / S   marcha (soltar = 0)                     A / D   rueda (soltar = se queda)
+  Q / E   uñas ARRIBA / ABAJO                     U / O   pantógrafo ADELANTE / ATRÁS
+  J / L   desplazador IZQUIERDA / DERECHA         I / K   puntas de las uñas ARRIBA / ABAJO
+  H       pito
+  Todo menos A/D vuelve a 0 al soltar. ESPACIO = PARAR (todo a 0, timón quieto). Sin foco = todo a 0.
+  NO reemplaza al pedal: levantar el pie es el paro.
   Arranque: llave en OFF → «ARMAR» → subir la llave → esperar «OPERACIONAL».
   Manda la línea de estado cada 50 ms: si la ventana se cae, el ESP pone todo a cero en 200 ms.
 Log en herramientas/rig/logs/teleop_wasd_<fecha>.log.
@@ -25,6 +27,17 @@ import serial
 PUERTO = sys.argv[1] if len(sys.argv) > 1 else "COM6"
 ANG_MIN, ANG_MAX = -100.0, 78.0
 GIRO_GPS = 20.0                     # grados de RUEDA por segundo mientras se mantiene A o D
+
+# tecla: (texto en pantalla, fila, columna)
+TECLAS = {
+    "q": ("Q\nuñas ↑", 0, 0), "w": ("W\nmarcha ↑", 0, 1), "e": ("E\nuñas ↓", 0, 2),
+    "a": ("A\nrueda ←", 1, 0), "s": ("S\nmarcha ↓", 1, 1), "d": ("D\nrueda →", 1, 2),
+    "u": ("U\npantóg. adel.", 0, 4), "i": ("I\npuntas ↑", 0, 5), "o": ("O\npantóg. atrás", 0, 6),
+    "j": ("J\ndesplaz. ←", 1, 4), "k": ("K\npuntas ↓", 1, 5), "l": ("L\ndesplaz. →", 1, 6),
+    "h": ("H\npito", 1, 3),
+}
+BOTON_B5 = {"j": 8, "l": 4, "k": 2, "i": 1}   # N, S, E, W (herramientas/can/multipiloto.md)
+
 aqui = os.path.dirname(os.path.abspath(__file__))
 os.makedirs(os.path.join(aqui, "logs"), exist_ok=True)
 log = open(os.path.join(aqui, "logs", "teleop_wasd_%s.log" % dt.datetime.now().strftime("%Y%m%d-%H%M%S")),
@@ -69,74 +82,81 @@ class Ventana:
         self.soltando = {}
         self.ang = None
         self.obj = None
-        self.can = "?"
-        self.ultimoM = None
-        r.title("Teleop W A S D · %s" % PUERTO)
+        self.ultimo = None
+        r.title("Teleop por teclado · %s" % PUERTO)
         r.configure(bg="#1e2228")
 
         top = tk.Frame(r, bg="#1e2228"); top.pack(fill="x", padx=10, pady=8)
         self.bArmar = tk.Button(top, text="ARMAR (llave en OFF)", font=("Segoe UI", 12, "bold"), bg="#2e7d32",
-                                fg="white", command=self.armar)
+                                fg="white", command=self.armar, takefocus=0)
         self.bArmar.pack(side="left")
         self.lCan = tk.Label(top, text="CAN: —", fg="#f0b429", bg="#1e2228", font=("Segoe UI", 14, "bold"))
         self.lCan.pack(side="left", padx=16)
 
         mid = tk.Frame(r, bg="#1e2228"); mid.pack(padx=10)
-        self.c = tk.Canvas(mid, width=420, height=250, bg="#2a2f37", highlightthickness=0)
+        self.c = tk.Canvas(mid, width=380, height=230, bg="#2a2f37", highlightthickness=0)
         self.c.pack(side="left")
-        teclado = tk.Frame(mid, bg="#1e2228"); teclado.pack(side="left", padx=16)
+        teclado = tk.Frame(mid, bg="#1e2228"); teclado.pack(side="left", padx=12)
         self.k = {}
-        for t, fila, col in (("W", 0, 1), ("A", 1, 0), ("S", 1, 1), ("D", 1, 2)):
-            l = tk.Label(teclado, text=t, width=4, height=2, font=("Segoe UI", 18, "bold"), bg="#3c444f", fg="white")
-            l.grid(row=fila, column=col, padx=3, pady=3)
-            self.k[t.lower()] = l
+        for k, (txt, fila, col) in TECLAS.items():
+            l = tk.Label(teclado, text=txt, width=10, height=3, font=("Segoe UI", 9, "bold"), bg="#3c444f", fg="white")
+            l.grid(row=fila, column=col, padx=2, pady=2)
+            self.k[k] = l
+        tk.Label(teclado, text="", width=2, bg="#1e2228").grid(row=0, column=3)
 
-        f = tk.Frame(r, bg="#1e2228"); f.pack(fill="x", padx=10, pady=6)
-        tk.Label(f, text="velocidad (joystick 0–255)", fg="#9aa4b1", bg="#1e2228").pack(side="left")
-        self.vel = tk.Scale(f, from_=10, to=255, orient="horizontal", length=260, bg="#1e2228", fg="white",
-                            highlightthickness=0, takefocus=0)
-        self.vel.set(60)
-        self.vel.pack(side="left", padx=6)
+        f = tk.Frame(r, bg="#1e2228"); f.pack(fill="x", padx=10, pady=4)
+        self.vel = self.slider(f, "marcha (W/S)", 60)
+        self.elev = self.slider(f, "uñas (Q/E)", 80)
+        self.pant = self.slider(f, "pantógrafo (U/O)", 80)
+        g = tk.Frame(r, bg="#1e2228"); g.pack(fill="x", padx=10)
         self.wUnas = tk.BooleanVar(value=True)
-        tk.Checkbutton(f, text="W = hacia las uñas", variable=self.wUnas, bg="#1e2228", fg="white",
-                       selectcolor="#1e2228", activebackground="#1e2228", takefocus=0).pack(side="left", padx=10)
-        tk.Button(f, text="rueda recta (0°)", command=lambda: self.ponerObj(0.0), takefocus=0).pack(side="left")
-        tk.Button(f, text="invertir timón", command=lambda: mandar("S"), takefocus=0).pack(side="left", padx=6)
+        tk.Checkbutton(g, text="W = hacia las uñas", variable=self.wUnas, bg="#1e2228", fg="white",
+                       selectcolor="#1e2228", activebackground="#1e2228", takefocus=0).pack(side="left")
+        tk.Button(g, text="rueda recta (0°)", command=lambda: self.ponerObj(0.0), takefocus=0).pack(side="left", padx=8)
+        tk.Button(g, text="invertir timón", command=lambda: mandar("S"), takefocus=0).pack(side="left")
 
         tk.Button(r, text="PARAR  (espacio) — el paro de verdad es levantar el pie", font=("Segoe UI", 12, "bold"),
-                  bg="#c62828", fg="white", command=self.parar, takefocus=0).pack(fill="x", padx=10)
-        self.lNum = tk.Label(r, text="", fg="white", bg="#1e2228", font=("Consolas", 11))
-        self.lNum.pack(pady=4)
-        self.t = tk.Text(r, width=96, height=8, bg="#11151a", fg="#d6dde6", font=("Consolas", 9))
+                  bg="#c62828", fg="white", command=self.parar, takefocus=0).pack(fill="x", padx=10, pady=6)
+        self.lMando = tk.Label(r, text="", fg="#f0b429", bg="#1e2228", font=("Consolas", 12, "bold"))
+        self.lMando.pack()
+        self.lNum = tk.Label(r, text="", fg="white", bg="#1e2228", font=("Consolas", 10))
+        self.lNum.pack(pady=2)
+        self.t = tk.Text(r, width=110, height=7, bg="#11151a", fg="#d6dde6", font=("Consolas", 9))
         self.t.pack(padx=10, pady=(0, 10))
 
         r.bind("<KeyPress>", self.abajo)
         r.bind("<KeyRelease>", self.arriba)
         r.bind("<space>", lambda e: self.parar())
-        r.bind("<FocusOut>", lambda e: self.sinFoco() if e.widget is r else None)
+        r.bind("<FocusOut>", lambda e: self.teclas.clear() if e.widget is r else None)
         r.protocol("WM_DELETE_WINDOW", self.cerrar)
         r.focus_force()
         self.tic()
 
-    # ---- teclado (con antirrebote del autorepetir) ----
+    def slider(self, padre, texto, ini):
+        fr = tk.Frame(padre, bg="#1e2228"); fr.pack(side="left", padx=8)
+        tk.Label(fr, text=texto, fg="#9aa4b1", bg="#1e2228").pack()
+        s = tk.Scale(fr, from_=10, to=255, orient="horizontal", length=200, bg="#1e2228", fg="white",
+                     highlightthickness=0, takefocus=0)
+        s.set(ini)
+        s.pack()
+        return s
+
+    # ---- teclado (antirrebote del autorepetir de Windows/Linux) ----
     def abajo(self, e):
         k = e.keysym.lower()
-        if k in ("w", "a", "s", "d"):
+        if k in TECLAS:
             self.teclas.add(k)
             self.soltando.pop(k, None)
 
     def arriba(self, e):
         k = e.keysym.lower()
-        if k in ("w", "a", "s", "d"):
-            self.soltando[k] = self.r.after(40, lambda: self.soltar(k))
+        if k in TECLAS:
+            self.soltando[k] = True
+            self.r.after(40, lambda: self.soltar(k))
 
     def soltar(self, k):
-        if k in self.soltando:
-            self.soltando.pop(k, None)
+        if self.soltando.pop(k, None):
             self.teclas.discard(k)
-
-    def sinFoco(self):
-        self.teclas.clear()
 
     # ---- acciones ----
     def armar(self):
@@ -144,6 +164,7 @@ class Ventana:
                                         "«OPERACIONAL». Parado en el pedal real."):
             mandar("A")
             self.bArmar.configure(text="ARMADO", bg="#555", state="disabled")
+        self.r.focus_force()
 
     def ponerObj(self, a):
         if self.ang is None:
@@ -162,8 +183,8 @@ class Ventana:
     def dibujar(self):
         c = self.c
         c.delete("all")
-        cx, cy, R = 210, 225, 175
-        c.create_text(cx, 14, text="RUEDA  ·  roja = medida (0x184)  ·  verde = objetivo", fill="#9aa4b1")
+        cx, cy, R = 190, 210, 160
+        c.create_text(cx, 14, text="RUEDA · roja = medida (0x184) · verde = objetivo", fill="#9aa4b1")
         c.create_arc(cx - R, cy - R, cx + R, cy + R, start=0, extent=180, style="arc", outline="#5b6573", width=3)
         for a in (-90, -45, 0, 45, 90):
             t = math.radians(90 - a)
@@ -177,54 +198,71 @@ class Ventana:
                 c.create_line(cx, cy, cx + (R - 20) * math.cos(t), cy - (R - 20) * math.sin(t), fill=color, width=w)
         c.create_oval(cx - 7, cy - 7, cx + 7, cy + 7, fill="#ddd", outline="")
 
+    @staticmethod
+    def eje(t, mas, menos, v):
+        if mas in t and menos not in t:
+            return v
+        if menos in t and mas not in t:
+            return -v
+        return 0
+
     def tic(self):
-        # marcha
-        v = int(self.vel.get())
-        signo = 1 if self.wUnas.get() else -1
-        m = 0
-        if "w" in self.teclas and "s" not in self.teclas:
-            m = v * signo
-        elif "s" in self.teclas and "w" not in self.teclas:
-            m = -v * signo
-        # timón: A/D mueven el objetivo; al soltar se queda
-        if ("a" in self.teclas) != ("d" in self.teclas) and self.ang is not None:
+        t = self.teclas
+        sm = 1 if self.wUnas.get() else -1
+        m = self.eje(t, "w", "s", int(self.vel.get())) * sm
+        y = self.eje(t, "e", "q", int(self.elev.get()))          # + = joystick adelante = uñas ABAJO
+        p = self.eje(t, "u", "o", int(self.pant.get()))          # + = palanca adelante
+        b = 0
+        for k, bit in BOTON_B5.items():
+            if k in t:
+                b |= bit
+        h = 1 if "h" in t else 0
+        if ("a" in t) != ("d" in t) and self.ang is not None:
             if self.obj is None:
                 self.obj = self.ang
-            paso = GIRO_GPS * 0.05 * (-1 if "a" in self.teclas else 1)
-            self.obj = max(ANG_MIN, min(ANG_MAX, self.obj + paso))
-        mandar("L m=%d r=%s" % (m, "-" if self.obj is None else "%.1f" % self.obj))
-        if m != self.ultimoM:
-            log.write(">>> %s marcha m=%d\n" % (dt.datetime.now().strftime("%H:%M:%S.%f")[:-3], m))
-            self.ultimoM = m
+            self.obj = max(ANG_MIN, min(ANG_MAX, self.obj + GIRO_GPS * 0.05 * (-1 if "a" in t else 1)))
+        linea = "L m=%d y=%d p=%d b=%d h=%d r=%s" % (m, y, p, b, h, "-" if self.obj is None else "%.1f" % self.obj)
+        mandar(linea)
+        clave = (m, y, p, b, h)
+        if clave != self.ultimo:
+            log.write(">>> %s %s\n" % (dt.datetime.now().strftime("%H:%M:%S.%f")[:-3], linea))
+            self.ultimo = clave
         for k, l in self.k.items():
-            l.configure(bg="#f0b429" if k in self.teclas else "#3c444f")
+            l.configure(bg="#f0b429" if k in t else "#3c444f", fg="black" if k in t else "white")
+        partes = []
+        if m: partes.append("MARCHA %s %d" % ("hacia las uñas" if m > 0 else "opuesto a las uñas", abs(m)))
+        if y: partes.append("UÑAS %s %d" % ("ABAJO" if y > 0 else "ARRIBA", abs(y)))
+        if p: partes.append("PANTÓGRAFO %s %d" % ("ADELANTE" if p > 0 else "ATRÁS", abs(p)))
+        for k, nom in (("j", "DESPLAZ ←"), ("l", "DESPLAZ →"), ("i", "PUNTAS ↑"), ("k", "PUNTAS ↓"), ("h", "PITO")):
+            if k in t: partes.append(nom)
+        if ("a" in t) != ("d" in t): partes.append("RUEDA %s" % ("←" if "a" in t else "→"))
+        self.lMando.configure(text="  ·  ".join(partes) if partes else "quieto")
 
         while not entrada.empty():
             l = entrada.get()
             if not l.startswith("T "):
                 self.escribir(l)
                 continue
-            kv = dict(p.split("=", 1) for p in l[2:].split() if "=" in p)
+            kv = dict(x.split("=", 1) for x in l[2:].split() if "=" in x)
             try:
                 self.ang = float(kv["ang"]) if kv.get("hz184", "0") != "0" else None
             except (KeyError, ValueError):
                 pass
-            self.can = kv.get("can", "?")
-            tim = kv.get("tim", "?")
+            can, tim = kv.get("can", "?"), kv.get("tim", "?")
             if tim in ("SIGNO_MAL", "SIN_RESP", "SIN_184"):
-                self.obj = None                 # no reintentar solo: hace falta volver a apretar A/D
-            ok = self.can == "OPERACIONAL"
-            self.lCan.configure(text="CAN: %s%s" % (self.can, "" if kv.get("arm") == "1" else " (sin armar)"),
-                                fg="#4caf50" if ok else "#f0b429")
-            self.lNum.configure(text="marcha m=%s   rueda %s°   objetivo %s°   timón %s   0x184 %s Hz   TEC %s REC %s  bus %s" % (
-                kv.get("m"), kv.get("ang"), kv.get("obj"), tim, kv.get("hz184"), kv.get("tec"), kv.get("rec"), kv.get("bus")))
+                self.obj = None
+            self.lCan.configure(text="CAN: %s%s" % (can, "" if kv.get("arm") == "1" else " (sin armar)"),
+                                fg="#4caf50" if can == "OPERACIONAL" else "#f0b429")
+            self.lNum.configure(text="0x182 = %s   rueda %s°  objetivo %s°  timón %s   0x184 %s Hz   TEC %s REC %s bus %s" % (
+                " ".join(kv.get("x182", "")[i:i + 2] for i in range(0, 16, 2)), kv.get("ang"), kv.get("obj"), tim,
+                kv.get("hz184"), kv.get("tec"), kv.get("rec"), kv.get("bus")))
         self.dibujar()
         if vivo:
             self.r.after(50, self.tic)
 
     def cerrar(self):
         global vivo
-        mandar("L m=0 r=-")
+        mandar("L m=0 y=0 p=0 b=0 h=0 r=-")
         mandar("X")
         vivo = False
         try:
