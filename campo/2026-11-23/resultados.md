@@ -156,6 +156,19 @@ desplazador, I/K puntas, H pito. maje parado en el pedal real (el paro), equipo 
 - La laptop estuvo enchufada a la pared un buen rato con todo conectado: el aislamiento aguantó.
 - Sin explicar: a las 13:13:48 la rueda fue sola de 1° a 35° y volvió a 2° en ~2 s, sin objetivo (log `teleop_wasd_20261123-131323.log`).
 
+## Odometría en vivo, control con recorrido nuevo (teleop por teclado, W, línea recta)
+
+`teleop_wasd.ino` integra `188` b2–b3 × 7.30 × 10⁻⁴ m/s en el ESP. Marca en la rueda motriz, odometría a cero,
+recto con W, flexómetro al final:
+
+| Odometría (distancia / camino) | Flexómetro (maje) | Diferencia |
+|---|---|---|
+| **3.443 m** / 3.456 m | **~3.4 m** («muy cerca, no sé si más o menos») | ~1 %, dentro de lo que da leer el flexómetro a ojo |
+
+- **La escala de la mañana (3.19 m ida y vuelta) se confirma con un recorrido distinto y otro modo de manejo**
+  (teclado, no el multipiloto). Camino − distancia = 13 mm: algo de ida y vuelta al frenar.
+- Para cerrarlo al centímetro: anotar el flexómetro exacto la próxima vez.
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.
