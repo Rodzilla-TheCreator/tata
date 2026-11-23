@@ -129,7 +129,7 @@ después**, al conector del equipo.
 
 El emulador de siempre (misma calibración) **más el CAN aislado en LISTEN_ONLY** leyendo el ángulo real de la
 rueda: **`0x184` bytes 2–3, int16, 0.01°, cero = recta, topes −103° / +81°** (`campo/2026-11-23/resultados.md`).
-Se le pide un ángulo de rueda (`A30`) y gira el volante emulado hasta llegar (P con banda de 0.5°). No hace falta
+Se le pide un ángulo de rueda (`A30`) y gira el volante emulado hasta llegar (P con banda de 0.5°). Y el timón a mano: la ventana dibuja el volante (mouse o A/D) y lo manda como `P<grados>`, igual que `rueda_timon.py`. No hace falta
 saber las vueltas de tope a tope. El CAN no transmite nada.
 
 - Objetivo recortado a **−100 / +78** (margen a los topes). Volante máx **180 °/s** al arrancar (`M360` para subir).

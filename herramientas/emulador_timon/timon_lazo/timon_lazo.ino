@@ -17,6 +17,8 @@
   SERIE 115200, una orden por línea:
     A<grados>   objetivo de la rueda, lazo cerrado. Se recorta a [ANG_MIN, ANG_MAX]
     V<gps>      volante a mano, grados/s del volante (lazo abierto, para probar). V0 = quieto
+    P<grados>   volante A MANO: posición absoluta del volante emulado (la ventana la manda al arrastrar el
+                timón en pantalla, en pasos chicos). Cancela el objetivo
     X o 0       PARAR: volante quieto y sin objetivo
     S           invertir el sentido (si la rueda va al revés)
     K<kp>       ganancia (grados/s de volante por grado de error). Arranca en KP_INI
@@ -88,6 +90,11 @@ void orden(String s) {
     obj = constrain(v, ANG_MIN, ANG_MAX); hayObj = true; manual = false; dirEmpuje = 0; est = "YENDO";
     if (obj != v) Serial.printf("EV objetivo %.1f recortado a %.1f (topes del equipo)\n", v, obj);
     else Serial.printf("EV objetivo %.1f\n", obj);
+    return;
+  }
+  if (c == 'P' || c == 'p') {          // volante a mano: posición absoluta, como emulador_timon.ino
+    float th = fmodf(v * PI / 180.0f, 6.28318f); if (th < 0) th += 6.28318f;
+    theta = th; hayObj = false; manual = false; dirEmpuje = 0; est = "MANO";
     return;
   }
   if (c == 'V' || c == 'v') { manualGps = constrain(v, -rateMax, rateMax); manual = true; hayObj = false; dirEmpuje = 0; est = "MANUAL"; return; }
