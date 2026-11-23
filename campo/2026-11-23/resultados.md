@@ -60,6 +60,24 @@ adelante/atrás (b0) es **elevación** y el izquierda/derecha (b1) es **marcha**
 del pedal en crudo**: lo que se ve es al Master habilitando elevación y tracción cuando el pedal está pisado.
 Para probar el pedal emulado sin moverse, el testigo más limpio es **`207` b0 bit `08`** (y `208` b5).
 
+## La velocidad y los sensores de las ruedas de carga (mirado a mano, paso 26)
+
+| Señal | Qué hace al marchar | Lectura |
+|---|---|---|
+| `188` b2–b3 (nodo 8, con signo) | sube con el joystick (hasta ~105), se va negativo al frenar (−16) y vuelve a 0 | **velocidad del motor de tracción**: el candidato a odometría |
+| `19E` b2–b3, `19E` b4–b5, `49E` b4–b5 (nodo 30) | la misma curva, un poco corrida (hasta 102, −22) | copias de una velocidad |
+| `288` b0 (nodo 8) | 0 → 134 → 0 mientras acelera | ¿corriente o par? |
+| `188` b5 (nodo 8) | sube y queda en ~13 varios segundos | ¿corriente / temperatura? |
+
+- **No apareció una señal propia de las ruedas de carga.** Los nodos 5 y 6 («Dirección 2/3, carga der/izq»)
+  no transmiten nada; solo el Master les manda. Las dos velocidades de `19E` (b2–b3 y b4–b5) **son iguales en las
+  295 muestras en movimiento**: si fueran rueda izquierda y derecha, al girar tendrían que diferir.
+- **No concluye:** las marchas fueron cortas (~2 s) y casi rectas. Lo que lo decide: **marchar despacio
+  girando** (timón a un lado, 5 s) y ver si `19E` b2–b3 y b4–b5 se separan; y **mirar las ruedas de carga**
+  (E2 del 21-nov: ¿hay un sensor con cable o imanes en el cubo?).
+- No hay un contador que acumule distancia: para odometría hay que integrar `188` b2–b3, y falta su escala
+  (rpm → m/s) con una marcha medida con flexómetro.
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.
