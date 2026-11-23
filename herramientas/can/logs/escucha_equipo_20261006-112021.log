@@ -1,0 +1,535 @@
+
+[grabar_can 11:20:21] puerto COM6 abierto (el ESP32 se reinicia y hace el barrido)
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tail 12 room 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+
+========================================================
+  escucha_can.ino  ·  SOLO ESCUCHA (LISTEN_ONLY)
+========================================================
+  TX = GPIO 21 (no se usa)   RX = GPIO 22
+
+Fase 1 · barrido de velocidad, 4 s cada una
+  250000  tramas validas     0   errores RX   0
+E BOD: Brownout detector was triggered
+
+
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tail 12 room 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+E BOD: Brownout detector was triggered
+
+
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tail 12 room 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+
+========================================================
+  escucha_can.ino  ·  SOLO ESCUCHA (LISTEN_ONLY)
+========================================================
+  TX = GPIO 21 (no se usa)   RX = GPIO 22
+
+Fase 1 · barrido de velocidad, 4 s cada una
+  250000  tramas validas     0   errores RX   0
+  500000  tramas validas     0   errores RX   0
+  125000  tramas validas     0   errores RX   0
+
+SILENCIO en las tres velocidades.
+  · ¿Paso prueba_can.ino en banco, con su control?
+  · ¿Llave en ON y paro de emergencia arriba?
+  · ¿CANH y CANL invertidos? Cambiarlos no daña nada en listen-only.
+  · Si hubo errores RX altos: hay senal pero no a esas velocidades,
+    o el pinout X200 no es el de este equipo.
+  · Errores RX en cero: no llega nada. Pin equivocado o bus apagado.
+
+Se queda escuchando a 250k por si el bus arranca despues.
+
+---- resumen 12 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 17 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 22 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 27 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 32 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 37 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 42 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 47 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 52 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 57 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 62 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 67 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+E BOD: ruv�� detector was triggered
+
+
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tail 12 room 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+
+========================================================
+  escucha_can.ino  ·  SOLO ESCUCHA (LISTEN_ONLY)
+========================================================
+  TX = GPIO 21 (no se usa)   RX = GPIO 22
+
+Fase 1 · barrido de velocidad, 4 s cada una
+  250000  tramas validas     0   errores RX   0
+  500000  tramas validas     0   errores RX   0
+  125000  tramas validas     0   errores RX   0
+
+SILENCIO en las tres velocidades.
+  · ¿Paso prueba_can.ino en banco, con su control?
+  · ¿Llave en ON y paro de emergencia arriba?
+  · ¿CANH y CANL invertidos? Cambiarlos no daña nada en listen-only.
+  · Si hubo errores RX altos: hay senal pero no a esas velocidades,
+    o el pinout X200 no es el de este equipo.
+  · Errores RX en cero: no llega nada. Pin equivocado o bus apagado.
+
+Se queda escuchando a 250k por si el bus arranca despues.
+
+---- resumen 12 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 17 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 22 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+E BOD: Brownout detector was triggered
+
+
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tai���� 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+
+[grabar_can 11:22:09] puerto caído: ClearCommError failed (PermissionError(13, 'Access is denied.', None, 5)) — reintento en 2 s
+
+[grabar_can 11:22:11] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:13] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:15] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:17] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:19] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:21] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:23] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:25] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:27] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:29] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:31] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:33] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:35] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:37] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:39] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:41] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:43] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:45] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:47] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:49] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:51] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:53] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:55] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:57] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:22:59] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:01] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:03] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:05] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:07] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:09] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:11] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:13] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:15] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:17] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:19] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:21] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:23] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:25] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:27] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:29] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:31] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:33] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:35] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:37] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:39] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:41] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:43] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:45] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:47] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:49] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:51] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:53] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:55] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:57] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:23:59] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:01] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:03] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:05] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:07] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:09] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:11] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:13] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:15] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:17] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:19] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:21] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:23] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:25] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:27] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:29] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:31] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:33] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:35] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:37] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:39] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:41] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:43] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:45] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:47] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:49] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:51] puerto caído: could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2) — reintento en 2 s
+
+[grabar_can 11:24:53] puerto COM6 abierto (el ESP32 se reinicia y hace el barrido)
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tail 12 room 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+
+========================================================
+  escucha_can.ino  ·  SOLO ESCUCHA (LISTEN_ONLY)
+========================================================
+  TX = GPIO 21 (no se usa)   RX = GPIO 22
+
+Fase 1 · barrido de velocidad, 4 s cada una
+  250000  tramas validas     0   errores RX   0
+  500000  tramas validas     0   errores RX   0
+  125000  tramas validas     0   errores RX   0
+
+SILENCIO en las tres velocidades.
+  · ¿Paso prueba_can.ino en banco, con su control?
+  · ¿Llave en ON y paro de emergencia arriba?
+  · ¿CANH y CANL invertidos? Cambiarlos no daña nada en listen-only.
+  · Si hubo errores RX altos: hay senal pero no a esas velocidades,
+    o el pinout X200 no es el de este equipo.
+  · Errores RX en cero: no llega nada. Pin equivocado o bus apagado.
+
+Se queda escuchando a 250k por si el bus arranca despues.
+
+---- resumen 12 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+����������������������������������������������������������������
+---- resumen 17 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 22 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 27 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 32 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 37 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 42 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 47 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 52 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 57 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 62 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 67 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 72 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 77 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 82 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 87 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 92 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 97 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 102 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 107 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 112 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 117 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 122 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 127 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 132 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 137 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 142 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 147 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 152 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 157 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 162 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 167 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 172 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 177 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 182 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 187 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 192 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 197 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 202 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 207 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 212 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 217 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 222 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 227 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 232 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 237 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 242 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 247 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 252 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 257 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 262 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 267 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 272 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 277 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 282 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 287 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 292 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 297 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+[grabar_can 11:29:55] parado a mano

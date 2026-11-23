@@ -1,0 +1,379 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:4876
+ho 0 tail 12 room 4
+load:0x40078000,len:16532
+load:0x40080400,len:3500
+entry 0x400805b4
+
+========================================================
+  escucha_can.ino  ·  SOLO ESCUCHA (LISTEN_ONLY)
+========================================================
+  TX = GPIO 21 (no se usa)   RX = GPIO 22
+
+Fase 1 · barrido de velocidad, 4 s cada una
+  250000  tramas validas     0   errores RX   0
+  500000  tramas validas     0   errores RX   0
+  125000  tramas validas     0   errores RX   0
+
+SILENCIO en las tres velocidades.
+  · ¿Paso prueba_can.ino en banco, con su control?
+  · ¿Llave en ON y paro de emergencia arriba?
+  · ¿CANH y CANL invertidos? Cambiarlos no daña nada en listen-only.
+  · Si hubo errores RX altos: hay senal pero no a esas velocidades,
+    o el pinout X200 no es el de este equipo.
+  · Errores RX en cero: no llega nada. Pin equivocado o bus apagado.
+
+Se queda escuchando a 250k por si el bus arranca despues.
+
+---- resumen 12 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 17 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 22 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 27 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 32 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 37 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 42 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 47 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 52 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 57 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 62 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 67 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 72 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 77 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 82 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 87 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 92 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 97 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 102 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 107 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 112 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 117 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 122 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 127 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 132 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 137 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 142 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 147 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 152 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 157 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 162 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 167 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 172 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 177 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 182 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 187 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 192 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 197 s · 0 identificadores · err RX 0 �� perdidas 0 ----
+
+
+---- resumen 202 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 207 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 212 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 217 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 222 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 227 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 232 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 237 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 242 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 247 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 252 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 257 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 262 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 267 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 272 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 277 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 282 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 287 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 292 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 297 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 302 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 307 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 312 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 317 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 322 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 327 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 332 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 337 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 342 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 347 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 352 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 357 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 362 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 367 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 372 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 377 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 382 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 387 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 392 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 397 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 402 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 407 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 412 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 417 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 422 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 427 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 432 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 437 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 442 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 447 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 452 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 457 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 462 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 467 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 472 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 477 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 482 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 487 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 492 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 497 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 502 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 507 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 512 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 517 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 522 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 527 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 532 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 537 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 542 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 547 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 552 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 557 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 562 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 567 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 572 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 577 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 582 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
+
+---- resumen 587 s · 0 identificadores · err RX 0 · perdidas 0 ----
+
