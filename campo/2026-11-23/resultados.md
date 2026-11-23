@@ -78,6 +78,26 @@ Para probar el pedal emulado sin moverse, el testigo más limpio es **`207` b0 b
 - No hay un contador que acumule distancia: para odometría hay que integrar `188` b2–b3, y falta su escala
   (rpm → m/s) con una marcha medida con flexómetro.
 
+## Escala del ángulo de la rueda de dirección (guion `timon`, 11:40, log `escucha_equipo_20261123-114014.log`)
+
+maje: el timón sigue girando después del tope, la rueda no; no se pudo marcar un centro. Tope izquierdo → barrido
+lento → tope derecho.
+
+| | `184` b2–b3 (nodo 4, 16 bits con signo, b2 bajo) |
+|---|---|
+| tope izquierdo (5 s quieto) | **−10 320**, fijo |
+| barrido (30 s, 1 541 muestras) | sube **sin un solo retroceso**, de −9 920 a +8 080 |
+| tope derecho (5 s quieto) | **+8 060**, fijo |
+
+- **Es el ángulo de la rueda**: valor estable en cada tope y continuo y monótono en el barrido.
+- Recorrido tope a tope: **18 380 unidades**. Con los 180° del manual (±90°): **0.0098 °/unidad ≈ 0.01°** →
+  izquierda −103.2°, derecha +80.6° (183.8° en total). **Lectura más probable: centésimas de grado.**
+- **El cero no está en el medio** (el medio de los topes cae en −1 130, −11.3°). O el equipo no está centrado en
+  0, o los topes no son simétricos. **Se cierra con un centro marcado** (rueda recta a ojo con una regla contra el
+  chasis, 5 s quieto).
+- `49E` b2–b3 (nodo 30) también barre (46 743 → 14 675 sin signo) pero con otra escala: no se usa.
+- `205` b6 queda en 65 en los dos topes: no es el ángulo.
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.
