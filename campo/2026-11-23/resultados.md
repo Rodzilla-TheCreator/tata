@@ -102,12 +102,15 @@ lento → tope derecho.
   O los topes de este equipo son asimétricos de verdad, o la unidad no es 0.01°. **Se cierra midiendo un ángulo
   conocido:** la rueda en un tope, con transportador o la app de nivel del celular contra la rueda, y anotar
   los grados y el valor del `184` en ese momento.
-- **maje, mirando la rueda:** gira ±90° aproximadamente, con topes disparejos: **timón a la derecha se pasa de
-  90°, timón a la izquierda se queda corto.** **Choca con el bus:** el tope del timón a la derecha es el MENOR
-  (+7 940 desde el centro) y el de la izquierda el MAYOR (−10 440). Si fuera lineal, el lado que se pasa de 90°
-  tendría que dar el número más grande. **En tensión, sin resolver.** Sospechosos: (1) la lectura a ojo del lado
-  (el operador va de costado); (2) la señal no es lineal con el ángulo o tiene otro cero por lado. Lo decide
-  medir los grados de cada tope con la app de nivel y anotarlos junto al valor del `184`.
+- **Resuelto (maje, mirando la rueda):** desde el centro, **a la izquierda pasa de 90°, a la derecha se queda
+  corta.** Es lo que da 0.01 °/unidad (−104° / +79°), así que **la escala queda en 0.01° por unidad** y la
+  asimetría es del equipo.
+
+  | Decía | Es | Qué lo tumbó |
+  |---|---|---|
+  | topes de ±90° (manual) | **−104° izquierda, +79° derecha** en este equipo | `184` en los topes + lo que vio maje |
+  | escala en tensión | **0.01 °/unidad**, cero = rueda recta | idem. Visual, no medido con transportador: si un ángulo medido difiere, se revisa |
+
 - `49E` b2–b3 (nodo 30) también barre (46 743 → 14 675 sin signo) pero con otra escala: no se usa.
 - `205` b6 queda en 65 en los dos topes: no es el ángulo.
 
