@@ -9,6 +9,20 @@ fierro y que la cadena de paro llega antes.**
 
 ---
 
+## Checkpoint 23-nov-2026 · TELEOP POR TECLADO: MARCHA, DIRECCIÓN E HIDRÁULICA DESDE UN ESP
+
+En el mismo EDR18N2 funcional prestado, **un solo ESP** (`herramientas/rig/teleop_wasd.ino`) con el nodo 2 falso
+por la cadena CAN aislada y el **timón emulado con lazo cerrado** sobre el ángulo real de la rueda (`0x184`,
+0.01°). Ventana `teleop_wasd.py`: W/S marcha, A/D rueda, Q/E uñas, U/O pantógrafo, J/L desplazador, I/K puntas,
+H pito. **maje parado en el pedal real, marcha lenta: todo respondió.** Detalle en `campo/2026-11-23/resultados.md`.
+
+Mismo día, solo escuchando: el diccionario completo del multipiloto con su función (joystick Y = elevación,
+X = marcha), la **odometría con escala** (velocidad `188` × 7.30e-4 m/s, ángulo `184` × 0.01°) y el testigo del
+pedal (`207` b0).
+
+**Lo que todavía no es el hito:** el paro es el pie de maje en el pedal real. Faltan el **hongo NC** (1.3), el
+**pedal emulado** (G3), el watchdog del pie y el **Bloque 3** (paro a propósito tres veces, distancia de frenado).
+
 ## Checkpoint 21-nov-2026 · EL EQUIPO SE MOVIÓ CON NUESTRO MANDO
 
 En un **EDR18N2 funcional prestado** (no el del taller, que está sin batería):

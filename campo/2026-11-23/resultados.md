@@ -144,6 +144,18 @@ rueda (`184` b2–b3 × 0.01°, cero = recta).
 - **Segunda corrida (maje): la rueda llegó a todos los ángulos que pidió.** El timón a mano también mueve la rueda.
 - El equipo quieto (sin marcha). Lazo: P, kp 30, volante máx 180 °/s, banda 0.5°.
 
+## TELEOP POR TECLADO, en el equipo (13:1x, `herramientas/rig/teleop_wasd.ino` + `teleop_wasd.py`)
+
+**Un solo ESP:** nodo 2 falso por la cadena CAN aislada (marcha, elevación, pantógrafo, desplazador, inclinación,
+pito) + timón emulado con lazo cerrado sobre el `0x184`. W/S marcha, A/D rueda, Q/E uñas, U/O pantógrafo, J/L
+desplazador, I/K puntas, H pito. maje parado en el pedal real (el paro), equipo en **marcha lenta (tortuga)**.
+
+- Primera corrida: la rueda seguía los objetivos positivos y no los negativos: el ESP tomaba `r=-20.0` como «sin
+  objetivo» (`r=-`). Corregido.
+- **Segunda corrida (maje): «todo funciona».** Todos los mandos por teclado y la rueda a los dos lados.
+- La laptop estuvo enchufada a la pared un buen rato con todo conectado: el aislamiento aguantó.
+- Sin explicar: a las 13:13:48 la rueda fue sola de 1° a 35° y volvió a 2° en ~2 s, sin objetivo (log `teleop_wasd_20261123-131323.log`).
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.

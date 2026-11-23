@@ -88,6 +88,10 @@ de la ficha; vacío gira sin retranqueo, cargado con ≥ 1 cm, margen 7 / 5 cm.
 > CAN aislada, el nodo 2 falso (`multipiloto_campo` + `multipiloto_gui.py`) movió el equipo con maje en el pedal
 > real; el multipiloto real sin CAN no lo movió (control). Falta timón y pedal emulados (lunes). `docs/17`.
 
+> **23-nov-2026 · TELEOP POR TECLADO.** Un ESP (`herramientas/rig/teleop_wasd.ino` + `teleop_wasd.py`): marcha,
+> uñas, pantógrafo, desplazador e inclinación por el nodo 2 falso, y el **timón con lazo cerrado** sobre el ángulo
+> real de la rueda (`0x184`). maje en el pedal real, marcha lenta: todo respondió. Odometría con escala. `docs/17`.
+
 > **Aviso a quien lea `docs/01` a `docs/07`:** se escribieron antes de la medición de campo
 > del 24-ago-2026 y varios números quedaron desmentidos. La sección «Corregido en campo» de
 > abajo manda sobre ellos. Todavía no se reescribieron uno por uno.
