@@ -101,6 +101,14 @@ PARES["timon"] = [
 PARES["centro"] = [
     ("rueda recta", "RUEDA RECTA, paralela a las uñas. No toques el timón: Enter, contá 5, Enter"),
 ]
+# 23-nov: escala de la velocidad (188 b2-b3) con una marcha medida. Rueda recta, pie en el pedal.
+PARES["marcha3m"] = [
+    ("quieto antes", "Rueda RECTA, en la marca de salida, pie en el pedal. Quieto: Enter, contá 5, Enter"),
+    ("ida 3 m", "Enter y marchá DESPACIO hasta la marca de 3 m; ya PARADO, Enter"),
+    ("quieto en 3 m", "Quieto en la marca: Enter, contá 5, Enter (escribí después cuánto marcó el flexómetro si no fue 3.00)"),
+    ("vuelta 3 m", "Enter y volvé DESPACIO a la marca de salida; ya PARADO, Enter"),
+    ("quieto al final", "Quieto: Enter, contá 5, Enter"),
+]
 if guion_nombre in PARES:
     GUIONES[guion_nombre] = [k for k, _ in PARES[guion_nombre]]
 
