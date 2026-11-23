@@ -114,6 +114,25 @@ lento → tope derecho.
 - `49E` b2–b3 (nodo 30) también barre (46 743 → 14 675 sin signo) pero con otra escala: no se usa.
 - `205` b6 queda en 65 en los dos topes: no es el ángulo.
 
+## Escala de la velocidad (guion `marcha3m`, 12:02, log `escucha_equipo_20261123-120149.log`)
+
+Ida y vuelta entre dos marcas a **3.19 m** (flexómetro, maje), rueda recta, pie en el pedal. Integral de `188`
+b2–b3 (con signo) en el tiempo del ESP:
+
+| Pasada | Integral (unidades·s) | Pico | Dirección (`184`) | m por unidad·s |
+|---|---|---|---|---|
+| ida (18.5 s) | **+4 371.8** | 479 | −0.7° a −0.6° (recta) | 7.297 × 10⁻⁴ |
+| vuelta (30.3 s) | **−4 368.2** | −382 | −8.1° a +6.2° (correcciones) | 7.303 × 10⁻⁴ |
+
+- **Las dos pasadas coinciden al 0.08 %.** Fuera de los pasos marcados el equipo no se movió (≤ 5.4 unidades·s, 4 mm).
+- **`188` b2–b3 × 7.30 × 10⁻⁴ = velocidad de la rueda motriz en m/s** (1 unidad ≈ 0.73 mm/s). Positivo = la ida
+  (joystick hacia el lado de la ida; con lo de la mañana, derecha = hacia las uñas). El pico de 479 fue ~0.35 m/s.
+- `19E` b2–b3 da la misma integral (4 373.2 / −4 368.7): es una copia.
+- Supone que la vuelta también fue de 3.19 m (volvió a la marca de salida). Que las dos coincidan lo respalda.
+
+**Con esto la odometría tiene sus dos entradas con escala:** velocidad (`188` b2–b3 × 7.30e-4 m/s) y ángulo de la
+rueda (`184` b2–b3 × 0.01°, cero = recta).
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.
