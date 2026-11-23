@@ -97,6 +97,10 @@ PARES["timon"] = [
     ("barrido izq a der", "Enter y girá el timón LENTO a la DERECHA hasta que la rueda ya no responda; ahí Enter"),
     ("referencia tope derecha", "Quieto con el timón a tope DERECHA: Enter, contá 5, Enter"),
 ]
+# 23-nov: el cero del ángulo. La rueda ya recta (paralela a las uñas), sin tocar el timón.
+PARES["centro"] = [
+    ("rueda recta", "RUEDA RECTA, paralela a las uñas. No toques el timón: Enter, contá 5, Enter"),
+]
 if guion_nombre in PARES:
     GUIONES[guion_nombre] = [k for k, _ in PARES[guion_nombre]]
 
