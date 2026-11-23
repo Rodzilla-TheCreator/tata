@@ -6,6 +6,17 @@ Log local: `logs/escucha_equipo_20261006-120519.log` (los .log no se versionan).
 Nombres de botones puestos por maje: north/south arriba-abajo; east/west la inclinación
 (west hacia arriba, east hacia abajo); «trasero» el botón de atrás.
 
+> **23-nov, qué hace cada mando en el equipo funcional (maje, con pedal; `campo/2026-11-23/resultados.md`).**
+> Los bytes de abajo siguen valiendo; lo que cambia es el nombre de la función:
+>
+> | Mando (byte) | Decía | Es |
+> |---|---|---|
+> | joystick adelante/atrás (b0) | marcha | **elevación**: adelante = uñas abajo, atrás = uñas arriba (mirando a la pantalla). Con pedal mueve el nodo 7 |
+> | joystick izquierda/derecha (b1) | dirección | **marcha**: izquierda = opuesto a las uñas, derecha = hacia las uñas. Con pedal mueve el nodo 8 |
+> | north / south (b5 `08`/`04`) | arriba / abajo | **desplazador**: N = izquierda, S = derecha |
+> | west / east (b5 `01`/`02`) | inclinación | igual: W = puntas arriba, E = puntas abajo |
+> | palanca trasera (b2) | — | **pantógrafo** adelante / atrás |
+
 ## Trama `0x182` — TPDO1 del nodo 2 (multipiloto), 8 bytes
 
 | Byte | Qué es | Valores |

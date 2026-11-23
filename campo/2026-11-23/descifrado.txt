@@ -1,0 +1,778 @@
+herramientas/can/logs/escucha_equipo_20261123-111756.log: 676237 tramas, 33 pasos marcados
+
+================================================================================================
+PASO 1 · referencia sin pedal   (6.6 s)
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FF → durante 02–FF
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–08 → durante 00–0C
+================================================================================================
+PASO 2 · SIN pedal · N   (5.0 s)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–08 (2 valores)  bits 00001000  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 2: antes 80 → durante 80–8A (2 valores)  bits 00001010  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–32 (2 valores)  bits 00010010  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 2: antes A5 → durante 81–D4 (8 valores)  bits 01111101  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 2: antes 00 → durante 00–E0 (2 valores)  bits 11100000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E8–EB → durante E5–EA
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  388 TPDO3     n8  byte 4: antes E3–E5 → durante DF–E5
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–0A → durante 00–1B
+================================================================================================
+PASO 3 · SIN pedal · S   (3.9 s)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–04 (2 valores)  bits 00000100  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–32 (2 valores)  bits 00010010  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 2: antes A5 → durante 8D–D4 (6 valores)  bits 01111101  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 2: antes 00 → durante 00–E0 (2 valores)  bits 11100000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E8–EA → durante E5–EA
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FE → durante 05–FF
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  20A RPDO1     n10 byte 4: antes 01–02 → durante 01–03
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  388 TPDO3     n8  byte 4: antes E1–E5 → durante DE–E4
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–03 → durante 00–1B
+================================================================================================
+PASO 4 · SIN pedal · E   (4.7 s)
+   LIMPIO   182 TPDO1     n2  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–02 (2 valores)  bits 00000010  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 2: antes 80 → durante 80–8A (2 valores)  bits 00001010  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–32 (2 valores)  bits 00010010  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E8–EA → durante E5–EA
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  20A RPDO1     n10 byte 2: antes A5–B1 → durante 99–BD
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  388 TPDO3     n8  byte 4: antes E1–E4 → durante E0–E4
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+================================================================================================
+PASO 5 · SIN pedal · W   (3.6 s)
+   LIMPIO   182 TPDO1     n2  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–32 (2 valores)  bits 00010010  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 2: antes A5 → durante 99–BD (4 valores)  bits 00111100  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E8–EA → durante E6–EA
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–FA → durante 00–FE
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  388 TPDO3     n8  byte 4: antes E1–E4 → durante E0–E4
+================================================================================================
+PASO 6 · SIN pedal · pito   (4.3 s)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   29E TPDO2     n30 byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 2: antes B1 → durante B0–B1 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  188 TPDO1     n8  byte 4: antes 01–FE → durante 01–FF
+   ruidoso  20A RPDO1     n10 byte 4: antes 01–02 → durante 01–03
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–0C → durante 00–FA
+   ruidoso  39E TPDO3     n30 byte 6: antes 00–01 → durante 00–FF
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+================================================================================================
+PASO 7 · SIN pedal · joy adelante   (5.1 s)
+   LIMPIO   182 TPDO1     n2  byte 0: antes 00 → durante 00–FF (120 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–08 (2 valores)  bits 00001000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–33 (2 valores)  bits 00010011  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 6: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FD → durante 02–FE
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  20A RPDO1     n10 byte 2: antes 81–A5 → durante 8D–B1
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–0A → durante 00–1B
+================================================================================================
+PASO 8 · SIN pedal · joy atras   (6.7 s)
+   LIMPIO   182 TPDO1     n2  byte 0: antes 00 → durante 00–FF (79 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–10 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–32 (2 valores)  bits 00010010  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FC
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–03 → durante 00–1B
+================================================================================================
+PASO 9 · SIN pedal · joy izquierda   (5.3 s)
+   LIMPIO   182 TPDO1     n2  byte 1: antes 00 → durante 00–F4 (84 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–04 (2 valores)  bits 00000100  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–31 (2 valores)  bits 00010001  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 4: antes 02 → durante 02–12 (17 valores)  bits 00011111  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   305 RPDO2     n5  byte 4: antes 00 → durante 00–5A (2 valores)  bits 01011010  SE QUEDA (posición/estado)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   ruidoso  188 TPDO1     n8  byte 4: antes 02–FF → durante 00–FF
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  20A RPDO1     n10 byte 2: antes 99–A5 → durante 81–A5
+   ruidoso  20A RPDO1     n10 byte 6: antes 22–23 → durante 21–23
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FE
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  388 TPDO3     n8  byte 4: antes E0–E3 → durante E0–E4
+   ruidoso  39E TPDO3     n30 byte 6: antes 00–01 → durante 00–FF
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–0A → durante 00–1B
+================================================================================================
+PASO 10 · SIN pedal · joy derecha   (4.9 s)
+   LIMPIO   182 TPDO1     n2  byte 1: antes 00 → durante 00–FF (43 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–02 (2 valores)  bits 00000010  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–31 (2 valores)  bits 00010001  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 4: antes 02 → durante 02–14 (19 valores)  bits 00011111  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E6–E9 → durante E5–E9
+   ruidoso  188 TPDO1     n8  byte 4: antes 00–FC → durante 00–FF
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  20A RPDO1     n10 byte 2: antes 99–A5 → durante 8D–A5
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–15 → durante 00–C5
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–03 → durante 00–1B
+================================================================================================
+PASO 11 · SIN pedal · palanca adelante   (4.4 s)
+   LIMPIO   182 TPDO1     n2  byte 2: antes 00 → durante 00–FF (38 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–40 (2 valores)  bits 01000000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 1: antes 20 → durante 20–45 (3 valores)  bits 01110101  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 3: antes 20 → durante 20–39 (2 valores)  bits 00011001  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 4: antes 20 → durante 20–30 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   203 RPDO1     n3  byte 5: antes 20 → durante 20–32 (2 valores)  bits 00010010  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 7: antes 00 → durante 00–8B (2 valores)  bits 10001011  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 2: antes B1 → durante B0–B1 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E4–E6 → durante E3–E6
+   ruidoso  203 RPDO1     n3  byte 2: antes 09–20 → durante 09–31
+   ruidoso  20A RPDO1     n10 byte 4: antes 01–03 → durante 00–02
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–08 → durante 00–0C
+   ruidoso  303 RPDO2     n3  byte 3: antes 00–14 → durante 00–C5
+================================================================================================
+PASO 12 · SIN pedal · palanca atras   (3.5 s)
+   LIMPIO   184 TPDO1     n4  byte 2: antes 80 → durante 80–8A (2 valores)  bits 00001010  vuelve (momentáneo)
+   LIMPIO   29E TPDO2     n30 byte 0: antes 00 → durante 00–FE (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   29E TPDO2     n30 byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 6: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   ruidoso  388 TPDO3     n8  byte 4: antes DE–E0 → durante DD–E0
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+================================================================================================
+PASO 13 · SIN pedal · timon izquierda   (5.0 s)
+   LIMPIO   184 TPDO1     n4  byte 0: antes 03 → durante 03–07 (2 valores)  bits 00000100  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–25 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 07 → durante 00–07 (8 valores)  bits 00000111  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 6: antes 00 → durante 00–DF (91 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   204 RPDO1     n4  byte 0: antes 80 → durante 80–88 (2 valores)  bits 00001000  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 71 → durante 71–81 (13 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   49E TPDO4     n30 byte 2: antes B1 → durante 01–F9 (121 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 0D → durante 00–0D (14 valores)  bits 00001111  SE QUEDA (posición/estado)
+   ruidoso  184 TPDO1     n4  byte 2: antes 80–8A → durante 02–FE
+   ruidoso  187 TPDO1     n7  byte 4: antes E3–E5 → durante DB–E5
+   ruidoso  188 TPDO1     n8  byte 4: antes 04–FF → durante 01–FF
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F1 → durante 00–FE
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FF
+   ruidoso  303 RPDO2     n3  byte 1: antes 00–CA → durante 00–D3
+   ruidoso  388 TPDO3     n8  byte 4: antes DE–E0 → durante D5–E0
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–0A → durante 00–1B
+================================================================================================
+PASO 14 · SIN pedal · timon derecha   (6.1 s)
+   LIMPIO   184 TPDO1     n4  byte 2: antes 1E → durante 02–FE (122 valores)  bits 11111110  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 00 → durante 00–0D (14 valores)  bits 00001111  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 81 → durante 41–81 (29 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   49E TPDO4     n30 byte 2: antes 34 → durante 00–FC (153 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 00 → durante 00–19 (26 valores)  bits 00011111  SE QUEDA (posición/estado)
+   ruidoso  184 TPDO1     n4  byte 6: antes 5A–6E → durante 06–CC
+   ruidoso  187 TPDO1     n7  byte 4: antes E1–E4 → durante D8–E5
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FA
+   ruidoso  388 TPDO3     n8  byte 4: antes DB–DF → durante D2–DF
+================================================================================================
+PASO 15 · SIN pedal · timon centro   (3.7 s)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–25 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 2: antes DE → durante 00–FC (97 valores)  bits 11111110  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 0D → durante 07–0D (7 valores)  bits 00001111  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 41 → durante 41–74 (31 valores)  bits 00111111  SE QUEDA (posición/estado)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 19 → durante 0C–19 (14 valores)  bits 00011111  SE QUEDA (posición/estado)
+   LIMPIO   584 SDO resp  n4  byte 4: antes 21 → durante 20–21 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  184 TPDO1     n4  byte 6: antes 44–5F → durante 08–CC
+   ruidoso  187 TPDO1     n7  byte 4: antes E1–E4 → durante DD–E5
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FF → durante 01–FE
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F5 → durante 00–FD
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FF
+   ruidoso  303 RPDO2     n3  byte 1: antes 00–C2 → durante 00–CA
+   ruidoso  388 TPDO3     n8  byte 4: antes DB–DE → durante D6–DF
+   ruidoso  49E TPDO4     n30 byte 2: antes 45–46 → durante 02–FF
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+================================================================================================
+PASO 16 · PISAR pedal   (4.2 s)
+   LIMPIO   181 TPDO1     n1  byte 2: antes FA → durante FA–FC (3 valores)  bits 00000111  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 0: antes 03 → durante 03–07 (2 valores)  bits 00000100  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–25 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 2: antes 70 → durante 12–EE (23 valores)  bits 11111110  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 08 → durante 07–08 (2 valores)  bits 00001111  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 6: antes 00 → durante 00–EA (64 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   187 TPDO1     n7  byte 0: antes 03 → durante 03–07 (2 valores)  bits 00000100  SE QUEDA (posición/estado)
+   LIMPIO   187 TPDO1     n7  byte 6: antes 00 → durante 00–15 (20 valores)  bits 00011111  SE QUEDA (posición/estado)
+   LIMPIO   204 RPDO1     n4  byte 0: antes 80 → durante 80–88 (2 valores)  bits 00001000  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 6A → durante 6A–74 (7 valores)  bits 00011111  SE QUEDA (posición/estado)
+   LIMPIO   207 RPDO1     n7  byte 0: antes 01 → durante 01–09 (2 valores)  bits 00001000  SE QUEDA (posición/estado)
+   LIMPIO   207 RPDO1     n7  byte 4: antes 00 → durante 00–32 (2 valores)  bits 00110010  SE QUEDA (posición/estado)
+   LIMPIO   207 RPDO1     n7  byte 5: antes 00 → durante 00–32 (2 valores)  bits 00110010  SE QUEDA (posición/estado)
+   LIMPIO   208 RPDO1     n8  byte 5: antes 20 → durante 08–20 (2 valores)  bits 00101000  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 0: antes 6A → durante 55–6A (4 valores)  bits 00111111  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 2: antes A5 → durante A5–B1 (2 valores)  bits 00010100  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 0F → durante 0C–0F (4 valores)  bits 00000011  SE QUEDA (posición/estado)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  187 TPDO1     n7  byte 4: antes E1–E5 → durante D9–E4
+   ruidoso  188 TPDO1     n8  byte 4: antes 01–FD → durante 01–FE
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–FC → durante 00–FE
+   ruidoso  303 RPDO2     n3  byte 1: antes 00–C9 → durante 00–CA
+   ruidoso  388 TPDO3     n8  byte 4: antes DB–DF → durante CE–DF
+   ruidoso  39E TPDO3     n30 byte 6: antes 00–01 → durante 00–FF
+   ruidoso  49E TPDO4     n30 byte 2: antes 5F–60 → durante 01–FB
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  587 SDO resp  n7  byte 4: antes 1B–20 → durante 1A–20
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FA
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–03 → durante 00–1B
+================================================================================================
+PASO 17 · referencia con pedal   (5.3 s)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 00–03 → durante 03–08
+   ruidoso  184 TPDO1     n4  byte 6: antes 31–45 → durante 31–73
+   ruidoso  187 TPDO1     n7  byte 4: antes DF–E1 → durante DE–E1
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FA → durante 02–FD
+   ruidoso  20A RPDO1     n10 byte 4: antes 01–02 → durante 01–03
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F1 → durante 00–FC
+   ruidoso  388 TPDO3     n8  byte 4: antes D9–DD → durante D9–DE
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 18–1A
+   ruidoso  584 SDO resp  n4  byte 4: antes 20–21 → durante 20–22
+   ruidoso  587 SDO resp  n7  byte 4: antes 1B–20 → durante 1A–20
+   ruidoso  603 SDO pide  n3  byte 5: antes 00–0B → durante 00–1B
+================================================================================================
+PASO 18 · CON pedal · N   (4.5 s)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–08 (2 valores)  bits 00001000  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (65 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 2: antes 00 → durante 00–FF (4 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 2: antes 00 → durante 00–FF (4 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 4: antes 00 → durante 00–FF (4 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (6 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 0: antes 00 → durante 00–FE (4 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   29E TPDO2     n30 byte 0: antes 00 → durante 00–F8 (7 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   29E TPDO2     n30 byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 6: antes 00 → durante 00–D6 (6 valores)  bits 11111110  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–F3 (53 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (6 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–8E (82 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 6: antes 00 → durante 00–FF (5 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 2: antes 00 → durante 00–E0 (2 valores)  bits 11100000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 4: antes 00 → durante 00–FF (4 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 45–48 → durante 48–4C
+   ruidoso  184 TPDO1     n4  byte 6: antes 4D–60 → durante 4B–64
+   ruidoso  187 TPDO1     n7  byte 4: antes DD–DF → durante AF–DF
+   ruidoso  187 TPDO1     n7  byte 6: antes 15–16 → durante 15–C3
+   ruidoso  20A RPDO1     n10 byte 2: antes 8D–A5 → durante 8D–C8
+   ruidoso  20A RPDO1     n10 byte 4: antes 01–02 → durante 01–17
+   ruidoso  388 TPDO3     n8  byte 4: antes D8–DB → durante AC–DA
+   ruidoso  587 SDO resp  n7  byte 4: antes 1B–20 → durante 1A–20
+   ruidoso  588 SDO resp  n8  byte 4: antes 1C–1D → durante 1B–1D
+================================================================================================
+PASO 19 · CON pedal · S   (4.1 s)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–04 (2 valores)  bits 00000100  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (58 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (12 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 4: antes 00 → durante 00–59 (6 valores)  bits 01011111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–F3 (62 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–02 (3 valores)  bits 00000011  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (12 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–E4 (73 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 2: antes 00 → durante 00–E0 (2 valores)  bits 11100000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 50–53 → durante 53–57
+   ruidoso  184 TPDO1     n4  byte 6: antes 39–58 → durante 4F–62
+   ruidoso  187 TPDO1     n7  byte 4: antes DD–DF → durante 34–DF
+   ruidoso  187 TPDO1     n7  byte 6: antes 16–17 → durante 03–F8
+   ruidoso  20A RPDO1     n10 byte 2: antes 99–A5 → durante 81–D4
+   ruidoso  20A RPDO1     n10 byte 4: antes 13–14 → durante 13–19
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F7 → durante 00–FE
+   ruidoso  388 TPDO3     n8  byte 4: antes D8–DB → durante 35–DB
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  587 SDO resp  n7  byte 4: antes 1B–20 → durante 1A–20
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+================================================================================================
+PASO 20 · CON pedal · E   (3.2 s)
+   LIMPIO   182 TPDO1     n2  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–02 (2 valores)  bits 00000010  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (68 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 5: antes 0D → durante 0C–0D (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 7: antes 00 → durante 00–02 (3 valores)  bits 00000011  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (12 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 6: antes 00 → durante 00–59 (5 valores)  bits 01011001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–FE (71 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–FF (5 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (12 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–FD (63 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   388 TPDO3     n8  byte 5: antes 0D → durante 0C–0D (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 5A–5D → durante 5D–60
+   ruidoso  184 TPDO1     n4  byte 6: antes 37–5B → durante 51–77
+   ruidoso  187 TPDO1     n7  byte 4: antes DB–DF → durante 00–F7
+   ruidoso  187 TPDO1     n7  byte 6: antes 15–17 → durante 01–FB
+   ruidoso  20A RPDO1     n10 byte 2: antes A5–B1 → durante 99–B1
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FA
+   ruidoso  388 TPDO3     n8  byte 4: antes D8–DB → durante 01–FF
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 18–19
+================================================================================================
+PASO 21 · CON pedal · W   (2.9 s)
+   LIMPIO   182 TPDO1     n2  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (57 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (12 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 4: antes 00 → durante 00–DB (6 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–FF (70 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (11 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–9D (72 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 60–63 → durante 63–66
+   ruidoso  184 TPDO1     n4  byte 6: antes 47–77 → durante 39–4F
+   ruidoso  187 TPDO1     n7  byte 4: antes D5–DA → durante 83–DB
+   ruidoso  187 TPDO1     n7  byte 6: antes 16–7E → durante 17–F8
+   ruidoso  188 TPDO1     n8  byte 4: antes 04–FE → durante 00–FE
+   ruidoso  20A RPDO1     n10 byte 4: antes 17–18 → durante 17–33
+   ruidoso  388 TPDO3     n8  byte 4: antes CF–D6 → durante 83–D8
+   ruidoso  49E TPDO4     n30 byte 2: antes 18–19 → durante 19–1A
+   ruidoso  587 SDO resp  n7  byte 4: antes 1B–20 → durante 1A–20
+================================================================================================
+PASO 22 · CON pedal · pito   (2.5 s)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 69–6B → durante 6C–6E
+   ruidoso  184 TPDO1     n4  byte 6: antes 50–63 → durante 4B–5C
+   ruidoso  187 TPDO1     n7  byte 6: antes 16–17 → durante 16–18
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FF → durante 01–FF
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FE
+   ruidoso  388 TPDO3     n8  byte 4: antes D4–D8 → durante D5–D9
+================================================================================================
+PASO 23 · CON pedal · joy adelante   (2.8 s)
+   LIMPIO   182 TPDO1     n2  byte 0: antes 00 → durante 00–7C (35 valores)  bits 01111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–08 (2 valores)  bits 00001000  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 4: antes 33 → durante 01–33 (6 valores)  bits 00111011  SE QUEDA (posición/estado)
+   LIMPIO   305 RPDO2     n5  byte 0: antes 00 → durante 00–03 (2 valores)  bits 00000011  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 2: antes 00 → durante 00–C6 (12 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 4: antes 00 → durante 00–B8 (2 valores)  bits 10111000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 72–75 → durante 75–78
+   ruidoso  184 TPDO1     n4  byte 6: antes 37–5D → durante 56–6F
+   ruidoso  187 TPDO1     n7  byte 4: antes D9–DD → durante D6–DB
+   ruidoso  187 TPDO1     n7  byte 6: antes 16–17 → durante 16–18
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FC → durante 03–FF
+   ruidoso  388 TPDO3     n8  byte 4: antes D5–D9 → durante D3–D9
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 18–19
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+================================================================================================
+PASO 24 · CON pedal · joy atras   (3.0 s)
+   LIMPIO   182 TPDO1     n2  byte 0: antes 00 → durante 00–54 (25 valores)  bits 01111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–10 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (42 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (7 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 5: antes 0D → durante 0C–0D (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FD (28 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–06 (7 valores)  bits 00000111  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 4: antes 01 → durante 01–51 (10 valores)  bits 01111111  SE QUEDA (posición/estado)
+   LIMPIO   305 RPDO2     n5  byte 0: antes 00 → durante 00–02 (3 valores)  bits 00000011  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 0: antes 00 → durante 00–DE (9 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–FF (44 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FD (28 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–06 (7 valores)  bits 00000111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–79 (33 valores)  bits 01111111  vuelve (momentáneo)
+   LIMPIO   388 TPDO3     n8  byte 5: antes 0D → durante 0C–0D (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 79–7C → durante 7C–7F
+   ruidoso  184 TPDO1     n4  byte 6: antes 36–56 → durante 3D–6A
+   ruidoso  187 TPDO1     n7  byte 4: antes D9–DD → durante 00–F7
+   ruidoso  187 TPDO1     n7  byte 6: antes 17–19 → durante 01–FD
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FF → durante 00–FF
+   ruidoso  388 TPDO3     n8  byte 4: antes D3–D8 → durante 06–F9
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  587 SDO resp  n7  byte 4: antes 1A–1F → durante 19–1F
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+================================================================================================
+PASO 25 · CON pedal · joy izquierda   (37.5 s)
+   LIMPIO   182 TPDO1     n2  byte 0: antes 00 → durante 00–FF (54 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 1: antes 00 → durante 00–A4 (65 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 2: antes 00 → durante 00–FF (44 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–40 (5 valores)  bits 01101100  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 5: antes 00 → durante 00–08 (2 valores)  bits 00001000  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–34 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (158 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 0: antes 03 → durante 03–07 (2 valores)  bits 00000100  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 2: antes 00 → durante 00–FF (75 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 5: antes 00 → durante 00–89 (87 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 2: antes 00 → durante 00–FF (75 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 4: antes 00 → durante 00–FF (75 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   204 RPDO1     n4  byte 0: antes 88 → durante 88–C8 (2 valores)  bits 01000000  vuelve (momentáneo)
+   LIMPIO   205 RPDO1     n5  byte 4: antes 00 → durante 00–E2 (2 valores)  bits 11100010  vuelve (momentáneo)
+   LIMPIO   205 RPDO1     n5  byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (8 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 0: antes 01 → durante 01–09 (2 valores)  bits 00001000  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 2: antes 00 → durante 00–EF (22 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 3: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 4: antes 02 → durante 02–0A (9 valores)  bits 00001111  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 5: antes 08 → durante 04–0D (3 valores)  bits 00001101  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 0: antes 00 → durante 00–FF (61 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   305 RPDO2     n5  byte 0: antes 00 → durante 00–04 (3 valores)  bits 00000111  vuelve (momentáneo)
+   LIMPIO   305 RPDO2     n5  byte 2: antes 00 → durante 00–1E (2 valores)  bits 00011110  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 2: antes 00 → durante 00–FF (23 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 4: antes 00 → durante 00–FB (6 valores)  bits 11111011  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 6: antes 00 → durante 00–FA (22 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–FF (165 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (8 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–83 (109 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   388 TPDO3     n8  byte 6: antes 00 → durante 00–FF (223 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   388 TPDO3     n8  byte 7: antes 00 → durante 00–FF (9 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 0: antes 00 → durante 00–FF (18 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 0: antes 00 → durante 00–90 (2 valores)  bits 10010000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 2: antes 00 → durante 00–E0 (2 valores)  bits 11100000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 4: antes 00 → durante 00–B8 (2 valores)  bits 10111000  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 6: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 4: antes 00 → durante 00–FF (75 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   584 SDO resp  n4  byte 4: antes 22 → durante 21–22 (2 valores)  bits 00000011  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes 8F–92 → durante 92–B7
+   ruidoso  184 TPDO1     n4  byte 6: antes 31–4A → durante 02–5E
+   ruidoso  187 TPDO1     n7  byte 4: antes D9–DD → durante 9C–DD
+   ruidoso  187 TPDO1     n7  byte 6: antes 15–16 → durante 00–FF
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FF → durante 00–FF
+   ruidoso  20A RPDO1     n10 byte 2: antes 99–A5 → durante 8D–E0
+   ruidoso  20A RPDO1     n10 byte 4: antes 48–4A → durante 00–4A
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FF
+   ruidoso  388 TPDO3     n8  byte 4: antes D4–D9 → durante 94–D9
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 0E–1D
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  587 SDO resp  n7  byte 4: antes 1A–1F → durante 1A–21
+   ruidoso  588 SDO resp  n8  byte 4: antes 1B–1D → durante 1B–1E
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–B7
+================================================================================================
+PASO 26 · CON pedal · joy derecha   (4.9 s)
+   LIMPIO   182 TPDO1     n2  byte 1: antes 00 → durante 00–80 (40 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–02 (2 valores)  bits 00000010  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–34 (2 valores)  bits 00010000  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 0: antes 03 → durante 03–07 (2 valores)  bits 00000100  SE QUEDA (posición/estado)
+   LIMPIO   188 TPDO1     n8  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 2: antes 00 → durante 00–FF (66 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 5: antes 00 → durante 00–60 (65 valores)  bits 01111111  SE QUEDA (posición/estado)
+   LIMPIO   19E TPDO1     n30 byte 2: antes 00 → durante 00–FF (66 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 4: antes 00 → durante 00–FF (66 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   204 RPDO1     n4  byte 0: antes 88 → durante 88–C8 (2 valores)  bits 01000000  vuelve (momentáneo)
+   LIMPIO   205 RPDO1     n5  byte 4: antes 00 → durante 00–1E (2 valores)  bits 00011110  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 0: antes 01 → durante 01–09 (2 valores)  bits 00001000  SE QUEDA (posición/estado)
+   LIMPIO   208 RPDO1     n8  byte 2: antes 00 → durante 00–F7 (21 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 4: antes 02 → durante 02–06 (5 valores)  bits 00000111  vuelve (momentáneo)
+   LIMPIO   208 RPDO1     n8  byte 5: antes 08 → durante 04–0D (3 valores)  bits 00001101  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 0: antes 00 → durante 00–87 (66 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   305 RPDO2     n5  byte 2: antes 00 → durante 00–1E (2 valores)  bits 00011110  SE QUEDA (posición/estado)
+   LIMPIO   388 TPDO3     n8  byte 6: antes 00 → durante 00–FF (111 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   388 TPDO3     n8  byte 7: antes 00 → durante 00–FF (8 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 0: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   39E TPDO3     n30 byte 7: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   40A RPDO3     n10 byte 6: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 4: antes 00 → durante 00–FF (66 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   584 SDO resp  n4  byte 4: antes 21 → durante 21–22 (2 valores)  bits 00000011  SE QUEDA (posición/estado)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes E1–E4 → durante E4–E9
+   ruidoso  184 TPDO1     n4  byte 6: antes 03–0D → durante 03–0E
+   ruidoso  187 TPDO1     n7  byte 4: antes D9–DB → durante CB–DB
+   ruidoso  188 TPDO1     n8  byte 4: antes 05–F5 → durante 02–FD
+   ruidoso  20A RPDO1     n10 byte 2: antes 99–A5 → durante 8D–A5
+   ruidoso  20A RPDO1     n10 byte 4: antes 02–03 → durante 01–03
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F9 → durante 00–FC
+   ruidoso  388 TPDO3     n8  byte 4: antes D4–D6 → durante C7–D8
+   ruidoso  39E TPDO3     n30 byte 6: antes 00–01 → durante 00–FF
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  587 SDO resp  n7  byte 4: antes 1A–1F → durante 1A–20
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–E8
+================================================================================================
+PASO 27 · CON pedal · palanca adelante   (4.0 s)
+   LIMPIO   182 TPDO1     n2  byte 2: antes 00 → durante 00–FF (43 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–40 (2 valores)  bits 01000000  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 2: antes 00 → durante 00–FF (61 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 6: antes 17 → durante 17–D6 (84 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   188 TPDO1     n8  byte 2: antes 00 → durante 00–FF (10 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   188 TPDO1     n8  byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 2: antes 00 → durante 00–FF (10 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 3: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 4: antes 00 → durante 00–FF (10 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   19E TPDO1     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (7 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 0: antes 00 → durante 00–FE (10 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   288 TPDO2     n8  byte 1: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 4: antes 00 → durante 00–F4 (15 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 5: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 0: antes 00 → durante 00–FD (62 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (7 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 3: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–85 (69 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 4: antes 00 → durante 00–FF (10 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 5: antes 00 → durante 00–FF (2 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes F0–F3 → durante F3–F7
+   ruidoso  184 TPDO1     n4  byte 6: antes 03–0F → durante 04–10
+   ruidoso  187 TPDO1     n7  byte 4: antes D8–DB → durante A8–DB
+   ruidoso  188 TPDO1     n8  byte 4: antes 01–FF → durante 00–FD
+   ruidoso  20A RPDO1     n10 byte 2: antes A5–B1 → durante 8D–A5
+   ruidoso  20A RPDO1     n10 byte 4: antes 01–03 → durante 02–0D
+   ruidoso  388 TPDO3     n8  byte 4: antes D4–D8 → durante A7–D5
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 18–1A
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–F6
+================================================================================================
+PASO 28 · CON pedal · palanca atras   (4.0 s)
+   LIMPIO   182 TPDO1     n2  byte 2: antes 00 → durante 00–98 (44 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   182 TPDO1     n2  byte 4: antes 00 → durante 00–20 (2 valores)  bits 00100000  vuelve (momentáneo)
+   LIMPIO   187 TPDO1     n7  byte 1: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   207 RPDO1     n7  byte 2: antes 00 → durante 00–FA (3 valores)  bits 11111011  vuelve (momentáneo)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 6: antes 00 → durante 00–FE (13 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   30A RPDO2     n10 byte 7: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 1: antes 00 → durante 00–FF (3 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 2: antes 00 → durante 00–FA (3 valores)  bits 11111011  vuelve (momentáneo)
+   LIMPIO   387 TPDO3     n7  byte 4: antes 00 → durante 00–A3 (73 valores)  bits 11111111  vuelve (momentáneo)
+   LIMPIO   583 SDO resp  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   LIMPIO   603 SDO pide  n3  byte 2: antes 56 → durante 20–56 (2 valores)  bits 01110110  vuelve (momentáneo)
+   ruidoso  181 TPDO1     n1  byte 2: antes F6–F9 → durante F9–FD
+   ruidoso  184 TPDO1     n4  byte 6: antes 04–0D → durante 04–0F
+   ruidoso  187 TPDO1     n7  byte 4: antes D6–DB → durante A4–DB
+   ruidoso  187 TPDO1     n7  byte 6: antes 16–86 → durante 16–F5
+   ruidoso  188 TPDO1     n8  byte 4: antes 02–FF → durante 01–FF
+   ruidoso  20A RPDO1     n10 byte 4: antes 0A–0C → durante 09–21
+   ruidoso  387 TPDO3     n7  byte 0: antes 00–0B → durante 00–FF
+   ruidoso  388 TPDO3     n8  byte 4: antes D2–D6 → durante A2–D6
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 18–1A
+   ruidoso  583 SDO resp  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  587 SDO resp  n7  byte 4: antes 1B–21 → durante 1A–21
+   ruidoso  603 SDO pide  n3  byte 1: antes 44–51 → durante 20–51
+   ruidoso  603 SDO pide  n3  byte 4: antes 00–A7 → durante 00–FD
+================================================================================================
+PASO 29 · CON pedal · timon izquierda   (5.4 s)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–25 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 2: antes 30 → durante 04–FE (98 valores)  bits 11111110  SE QUEDA (posición/estado)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 07 → durante 00–07 (8 valores)  bits 00000111  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 73 → durante 73–81 (11 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 0D → durante 00–0D (14 valores)  bits 00001111  SE QUEDA (posición/estado)
+   LIMPIO   584 SDO resp  n4  byte 4: antes 22 → durante 21–22 (2 valores)  bits 00000011  SE QUEDA (posición/estado)
+   ruidoso  181 TPDO1     n1  byte 2: antes 06–09 → durante 09–0E
+   ruidoso  184 TPDO1     n4  byte 6: antes 03–0D → durante 04–DF
+   ruidoso  187 TPDO1     n7  byte 4: antes D8–DB → durante CF–DA
+   ruidoso  187 TPDO1     n7  byte 6: antes 16–17 → durante 15–17
+   ruidoso  188 TPDO1     n8  byte 4: antes 02–FF → durante 01–FF
+   ruidoso  20A RPDO1     n10 byte 2: antes 99–A5 → durante 8D–B1
+   ruidoso  20A RPDO1     n10 byte 4: antes 1F–20 → durante 1E–20
+   ruidoso  303 RPDO2     n3  byte 1: antes 00–CA → durante 00–D3
+   ruidoso  388 TPDO3     n8  byte 4: antes D3–D6 → durante CB–D8
+   ruidoso  39E TPDO3     n30 byte 6: antes 00–FE → durante 00–FF
+   ruidoso  49E TPDO4     n30 byte 2: antes 19–1A → durante 00–FD
+================================================================================================
+PASO 30 · CON pedal · timon derecha   (6.0 s)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 00 → durante 00–0E (15 valores)  bits 00001111  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 81 → durante 41–81 (23 valores)  bits 11111111  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 00 → durante 00–1A (27 valores)  bits 00011111  SE QUEDA (posición/estado)
+   ruidoso  181 TPDO1     n1  byte 2: antes 0E–11 → durante 11–17
+   ruidoso  184 TPDO1     n4  byte 2: antes 50–5A → durante 00–FE
+   ruidoso  184 TPDO1     n4  byte 6: antes 62–7C → durante 08–DD
+   ruidoso  187 TPDO1     n7  byte 4: antes D8–DA → durante CB–DA
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FF
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FD
+   ruidoso  388 TPDO3     n8  byte 4: antes D2–D5 → durante C7–D8
+   ruidoso  49E TPDO4     n30 byte 2: antes 94–A7 → durante 00–FD
+================================================================================================
+PASO 31 · CON pedal · timon centro   (3.8 s)
+   LIMPIO   184 TPDO1     n4  byte 1: antes 24 → durante 24–25 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 3: antes 0E → durante 07–0E (8 valores)  bits 00001111  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 41 → durante 41–6F (20 valores)  bits 00111111  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 1A → durante 0E–1A (13 valores)  bits 00011111  SE QUEDA (posición/estado)
+   ruidoso  181 TPDO1     n1  byte 2: antes 17–1A → durante 1A–1D
+   ruidoso  184 TPDO1     n4  byte 2: antes 74–7E → durante 02–FC
+   ruidoso  184 TPDO1     n4  byte 6: antes 37–BB → durante 0B–D0
+   ruidoso  187 TPDO1     n7  byte 4: antes D4–D9 → durante D0–DB
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FE
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FE
+   ruidoso  303 RPDO2     n3  byte 1: antes 00–C1 → durante 00–C9
+   ruidoso  388 TPDO3     n8  byte 4: antes D0–D4 → durante CD–D8
+   ruidoso  49E TPDO4     n30 byte 2: antes 4B–6A → durante 02–FF
+   ruidoso  588 SDO resp  n8  byte 4: antes 1B–1D → durante 1C–1E
+================================================================================================
+PASO 32 · SOLTAR pedal   (6.7 s)
+   LIMPIO   183 TPDO1     n3  byte 0: antes 00 → durante 00–01 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   184 TPDO1     n4  byte 2: antes DA → durante 76–DA (9 valores)  bits 11111110  SE QUEDA (posición/estado)
+   LIMPIO   187 TPDO1     n7  byte 0: antes 07 → durante 03–07 (2 valores)  bits 00000100  SE QUEDA (posición/estado)
+   LIMPIO   205 RPDO1     n5  byte 6: antes 6E → durante 6E–71 (3 valores)  bits 00011111  SE QUEDA (posición/estado)
+   LIMPIO   207 RPDO1     n7  byte 0: antes 09 → durante 01–09 (2 valores)  bits 00001000  SE QUEDA (posición/estado)
+   LIMPIO   208 RPDO1     n8  byte 5: antes 08 → durante 08–20 (2 valores)  bits 00101000  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 0: antes 55 → durante 55–6A (4 valores)  bits 00111111  SE QUEDA (posición/estado)
+   LIMPIO   20A RPDO1     n10 byte 6: antes 23 → durante 22–23 (2 valores)  bits 00000001  vuelve (momentáneo)
+   LIMPIO   303 RPDO2     n3  byte 2: antes 00 → durante 00–C1 (2 valores)  bits 11000001  vuelve (momentáneo)
+   LIMPIO   49E TPDO4     n30 byte 3: antes 0E → durante 0D–0E (2 valores)  bits 00000011  SE QUEDA (posición/estado)
+   ruidoso  181 TPDO1     n1  byte 2: antes 1E–21 → durante 21–23
+   ruidoso  184 TPDO1     n4  byte 6: antes 3E–57 → durante 3B–CA
+   ruidoso  187 TPDO1     n7  byte 4: antes D6–D9 → durante D5–DB
+   ruidoso  187 TPDO1     n7  byte 6: antes 17–18 → durante 00–17
+   ruidoso  20A RPDO1     n10 byte 4: antes 1E–20 → durante 1D–20
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–FC → durante 00–FD
+   ruidoso  29E TPDO2     n30 byte 4: antes 00–F2 → durante 00–FD
+   ruidoso  303 RPDO2     n3  byte 1: antes 00–C9 → durante 00–CA
+   ruidoso  388 TPDO3     n8  byte 4: antes D0–D5 → durante CE–D6
+   ruidoso  49E TPDO4     n30 byte 2: antes 49–52 → durante 0D–EB
+   ruidoso  588 SDO resp  n8  byte 4: antes 1C–1D → durante 1B–1D
+================================================================================================
+PASO 33 · referencia final   (3.8 s)
+   ruidoso  188 TPDO1     n8  byte 4: antes 03–FF → durante 02–FF
+   ruidoso  20A RPDO1     n10 byte 4: antes 1E–20 → durante 1D–20
+   ruidoso  29E TPDO2     n30 byte 0: antes 00–F3 → durante 00–FA
+   ruidoso  588 SDO resp  n8  byte 4: antes 1C–1D → durante 1B–1D
+
+================================================================================================
+SOLO CON EL PEDAL (lo que la acción mueve únicamente con el pie puesto):
+   N                  187 b1, 187 b2, 187 b3, 188 b2, 188 b3, 19E b2, 19E b3, 19E b4, 19E b5, 207 b2, 207 b3, 288 b0, 288 b1, 29E b0, 29E b1, 30A b6, 30A b7, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4, 39E b6, 39E b7, 49E b4, 49E b5
+   S                  187 b1, 187 b2, 187 b3, 187 b7, 207 b2, 207 b3, 30A b4, 30A b5, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4
+   E                  187 b1, 187 b2, 187 b3, 187 b5, 187 b7, 207 b2, 207 b3, 30A b6, 30A b7, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4, 387 b5, 388 b5
+   W                  187 b1, 187 b2, 187 b3, 207 b2, 207 b3, 20A b6, 30A b4, 30A b5, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4
+   joy adelante       20A b4, 305 b0, 30A b2, 30A b3, 40A b4, 40A b5, 583 b2, 603 b2
+   joy atras          187 b1, 187 b2, 187 b3, 187 b5, 187 b7, 207 b2, 207 b3, 20A b4, 305 b0, 30A b0, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4, 388 b5
+   joy izquierda      182 b0, 182 b2, 182 b5, 182 b7, 184 b1, 187 b1, 187 b2, 187 b3, 187 b7, 188 b0, 188 b1, 188 b2, 188 b3, 188 b5, 19E b2, 19E b3, 19E b4, 19E b5, 204 b0, 205 b4, 205 b5, 207 b2, 207 b3, 208 b0, 208 b2, 208 b3, 208 b5, 288 b0, 288 b1, 305 b0, 305 b2, 30A b2, 30A b3, 30A b4, 30A b5, 30A b6, 30A b7, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4, 388 b6, 388 b7, 39E b0, 39E b1, 40A b0, 40A b1, 40A b2, 40A b3, 40A b4, 40A b5, 40A b6, 49E b4, 49E b5, 583 b2, 584 b4, 603 b2
+   joy derecha        184 b1, 188 b0, 188 b1, 188 b2, 188 b3, 188 b5, 19E b2, 19E b3, 19E b4, 19E b5, 204 b0, 205 b4, 208 b0, 208 b2, 208 b3, 208 b5, 20A b6, 288 b0, 305 b2, 388 b6, 388 b7, 39E b0, 39E b7, 40A b6, 49E b4, 49E b5, 584 b4
+   palanca adelante   187 b1, 187 b2, 187 b3, 187 b6, 188 b2, 188 b3, 19E b2, 19E b3, 19E b4, 19E b5, 207 b2, 207 b3, 288 b0, 288 b1, 30A b4, 30A b5, 387 b0, 387 b1, 387 b2, 387 b3, 387 b4, 49E b4, 49E b5, 583 b2, 603 b2
+   palanca atras      182 b2, 182 b4, 187 b1, 207 b2, 20A b6, 30A b6, 30A b7, 387 b1, 387 b2, 387 b4, 583 b2, 603 b2
+   timon izquierda    184 b2, 20A b6, 584 b4
+   timon derecha      20A b6
+   timon centro       20A b6
+
+CANDIDATOS AL BIT DEL PEDAL (cambian al pisar Y al soltar): 184 byte 2, 187 byte 0, 205 byte 6, 207 byte 0, 208 byte 5, 20A byte 0, 49E byte 3
