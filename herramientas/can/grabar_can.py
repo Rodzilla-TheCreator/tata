@@ -18,6 +18,12 @@ en la misma escala de tiempo que las tramas, para cruzar después qué cambió c
 MODO GUION: en pantalla solo salen los pasos y el resumen de cada 5 s (las tramas se
 guardan todas en el log igual). Muestra el paso siguiente; Enter vacío = «empiezo este
 paso» y queda marcado. Texto + Enter = marca libre.
+
+    py grabar_can.py COM6 921600 diagnostico     # MODO ENTER-ACCIÓN-ENTER (23-nov)
+
+MODO ENTER-ACCIÓN-ENTER (guiones de PARES): cada paso lleva DOS Enter. El primero marca
+INICIO (después hacés la acción), el segundo marca FIN. Después se corre descifrar.py sobre
+el log y dice, por paso, qué bytes cambiaron respecto de los 3 s de antes.
 """
 import datetime as dt
 import os
@@ -56,6 +62,37 @@ GUIONES = {
         "fin",
     ],
 }
+
+# GUIONES DE PARES (Enter = INICIO, acción, Enter = FIN). Entre pasos, quieto 3 s: es la referencia.
+_ACCIONES = [
+    ("N", "botón NORTH: apretalo, mantenelo 2 s y soltalo"),
+    ("S", "botón SOUTH: apretalo, mantenelo 2 s y soltalo"),
+    ("E", "botón EAST: apretalo, mantenelo 2 s y soltalo"),
+    ("W", "botón WEST: apretalo, mantenelo 2 s y soltalo"),
+    ("pito", "botón TRASERO (pito): apretalo 1 s y soltalo"),
+    ("joy adelante", "joystick ADELANTE: despacio hasta la mitad, 2 s, y soltalo"),
+    ("joy atras", "joystick ATRÁS: despacio hasta la mitad, 2 s, y soltalo"),
+    ("joy izquierda", "joystick IZQUIERDA: hasta la mitad, 2 s, y soltalo"),
+    ("joy derecha", "joystick DERECHA: hasta la mitad, 2 s, y soltalo"),
+    ("palanca adelante", "palanca TRASERA hacia ADELANTE: hasta la mitad, 2 s, y soltala"),
+    ("palanca atras", "palanca TRASERA hacia ATRÁS: hasta la mitad, 2 s, y soltala"),
+    ("timon izquierda", "TIMÓN: media vuelta a la IZQUIERDA y dejalo ahí"),
+    ("timon derecha", "TIMÓN: una vuelta a la DERECHA (pasa el centro) y dejalo ahí"),
+    ("timon centro", "TIMÓN: volvé al centro (rueda recta)"),
+]
+PARES = {
+    "diagnostico": (
+        [("referencia sin pedal", "NADA: no toques nada (Enter, contá 5, Enter)")]
+        + [("SIN pedal · " + k, v) for k, v in _ACCIONES]
+        + [("PISAR pedal", "PEDAL: subite y quedate parado en él (Enter al pisar, Enter cuando ya estás firme)"),
+           ("referencia con pedal", "NADA, parado en el pedal: no toques nada (Enter, contá 5, Enter)")]
+        + [("CON pedal · " + k, "(TOQUES CORTOS: el equipo SE MUEVE) " + v) for k, v in _ACCIONES]
+        + [("SOLTAR pedal", "PEDAL: bajate del pedal (Enter, bajarse, Enter)"),
+           ("referencia final", "NADA: no toques nada (Enter, contá 5, Enter)")]
+    ),
+}
+if guion_nombre in PARES:
+    GUIONES[guion_nombre] = [k for k, _ in PARES[guion_nombre]]
 
 # GUIONES CON TEMPORIZADOR: (acción, segundos). No hay que dar Enter: la pantalla avisa,
 # cuenta, y marca INICIO y FIN solos. Entre paso y paso, 3 s de «prepárate».
@@ -141,7 +178,19 @@ def correr_temporizado():
     print("GUION TERMINADO. Ctrl-C para parar la grabación.", flush=True)
 
 
+pares = PARES.get(guion_nombre)
+abierto = [False]
+
+
 def mostrar_paso():
+    if pares and paso[0] < len(pares):
+        clave, texto = pares[paso[0]]
+        print("\n========================================================", flush=True)
+        print("  PASO %d/%d · %s" % (paso[0] + 1, len(pares), clave), flush=True)
+        print("  %s" % texto, flush=True)
+        print("  -> Enter = EMPIEZO · hacé la acción · Enter = TERMINÉ", flush=True)
+        print("========================================================", flush=True)
+        return
     if guion and paso[0] < len(guion):
         print("\n========================================================", flush=True)
         print("  PASO %d/%d:  %s" % (paso[0] + 1, len(guion), guion[paso[0]]), flush=True)
@@ -152,6 +201,21 @@ def mostrar_paso():
 def marcas_del_teclado():
     for linea in sys.stdin:
         texto = linea.strip()
+        if pares and not texto and paso[0] < len(pares):
+            clave = pares[paso[0]][0]
+            if not abierto[0]:
+                poner_marca("INICIO %d · %s" % (paso[0] + 1, clave))
+                abierto[0] = True
+                print("     ... AHORA. Enter cuando termines.", flush=True)
+            else:
+                poner_marca("FIN %d · %s" % (paso[0] + 1, clave))
+                abierto[0] = False
+                paso[0] += 1
+                print("     quieto 3 s antes del siguiente.", flush=True)
+                mostrar_paso()
+                if paso[0] >= len(pares):
+                    print("\nGuion terminado. Ctrl-C para parar y después:  py descifrar.py <log>", flush=True)
+            continue
         if guion and not texto and paso[0] < len(guion):
             poner_marca("PASO %d · %s" % (paso[0] + 1, guion[paso[0]].split(" — ")[0]))
             paso[0] += 1
