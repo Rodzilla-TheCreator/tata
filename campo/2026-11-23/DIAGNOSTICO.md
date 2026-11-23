@@ -12,6 +12,8 @@ cada acción. Después, `descifrar.py` dice qué bytes cambiaron con cada una.
 - El **multipiloto REAL conectado normal, con su CAN** (hoy no va el nodo 2 falso).
 - La cadena **aislada** al DB9: CANH → 8, CANL → 3, **GND_bus → negativo de batería** (pin 7 de la ficha
   del multipiloto). **Sin la R3 del TJA** si este equipo da 60 Ω entre 3 y 8 (el 21-nov dio 60).
+- **Corregido (maje, 23-nov):** en este equipo el **GND_bus va al pin 2 del DB9**, como funcionó el 21-nov
+  (decía: negativo de batería por el pin 7 de la ficha del multipiloto). El multipiloto original enchufado con su CAN.
 - Cargar `herramientas/can/escucha_can/` en el ESP. **El ESP y el cable USB fijos** (el 21-nov los cortes
   fueron el cable flojo).
 
