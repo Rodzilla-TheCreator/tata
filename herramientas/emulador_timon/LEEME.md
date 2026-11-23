@@ -124,3 +124,19 @@ después**, al conector del equipo.
 - Resolución 8-bit del DAC nativo: OK para la prueba (~0.45°/paso). Para el kit, **MCP4728**
   (12-bit, I²C, ya está en el hardware de `docs/21`).
 - El sensor **no tiene número de parte** en el cuerpo.
+
+## Lazo cerrado sobre la rueda (23-nov) — `timon_lazo/timon_lazo.ino` + `timon_lazo.py`
+
+El emulador de siempre (misma calibración) **más el CAN aislado en LISTEN_ONLY** leyendo el ángulo real de la
+rueda: **`0x184` bytes 2–3, int16, 0.01°, cero = recta, topes −103° / +81°** (`campo/2026-11-23/resultados.md`).
+Se le pide un ángulo de rueda (`A30`) y gira el volante emulado hasta llegar (P con banda de 0.5°). No hace falta
+saber las vueltas de tope a tope. El CAN no transmite nada.
+
+- Objetivo recortado a **−100 / +78** (margen a los topes). Volante máx **180 °/s** al arrancar (`M360` para subir).
+- Para solo, con su `EV`: watchdog de 300 ms sin líneas · sin `0x184` 300 ms · **sentido al revés** (la rueda se
+  mueve > 1° para el otro lado: `S` invierte) · **sin respuesta** (1.5 s empujando y < 0.3° de avance).
+- Simulado en la laptop (rueda = 0.09 × volante, `0x184` a 50 Hz con 40 ms de retardo): llega a ±0.4° sin
+  pasarse, de −90 a +78. **Sin probar en el equipo.**
+- Hardware: el del timón (GPIO25/26 → LM358 → nodo 4) + la cadena CAN aislada al DB9 (22/21). GND ESP = amarillo.
+- **Antes de usarlo en el equipo:** rueda motriz en el aire o el equipo parado y despejado; primer objetivo chico
+  (`+20`), y mirar que vaya para el lado correcto.
