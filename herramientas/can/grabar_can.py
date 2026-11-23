@@ -91,6 +91,12 @@ PARES = {
            ("referencia final", "NADA: no toques nada (Enter, contá 5, Enter)")]
     ),
 }
+# 23-nov: escala del ángulo de la rueda de dirección. Arranca con el timón a tope IZQUIERDA.
+PARES["timon"] = [
+    ("referencia tope izquierda", "TIMÓN ya a tope IZQUIERDA (la rueda no gira más). Quieto: Enter, contá 5, Enter"),
+    ("barrido izq a der", "Enter y girá el timón LENTO a la DERECHA hasta que la rueda ya no responda; ahí Enter"),
+    ("referencia tope derecha", "Quieto con el timón a tope DERECHA: Enter, contá 5, Enter"),
+]
 if guion_nombre in PARES:
     GUIONES[guion_nombre] = [k for k, _ in PARES[guion_nombre]]
 
