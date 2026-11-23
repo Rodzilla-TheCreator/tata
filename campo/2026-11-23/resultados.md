@@ -169,6 +169,13 @@ recto con W, flexómetro al final:
   (teclado, no el multipiloto). Camino − distancia = 13 mm: algo de ida y vuelta al frenar.
 - Para cerrarlo al centímetro: anotar el flexómetro exacto la próxima vez.
 
+## Entre ejes (maje, flexómetro)
+
+**1.69 m** del centro de la rueda motriz a la línea de las ruedas de carga, en perpendicular. Cierra la pregunta de
+septiembre: **batería de 539, `y` = 1.688, `XPIV` = 1.928** (`herramientas/fichas/LEEME.md`). La motriz está en la
+esquina bajo el timón, del lado opuesto a las uñas; en la otra esquina de ese lado hay una rueda de apoyo.
+Falta: cuánto está corrida la motriz de lado. `percepcion/odometria.py` sigue con `WB = 1.562`.
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.

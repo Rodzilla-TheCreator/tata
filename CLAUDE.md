@@ -170,6 +170,7 @@ Todo esto contradice lo que estaba escrito antes. **Manda esta sección.**
 | Esquina del culo (06-nov) | ángulo recto | **radio ~0.17** (±3 cm, no medido) | dibujo de la ficha VDI |
 | Culo (07-nov) | esquinas de radio 0.17 | **cara en arco de R 1.747** (centro 5 cm detrás del eje de carga) con esquinas de transición; todo dentro del círculo de `Wa` 1.801 | **vectores** de la hoja VDI, a escala (0.1 %): `herramientas/fichas/culo_de_la_ficha.py`. Ancho a rumbo **2.967 vacío / 3.005 cargado** |
 | Culo → rueda motriz (07-nov) | — | **0.240** (cota del dibujo); de serie culo → eje de carga = 0.240 + 1.562 = 1.802 | hoja VDI, dibujo de costado |
+| Entre ejes (23-nov) | 1.562 (ficha de serie); 1.688 deducido del largo de 2.91 | **1.69, medido** → batería de 539, `XPIV` **1.928** | flexómetro, motriz → línea de las ruedas de carga en perpendicular (EDR18N2 funcional prestado). La motriz va en la esquina bajo el timón, con una rueda de apoyo en la otra esquina |
 
 > **Superado el 06-nov** por las filas de arriba (`analisis/rutas_resultados.md`, v3): δmax es 90° y `XPIV` sale del largo.
 

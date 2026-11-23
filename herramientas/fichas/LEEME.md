@@ -188,6 +188,12 @@ La placa (batería de 1,050–1,180 kg, más que el máximo de 1,050 de la ficha
 **No cambia el giro** (el ancho a rumbo es forma: 2.967 / 3.005); cambia `WB` en la cinemática y los
 tiempos (v3b: ≤ 1 s). **Se confirma midiendo el entre ejes**: 1.56 o 1.69.
 
+> **CONFIRMADO 23-nov (maje, flexómetro, EDR18N2 funcional prestado): entre ejes = 1.69 m**, en perpendicular
+> del centro de la rueda motriz a la línea de las ruedas de carga. **Es la batería de 539: `y` = 1,688, `XPIV` =
+> 1,928.** La motriz está en la esquina bajo el timón, del lado opuesto a las uñas, con una rueda de apoyo en la
+> esquina contraria (falta medir cuánto está corrida de lado). Pendiente: `percepcion/odometria.py` sigue con
+> `WB = 1.562`.
+
 ### 4 · Lo que corrige de `CLAUDE.md`
 
 La «cota dura» de septiembre, `XPIV < √(Wa² − (W/2)²) = 1.672`, **suponía esquinas en ángulo recto**.
