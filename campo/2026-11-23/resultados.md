@@ -136,6 +136,14 @@ b2–b3 (con signo) en el tiempo del ESP:
 **Con esto la odometría tiene sus dos entradas con escala:** velocidad (`188` b2–b3 × 7.30e-4 m/s) y ángulo de la
 rueda (`184` b2–b3 × 0.01°, cero = recta).
 
+## Timón emulado con lazo cerrado, en el equipo (12:48–13:0x, `timon_lazo.ino` + `timon_lazo.py`)
+
+- Primera corrida: con sentido +1 la rueda fue **al revés las dos veces** (−20: 12.9° → 19.6°; +20: 16.4° → 10.3°)
+  y el ESP paró solo (SIGNO AL REVÉS, bien detectado). Y aparecieron **falsos «SIN 0x184»**: el `0x184` llegó a
+  50 Hz todo el tiempo; era un bug (resta sin signo de `millis()`). Corregido y **sentido −1** de fábrica.
+- **Segunda corrida (maje): la rueda llegó a todos los ángulos que pidió.** El timón a mano también mueve la rueda.
+- El equipo quieto (sin marcha). Lazo: P, kp 30, volante máx 180 °/s, banda 0.5°.
+
 ## Pendiente
 
 - Palanca trasera atrás sin pedal: no aparece en el `182`; mirarla a mano en el log.
