@@ -193,6 +193,10 @@ tiempos (v3b: ≤ 1 s). **Se confirma midiendo el entre ejes**: 1.56 o 1.69.
 > 1,928.** La motriz está en la esquina bajo el timón, del lado opuesto a las uñas, con una rueda de apoyo en la
 > esquina contraria (falta medir cuánto está corrida de lado). Pendiente: `percepcion/odometria.py` sigue con
 > `WB = 1.562`.
+>
+> **Mismo día, vías (aprox.):** ruedas de carga centro a centro ≈ **1.2 m** = la de serie (1,067 + 127 = 1,194 →
+> `b1` ≈ 1,321). Motriz ↔ rueda de apoyo centro a centro **0.65 m** (no viene en la ficha): la motriz a ~0.325 del eje
+> del equipo, del lado del timón, si las dos están parejas.
 
 ### 4 · Lo que corrige de `CLAUDE.md`
 

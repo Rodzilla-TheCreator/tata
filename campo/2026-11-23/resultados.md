@@ -175,18 +175,15 @@ recto con W, flexómetro al final:
 septiembre: **batería de 539, `y` = 1.688, `XPIV` = 1.928** (`herramientas/fichas/LEEME.md`). La motriz está en la
 esquina bajo el timón, del lado opuesto a las uñas; en la otra esquina de ese lado hay una rueda de apoyo.
 Falta: cuánto está corrida la motriz de lado. `percepcion/odometria.py` sigue con `WB = 1.562`.
-
-## Vías (maje, flexómetro)
-
-| Medida | Valor | Lectura |
-|---|---|---|
-| motriz ↔ rueda de apoyo, centro a centro | **0.65 m** | si las dos van parejas a los costados del eje del equipo, **la motriz está corrida 0.325 m** del centro |
-| entre los pares de ruedas de carga, centro a centro | **~1.11 m** | de serie (1,067 entre patas + 127 de pata, ruedas centradas) serían **1.19**: no calza |
-
-**Dato en tensión:** con 1.11 de vía y patas de 127 con la rueda centrada, el ancho pata a pata (`W_MAX`) sería
-~1.24 m, no el 1.315 que usa el repo (nunca medido). Puede ser otra opción de patas (catálogo: 838–1524 en pasos de
-12.7) o que la rueda no vaya centrada en la pata. **Lo cierra medir `W_MAX` directo**: de la cara de afuera de una
-pata a la de afuera de la otra.
+- **Vías (maje, flexómetro, ~):** ruedas de carga de centro a centro (dos por pata) **≈ 1.2 m** → es la de serie
+  (1,067 entre patas + 127 de pata = **1,194**), así que **`b1` ≈ 1,321** (el repo usa 1.315, nunca medido).
+  **Motriz ↔ rueda de apoyo, de centro a centro: 0.65 m** → si las dos están parejas al eje del equipo, la motriz va
+  **0.325 m corrida** hacia el lado del timón. Supuesto sin verificar: que la de apoyo esté a la misma distancia del
+  eje que la motriz.
+- **Qué cambia en la odometría con la motriz corrida `e` (rueda a `L` = 1.688 del eje de carga):** el giro no cambia,
+  **ω = v·sin δ / L** con o sin corrimiento; lo que cambia es la velocidad del punto medio del eje de carga:
+  **v·cos δ + v·(e/L)·sin δ** (signo según el lado). Con 30° de rueda es ~10 % del avance. `percepcion/odometria.py`
+  todavía usa `WB = 1.562` y no tiene `e`: pendiente.
 
 ## Pendiente
 
