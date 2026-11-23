@@ -95,6 +95,13 @@ lento → tope derecho.
 - **El cero no está en el medio** (el medio de los topes cae en −1 130, −11.3°). O el equipo no está centrado en
   0, o los topes no son simétricos. **Se cierra con un centro marcado** (rueda recta a ojo con una regla contra el
   chasis, 5 s quieto).
+- **El centro (11:44, log `escucha_equipo_20261123-114444.log`, rueda recta a ojo, paralela a las uñas): +120**,
+  fijo en 241 muestras. **El cero del equipo es la rueda recta** (+120 ≈ 1.2° con 0.01 °/unidad, dentro de «a ojo»).
+- **Eso deja en tensión la escala:** con el cero en el centro, los topes quedan **asimétricos**: −10 440 a la
+  izquierda y +7 940 a la derecha, medidos desde el centro. Con 0.01 °/unidad serían −104° y +79°, no ±90°.
+  O los topes de este equipo son asimétricos de verdad, o la unidad no es 0.01°. **Se cierra midiendo un ángulo
+  conocido:** la rueda en un tope, con transportador o la app de nivel del celular contra la rueda, y anotar
+  los grados y el valor del `184` en ese momento.
 - `49E` b2–b3 (nodo 30) también barre (46 743 → 14 675 sin signo) pero con otra escala: no se usa.
 - `205` b6 queda en 65 en los dos topes: no es el ángulo.
 
