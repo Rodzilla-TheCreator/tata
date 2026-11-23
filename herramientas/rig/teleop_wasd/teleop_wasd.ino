@@ -146,7 +146,8 @@ void linea(String s) {
        (vp > 0 ? 0x40 : vp < 0 ? 0x20 : 0) | (vh ? 0x01 : 0);
   const char* pr = strstr(p, "r=");
   if (pr) {
-    if (pr[2] == '-') { if (hayObj) pararTimon(NULL, "QUIETO"); }
+    // 23-nov: «r=-» es sin objetivo, pero «r=-20.0» es un objetivo negativo (antes se tomaba como «-»)
+    if (pr[2] == '-' && !isdigit((unsigned char)pr[3])) { if (hayObj) pararTimon(NULL, "QUIETO"); }
     else if (!isnan(ang)) {
       float o = constrain(atof(pr + 2), ANG_MIN, ANG_MAX);
       if (!hayObj) { dirEmpuje = 0; estTim = "YENDO"; }
