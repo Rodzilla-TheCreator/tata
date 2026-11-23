@@ -114,6 +114,9 @@ class Ventana:
                        selectcolor="#1e2228", activebackground="#1e2228", takefocus=0).pack(side="left")
         tk.Button(g, text="rueda recta (0°)", command=lambda: self.ponerObj(0.0), takefocus=0).pack(side="left", padx=8)
         tk.Button(g, text="invertir timón", command=lambda: mandar("S"), takefocus=0).pack(side="left")
+        tk.Button(g, text="odometría a 0", command=lambda: mandar("Z"), takefocus=0).pack(side="left", padx=8)
+        self.lOdo = tk.Label(g, text="distancia —", fg="#4fc3f7", bg="#1e2228", font=("Consolas", 16, "bold"))
+        self.lOdo.pack(side="left", padx=8)
 
         tk.Button(r, text="PARAR  (espacio) — el paro de verdad es levantar el pie", font=("Segoe UI", 12, "bold"),
                   bg="#c62828", fg="white", command=self.parar, takefocus=0).pack(fill="x", padx=10, pady=6)
@@ -253,6 +256,11 @@ class Ventana:
                 self.obj = None
             self.lCan.configure(text="CAN: %s%s" % (can, "" if kv.get("arm") == "1" else " (sin armar)"),
                                 fg="#4caf50" if can == "OPERACIONAL" else "#f0b429")
+            try:
+                self.lOdo.configure(text="distancia %+.3f m · camino %.3f m · %+.2f m/s" % (
+                    float(kv["dist"]), float(kv["camino"]), float(kv["vel"])))
+            except (KeyError, ValueError):
+                pass
             self.lNum.configure(text="0x182 = %s   rueda %s°  objetivo %s°  timón %s   0x184 %s Hz   TEC %s REC %s bus %s" % (
                 " ".join(kv.get("x182", "")[i:i + 2] for i in range(0, 16, 2)), kv.get("ang"), kv.get("obj"), tim,
                 kv.get("hz184"), kv.get("tec"), kv.get("rec"), kv.get("bus")))

@@ -46,6 +46,11 @@ const float Vo = 2.47, Va = 1.98;
 const float kV = 1.381, oV = 0.131, kC = 1.386, oC = 0.115;
 const int DAC_V = 25, DAC_C = 26;
 const uint32_t ID_ANG = 0x184;
+// ---- odometría (23-nov): 0x188 b2-b3 int16 x 7.30e-4 = m/s de la rueda motriz (+ = hacia las uñas) ----
+const uint32_t ID_VEL = 0x188;
+const float ESCALA_VEL = 7.30e-4f;
+float vel = 0, dist = 0, recorrido = 0;  // m/s, m con signo, m sin signo
+uint32_t tVel = 0;
 const float ANG_MIN = -100.0f, ANG_MAX = 78.0f, BANDA = 0.5f, KP = 30.0f, RATE_MAX = 180.0f, RATE_MIN = 25.0f;
 const uint32_t SIN184_MS = 300, SIGNO_MS = 400, STALL_MS = 1500;
 float theta = 0, gps = 0, obj = 0, ang = NAN, angEmpuje = 0;
@@ -133,6 +138,7 @@ void linea(String s) {
     return;
   }
   if (s == "X") { silencio(); pararTimon(NULL, "QUIETO"); return; }
+  if (s == "Z") { dist = 0; recorrido = 0; Serial.println("EV odometria en cero"); return; }
   if (s == "S") { signo = -signo; pararTimon(NULL, "QUIETO"); Serial.printf("EV timon: sentido %+d\n", signo); return; }
   if (c != 'L') return;
   tLinea = millis(); latidoVivo = true;
@@ -175,6 +181,11 @@ void loop() {
   while (twai_receive(&m, 0) == ESP_OK) {
     if (m.identifier == ID_ANG && m.data_length_code >= 4) {
       ang = (int16_t)(m.data[2] | (m.data[3] << 8)) / 100.0f; tAng = millis(); n184++;
+    }
+    if (m.identifier == ID_VEL && m.data_length_code >= 4) {   // integrar como descifrar: valor anterior x dt
+      uint32_t t = millis();
+      if (tVel) { float dt = (t - tVel) / 1000.0f; if (dt > 0.1f) dt = 0.1f; dist += vel * dt; recorrido += fabsf(vel) * dt; }
+      vel = (int16_t)(m.data[2] | (m.data[3] << 8)) * ESCALA_VEL; tVel = t;
     }
     if (armado && tPrimeraTrama == 0) tPrimeraTrama = millis();
     if (armado) atender(m);
@@ -234,9 +245,9 @@ void loop() {
     char o[12]; if (hayObj) snprintf(o, sizeof o, "%.1f", obj); else strcpy(o, "-");
     const char* ne[] = {"SIN_BOOT", "PREOP", "OPERACIONAL", "PARADO"};
     uint8_t d[8]; armar182(d);
-    Serial.printf("T can=%s arm=%d m=%d x182=%02X%02X%02X%02X%02X%02X%02X%02X ang=%.2f obj=%s gps=%.0f tim=%s hz184=%lu tec=%lu rec=%lu bus=%s\n",
+    Serial.printf("T can=%s arm=%d m=%d x182=%02X%02X%02X%02X%02X%02X%02X%02X ang=%.2f obj=%s gps=%.0f tim=%s vel=%.3f dist=%.3f camino=%.3f hz184=%lu tec=%lu rec=%lu bus=%s\n",
                   ne[estado], armado ? 1 : 0, mando, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7],
-                  isnan(ang) ? 0.0f : ang, o, gps, estTim, (unsigned long)hz184,
+                  isnan(ang) ? 0.0f : ang, o, gps, estTim, vel, dist, recorrido, (unsigned long)hz184,
                   (unsigned long)st.tx_error_counter, (unsigned long)st.rx_error_counter,
                   st.state == TWAI_STATE_RUNNING ? "ok" : (st.state == TWAI_STATE_BUS_OFF ? "OFF" : "?"));
   }
