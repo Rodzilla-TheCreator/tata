@@ -127,6 +127,9 @@ b2–b3 (con signo) en el tiempo del ESP:
 - **Las dos pasadas coinciden al 0.08 %.** Fuera de los pasos marcados el equipo no se movió (≤ 5.4 unidades·s, 4 mm).
 - **`188` b2–b3 × 7.30 × 10⁻⁴ = velocidad de la rueda motriz en m/s** (1 unidad ≈ 0.73 mm/s). Positivo = la ida
   (joystick hacia el lado de la ida; con lo de la mañana, derecha = hacia las uñas). El pico de 479 fue ~0.35 m/s.
+- **Velocidad variable a propósito no fue (maje): acelerando y frenando a media corrida, sin ritmo parejo.** No
+  afecta a la integral, y lo vuelve una prueba mejor: dos perfiles distintos (18.5 s con pico 479, 30.3 s con
+  pico 382) dan la misma escala, así que es **lineal en el rango probado (0–0.35 m/s)**. Arriba de eso, sin probar.
 - `19E` b2–b3 da la misma integral (4 373.2 / −4 368.7): es una copia.
 - Supone que la vuelta también fue de 3.19 m (volvió a la marca de salida). Que las dos coincidan lo respalda.
 
