@@ -58,7 +58,7 @@ const uint32_t WDOG_MS = 300, SIN184_MS = 300, SIGNO_MS = 400, STALL_MS = 1500;
 float theta = 0;                     // rad, posición del volante emulado
 float gps = 0;                       // grados/s del volante que se están aplicando
 float kp = KP_INI, rateMax = RATE_MAX_INI;
-int signo = +1;
+int signo = -1;                      // medido 23-nov: volante + -> rueda - (con +1 las dos pruebas fueron al reves)
 bool hayObj = false, manual = false;
 float obj = 0, manualGps = 0;
 float ang = NAN;                     // grados de rueda (0x184)
@@ -137,8 +137,10 @@ void loop() {
   if (ahora - tHz >= 1000) { hz184 = n184; n184 = 0; tHz = ahora; }
 
   bool activo = hayObj || manual;
-  if (activo && ahora - tLinea > WDOG_MS) parar("WATCHDOG: sin lineas por serie", "QUIETO");
-  if (hayObj && (isnan(ang) || ahora - tAng > SIN184_MS)) parar("SIN 0x184 (llave o CAN)", "SIN_184");
+  ahora = millis();                    // 23-nov: leerCAN() pone tAng DESPUÉS del millis() de arriba; con el
+                                       // ahora viejo, ahora - tAng daba negativo (uint32 enorme) = falso SIN 0x184
+  if (activo && (int32_t)(ahora - tLinea) > (int32_t)WDOG_MS) parar("WATCHDOG: sin lineas por serie", "QUIETO");
+  if (hayObj && (isnan(ang) || (int32_t)(ahora - tAng) > (int32_t)SIN184_MS)) parar("SIN 0x184 (llave o CAN)", "SIN_184");
 
   // ---- el lazo ----
   float pedido = 0;                    // gps del volante, antes del signo
