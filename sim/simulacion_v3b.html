@@ -165,7 +165,7 @@ input[type=range]{width:100%;accent-color:var(--amarillo)}
   </div>
 
   <div class="pie">
-    <div>Pasillo B de RETHINK según el DXF (<code>datos/sectorA.json</code>): 7 bahías, un hueco de 2.66 m y 6 bahías por lado, con pared en las dos puntas (3.07 m antes del primer poste y 3.05 m después del último). Junto al primer rack R está la zona de descarga, donde el humano recoge lo que sale; junto al último rack R, la de carga, donde deja lo que entra (maje, 09-nov). Rutas del planificador Hybrid A* (<code>analisis/planificador_rutas.py</code>, modelo v3b): 2.91 m de culo a punta, culo de la ficha, timón a 90°, 6 cm de retranqueo. Elevación y empuje de la ficha VDI. Marcha a 1.5 m/s como máximo, el sobre del kit, dentro de los 5–8 km/h de los operadores; maniobra, aceleración y freno son supuestos. Datos: <code>sim/exportar.py</code> · <span id="gen"></span>.</div>
+    <div>Pasillo B de RETHINK según el DXF (<code>datos/sectorA.json</code>): 7 bahías, un hueco de 2.66 m y 6 bahías por lado, con pared en las dos puntas (3.07 m antes del primer poste y 3.05 m después del último). Junto al primer rack R está la zona de descarga, donde el humano recoge lo que sale; junto al último rack R, la de carga, donde deja lo que entra (maje, 09-nov). Rutas del planificador Hybrid A* (<code>analisis/planificador_rutas.py</code>, modelo v4 del 24-nov: entre ejes 1.688, la rueda motriz corrida 0.325 bajo el timón y topes −104.4° / +79.4°; el punto celeste es el centro de giro, donde la línea del eje de la rueda corta la del eje de carga): 2.91 m de culo a punta, culo de la ficha, 6 cm de retranqueo. La versión del 09-nov (rueda centrada, timón a 90°) sigue en <code>sim/simulacion_v3b.html</code>. Elevación y empuje de la ficha VDI. Marcha a 1.5 m/s como máximo, el sobre del kit, dentro de los 5–8 km/h de los operadores; maniobra, aceleración y freno son supuestos. Datos: <code>sim/exportar.py</code> · <span id="gen"></span>.</div>
   </div>
 </div>
 
@@ -180,7 +180,8 @@ const DEC_FRENO = 1.2;      // m/s², SUPUESTO: el freno de resorte al soltar el
 const WD_MS = 200;
 const HFOV = 54.3*Math.PI/180, RANGO_CAM = 623.4*0.15/20;   // donde la marca baja de 20 px
 
-$('modelo').textContent = `pasillo B del DXF · ${G.N} bahías por lado · v3b · XPIV ${D.supuestos.XPIV} · δmax 90° · retranqueo ${Math.round(D.supuestos.REC[0]*100)} cm · ${D.pedidos.length} pedidos · ${T_FIN.toFixed(0)} s`;
+const VER = D.supuestos.version || 'v3b', TOPES = D.supuestos.TOPES || [-90, 90];
+$('modelo').textContent = `pasillo B del DXF · ${G.N} bahías por lado · ${VER} · entre ejes ${(+D.supuestos.WB).toFixed(3)} · motriz corrida ${Math.round((EQ.e||0)*100)} cm · topes ${TOPES[0]}° / +${TOPES[1]}° · retranqueo ${Math.round(D.supuestos.REC[0]*100)} cm · ${D.pedidos.length} pedidos · ${T_FIN.toFixed(0)} s`;
 $('gen').textContent = 'generado ' + D.generado;
 
 // ── interpolación ───────────────────────────────────────────────
@@ -299,18 +300,33 @@ function dibujar(e){
   const L = (a,b)=>local(e,a,b);
   cx.save(); cx.shadowColor=css('--sombra'); cx.shadowBlur=6;
   poly(pz[0].map(p=>L(p[0],p[1])), C.am, C.tinta, 1.3); cx.restore();
-  // rueda motriz y ruedas de carga
-  const rr = EQ.rueda[0]/2, rw = EQ.rueda[1]/2, ad = -EQ.wb;
+  // rueda motriz (corrida EQ.e de lado, bajo el timón: v4), rueda de apoyo y ruedas de carga
+  const rr = EQ.rueda[0]/2, rw = EQ.rueda[1]/2, ad = -EQ.wb, ey = EQ.e || 0;
   const ca = Math.cos(e.d), sa = Math.sin(e.d);
-  poly([[-rr,-rw],[rr,-rw],[rr,rw],[-rr,rw]].map(p=>L(ad+p[0]*ca-p[1]*sa, p[0]*sa+p[1]*ca)), C.tinta, null);
+  if (ey) poly([[-.09,-.05],[.09,-.05],[.09,.05],[-.09,.05]].map(p=>L(ad+p[0], -ey+p[1])), C.tenue, null);
+  poly([[-rr,-rw],[rr,-rw],[rr,rw],[-rr,rw]].map(p=>L(ad+p[0]*ca-p[1]*sa, ey+p[0]*sa+p[1]*ca)), C.tinta, null);
+  // el centro de giro: donde la línea del eje de la rueda motriz corta la del eje de carga (y = e − WB/tan δ).
+  // Se dibuja cuando la rueda va bien cruzada: con la motriz corrida cae casi en el medio del eje de carga
+  if (Math.abs(sa) > 0.5 && e.v !== undefined){
+    const yc = ey - EQ.wb*ca/sa, c0 = L(0, yc), w0 = L(ad, ey);
+    cx.save(); cx.setLineDash([4,4]); cx.strokeStyle = C.cam; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(sx(w0[0]),sy(w0[1])); cx.lineTo(sx(c0[0]),sy(c0[1])); cx.stroke(); cx.restore();
+    cx.beginPath(); cx.arc(sx(c0[0]),sy(c0[1]),5,0,2*Math.PI); cx.fillStyle=C.cam; cx.fill();
+    cx.font='500 10px IBM Plex Mono'; cx.textAlign='left'; cx.fillStyle=C.cam;
+    cx.fillText('centro de giro ' + (yc*100>=0?'+':'') + Math.round(yc*100) + ' cm', sx(c0[0])+8, sy(c0[1])-6);
+  }
   for (const s of [1,-1]) poly([[-.064,-.046],[.064,-.046],[.064,.046],[-.064,.046]].map(p=>L(p[0], s*0.483+p[1])), C.tinta, null);
-  // torre, pantógrafo, carro y uñas
-  const am = EQ.a_mast, ext = e.ext;
-  poly([[am-0.02,-0.408],[am+0.18,-0.408],[am+0.18,0.408],[am-0.02,0.408]].map(p=>L(p[0],p[1])), C.acero, null);
-  if (ext>0.01){ cx.beginPath(); for (const s of [1,-1]){ const p1=L(am+0.18,s*0.3), p2=L(EQ.a_pata+ext-0.08,-s*0.3); cx.moveTo(sx(p1[0]),sy(p1[1])); cx.lineTo(sx(p2[0]),sy(p2[1])); }
+  // torre, pantógrafo, carro y uñas (24-nov, corregido). EQ.a_mast es el DORSO de las uñas retraídas (culo → dorso
+  // 1.71, menos XPIV): las uñas miden 1.20 de ahí a la punta. Antes se dibujaba solo el tramo que asoma de las patas
+  // (0.72 m) y el carro en la punta de las patas: con el pantógrafo afuera las uñas se veían cortas y el carro corrido
+  // 0.48 m hacia adelante. El polígono de choque del planificador no cambia (la parte entre las patas va en el cuerpo).
+  const am = EQ.a_mast, ext = e.ext, carro = am + ext;
+  poly([[am-0.22,-0.408],[am-0.04,-0.408],[am-0.04,0.408],[am-0.22,0.408]].map(p=>L(p[0],p[1])), C.acero, null);
+  if (ext>0.01){ cx.beginPath(); for (const s of [1,-1]){ const p1=L(am-0.04,s*0.3), p2=L(carro-0.06,-s*0.3); cx.moveTo(sx(p1[0]),sy(p1[1])); cx.lineTo(sx(p2[0]),sy(p2[1])); }
     cx.strokeStyle=C.acero; cx.lineWidth=2; cx.stroke(); }
-  poly([[EQ.a_pata+ext-0.08,-0.413],[EQ.a_pata+ext,-0.413],[EQ.a_pata+ext,0.413],[EQ.a_pata+ext-0.08,0.413]].map(p=>L(p[0],p[1])), C.acero, null);
-  for (let k=1;k<=2;k++) poly(pz[k].map(p=>L(p[0]+ext,p[1])), C.acero, null);
+  poly([[carro-0.06,-0.413],[carro,-0.413],[carro,0.413],[carro-0.06,0.413]].map(p=>L(p[0],p[1])), C.acero, null);
+  for (let k=1;k<=2;k++){ const ys = pz[k].map(p=>p[1]), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    poly([[carro,y0],[EQ.a_punta+ext,y0],[EQ.a_punta+ext,y1],[carro,y1]].map(p=>L(p[0],p[1])), C.acero, null); }
   if (e.ibc==='uñas') ibcEn(e, EQ.a_punta+ext-0.6, C.ibc, C.ibcB);
   // el punto que pasa más cerca
   if (e.hol && e.v!==undefined){ const col = e.hol[0]<0.02?C.mal:e.hol[0]<0.05?C.aviso:C.ok;

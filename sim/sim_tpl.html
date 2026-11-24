@@ -316,13 +316,17 @@ function dibujar(e){
     cx.fillText('centro de giro ' + (yc*100>=0?'+':'') + Math.round(yc*100) + ' cm', sx(c0[0])+8, sy(c0[1])-6);
   }
   for (const s of [1,-1]) poly([[-.064,-.046],[.064,-.046],[.064,.046],[-.064,.046]].map(p=>L(p[0], s*0.483+p[1])), C.tinta, null);
-  // torre, pantógrafo, carro y uñas
-  const am = EQ.a_mast, ext = e.ext;
-  poly([[am-0.02,-0.408],[am+0.18,-0.408],[am+0.18,0.408],[am-0.02,0.408]].map(p=>L(p[0],p[1])), C.acero, null);
-  if (ext>0.01){ cx.beginPath(); for (const s of [1,-1]){ const p1=L(am+0.18,s*0.3), p2=L(EQ.a_pata+ext-0.08,-s*0.3); cx.moveTo(sx(p1[0]),sy(p1[1])); cx.lineTo(sx(p2[0]),sy(p2[1])); }
+  // torre, pantógrafo, carro y uñas (24-nov, corregido). EQ.a_mast es el DORSO de las uñas retraídas (culo → dorso
+  // 1.71, menos XPIV): las uñas miden 1.20 de ahí a la punta. Antes se dibujaba solo el tramo que asoma de las patas
+  // (0.72 m) y el carro en la punta de las patas: con el pantógrafo afuera las uñas se veían cortas y el carro corrido
+  // 0.48 m hacia adelante. El polígono de choque del planificador no cambia (la parte entre las patas va en el cuerpo).
+  const am = EQ.a_mast, ext = e.ext, carro = am + ext;
+  poly([[am-0.22,-0.408],[am-0.04,-0.408],[am-0.04,0.408],[am-0.22,0.408]].map(p=>L(p[0],p[1])), C.acero, null);
+  if (ext>0.01){ cx.beginPath(); for (const s of [1,-1]){ const p1=L(am-0.04,s*0.3), p2=L(carro-0.06,-s*0.3); cx.moveTo(sx(p1[0]),sy(p1[1])); cx.lineTo(sx(p2[0]),sy(p2[1])); }
     cx.strokeStyle=C.acero; cx.lineWidth=2; cx.stroke(); }
-  poly([[EQ.a_pata+ext-0.08,-0.413],[EQ.a_pata+ext,-0.413],[EQ.a_pata+ext,0.413],[EQ.a_pata+ext-0.08,0.413]].map(p=>L(p[0],p[1])), C.acero, null);
-  for (let k=1;k<=2;k++) poly(pz[k].map(p=>L(p[0]+ext,p[1])), C.acero, null);
+  poly([[carro-0.06,-0.413],[carro,-0.413],[carro,0.413],[carro-0.06,0.413]].map(p=>L(p[0],p[1])), C.acero, null);
+  for (let k=1;k<=2;k++){ const ys = pz[k].map(p=>p[1]), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    poly([[carro,y0],[EQ.a_punta+ext,y0],[EQ.a_punta+ext,y1],[carro,y1]].map(p=>L(p[0],p[1])), C.acero, null); }
   if (e.ibc==='uñas') ibcEn(e, EQ.a_punta+ext-0.6, C.ibc, C.ibcB);
   // el punto que pasa más cerca
   if (e.hol && e.v!==undefined){ const col = e.hol[0]<0.02?C.mal:e.hol[0]<0.05?C.aviso:C.ok;
