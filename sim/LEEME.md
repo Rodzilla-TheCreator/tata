@@ -67,6 +67,11 @@ python sim/build.py         # escribe sim/simulacion.html con los datos adentro
 - APROXIMA / RETROCEDE: el equipo avanza 0.163 m para que las uñas entren los 1.20 del IBC (1.067 de
   pantógrafo no alcanzan con la punta a 3 cm de la cara). **No es supuesto, es regla (maje, 24-nov):** entra el
   1.20 entero porque el cubo es de químicos y va asentado contra el carro.
+- **La rueda gira a 50 °/s como mucho (24-nov):** antes saltaba de un ángulo al otro en cero tiempo. 50 °/s es lo
+  sostenido en los logs del teleop del 23-nov (49–56 °/s siguiendo nuestro lazo, `herramientas/rig/logs/`). Un
+  cambio de más de 5° entre dos primitivas se hace con el equipo detenido, girando la rueda en el lugar (como el
+  operador antes de rotar); los menores, en marcha. En `teleop_wasd_20261123-131034.log` la rueda salta de +3.2° a
+  −81.8° en 0.1 s con el lazo QUIETO (850 °/s, imposible): lectura rara, sin explicar, igual que la de las 13:13:48.
 - **INCLINA / NIVELA (24-nov):** tomado el cubo, 4° hacia atrás (el máximo de la ficha) a 2.5 °/s (programa 1 de
   fábrica, `0x233A`/`0x233B`), para que el peso lo asiente contra el carro y la curva de las uñas; se viaja así y se
   nivela antes de dejar. En el panel del mástil la inclinación se dibuja ×3 para que se vea.

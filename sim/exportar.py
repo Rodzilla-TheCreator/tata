@@ -50,6 +50,12 @@ DT_VIS = 0.25               # s entre cálculos de visibilidad
 V3B = '--v3b' in sys.argv
 DMAX = math.pi / 2          # lo que vale fr = 1 en las primitivas: π/2 en v3b, el tope largo en v4 (se fija en main)
 DATOS = 'sim_datos_v3b.json' if V3B else 'sim_datos.json'
+# 24-nov: la rueda no se teletransporta. Gira a W_RUEDA como mucho: 49–56 °/s sostenidos en los logs del 23-nov
+# (teleop_wasd_*.log, siguiendo nuestro lazo; herramientas/rig/logs). Un cambio de más de SALTO_RUEDA entre dos
+# primitivas se hace con el equipo DETENIDO (el perfil frena a cero ahí), girando la rueda en el lugar.
+W_RUEDA = math.radians(50.0)
+SALTO_RUEDA = math.radians(5.0)
+DELTA_ACT = 0.0             # ángulo actual de la rueda, se arrastra entre movimientos
 
 
 def geometria_equipo():
@@ -82,16 +88,36 @@ def perfil(prims):
     return v
 
 
+def girar_quieto(out, pose, d_obj, etapa, t, cargado):
+    """La rueda va de DELTA_ACT a d_obj con el equipo quieto, a W_RUEDA. Devuelve el t al terminar."""
+    global DELTA_ACT
+    dd = d_obj - DELTA_ACT
+    if abs(dd) < math.radians(0.5):
+        DELTA_ACT = d_obj
+        return t
+    dur = abs(dd) / W_RUEDA
+    n = max(2, int(math.ceil(dur / 0.1)))
+    for k in range(n):
+        out.append(dict(t=t + dur * k / n, x=pose[0], y=pose[1], th=pose[2], d=DELTA_ACT + dd * k / n, sg=0, v=0.0,
+                        e=etapa, c=cargado))
+    DELTA_ACT = d_obj
+    return t + dur
+
+
 def mover(res, etapa, t0, cargado):
-    """Muestras (t, x, y, th, δ, sentido, v) de un movimiento del planificador, desde t0."""
+    """Muestras (t, x, y, th, δ, sentido, v) de un movimiento del planificador, desde t0. Parte en tramos donde
+    cambia el sentido o la rueda salta más de SALTO_RUEDA; antes de cada tramo gira la rueda con el equipo quieto."""
+    global DELTA_ACT
     prims, poses = res['prims'], res['poses']
     out, t = [], t0
     i = 0
     while i < len(prims):
-        j = i
-        while j < len(prims) and prims[j][0] == prims[i][0]:
+        j = i + 1
+        while j < len(prims) and prims[j][0] == prims[i][0] and \
+                abs(prims[j][1] - prims[j - 1][1]) * DMAX <= SALTO_RUEDA:
             j += 1
         tr = prims[i:j]
+        t = girar_quieto(out, poses[i], tr[0][1] * DMAX, etapa, t, cargado)
         v = perfil(tr)
         for k, (sg, fr, ds) in enumerate(tr):
             p = poses[i + k]
@@ -99,14 +125,15 @@ def mover(res, etapa, t0, cargado):
                             e=etapa, c=cargado))
             vm = (v[k] + v[k + 1]) / 2
             t += ds / vm if vm > 1e-6 else 2 * math.sqrt(ds / P.ACC)
+        DELTA_ACT = tr[-1][1] * DMAX
         i = j
     p = poses[-1]
-    out.append(dict(t=t, x=p[0], y=p[1], th=p[2], d=0.0, sg=0, v=0.0, e=etapa, c=cargado))
+    out.append(dict(t=t, x=p[0], y=p[1], th=p[2], d=DELTA_ACT, sg=0, v=0.0, e=etapa, c=cargado))
     return out, t
 
 
 def quieto(pose, etapa, t0, dur, cargado):
-    return [dict(t=t0, x=pose[0], y=pose[1], th=pose[2], d=0.0, sg=0, v=0.0, e=etapa, c=cargado)], t0 + dur
+    return [dict(t=t0, x=pose[0], y=pose[1], th=pose[2], d=DELTA_ACT, sg=0, v=0.0, e=etapa, c=cargado)], t0 + dur
 
 
 def recta_local(pose, dist, n=8):
@@ -400,7 +427,8 @@ def main():
                            TOPES=[-90, 90] if V3B else [round(-math.degrees(topes[0]), 1), round(math.degrees(topes[1]), 1)],
                            XPIV=round(pl.xpiv, 3), WB=P.WB, DMAX=round(math.degrees(DMAX), 1), REC=list(pl.rec), VMAX=P.VMAX, VMAN=P.VMAN,
                            ACC=P.ACC, V_SUBE=V_SUBE, V_BAJA=V_BAJA, V_EMPUJE=V_EMPUJE, EXT_MAX=EXT_MAX,
-                           H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), INCLINA=INCLINA, V_INCLINA=V_INCLINA, montaje='A2', marcas_cada=2,
+                           H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), INCLINA=INCLINA, V_INCLINA=V_INCLINA,
+                           W_RUEDA=round(math.degrees(W_RUEDA), 1), SALTO_RUEDA=round(math.degrees(SALTO_RUEDA), 1), montaje='A2', marcas_cada=2,
                            PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)),
                            nota='VMAX 1.5 m/s = sobre del kit, dentro de los 5–8 km/h que dicen los operadores. '
                                 'SUPUESTOS: VMAN, ACC, H_VIAJE, T_MIN, PX_MIN, ANG_MAX, y el hueco entre tramos tratado '

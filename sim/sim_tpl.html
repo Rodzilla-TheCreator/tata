@@ -191,7 +191,7 @@ function angInterp(a,b,f){ let d=b-a; while(d>Math.PI) d-=2*Math.PI; while(d<-Ma
 function estado(t){
   const i = busca(S,t), a = S[i], b = S[Math.min(i+1,S.length-1)];
   const f = b[0]>a[0] ? Math.min(1,Math.max(0,(t-a[0])/(b[0]-a[0]))) : 0;
-  const e = { t, i, x:a[1]+(b[1]-a[1])*f, y:a[2]+(b[2]-a[2])*f, th:angInterp(a[3],b[3],f), d:a[4], sg:a[5],
+  const e = { t, i, x:a[1]+(b[1]-a[1])*f, y:a[2]+(b[2]-a[2])*f, th:angInterp(a[3],b[3],f), d:a[4]+(b[4]-a[4])*f, sg:a[5],
     v:a[6]+(b[6]-a[6])*f, etapa:a[7], cargado:!!a[8], hol:HH[i] };
   const j = busca(VV,t), p = VV[j], q = VV[Math.min(j+1,VV.length-1)];
   const g = q[0]>p[0] ? Math.min(1,Math.max(0,(t-p[0])/(q[0]-p[0]))) : 1;
