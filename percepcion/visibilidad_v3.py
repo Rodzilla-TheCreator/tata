@@ -142,7 +142,7 @@ SEMILLAS = 6
 def verdad(d):
     """Trayectoria verdadera en pasos de ≤ 2 cm de rueda, reproduciendo las muestras del turno con
     avanzar_rueda (la cinemática v3). Devuelve arreglos t, dt, pose, v (rueda), δ, fase, y las llegadas."""
-    from odometria import avanzar_rueda
+    from odometria import WB_SERIE, avanzar_rueda
     S = d['S']
     T, DTS, POS, VV, DD, FASE, LLEG = [], [], [], [], [], [], []
     pose = tuple(S[0][1:4])
@@ -158,7 +158,7 @@ def verdad(d):
         if a[7] in LLEGADAS and (not FASE or FASE[-1] != a[7]):
             LLEG.append(len(T) - 1)
         for _ in range(n):
-            pose = avanzar_rueda(pose, vw, dd, dt)
+            pose = avanzar_rueda(pose, vw, dd, dt, e=0.0, wb=WB_SERIE)      # las rutas v3b: centrada, 1.562
             t += dt
             T.append(t); DTS.append(dt); POS.append(pose); VV.append(vw); DD.append(dd)
             FASE.append(a[7])
@@ -176,13 +176,15 @@ def correr_ekf(tr, camaras, M, semilla):
     """Como visibilidad.correr_ekf, con el EKF de la rueda motriz. Devuelve el error lateral (a lo
     largo del pasillo, que es lo que alinea las uñas con los huecos del IBC) en cada llegada."""
     from ekf import EKF, ColocacionMarcas, R_pose, marca_vista_desde, pose_desde_marca
+    from odometria import WB_SERIE
     r = np.random.default_rng(semilla)
     rmed = np.random.default_rng(semilla + 10_000)
     E = V._esquinas(M)
     creido = {int(m[5]): (m[0] + r.normal(0, V.SIG_COLOCACION), m[1] + r.normal(0, V.SIG_COLOCACION), m[3]) for m in M}
     p0 = tr['pose'][0]
     f = EKF(p0 + r.normal(0, [0.05, 0.05, math.radians(1.0)]),
-            np.diag([0.10 ** 2, 0.10 ** 2, math.radians(3) ** 2]), rueda=True)
+            np.diag([0.10 ** 2, 0.10 ** 2, math.radians(3) ** 2]), rueda=True,
+            e=0.0, wb=WB_SERIE)                     # las rutas v3b: centrada, 1.562 (24-nov: ya no es el default)
     coloc = ColocacionMarcas(V.SIG_COLOCACION)
     errores, lleg = [], set(tr['llegadas'])
     for i in range(1, len(tr['t'])):

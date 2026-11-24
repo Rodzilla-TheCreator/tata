@@ -17,6 +17,8 @@
 # predict(v, δ, dt): propaga con odometria.avanzar (la cinemática del planificador), o con
 #   avanzar_rueda si rueda=True (09-nov: v de la rueda motriz, aguanta el timón a 90° del giro v3). Ruido de
 #   proceso Q = G·M·Gᵀ desde la incertidumbre de las entradas, más una deriva lenta de b y s.
+#   24-nov: con rueda=True, la motriz corrida `e` (odometria.E, 0.325 bajo el timón) y WB 1.688 medido: el medio
+#   del eje de carga avanza ds_rueda·(cos δ − (e/WB)·sin δ). e=0 reproduce el filtro del 09-nov.
 #
 # update_aruco(pose, R): corrige con una pose absoluta (H = [I₃ 0]). Ángulo envuelto.
 #   Compuerta de Mahalanobis (χ² 3 gl, 99 %) contra marcas mal identificadas o reflejos.
@@ -27,7 +29,7 @@ import math
 
 import numpy as np
 
-from odometria import WB, avanzar, avanzar_rueda
+from odometria import E, WB, avanzar, avanzar_rueda
 
 CHI2_3_99 = 11.345          # χ² con 3 grados de libertad al 99 %
 RECHAZOS_PARA_REABRIR = 10  # ≈ 0.5 s de marcas que contradicen al filtro, con dos cámaras a 10 Hz
@@ -41,7 +43,7 @@ def envolver(a):
 class EKF:
     def __init__(self, pose0, P0, sigma_v_rel=0.01, sigma_v_abs=0.01, sigma_delta=math.radians(0.5),
                  sigma_b0=math.radians(1.0), sigma_s0=0.05,
-                 deriva_b=math.radians(0.01), deriva_s=1e-4, rueda=False):
+                 deriva_b=math.radians(0.01), deriva_s=1e-4, rueda=False, e=None, wb=None):
         """
         pose0, P0     pose inicial [x, y, θ] y su covarianza 3×3
         sigma_v_*     ruido aleatorio de la velocidad (relativo a v, y piso en m/s)
@@ -52,8 +54,13 @@ class EKF:
                       tan δ. True (09-nov): v es la de la RUEDA MOTRIZ, que es lo que mide el encoder,
                       y se integra con cos δ / sin δ: aguanta δ = 90° (el giro v3, rotación sobre el
                       eje de carga), donde tan δ es infinita. s es la escala de esa velocidad.
+        e             solo con rueda=True: corrimiento lateral de la motriz (24-nov). None = odometria.E
+                      (0.325 del lado del timón); 0 = el modelo del 09-nov, con la motriz en el centro.
+        wb            entre ejes. None = odometria.WB (1.688 medido); WB_SERIE (1.562) reproduce lo del 09-nov.
         """
+        self.wb = WB if wb is None else wb
         self.rueda = rueda
+        self.e = (E if e is None else e) if rueda else 0.0
         self.x = np.r_[np.asarray(pose0, float), 0.0, 1.0]
         self.P = np.zeros((5, 5))
         self.P[:3, :3] = P0
@@ -77,15 +84,16 @@ class EKF:
         de = delta - b
         dsw = s * v * dt                                 # lo que recorre el punto de la velocidad medida
         if self.rueda:                                   # v de la rueda motriz (v3, aguanta δ = 90°)
-            cd, sd = math.cos(de), math.sin(de)
-            ds, dth = dsw * cd, -(dsw / WB) * sd
-            dds_dsw, ddth_dsw = cd, -sd / WB             # ∂(ds, dθ)/∂ds_rueda
-            dds_dde, ddth_dde = -dsw * sd, -(dsw / WB) * cd
+            W = self.wb
+            cd, sd, k = math.cos(de), math.sin(de), self.e / W
+            ds, dth = dsw * (cd - k * sd), -(dsw / W) * sd
+            dds_dsw, ddth_dsw = cd - k * sd, -sd / W     # ∂(ds, dθ)/∂ds_rueda
+            dds_dde, ddth_dde = -dsw * (sd + k * cd), -(dsw / W) * cd
         else:                                            # v del eje de carga (02-nov, con tan δ)
-            t = math.tan(de)
-            ds, dth = dsw, -(dsw / WB) * t
-            dds_dsw, ddth_dsw = 1.0, -t / WB
-            dds_dde, ddth_dde = 0.0, -(ds / WB) * (1 + t * t)
+            W, t = self.wb, math.tan(de)
+            ds, dth = dsw, -(dsw / W) * t
+            dds_dsw, ddth_dsw = 1.0, -t / W
+            dds_dde, ddth_dde = 0.0, -(ds / W) * (1 + t * t)
         thm = th + 0.5 * dth
         c, sn = math.cos(thm), math.sin(thm)
 
@@ -108,7 +116,10 @@ class EKF:
         Q[3, 3] += self.qb * dt
         Q[4, 4] += self.qs * dt
 
-        nx, ny, nth = (avanzar_rueda if self.rueda else avanzar)((x, y, th), s * v, de, dt)
+        if self.rueda:
+            nx, ny, nth = avanzar_rueda((x, y, th), s * v, de, dt, e=self.e, wb=self.wb)
+        else:
+            nx, ny, nth = avanzar((x, y, th), s * v, de, dt, wb=self.wb)
         self.x = np.array([nx, ny, envolver(nth), b, s])
         self.P = F @ self.P @ F.T + Q
         self.ultimo = (F, G)                             # para la prueba de jacobianos (prueba_ekf_rueda.py)

@@ -502,3 +502,21 @@ el EKF estima los sesgos mientras ve marcas.
 - **En tensión:** todo depende de supuestos (montajes, `PX_MIN`, `ANG_MAX`, ruido de la medición escalado con
   la distancia, sesgos). Y la verdad del recorrido se re-ancla a las muestras del planificador cada tramo
   (salto máx 3.9 mm), un error extra que la odometría no ve: hace el resultado un poco pesimista.
+
+## 24-nov · la odometría con la geometría medida (motriz corrida, entre ejes 1.688)
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| `WB` 1.562, la motriz en el eje del equipo, topes ±90° | **`WB` 1.688, motriz corrida `e` 0.325 bajo el timón, topes −104.4 / +79.4** | medidas del 23-nov; v4 del planificador (`analisis/rutas_resultados.md`) |
+| con la rueda a 90° el equipo rota sobre el eje de carga | **rota con δ = atan(WB/e) = 79.1°** | la misma |
+
+- `odometria.avanzar_rueda` y `EKF(rueda=True)`: el medio del eje de carga avanza `ds_rueda·(cos δ − (e/WB)·sin δ)`;
+  el giro sigue siendo `−(ds_rueda/WB)·sin δ`. Por defecto `e = odometria.E` y `wb = odometria.WB`; `e=0, wb=WB_SERIE`
+  reproduce lo del 09-nov (así lo llama `visibilidad_v3.py`, que repite las rutas v3b: comprobado idéntico).
+- `odometria.de_bus(crudo_188, crudo_184)` → `(v_rueda, δ)`: 7.30e-4 m/s por unidad, 0.01° por unidad con la recta en
+  +120, y `δ = LADO_MOTRIZ · ángulo`.
+- **`LADO_MOTRIZ = +1` está SIN CONFIRMAR**: supone el timón a la izquierda mirando del culo hacia las uñas (así lo
+  dibujan las dos fichas). Si está al revés, el rumbo integra al revés en cada curva. Lo contesta maje de memoria.
+- `prueba_ekf_rueda.py` PASA: contra el planificador v4 con la misma geometría (0), `de_bus` con los crudos del 23-nov,
+  jacobianos en los topes, en 90° y en el lugar, y el giro a ciegas: 1.4 cm máx. Controles: ignorar `e` da 46 cm;
+  `e` del lado equivocado, 92 cm. `sim_sintetico.py` PASA 30/30 con `WB` 1.688.
