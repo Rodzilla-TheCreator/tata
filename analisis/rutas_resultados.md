@@ -674,3 +674,22 @@ medio del eje no se mueve; con `e` 0 y 79° se mueve 0.50 m.)
   no rueda y el centro queda a ~0.64 m, cerca de una pata. Y anotar de qué lado del equipo está la motriz.
 - **Falta:** `percepcion/odometria.py` y `ekf.py` (el medio del eje avanza `ds·(cos δ − e/WB·sin δ)`, no `ds·cos δ`), y
   rehacer las rutas completas y `sim/` con el v4 si se quiere la pose exacta durante el giro.
+
+### 24-nov, tarde · H1 confirmada por maje, y los topes bajan de relevancia
+
+**H1 es la correcta** (maje: la motriz está debajo del timón, del lado del tope corto). Con eso, en los dos topes el
+equipo rota prácticamente sobre el medio del eje de carga (+1 / −11 cm) y la sombra es la de v3 (1.929 / 1.953).
+H2 queda descartada; se conserva arriba con lo que daba.
+
+**Y los topes pesan poco (maje):** el sentido de giro lo decide el **multipiloto** (marcha adelante o atrás), no el
+tope. Con la rueda en una sola línea, adelante gira para un lado y atrás para el otro; no hace falta pasar de
+−104° a +79°. Probado en el planificador (H1, `4 La`, sin pedir un solo sentido de marcha): elige lo mismo que con
+el sentido fijo. Al salir de la bahía hace falta **retroceder mientras rota** (si rota en el lugar, las uñas barren
+de costado contra los postes), y eso es lo que decide qué tope usa, no los topes en sí.
+
+Lo que sí queda de los topes:
+- **Cambiar de un tope al otro cuesta tiempo**: 184° de rueda. Falta medir la velocidad del motor de dirección (el
+  barrido lento del 23-nov no sirve: fue a mano). Y **cambiar el sentido de marcha pide equipo detenido**: ese es el
+  costo real de «un segundo a −100 y al siguiente a +70».
+- **El lazo del timón tiene que recortar la consigna a −104 / +79**: más allá, el volante sigue girando y la rueda no.
+- La odometría y el EKF necesitan `e` y 1.688 (el medio del eje avanza `ds·(cos δ − e/WB·sin δ)`).
