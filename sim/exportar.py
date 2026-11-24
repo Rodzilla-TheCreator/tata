@@ -55,7 +55,13 @@ DATOS = 'sim_datos_v3b.json' if V3B else 'sim_datos.json'
 # primitivas se hace con el equipo DETENIDO (el perfil frena a cero ahí), girando la rueda en el lugar.
 W_RUEDA = math.radians(50.0)
 SALTO_RUEDA = math.radians(5.0)
+# Solo en las maniobras junto al rack se para a girar la rueda. En RECTA / TRANSITO (el traslado) el planificador
+# también salta de timón (30–170°: el cierre en S de dos arcos y el cambio de carril; un castigo por cambiar el timón
+# en el A* no lo arregla, probado el 24-nov), pero ahí sobra lugar: la rueda gira en marcha a W_RUEDA y va atrasada
+# respecto del plan, como con un seguidor de trayectoria. La pose que se muestra es la planificada.
+EN_MARCHA = ('RECTA', 'TRANSITO')
 DELTA_ACT = 0.0             # ángulo actual de la rueda, se arrastra entre movimientos
+_DELTA_INI = [0.0]          # el de antes de un movimiento en marcha (para atrasar la rueda)
 
 
 def geometria_equipo():
@@ -110,14 +116,17 @@ def mover(res, etapa, t0, cargado):
     global DELTA_ACT
     prims, poses = res['prims'], res['poses']
     out, t = [], t0
+    parar = etapa not in EN_MARCHA
+    _DELTA_INI[0] = DELTA_ACT
     i = 0
     while i < len(prims):
         j = i + 1
         while j < len(prims) and prims[j][0] == prims[i][0] and \
-                abs(prims[j][1] - prims[j - 1][1]) * DMAX <= SALTO_RUEDA:
+                (not parar or abs(prims[j][1] - prims[j - 1][1]) * DMAX <= SALTO_RUEDA):
             j += 1
         tr = prims[i:j]
-        t = girar_quieto(out, poses[i], tr[0][1] * DMAX, etapa, t, cargado)
+        if parar:
+            t = girar_quieto(out, poses[i], tr[0][1] * DMAX, etapa, t, cargado)
         v = perfil(tr)
         for k, (sg, fr, ds) in enumerate(tr):
             p = poses[i + k]
@@ -127,6 +136,16 @@ def mover(res, etapa, t0, cargado):
             t += ds / vm if vm > 1e-6 else 2 * math.sqrt(ds / P.ACC)
         DELTA_ACT = tr[-1][1] * DMAX
         i = j
+    if not parar:                                   # la rueda real, atrasada: sigue al plan a W_RUEDA como mucho
+        d, t_ant = None, None
+        for m in out:
+            if d is None:
+                d, t_ant = _DELTA_INI[0], m['t']
+            paso = W_RUEDA * (m['t'] - t_ant)
+            d += max(-paso, min(paso, m['d'] - d))
+            m['d'], t_ant = d, m['t']
+        if out:
+            DELTA_ACT = out[-1]['d']
     p = poses[-1]
     out.append(dict(t=t, x=p[0], y=p[1], th=p[2], d=DELTA_ACT, sg=0, v=0.0, e=etapa, c=cargado))
     return out, t
@@ -317,7 +336,7 @@ def armar(pl, rutas):
     return S, Vt, cubos, pedidos
 
 
-EN_EL_CUBO = ('APROXIMA', 'EXTIENDE', 'TOMA', 'DEPOSITA', 'RETRAE', 'RETROCEDE')   # las uñas van dentro del IBC
+EN_EL_CUBO = ('APROXIMA', 'EXTIENDE', 'TOMA', 'INCLINA', 'NIVELA', 'DEPOSITA', 'RETRAE', 'RETROCEDE')   # las uñas van dentro del IBC
 
 
 def holguras(pl, S):
