@@ -13,6 +13,7 @@ import math
 import os
 import sys
 import time
+from contextlib import nullcontext
 
 import numpy as np
 
@@ -37,6 +38,21 @@ DT_VIS = 0.25               # s entre cálculos de visibilidad
 # carga del fondo (junto al último rack R, maje 09-nov) y recoge los que SALEN al principio del pasillo.
 #   ('salida', desde, hueco)   desde (pose '3L', 'principio' o una bahía) → toma en hueco → deja en el principio
 #   ('entrada', desde, hueco)  desde → toma en la zona de carga → deja en hueco
+# 24-nov: por defecto el modelo v4 (motriz corrida 0.325 bajo el timón, entre ejes 1.688, topes −104.4 / +79.4;
+# analisis/rutas_resultados.md). `--v3b` reproduce lo del 09-nov (rueda centrada, 1.562, ±90°) en
+# sim_datos_v3b.json; la página de esa versión queda en simulacion_v3b.html.
+V3B = '--v3b' in sys.argv
+DMAX = math.pi / 2          # lo que vale fr = 1 en las primitivas: π/2 en v3b, el tope largo en v4 (se fija en main)
+DATOS = 'sim_datos_v3b.json' if V3B else 'sim_datos.json'
+
+
+def geometria_equipo():
+    """El contexto del planificador con la geometría del modelo elegido, y los topes."""
+    if V3B:
+        return nullcontext(), None
+    return P.con_geo(P.WB_V4, P.E_V4), P.TOPES_V4
+
+
 ZONA = None                 # se arma adentro de geometria('dxf'): la «bahía» N + 1, lado R, al piso
 PEDIDOS = [
     ('salida', '3L', '5 3 Ra'),            # el caso de maje
@@ -73,7 +89,7 @@ def mover(res, etapa, t0, cargado):
         v = perfil(tr)
         for k, (sg, fr, ds) in enumerate(tr):
             p = poses[i + k]
-            out.append(dict(t=t, x=p[0], y=p[1], th=p[2], d=fr * math.pi / 2, sg=sg, v=v[k] * sg,
+            out.append(dict(t=t, x=p[0], y=p[1], th=p[2], d=fr * DMAX, sg=sg, v=v[k] * sg,
                             e=etapa, c=cargado))
             vm = (v[k] + v[k + 1]) / 2
             t += ds / vm if vm > 1e-6 else 2 * math.sqrt(ds / P.ACC)
@@ -332,13 +348,15 @@ def vista(pl, S):
 
 
 def main():
-    global ZONA, DESCARGA
+    global ZONA, DESCARGA, DMAX
     log = lambda s: print(s, flush=True)
     t0 = time.time()
-    with B.geometria('dxf'):
+    ctx, topes = geometria_equipo()
+    with B.geometria('dxf'), ctx:
         DESCARGA = repr(B.Direccion(0, '1A', B.ZONA_DESCARGA, 'c'))   # '0 1A Rc'
         ZONA = repr(B.Direccion(B.N + 1, '1A', B.ZONA_CARGA, 'c'))     # '14 1A Rc': el planificador pide texto
-        pl = P.Planificador(modelo='v3')
+        pl = P.Planificador(modelo='v3', d_lim=topes)
+        DMAX = pl.eq[False].dmax
         rutas = planificar_turno(pl, log)
         S, Vt, cubos, pedidos = armar(pl, rutas)
         log(f'{len(S)} muestras de pose, turno de {S[-1]["t"]:.0f} s; holguras y visibilidad…')
@@ -361,8 +379,12 @@ def main():
                    fuente='datos/sectorA.json (pasillo B: verde | azul) + zona de carga de maje')
         datos = dict(
             generado=time.strftime('%Y-%m-%d %H:%M'),
-            supuestos=dict(modelo='v3b (planificador_rutas.py, modelo=v3, culo de la ficha), geometría del DXF',
-                           XPIV=round(pl.xpiv, 3), WB=P.WB, DMAX=90, REC=list(pl.rec), VMAX=P.VMAX, VMAN=P.VMAN,
+            supuestos=dict(modelo=('v3b (planificador_rutas.py, modelo=v3, culo de la ficha), geometría del DXF' if V3B
+                                   else 'v4 (planificador_rutas.py, modelo=v3 con la motriz corrida y topes asimétricos, '
+                                        'culo de la ficha), geometría del DXF'),
+                           version='v3b' if V3B else 'v4', E=0.0 if V3B else P.E_V4,
+                           TOPES=[-90, 90] if V3B else [round(-math.degrees(topes[0]), 1), round(math.degrees(topes[1]), 1)],
+                           XPIV=round(pl.xpiv, 3), WB=P.WB, DMAX=round(math.degrees(DMAX), 1), REC=list(pl.rec), VMAX=P.VMAX, VMAN=P.VMAN,
                            ACC=P.ACC, V_SUBE=V_SUBE, V_BAJA=V_BAJA, V_EMPUJE=V_EMPUJE, EXT_MAX=EXT_MAX,
                            H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), montaje='A2', marcas_cada=2,
                            PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)),
@@ -371,7 +393,7 @@ def main():
                                 'como cara de rack'),
             geo=geo,
             equipo=dict(piezas=piezas, xpiv=pl.xpiv, a_mast=a_mast, a_pata=a_mast + P.L_ANCHO,
-                        a_punta=B.a_punta(pl.xpiv, pl.lch), wb=P.WB, rueda=[0.343, 0.140], w_capo=P.W_CAPO,
+                        a_punta=B.a_punta(pl.xpiv, pl.lch), wb=P.WB, e=0.0 if V3B else P.E_V4, rueda=[0.343, 0.140], w_capo=P.W_CAPO,
                         w_max=P.W_MAX),
             pedidos=pedidos,
             cubos=[dict(x=round(c['x'], 3), y=round(c['y'], 3), th=round(c['th'], 4), t0=round(c['t0'], 2),
@@ -381,18 +403,19 @@ def main():
             H=hol,
             V=[[round(v['t'], 3), round(v['h'], 3), round(v['ext'], 3), v['ibc'], v['e']] for v in Vt],
             vis=vis, marcas=marcas, camaras=camaras)
-    with open(os.path.join(RAIZ, 'sim', 'sim_datos.json'), 'w', encoding='utf-8') as f:
+    with open(os.path.join(RAIZ, 'sim', DATOS), 'w', encoding='utf-8') as f:
         json.dump(datos, f, ensure_ascii=False, separators=(',', ':'))
-    log(f'listo en {time.time() - t0:.0f} s → sim/sim_datos.json')
+    log(f'listo en {time.time() - t0:.0f} s → sim/{DATOS}')
 
 
 def solo_holguras():
     """Recalcula H sobre el sim_datos.json ya hecho, sin volver a planificar (10 min)."""
-    ruta = os.path.join(RAIZ, 'sim', 'sim_datos.json')
+    ruta = os.path.join(RAIZ, 'sim', DATOS)
     with open(ruta, encoding='utf-8') as f:
         d = json.load(f)
-    with B.geometria('dxf'):
-        pl = P.Planificador(modelo='v3')
+    ctx, topes = geometria_equipo()
+    with B.geometria('dxf'), ctx:
+        pl = P.Planificador(modelo='v3', d_lim=topes)
         S = [dict(t=r[0], x=r[1], y=r[2], th=r[3], e=r[7], c=bool(r[8])) for r in d['S']]
         d['H'] = holguras(pl, S)
     with open(ruta, 'w', encoding='utf-8') as f:

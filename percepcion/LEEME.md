@@ -515,8 +515,8 @@ el EKF estima los sesgos mientras ve marcas.
   reproduce lo del 09-nov (así lo llama `visibilidad_v3.py`, que repite las rutas v3b: comprobado idéntico).
 - `odometria.de_bus(crudo_188, crudo_184)` → `(v_rueda, δ)`: 7.30e-4 m/s por unidad, 0.01° por unidad con la recta en
   +120, y `δ = LADO_MOTRIZ · ángulo`.
-- **`LADO_MOTRIZ = +1` está SIN CONFIRMAR**: supone el timón a la izquierda mirando del culo hacia las uñas (así lo
-  dibujan las dos fichas). Si está al revés, el rumbo integra al revés en cada curva. Lo contesta maje de memoria.
+- **`LADO_MOTRIZ = +1`, confirmado por maje (24-nov):** el timón va a la izquierda mirando del culo hacia las uñas
+  (antes era supuesto, de las dos fichas). Con el signo al revés el rumbo integraría al revés en cada curva.
 - `prueba_ekf_rueda.py` PASA: contra el planificador v4 con la misma geometría (0), `de_bus` con los crudos del 23-nov,
   jacobianos en los topes, en 90° y en el lugar, y el giro a ciegas: 1.4 cm máx. Controles: ignorar `e` da 46 cm;
   `e` del lado equivocado, 92 cm. `sim_sintetico.py` PASA 30/30 con `WB` 1.688.

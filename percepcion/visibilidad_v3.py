@@ -1,6 +1,6 @@
 """Visibilidad de ArUco por montaje de cámaras, con el modelo v3b y el pasillo B del DXF (09-nov).
 
-Usa el turno de sim/sim_datos.json (rutas del planificador v3b: 2.91 m, culo de la ficha, timón a 90°,
+Usa el turno de sim/sim_datos_v3b.json (24-nov: era sim_datos.json; rutas del planificador v3b: 2.91 m, culo de la ficha, timón a 90°,
 pasillo B con 13 bahías por lado, zonas de descarga y carga en las puntas, lado R) y el mismo modelo de
 cámara de visibilidad.py (C920, FOV 54.3°, PX_MIN, ANG_MAX). Compara montajes, incluidos los pares a 90°
 que no se habían probado, y marcas sobre los postes cada 1 o 2 bahías.
@@ -213,7 +213,7 @@ def correr_ekf(tr, camaras, M, semilla):
 
 
 def main_ekf(nombres=('A2', 'A2-der', 'A2-esp', 'B', 'V90', 'A', 'D', 'A2+F90'), pasos=(1, 2)):
-    with open(os.path.join(RAIZ, 'sim', 'sim_datos.json'), encoding='utf-8') as f:
+    with open(os.path.join(RAIZ, 'sim', 'sim_datos_v3b.json'), encoding='utf-8') as f:
         d = json.load(f)
     ruta = os.path.join(RAIZ, 'percepcion', 'visibilidad_v3.json')
     with open(ruta, encoding='utf-8') as f:
@@ -257,7 +257,7 @@ def main_ekf(nombres=('A2', 'A2-der', 'A2-esp', 'B', 'V90', 'A', 'D', 'A2+F90'),
 
 
 def main():
-    with open(os.path.join(RAIZ, 'sim', 'sim_datos.json'), encoding='utf-8') as f:
+    with open(os.path.join(RAIZ, 'sim', 'sim_datos_v3b.json'), encoding='utf-8') as f:
         d = json.load(f)
     xpiv = d['supuestos']['XPIV']
     out = dict(supuestos=dict(XPIV=xpiv, PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)), H_MARCA=V.H_MARCA,

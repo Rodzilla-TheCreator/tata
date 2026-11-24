@@ -34,8 +34,8 @@ WB = 1.688          # entre ejes MEDIDO (1.69, 23-nov): batería de 539
 E_MAG = 0.325       # corrimiento lateral de la motriz, m (motriz ↔ apoyo 0.65 / 2, supone la de apoyo simétrica).
                     # Los topes lo acotan a 0.316–0.433 (analisis/rutas_resultados.md, v4)
 LADO_MOTRIZ = +1    # +1: el timón (y la motriz bajo él) a la IZQUIERDA mirando del culo hacia las uñas.
-                    # SIN CONFIRMAR: sale de las dos vistas de arriba de las fichas, que dibujan el timón de ese lado.
-                    # Si es al revés, poner −1: con el signo mal el rumbo integra al revés en cada curva
+                    # CONFIRMADO por maje el 24-nov (antes: supuesto de las dos vistas de arriba de las fichas).
+                    # Con −1 el rumbo integraría al revés en cada curva
 E = LADO_MOTRIZ * E_MAG
 # 0x184 b2–b3 (int16, b2 bajo) × 0.01° = ángulo de la rueda; recta en +120 crudo. Tope corto +79.4°, largo
 # −104.4°, desde la recta. Con H1 (confirmada 24-nov) el tope corto apunta hacia el lado de la motriz, así

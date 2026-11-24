@@ -1,5 +1,19 @@
 # La simulación del pasillo — un turno del EDR18N2 (09-nov-2026)
 
+> **24-nov · ahora con el modelo v4.** `simulacion.html` usa las rutas del planificador con la geometría medida:
+> entre ejes **1.688**, la rueda motriz **corrida 0.325 bajo el timón** (a la izquierda mirando hacia las uñas) y
+> topes **−104.4° / +79.4°** (`analisis/rutas_resultados.md`, v4). En el plano se dibuja la motriz en su lugar, la
+> rueda de apoyo en la otra esquina y, cuando la rueda va cruzada, **el centro de giro** (punto celeste): donde la
+> línea del eje de la rueda corta la del eje de carga.
+>
+> | Decía (09-nov, v3b) | Es (24-nov, v4) | Qué lo tumbó |
+> |---|---|---|
+> | rueda en el centro, entre ejes 1.562, timón a ±90° | corrida 0.325, 1.688, topes −104.4 / +79.4 | medidas del 23-nov |
+>
+> La del 09-nov sigue en **`simulacion_v3b.html`** (datos en `sim_datos_v3b.json`, que es lo que usa
+> `percepcion/visibilidad_v3.py`). Regenerar: `python sim/exportar.py` + `python sim/build.py` (v4);
+> `python sim/exportar.py --v3b` + `python sim/build.py v3b` (la vieja).
+
 `simulacion.html` es un solo archivo: abrilo en el navegador. Junta en una línea de tiempo todo lo que el
 repo sabe hoy del pasillo de 3.00 m:
 
