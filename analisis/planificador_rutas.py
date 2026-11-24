@@ -3,6 +3,7 @@
 #
 #   py analisis/planificador_rutas.py          # v3b (07-nov): el culo de los vectores de la ficha → rutas_v3b.json,
 #                                              # ruta_3L_5R_v3b.png
+#   py analisis/planificador_rutas.py --v4     # v4 (24-nov): motriz corrida de lado, WB 1.688, topes −104/+79 → rutas_v4.json
 #   py analisis/planificador_rutas.py --v3     # v3 (06-nov): culo con esquinas de 0.17 → rutas_v3.json, ruta_3L_5R_v3.png
 #   py analisis/planificador_rutas.py --v2     # v2 (05-nov, tarde): postes + retranqueo → rutas_v2.json
 #   py analisis/planificador_rutas.py --v1     # v1 (05-nov): casos 1–3 y controles → ruta_3L_5R.png y
@@ -51,6 +52,7 @@ for _f in (sys.stdout, sys.stderr):
 
 # ── el equipo (CLAUDE.md) ────────────────────────────────────────────────────
 WB, Wa = 1.562, 1.797
+E_MOTRIZ = 0.0                  # v4: corrimiento lateral de la rueda motriz (+ = hacia +y). v1–v3b: 0
 W_MAX, W_CAPO = 1.315, 1.065
 L_ANCHO = 0.48                  # medido 18-sep (el viejo planificador tiene 0.20)
 UNA_ANCHO, UNA_CENTRO = 0.13, 0.30
@@ -75,7 +77,10 @@ def step(p, ds, d, rueda=False):
     de carga no se mueve (rota en el lugar) y tan δ explota; así queda finito. Para δ < 90° es la
     misma cinemática: ds_eje = ds·cos δ y Δθ = −(ds/WB)·sin δ = −(ds_eje/WB)·tan δ. Igual de reversible."""
     if rueda:
-        dth = -(ds / WB) * math.sin(d); th2 = p[2] + dth * 0.5; de = ds * math.cos(d)
+        # v4: con la motriz corrida E_MOTRIZ de lado, el punto medio del eje de carga avanza
+        # ds·(cos δ − (e/WB)·sin δ); Δθ no cambia. Rota en el lugar con tan δ = WB/e (no con 90°).
+        dth = -(ds / WB) * math.sin(d); th2 = p[2] + dth * 0.5
+        de = ds * (math.cos(d) - (E_MOTRIZ / WB) * math.sin(d))
         return (p[0] + de * math.cos(th2), p[1] + de * math.sin(th2), p[2] + dth)
     dth = -(ds / WB) * math.tan(d); th2 = p[2] + dth * 0.5
     return (p[0] + ds * math.cos(th2), p[1] + ds * math.sin(th2), p[2] + dth)
@@ -244,6 +249,18 @@ def con_wb(wb):
         yield
     finally:
         WB = viejo
+
+
+@contextmanager
+def con_geo(wb, e):
+    """v4: entre ejes y corrimiento lateral de la motriz juntos (los dos globales de step())."""
+    global E_MOTRIZ
+    viejo, E_MOTRIZ = E_MOTRIZ, e
+    try:
+        with con_wb(wb):
+            yield
+    finally:
+        E_MOTRIZ = viejo
 PEN_FR_V3 = 0.005             # castigo por timón en el A* (v1/v2: 0.02). Con 0.02 y ds de rueda, rotar en el
                               # lugar parecía 67 % más caro y el giro no salía en 6000 expansiones (sí en 22 700)
 
@@ -261,22 +278,27 @@ FRACS_FINO = (-1.0, -0.85, -0.7, -0.55, -0.4, -0.25, -0.1, 0.0, 0.1, 0.25, 0.4, 
 
 class Equipo:
     def __init__(self, xpiv=B.XPIV, unas=True, cargado=False, l_ancho=L_ANCHO, fracs=FRACS, paso_sil=0.05,
-                 ds=None, lch=B.LCH, r_culo=0.0, d_max=None, rueda=False, pen_fr=0.02):
+                 ds=None, lch=B.LCH, r_culo=0.0, d_max=None, rueda=False, pen_fr=0.02, d_lim=None):
         """v3: lch 1.71 (2.91 culo → punta), r_culo, d_max = 90° (modo 180°/360° del manual) y
         rueda=True (los ds son de la rueda motriz: ver step)."""
         ds = DS if ds is None else ds
         self.ds, self.rueda, self.pen_fr = ds, rueda, pen_fr
         self.xpiv, self.dmax = xpiv, (dmax(xpiv) if d_max is None else d_max)
+        # v4: topes asimétricos (magnitudes: δ < 0 hasta d_lim[0], δ > 0 hasta d_lim[1]). La fracción que se
+        # guarda sigue siendo δ / dmax, con dmax el mayor de los dos, para que el resto no cambie
+        self.d_lim = (self.dmax, self.dmax) if d_lim is None else tuple(d_lim)
+        self.dmax = max(self.d_lim)
         self.sil, self.frente = silueta(xpiv, unas, cargado, l_ancho, paso_sil, lch, r_culo)
         self.prims = []                                  # (sentido, frac, poses locales)
         LX, LY, FIN = [], [], []
         for sg in (1, -1):
             for f in fracs:
                 q, poses = (0.0, 0.0, 0.0), []
+                ang = f * (self.d_lim[1] if f > 0 else self.d_lim[0])
                 for _ in range(NSUB):
-                    q = step(q, sg * ds / NSUB, f * self.dmax, rueda)
+                    q = step(q, sg * ds / NSUB, ang, rueda)
                     poses.append(q)
-                self.prims.append((sg, f))
+                self.prims.append((sg, ang / self.dmax))
                 FIN.append(q)
                 c = np.array([math.cos(p[2]) for p in poses])[:, None]
                 s = np.array([math.sin(p[2]) for p in poses])[:, None]
@@ -287,6 +309,9 @@ class Equipo:
         self.LX, self.LY = np.array(LX), np.array(LY)    # (n_prim, NSUB, P)
         self.fin = FIN
         self.por_sentido = {sg: np.array([i for i, (s_, _) in enumerate(self.prims) if s_ == sg]) for sg in (1, -1)}
+
+    def dentro(self, d):
+        return -self.d_lim[0] - 1e-12 <= d <= self.d_lim[1] + 1e-12
 
     def huella(self, p):
         c, s = math.cos(p[2]), math.sin(p[2])
@@ -518,7 +543,7 @@ def _acomodar(p, sg, meta, eq, mundo):
                     d = d - np.linalg.solve(J, e)
                 except np.linalg.LinAlgError:
                     break
-            if abs(e[0]) < 1e-4 and abs(e[1]) < 1e-5 and np.all(np.abs(d) <= dmx):
+            if abs(e[0]) < 1e-4 and abs(e[1]) < 1e-5 and all(eq.dentro(x) for x in d):
                 q1 = _arco(p, sgn, largo, d[0], rueda=ru)
                 arcos = [((sgn, d[0] / dmx, largo), q1), ((sgn, d[1] / dmx, largo), q)]
                 break
@@ -653,7 +678,8 @@ class Planificador:
 
     def __init__(self, xpiv=B.XPIV, pasillo=B.PASILLO, prof=PROF_BAHIA, cm=B.CARRIL_CM,
                  max_exp=15000, unas=True, n_vueltas=6, modelo='v1', rec=(B.REC_L, B.REC_R),
-                 holgura=None, sin_reversa=None, central=False, tol_carril=None, r_culo=None, gap=None):
+                 holgura=None, sin_reversa=None, central=False, tol_carril=None, r_culo=None, gap=None,
+                 d_lim=None):
         """modelo 'v1': pared + uñas en la bahía (PROF_BAHIA). 'v2': postes + retranqueo `rec` en
         los dos lados, timón fino, giro SIN cambios de sentido (como el video), holgura chica.
         'v3': el mundo y las reglas de v2 con la silueta de la ficha: 2.91 culo → punta (LCH_V3),
@@ -670,7 +696,7 @@ class Planificador:
         self.gap = B.GAP_OBJ if gap is None else gap        # punta de uña → cara del cubo, en el hueco
         self.k_th = WB if v3 else 0.33
         self.r_culo = (R_CULO_V3B if r_culo is None else r_culo) if v3 else 0.0
-        geo = dict(lch=self.lch, r_culo=self.r_culo, d_max=math.pi / 2, rueda=True, pen_fr=PEN_FR_V3) if v3 else {}
+        geo = dict(lch=self.lch, r_culo=self.r_culo, d_max=math.pi / 2, rueda=True, pen_fr=PEN_FR_V3, d_lim=d_lim) if v3 else {}
         self.hol = (HOLGURA_V2 if v2 else B.HOLGURA) if holgura is None else holgura
         self.sin_reversa = v2 if sin_reversa is None else sin_reversa
         # v3: el giro rota casi sobre el eje de carga y termina con el eje del lado de la bahía (~0.5 m del
@@ -745,7 +771,7 @@ class Planificador:
                     d = math.asin(dth * WB / (s * largo))
                 else:
                     d = math.atan(-dth * WB / (-s * largo))
-                if abs(d) > self.eq[cargado].dmax:
+                if not self.eq[cargado].dentro(d):
                     continue
                 q = _arco(p1, -s, largo, d, rueda=ru)       # hacia atrás desde la meta
                 q = (q[0], q[1], th_eje)                    # alineado exacto (error < 1e-12)
@@ -1524,8 +1550,108 @@ def main_v3b():
     log("rutas_v3b.json escrito")
 
 
+# ── v4 (24-nov): la rueda motriz corrida de lado, entre ejes 1.688 y topes asimétricos ──
+# Medido el 23-nov (campo/2026-11-23/resultados.md): entre ejes 1.69, motriz ↔ rueda de apoyo 0.65 (→ e ≈ 0.325
+# si la de apoyo está a la misma distancia del eje), topes del 0x184 −104.4° / +79.4° desde el centro.
+# La ficha VDI NO trae la posición lateral: se salta la fila 3.6 (b10) y la vista de arriba no dibuja ruedas.
+WB_V4 = 1.688
+TOPES_V4 = (math.radians(104.4), math.radians(79.4))     # (lado δ < 0, lado δ > 0), magnitudes
+E_V4 = 0.325
+COMBOS4 = tuple((f"4 {s}{p}", r) for s in 'LR' for p in 'abc' for r in (0.0, math.pi))
+HIP_V4 = (                                               # (nombre, e, topes)
+    ('control: centrada, ±90°', 0.0, None),
+    ('H1: e +0.325 (del lado del tope corto)', E_V4, TOPES_V4),
+    ('H2: e −0.325 (del lado del tope largo)', -E_V4, TOPES_V4),
+    ('H1, e 0.30', 0.30, TOPES_V4),
+    ('H1, e 0.374 (topes centrados)', 0.374, TOPES_V4),
+    ('H1, e 0.43', 0.43, TOPES_V4),
+)
+
+
+def centro_de_giro(e, d, wb=WB_V4):
+    """y del centro de giro sobre la línea del eje de carga (desde el medio): e − WB / tan δ."""
+    return float('inf') if abs(math.sin(d)) < 1e-12 else e - wb * math.cos(d) / math.sin(d)
+
+
+def e_de_los_topes(topes=TOPES_V4, wb=WB_V4):
+    """Si el tope está puesto para rotar sobre el medio del eje: tan δ = WB / e. Las dos líneas de tope
+    (δ+ y δ− + 180°) dan un rango de e; su promedio es el e de topes «centrados»."""
+    l1, l2 = topes[1], math.pi - topes[0]
+    return wb / math.tan(l1), wb / math.tan(l2), wb / math.tan((l1 + l2) / 2)
+
+
+def giro_v4(d, r, c, e, topes, hol=0.0, gap=None, rec=B.REC_L, max_exp=6000):
+    with con_geo(WB_V4, e):
+        pl = Planificador(modelo='v3', d_lim=topes, rec=(rec, rec), holgura=hol, max_exp=max_exp, gap=gap)
+        return pl.salida(d, r, c)
+
+
+def control_cinematica_v4():
+    """Con e y δ = atan(WB/e) el medio del eje de carga NO se mueve (rota en el lugar); con e = 0 eso pasa a 90°.
+    Y el control: con e = 0 y δ = 79°, SÍ se mueve. Devuelve los tres desplazamientos (m)."""
+    out = {}
+    for nom, e, d in (('e 0.325, δ en el lugar', E_V4, math.atan(WB_V4 / E_V4)), ('e 0, δ 90°', 0.0, math.pi / 2),
+                      ('CONTROL e 0, δ 79°', 0.0, math.radians(79.1))):
+        with con_geo(WB_V4, e):
+            q = (0.0, 0.0, 0.0)
+            for _ in range(100):
+                q = step(q, 0.03, d, True)
+        out[nom] = dict(eje_m=round(math.hypot(q[0], q[1]), 4), giro=round(math.degrees(q[2])))
+    return out
+
+
+def margenes_v4(log, hips=HIP_V4, combos=COMBOS4, holguras=(0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.10)):
+    """Por hipótesis: ¿sale el giro sin reversa?, con qué margen (holgura máxima), y cómo (cuánto se mueve
+    el eje de carga). Retranqueo nominal de 6 cm, como validar_video_v3."""
+    out = {}
+    for nom, e, topes in hips:
+        fila = {}
+        for d, r in combos:
+            for c in (False, True):
+                mejor, res = None, None
+                for h in holguras:
+                    x = giro_v4(d, r, c, e, topes, hol=h, gap=max(B.GAP_OBJ, h + 0.005))
+                    if not x['ok']:
+                        break
+                    mejor, res = h, x
+                k = f"{d}→{_rt(r)} {'cargado' if c else 'vacío'}"
+                fila[k] = dict(ok=mejor is not None, margen_cm=None if mejor is None else round(100 * mejor))
+                if res is not None:
+                    fila[k].update(_forma_giro(res))
+        ok = [v for v in fila.values() if v['ok']]
+        log(f"  {nom}: salen {len(ok)}/{len(fila)} · margen mín {min((v['margen_cm'] for v in ok), default=None)} cm")
+        out[nom] = fila
+    return out
+
+
+def main_v4():
+    import time
+    t0 = time.time()
+    aqui = os.path.dirname(os.path.abspath(__file__))
+    log = lambda s: print(f"[{time.time() - t0:6.0f} s] {s}", flush=True)
+    R = dict(supuestos=dict(WB=WB_V4, E=E_V4, TOPES_GRADOS=[round(math.degrees(t), 1) for t in TOPES_V4],
+                            XPIV=round(XPIV_V3, 3), LCH=round(LCH_V3, 3), R_CULO='ficha', REC=B.REC_L,
+                            cinematica='ds de la rueda motriz; medio del eje de carga avanza ds·(cos δ − e/WB·sin δ)'))
+    R['cinematica'] = control_cinematica_v4()
+    log(f"cinemática: {R['cinematica']}")
+    lo, hi, mid = e_de_los_topes()
+    R['e_de_los_topes'] = dict(tope_corto=round(lo, 3), tope_largo=round(hi, 3), centrado=round(mid, 3))
+    log(f"e si los topes son la línea de rotar en el lugar: {lo:.3f} (tope corto) … {hi:.3f} (largo), centrado {mid:.3f}")
+    R['centros'] = {nom: {f"{math.degrees(sg * t):+.1f}°": round(centro_de_giro(e, sg * t), 3)
+                          for sg, t in ((-1, (topes or (math.pi / 2,) * 2)[0]), (1, (topes or (math.pi / 2,) * 2)[1]))}
+                    for nom, e, topes in HIP_V4}
+    for nom, v in R['centros'].items():
+        log(f"  centro de giro en los topes · {nom}: {v}")
+    R['margenes'] = margenes_v4(log)
+    with open(os.path.join(aqui, 'rutas_v4.json'), 'w', encoding='utf-8') as f:
+        json.dump(R, f, ensure_ascii=False, indent=1, default=str)
+    log("rutas_v4.json escrito")
+
+
 if __name__ == "__main__":
-    if '--v1' in sys.argv:
+    if '--v4' in sys.argv:
+        main_v4()       # la motriz corrida de lado, 1.688 y topes asimétricos (rutas_v4.json)
+    elif '--v1' in sys.argv:
         main()          # lo del 05-nov a la mañana: pared + uñas en la bahía (rutas_tabla.json v1)
     elif '--v2' in sys.argv:
         main_v2()       # postes + retranqueo + giro sin reversa (rutas_v2.json)
