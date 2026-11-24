@@ -118,6 +118,12 @@ Velocidad de trabajo **7.9 km/h**, no los 12 de catálogo. Sobre de velocidad: *
 **1200 × 1000 × 1160 mm**. En el rack presenta su cara de **1.00 m al pasillo** y entra
 **1.20 m al fondo** — lo fija la bahía de 2.35 m, donde entran dos con 35 cm sobrantes.
 
+**Las uñas entran el 1.20 entero, siempre, y al tomar se inclinan hacia atrás.** El IBC es de químicos: no se
+puede sacudir ni tirar. El pantógrafo da 1.067 y la punta queda a 3 cm del cubo, así que **los 16 cm que faltan
+los pone la marcha** (`APROXIMA`): no son opcionales. Con el cubo tomado, **inclinar atrás** (4°, la bahía tiene luz
+arriba) lo asienta contra el carro y la curva de las uñas; con media uña adentro quedaría a un ángulo raro. Para
+dejar, **nivelar** antes de bajar. Se puede andar con el pantógrafo extendido y retraerlo con carga (maje, 24-nov).
+
 **Se dice ArUco.** No "marcadores", no "etiquetas", no "AprilTag". Es el término del proyecto
 y viene de Botoni, donde el equipo definió cuáles y dónde iban.
 

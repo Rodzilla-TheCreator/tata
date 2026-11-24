@@ -65,7 +65,14 @@ python sim/build.py         # escribe sim/simulacion.html con los datos adentro
 - Freno al soltar el pie: **1.2 m/s²** (solo en la página).
 - Altura de viaje de las uñas 0.05 m; cada etapa quieta dura al menos 0.8 s.
 - APROXIMA / RETROCEDE: el equipo avanza 0.163 m para que las uñas entren los 1.20 del IBC (1.067 de
-  pantógrafo no alcanzan con la punta a 3 cm de la cara).
+  pantógrafo no alcanzan con la punta a 3 cm de la cara). **No es supuesto, es regla (maje, 24-nov):** entra el
+  1.20 entero porque el cubo es de químicos y va asentado contra el carro.
+- **INCLINA / NIVELA (24-nov):** tomado el cubo, 4° hacia atrás (el máximo de la ficha) a 2.5 °/s (programa 1 de
+  fábrica, `0x233A`/`0x233B`), para que el peso lo asiente contra el carro y la curva de las uñas; se viaja así y se
+  nivela antes de dejar. En el panel del mástil la inclinación se dibuja ×3 para que se vea.
+- **El pantógrafo va a 0.30 / 0.28 m/s (ficha), pero el programa 1 de fábrica lo limita a 0.12 (elevación libre) y
+  0.10 m/s (mástil arriba)** (`0x2336`, `0x23A0`/`0x23A1`). Si el equipo está en el programa 1, cada extender o
+  retraer tarda ~11 s, no ~4: la sim es optimista en ~25–30 s por pedido. Sin confirmar en qué programa está.
 - El hueco de 2.66 m entre tramos se trata como si fuera cara de rack (conservador): no se sabe si es un
   pasillo cruzado o una columna. El segundo tramo mide 14.94 en el modelo y 14.91 en el DXF.
 - `PX_MIN` 20 px, `ANG_MAX` 60°.

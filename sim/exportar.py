@@ -32,6 +32,12 @@ EXT_MAX = 1.067             # empuje, doble profundidad (VDI 4.28)
 H_VIAJE = 0.05              # SUPUESTO: altura de las uñas al viajar y al girar
 T_MIN = 0.8                 # SUPUESTO: cada etapa quieta dura al menos esto (asentar, confirmar)
 INSERTA = B.IBC_FONDO + B.GAP_OBJ - EXT_MAX   # lo que falta meter con el equipo (APROXIMA): 0.163 m
+# 24-nov (maje): los 16 cm NO son opcionales. Las uñas entran el 1.20 entero: el cubo es de químicos, no se puede
+# sacudir, y va contra el dorso de las uñas. Por eso, apenas tomado, se INCLINA hacia atrás: el peso lo asienta
+# contra el carro y la curva de las uñas (con media uña adentro quedaría a un ángulo raro). La bahía tiene luz
+# arriba para inclinar. Para dejar, se NIVELA antes de bajar. Se viaja inclinado.
+INCLINA = 4.0               # grados hacia atrás: el máximo de la ficha (VDI 3.2: 3° adelante / 4° atrás)
+V_INCLINA = 2.5             # °/s, programa 1 de fábrica (manual de servicio, 0x233A / 0x233B)
 DT_VIS = 0.25               # s entre cálculos de visibilidad
 
 # El turno, con el flujo de RETHINK (docs/09): el montacargas humano deja los cubos que ENTRAN en la zona de
@@ -175,8 +181,10 @@ def armar(pl, rutas):
     t, h, ext = 0.0, H_VIAJE, 0.0
     a_ibc = B.a_punta(pl.xpiv, pl.lch) + EXT_MAX - 0.6        # centro del cubo con las uñas extendidas
 
+    inc = 0.0                                                   # inclinación de las uñas, ° hacia atrás
+
     def vert(e, ibc):
-        Vt.append(dict(t=t, h=h, ext=ext, ibc=ibc, e=e))
+        Vt.append(dict(t=t, h=h, ext=ext, ibc=ibc, e=e, inc=inc))
 
     def mundo_de(pose, a):
         return [pose[0] + a * math.cos(pose[2]), pose[1] + a * math.sin(pose[2]), pose[2]]
@@ -190,7 +198,7 @@ def armar(pl, rutas):
 
     def etapas(pose, lugar, tomar):
         """Toma (tomar=True) o deja en un hueco o en la zona de carga, con el equipo ya enfrentado."""
-        nonlocal t, h, ext
+        nonlocal t, h, ext, inc
         d = lugar
         h_ent, h_agr = B.altura_uña(d, 'entrada'), B.altura_uña(d, 'agarre')
         car0 = not tomar
@@ -200,7 +208,9 @@ def armar(pl, rutas):
                  ('EXTIENDE', EXT_MAX / V_EMPUJE[0 if tomar else 1], h_ini, EXT_MAX, car0)]
         if tomar:
             pasos.append(('TOMA', (h_agr - h_ent) / V_SUBE[1], h_agr, EXT_MAX, True))
+            pasos.append(('INCLINA', INCLINA / V_INCLINA, h_agr, EXT_MAX, True))
         else:
+            pasos.append(('NIVELA', INCLINA / V_INCLINA, h_ini, EXT_MAX, True))
             pasos.append(('DEPOSITA', (h_agr - h_ent) / V_BAJA[1], h_ent, EXT_MAX, False))
         car1 = tomar
         h_sal = h_agr if tomar else h_ent
@@ -227,6 +237,10 @@ def armar(pl, rutas):
                 vert(etapa, 'uñas' if etapa in ('TOMA', 'DEPOSITA') else ibc)
                 t = t1
                 h, ext = h1, e1
+                if etapa == 'INCLINA':
+                    inc = INCLINA
+                elif etapa == 'NIVELA':
+                    inc = 0.0
                 if etapa == 'DEPOSITA':
                     t_cubo = t                                  # desde acá el cubo queda en el rack
                 vert(etapa, 'uñas' if etapa == 'TOMA' else ('nada' if etapa == 'DEPOSITA' else ibc))
@@ -386,7 +400,7 @@ def main():
                            TOPES=[-90, 90] if V3B else [round(-math.degrees(topes[0]), 1), round(math.degrees(topes[1]), 1)],
                            XPIV=round(pl.xpiv, 3), WB=P.WB, DMAX=round(math.degrees(DMAX), 1), REC=list(pl.rec), VMAX=P.VMAX, VMAN=P.VMAN,
                            ACC=P.ACC, V_SUBE=V_SUBE, V_BAJA=V_BAJA, V_EMPUJE=V_EMPUJE, EXT_MAX=EXT_MAX,
-                           H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), montaje='A2', marcas_cada=2,
+                           H_VIAJE=H_VIAJE, T_MIN=T_MIN, INSERTA=round(INSERTA, 3), INCLINA=INCLINA, V_INCLINA=V_INCLINA, montaje='A2', marcas_cada=2,
                            PX_MIN=V.PX_MIN, ANG_MAX=round(math.degrees(V.ANG_MAX)),
                            nota='VMAX 1.5 m/s = sobre del kit, dentro de los 5–8 km/h que dicen los operadores. '
                                 'SUPUESTOS: VMAN, ACC, H_VIAJE, T_MIN, PX_MIN, ANG_MAX, y el hueco entre tramos tratado '
@@ -401,7 +415,7 @@ def main():
             S=[[round(s['t'], 3), round(s['x'], 4), round(s['y'], 4), round(s['th'], 4), round(s['d'], 3),
                 s['sg'], round(s['v'], 3), s['e'], int(s['c'])] for s in S],
             H=hol,
-            V=[[round(v['t'], 3), round(v['h'], 3), round(v['ext'], 3), v['ibc'], v['e']] for v in Vt],
+            V=[[round(v['t'], 3), round(v['h'], 3), round(v['ext'], 3), v['ibc'], v['e'], v['inc']] for v in Vt],
             vis=vis, marcas=marcas, camaras=camaras)
     with open(os.path.join(RAIZ, 'sim', DATOS), 'w', encoding='utf-8') as f:
         json.dump(datos, f, ensure_ascii=False, separators=(',', ':'))
