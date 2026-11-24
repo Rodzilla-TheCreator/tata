@@ -693,3 +693,45 @@ Lo que sí queda de los topes:
   costo real de «un segundo a −100 y al siguiente a +70».
 - **El lazo del timón tiene que recortar la consigna a −104 / +79**: más allá, el volante sigue girando y la rueda no.
 - La odometría y el EKF necesitan `e` y 1.688 (el medio del eje avanza `ds·(cos δ − e/WB·sin δ)`).
+
+## 24-nov · Todas las formas de girar 90° hacia una bahía, con la geometría v4 (`giro_opciones.py`)
+
+**Lo que habilita la v4:** con los topes −104.4 / +79.4 y la motriz corrida 0.325, **cualquier punto de la línea
+del eje de carga puede ser el centro de giro** (δ > 0 cubre `y_c ≤ +0.009`, δ < 0 cubre `y_c ≥ −0.108`), y el sentido
+lo pone el multipiloto. Así que un giro de un solo movimiento a timón fijo se describe con dos números: **dónde está
+el centro** (`y_c`) y **cuánto retrocede recto antes** (`d`). Se barrieron los dos (16 casos: L/R, a/b, los dos rumbos,
+vacío y cargado), y se comparó con el A* libre, sin reversa y con reversa permitida.
+
+**La regla del cubo:** el cubo es de químicos y la punta arranca a 3 cm de él. Un giro que la acerque más no sirve.
+Los giros que más margen le dan al chasis (hasta 14.6 cm) lo logran **arrimando la punta al cubo a 1–4 mm**: descartados.
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| margen del giro 7 / 5 cm (v3b), 6 / 5 (v4) | ese número es la «holgura pareja» del A*, que al subirla **también aleja la punta del cubo al arrancar** y con eso acerca el culo a la cara de enfrente: topa en ~7 cm sea cual sea el camino. Medido parejo (punta a 3 cm, distancia en y como el Mundo), el giro del A* de hoy deja **9.7 / 7.5 cm** (hacia adentro) y **12.4 / 8.5** (hacia la descarga), pero **acerca la punta al cubo a 2.5 cm (2.0 cargado)** | `giro_opciones.py`, que mide cada cosa por separado |
+
+**Resultados (los 16 casos dan lo mismo por simetría: el lado L/R no importa, solo el sentido del giro):**
+
+| Retroceso antes de girar | Vacío: mejor margen | Cargado: mejor margen |
+|---|---|---|
+| 0 cm | 3–7 cm | **ninguno** (hacia adentro) / 1.7 cm (hacia la descarga) |
+| 2 cm | 11–12 cm | 3.5–7 cm |
+| **4–7 cm** | **12 cm** | **8 cm** |
+| 12 cm (pivota justo sobre el medio del eje) | 6 cm | 6 cm |
+| 16 cm | 2 cm | 2 cm |
+
+- **Sin retroceder, cargado, no hay giro de un solo movimiento que no acerque las uñas al cubo.** Hay que sacar las uñas
+  unos centímetros antes de girar. Cada centímetro de retroceso después de ~7 le quita un centímetro al chasis: el culo
+  se acerca a la cara de enfrente.
+- **Pivotar justo sobre el medio del eje no es lo mejor:** pide retroceder 7–12 cm primero. Lo mejor es un centro a
+  5–20 cm del medio, del lado hacia el que gira.
+- **El A* con reversa permitida no la usa:** da lo mismo que sin reversa. Maniobrar en varios tiempos no gana nada.
+- **El tiempo casi no cambia:** 9.4–10.1 s todas las opciones (poner la rueda a 50 °/s + 90° de giro a 0.35 m/s).
+- Supone las bahías de enfrente alineadas con estas: el culo entra en la luz de enfrente, donde la cara del cubo está 6 cm
+  más atrás que la del poste.
+
+**La receta única, que sirve para los 16 casos: retroceder 7 cm recto, poner la rueda a −96.6° o +74.9° (según el
+sentido del giro; centro a 13 cm del medio del eje) y girar 90°. Margen mínimo 8 cm vacío y cargado, y las uñas nunca
+se acercan al cubo.** Es más simple de ejecutar que la ruta del A* (dos pasos, timón fijo) y deja más margen.
+
+**Pendiente:** llevar la receta al planificador y a la sim (hoy usan el giro del A*, que arrima la punta a 2.0–2.5 cm del
+cubo). Y lo de siempre: filmar al operador girando para ver qué hace él.
