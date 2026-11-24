@@ -630,3 +630,47 @@ Con la rueda corrida `e`, el centro de giro cae sobre la línea del eje de carga
   igual y en sentido contrario, rota sobre el medio (tiza); (2) medir `e` con plomada (centro de la motriz ↔ eje del
   equipo) y de qué lado está; (3) v4 del planificador: `step()` con `e`, entre ejes 1.688 y topes asimétricos, y rehacer
   las rutas. `percepcion/odometria.py` y `ekf.py` también necesitan `e` y 1.688.
+
+## 24-nov · v4: la motriz corrida, entre ejes 1.688 y topes −104.4° / +79.4° (`planificador_rutas.py --v4`)
+
+**Corrige la sección de arriba («Pendiente v4»).** Esa tabla daba el tope corto (79°) con el centro de giro a +0.653 y
+«24 cm más de barrido». **Estaba mal el signo:** suponía la motriz del lado del tope largo sin decirlo. La fórmula
+correcta es `y = e − WB / tan δ` y depende de **de qué lado está `e` respecto de los topes**:
+
+| | Tope −104.4° | Tope +79.4° | Qué es |
+|---|---|---|---|
+| **H1**: `e` +0.325, del lado del tope corto | centro a **−0.108** | centro a **+0.009** | los **dos** topes rotan casi sobre el medio del eje |
+| **H2**: `e` −0.325, del lado del tope largo | −0.758 | −0.641 | ninguno rota en el lugar |
+
+| Decía | Es | Qué lo tumbó |
+|---|---|---|
+| el tope asimétrico compensa la rueda corrida **hacia un lado**; hacia el otro el culo barre 24 cm más | con H1, **los dos topes son la misma línea de rueda** (+79.4° y −104.4° + 180° = 75.6°): la línea que hace **rotar sobre el medio del eje** (`tan δ = WB / e` → 79.1°), con ~2° de sobrecarrera a cada lado. Es el «modo 180°» del manual: medio giro de rueda, y las dos puntas son la rotación en el lugar | el v4, y que los topes medidos caigan a ±2° de la misma línea |
+
+**La ficha no trae la posición lateral de la motriz** (la hoja VDI se salta la fila 3.6 `b10`; las dos vistas de arriba,
+Jungheinrich y Mitsubishi, no dibujan ruedas; el manual de servicio solo trae el par de las tuercas). **Pero los topes
+la traen:** si los topes son la línea de rotar en el lugar, `e = WB / tan δ` → **0.316** (tope corto) a **0.433** (largo),
+**0.374** con los topes centrados. Los 0.325 de la cinta caen adentro. Es un control cruzado, no una medición.
+
+**Giros a bahía, sin reversa, retranqueo 6 cm, 12 combinaciones × vacío/cargado (lados L y R, a/b/c, los dos rumbos):**
+
+| Hipótesis | Salen | Margen mín. vacío / cargado | Cómo |
+|---|---|---|---|
+| control: centrada, ±90°, WB 1.688 | 24/24 | 6 / 5 cm | rota en el lugar (el eje se mueve 6–12 cm) |
+| **H1, e 0.325** | **24/24** | **6 / 5 cm** | un sentido usa el tope corto (eje 6–11 cm), el otro el largo (eje 43–49 cm) |
+| H1, e 0.30 / 0.374 / 0.43 | 24/24 cada una | 6 / 5 cm | igual |
+| **H2, e −0.325** | **12/24** | 6 / 5 cm las que salen | **no sale ningún giro hacia el lado del tope corto** (L→descarga, R→adentro) |
+
+(v3b daba 7 / 5 con WB 1.562; el 1.688 le quita 1 cm al vacío. Control de la cinemática: con `e` y `δ = atan(WB/e)` el
+medio del eje no se mueve; con `e` 0 y 79° se mueve 0.50 m.)
+
+- **Con H1 no cambia nada de lo que se puede hacer:** mismos márgenes que la rueda centrada, en los dos sentidos, para
+  cualquier `e` entre 0.30 y 0.43. Lo que cambia es **cómo**: hacia el lado del tope largo el eje de carga se corre
+  ~0.45 m durante el giro, porque el centro queda a 11 cm del medio. Las rutas v3b y `sim/` siguen valiendo para «cabe o no»;
+  la pose a lo largo del giro no.
+- **Con H2, la mitad de los giros no existe sin reversa.** El operador entra a bahías de los dos lados sin reversa todos
+  los días: si eso se confirma, **H2 queda descartada por la realidad** y la motriz está del lado del tope corto (+79°).
+- **Para cerrarlo en el equipo (cinco minutos, tiza):** rueda en el tope corto (+79°, derecha del `0x184`), avanzar
+  despacio: con H1 **las dos ruedas de carga ruedan igual y en sentido contrario** (rota sobre el medio); con H2 una casi
+  no rueda y el centro queda a ~0.64 m, cerca de una pata. Y anotar de qué lado del equipo está la motriz.
+- **Falta:** `percepcion/odometria.py` y `ekf.py` (el medio del eje avanza `ds·(cos δ − e/WB·sin δ)`, no `ds·cos δ`), y
+  rehacer las rutas completas y `sim/` con el v4 si se quiere la pose exacta durante el giro.

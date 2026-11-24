@@ -1,0 +1,1178 @@
+{
+ "supuestos": {
+  "WB": 1.688,
+  "E": 0.325,
+  "TOPES_GRADOS": [
+   104.4,
+   79.4
+  ],
+  "XPIV": 1.929,
+  "LCH": 1.71,
+  "R_CULO": "ficha",
+  "REC": 0.06,
+  "cinematica": "ds de la rueda motriz; medio del eje de carga avanza ds·(cos δ − e/WB·sin δ)"
+ },
+ "cinematica": {
+  "e 0.325, δ en el lugar": {
+   "eje_m": 0.0,
+   "giro": -100
+  },
+  "e 0, δ 90°": {
+   "eje_m": 0.0,
+   "giro": -102
+  },
+  "CONTROL e 0, δ 79°": {
+   "eje_m": 0.498,
+   "giro": -100
+  }
+ },
+ "e_de_los_topes": {
+  "tope_corto": 0.316,
+  "tope_largo": 0.433,
+  "centrado": 0.374
+ },
+ "centros": {
+  "control: centrada, ±90°": {
+   "-90.0°": 0.0,
+   "+90.0°": -0.0
+  },
+  "H1: e +0.325 (del lado del tope corto)": {
+   "-104.4°": -0.108,
+   "+79.4°": 0.009
+  },
+  "H2: e −0.325 (del lado del tope largo)": {
+   "-104.4°": -0.758,
+   "+79.4°": -0.641
+  },
+  "H1, e 0.30": {
+   "-104.4°": -0.133,
+   "+79.4°": -0.016
+  },
+  "H1, e 0.374 (topes centrados)": {
+   "-104.4°": -0.059,
+   "+79.4°": 0.058
+  },
+  "H1, e 0.43": {
+   "-104.4°": -0.003,
+   "+79.4°": 0.114
+  }
+ },
+ "margenes": {
+  "control: centrada, ±90°": {
+   "4 La→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 La→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Lb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Lb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Lc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Lc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Ra→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Ra→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Ra→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Ra→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Rb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Rb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Rc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": 87,
+    "fr_max": 1.0
+   },
+   "4 Rc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.063,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.118,
+    "giro": -87,
+    "fr_max": 1.0
+   }
+  },
+  "H1: e +0.325 (del lado del tope corto)": {
+   "4 La→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.426,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.446,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.059,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 La→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.114,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.472,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.492,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.059,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Lb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.114,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.472,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.492,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.059,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Lc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.114,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.059,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.114,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.472,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Ra→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.492,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.059,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Rb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.114,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.426,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.446,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.059,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Rc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.114,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.472,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.492,
+    "giro": -87,
+    "fr_max": 1.0
+   }
+  },
+  "H2: e −0.325 (del lado del tope largo)": {
+   "4 La→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.61,
+    "eje_m": 0.252,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 La→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.64,
+    "eje_m": 0.21,
+    "giro": -88,
+    "fr_max": 0.85
+   },
+   "4 La→descarga vacío": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 La→descarga cargado": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Lb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.61,
+    "eje_m": 0.229,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Lb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.64,
+    "eje_m": 0.189,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Lb→descarga vacío": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Lb→descarga cargado": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Lc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.61,
+    "eje_m": 0.252,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Lc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.64,
+    "eje_m": 0.21,
+    "giro": -88,
+    "fr_max": 0.85
+   },
+   "4 Lc→descarga vacío": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Lc→descarga cargado": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Ra→adentro vacío": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Ra→adentro cargado": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Ra→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.61,
+    "eje_m": 0.229,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Ra→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.64,
+    "eje_m": 0.189,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Rb→adentro vacío": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Rb→adentro cargado": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Rb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.61,
+    "eje_m": 0.252,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Rb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.64,
+    "eje_m": 0.21,
+    "giro": -88,
+    "fr_max": 0.85
+   },
+   "4 Rc→adentro vacío": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Rc→adentro cargado": {
+    "ok": false,
+    "margen_cm": null
+   },
+   "4 Rc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.61,
+    "eje_m": 0.252,
+    "giro": -87,
+    "fr_max": 0.85
+   },
+   "4 Rc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.64,
+    "eje_m": 0.21,
+    "giro": -88,
+    "fr_max": 0.85
+   }
+  },
+  "H1, e 0.30": {
+   "4 La→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.406,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.417,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.075,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 La→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.131,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.452,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.464,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.075,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.131,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.452,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.464,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.075,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.131,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.075,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.131,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.452,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Ra→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.464,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.075,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.131,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.406,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.417,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.075,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.131,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.452,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.464,
+    "giro": -87,
+    "fr_max": 1.0
+   }
+  },
+  "H1, e 0.374 (topes centrados)": {
+   "4 La→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.472,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.485,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.052,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 La→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.093,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.525,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.539,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.052,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Lb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.093,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.525,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.539,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.052,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Lc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.093,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.052,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.093,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.525,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Ra→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.539,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.052,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Rb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.093,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.472,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.485,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.64,
+    "eje_m": 0.052,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Rc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.093,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.525,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.539,
+    "giro": -87,
+    "fr_max": 1.0
+   }
+  },
+  "H1, e 0.43": {
+   "4 La→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.52,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.541,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 La→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.67,
+    "eje_m": 0.092,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 La→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.096,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Lb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.582,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.595,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.67,
+    "eje_m": 0.092,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.096,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Lc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.582,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.595,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Lc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.67,
+    "eje_m": 0.092,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Lc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.096,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.67,
+    "eje_m": 0.092,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Ra→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.096,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Ra→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.582,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Ra→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.595,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.67,
+    "eje_m": 0.092,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rb→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.096,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Rb→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.52,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rb→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.541,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→adentro vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.67,
+    "eje_m": 0.092,
+    "giro": 88,
+    "fr_max": 0.76
+   },
+   "4 Rc→adentro cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.67,
+    "eje_m": 0.096,
+    "giro": 87,
+    "fr_max": 0.76
+   },
+   "4 Rc→descarga vacío": {
+    "ok": true,
+    "margen_cm": 6,
+    "rueda_m": 2.58,
+    "eje_m": 0.582,
+    "giro": -87,
+    "fr_max": 1.0
+   },
+   "4 Rc→descarga cargado": {
+    "ok": true,
+    "margen_cm": 5,
+    "rueda_m": 2.58,
+    "eje_m": 0.595,
+    "giro": -87,
+    "fr_max": 1.0
+   }
+  }
+ }
+}

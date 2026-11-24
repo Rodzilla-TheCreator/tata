@@ -222,3 +222,9 @@ una contradicción: queda entre 1.80 (de serie) y 1.93 (batería larga).
 | Chasis | alto 1,270; escalón 250; despeje 51–61 | MCFA · VDI 4.8, 4.32 |
 | Carro portahorquillas | 826 de ancho; uñas abiertas 305–802 | VDI 4.24–4.25 |
 | Dirección | eléctrica | VDI 8.6 |
+
+> **24-nov · la posición lateral de la motriz no está en ninguna ficha.** La hoja VDI de Jungheinrich salta de la fila
+> 3.5 a la 3.7 (no hay 3.6 `b10`, ancho de vía delantero) y ninguna de las dos vistas de arriba dibuja las ruedas; el
+> manual de servicio solo trae el par de las tuercas de la motriz. **Los topes de dirección sí la implican:** si las dos
+> puntas del giro de 180° son la línea de rotar sobre el medio del eje, `e = WB / tan δ` = 0.316–0.433 (0.374 centrado),
+> y la cinta dio ~0.325. Ver `analisis/rutas_resultados.md`, v4.
