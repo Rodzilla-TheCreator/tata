@@ -81,3 +81,13 @@ del TJA va directo a VIA).
   volante; la rueda la decide el nodo 4.
 - En el equipo: `docs/25` y el orden del `LEEME.md` del emulador del pedal (paso 0: el conjunto real
   enchufado). La rueda en el aire y el hongo en la mano antes de cualquier mando.
+
+## Teleop por teclado y odometría de giros (23–24-nov)
+
+- `teleop_wasd/teleop_wasd.ino` + `teleop_wasd.py`: el teleop del 23-nov (`campo/2026-11-23/resultados.md`). Desde el
+  24-nov la ventana integra la odometría en vivo con `percepcion/odometria.py` (entre ejes 1.688, motriz corrida 0.325),
+  tiene **MARCA (M)** para poner la pose en cero y dejar la marca en el log, y botones de rueda para la prueba de
+  giros (recta del modelo +1.2, topes, la receta del pasillo, arco).
+- `odometria_log.py`: los tramos entre MARCAs de un log del teleop, lo que da la tiza (seis distancias), la comparación
+  de las dos y lo que ajusta (recta del `0x184`, escala de la marcha, `e`). `--objetivo` dice dónde deberían caer las
+  marcas antes de mover el equipo. `--prueba` se prueba con controles. Protocolo: `campo/giros_odometria/LEEME.md`.

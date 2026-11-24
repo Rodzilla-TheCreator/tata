@@ -8,6 +8,10 @@
   J / L   desplazador IZQUIERDA / DERECHA         I / K   puntas de las uñas ARRIBA / ABAJO
   H       pito
   Todo menos A/D vuelve a 0 al soltar. ESPACIO = PARAR (todo a 0, timón quieto). Sin foco = todo a 0.
+  M       MARCA (24-nov): deja «>>> MARCA n» en el log y pone en cero la pose de la odometría en vivo (el giro, el
+          avance y cuánto se movió el medio del eje de carga desde la marca: percepcion/odometria.py, motriz corrida)
+  Botones de rueda: la recta del modelo (+1.2), tope corto, tope largo y la receta del giro (analisis/giro_opciones.py).
+  Para la prueba de giros con tiza: campo/giros_odometria/LEEME.md.
   NO reemplaza al pedal: levantar el pie es el paro.
   Arranque: llave en OFF → «ARMAR» → subir la llave → esperar «OPERACIONAL».
   Manda la línea de estado cada 50 ms: si la ventana se cae, el ESP pone todo a cero en 200 ms.
@@ -23,6 +27,9 @@ import tkinter as tk
 from tkinter import messagebox
 
 import serial
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "percepcion"))
+from odometria import CENTRO_184, GRADOS_184, LADO_MOTRIZ, avanzar_rueda   # noqa: E402
 
 PUERTO = sys.argv[1] if len(sys.argv) > 1 else "COM6"
 ANG_MIN, ANG_MAX = -100.0, 78.0
@@ -117,6 +124,16 @@ class Ventana:
         tk.Button(g, text="odometría a 0", command=lambda: mandar("Z"), takefocus=0).pack(side="left", padx=8)
         self.lOdo = tk.Label(g, text="distancia —", fg="#4fc3f7", bg="#1e2228", font=("Consolas", 16, "bold"))
         self.lOdo.pack(side="left", padx=8)
+        # 24-nov: la rueda a los ángulos de las pruebas de giro (en unidades del 0x184 / 100: el centro es +1.2)
+        h = tk.Frame(r, bg="#1e2228"); h.pack(fill="x", padx=10, pady=2)
+        tk.Label(h, text="rueda a:", fg="#9aa4b1", bg="#1e2228").pack(side="left")
+        for txt, a in (("+1.2 recta del modelo", 1.2), ("+78 tope corto", 78.0), ("−100 tope largo", -100.0), ("receta −95.4 (δ −96.6)", -95.4),
+                       ("receta +76.1 (δ +74.9)", 76.1), ("+30 arco", 30.0)):
+            tk.Button(h, text=txt, command=lambda a=a: self.ponerObj(a), takefocus=0).pack(side="left", padx=3)
+        tk.Button(h, text="MARCA (M)", bg="#6a1b9a", fg="white", command=self.marca, takefocus=0).pack(side="left", padx=12)
+        self.lPose = tk.Label(r, text="desde la marca —", fg="#ce93d8", bg="#1e2228", font=("Consolas", 14, "bold"))
+        self.lPose.pack(pady=2)
+        self.pose, self.dist_ant, self.ang_ant, self.n_marca = (0.0, 0.0, 0.0), None, None, 0
 
         tk.Button(r, text="PARAR  (espacio) — el paro de verdad es levantar el pie", font=("Segoe UI", 12, "bold"),
                   bg="#c62828", fg="white", command=self.parar, takefocus=0).pack(fill="x", padx=10, pady=6)
@@ -130,6 +147,8 @@ class Ventana:
         r.bind("<KeyPress>", self.abajo)
         r.bind("<KeyRelease>", self.arriba)
         r.bind("<space>", lambda e: self.parar())
+        r.bind("<m>", lambda e: self.marca())
+        r.bind("<M>", lambda e: self.marca())
         r.bind("<FocusOut>", lambda e: self.teclas.clear() if e.widget is r else None)
         r.protocol("WM_DELETE_WINDOW", self.cerrar)
         r.focus_force()
@@ -174,6 +193,33 @@ class Ventana:
             self.escribir("sin 0x184: no se puede girar la rueda")
             return
         self.obj = max(ANG_MIN, min(ANG_MAX, a))
+
+    def marca(self):
+        self.n_marca += 1
+        log.write(">>> %s MARCA %d\n" % (dt.datetime.now().strftime("%H:%M:%S.%f")[:-3], self.n_marca))
+        self.pose = (0.0, 0.0, 0.0)
+        self.escribir("MARCA %d: odometría de la marca en cero" % self.n_marca)
+
+    def integrar(self, kv):
+        """La pose desde la última marca, con lo que manda el ESP: dist (m de rueda, integrado a 50 Hz en el ESP) y
+        ang (0x184 / 100). Misma cinemática que percepcion/odometria.py (entre ejes 1.688, motriz corrida 0.325)."""
+        try:
+            dist, ang = float(kv["dist"]), float(kv["ang"])
+        except (KeyError, ValueError):
+            return
+        if kv.get("hz184", "0") == "0":
+            return
+        if self.dist_ant is not None:
+            ds = dist - self.dist_ant
+            if abs(ds) < 0.5:                                   # «odometría a 0» en el ESP: se salta
+                a = 0.5 * (ang + self.ang_ant)
+                d = LADO_MOTRIZ * math.radians(a - CENTRO_184 * GRADOS_184)
+                self.pose = avanzar_rueda(self.pose, ds, d, 1.0)
+        self.dist_ant, self.ang_ant = dist, ang
+        x, y, th = self.pose
+        self.lPose.configure(text="desde la MARCA %d:  giro %+6.1f°   avance %+.3f m   de lado %+.3f m   "
+                                  "medio del eje de carga movido %.1f cm" % (self.n_marca, math.degrees(th), x, y,
+                                                                             100 * math.hypot(x, y)))
 
     def parar(self):
         self.teclas.clear()
@@ -247,6 +293,7 @@ class Ventana:
                 self.escribir(l)
                 continue
             kv = dict(x.split("=", 1) for x in l[2:].split() if "=" in x)
+            self.integrar(kv)
             try:
                 self.ang = float(kv["ang"]) if kv.get("hz184", "0") != "0" else None
             except (KeyError, ValueError):
