@@ -602,3 +602,31 @@ La batería larga suma 0.1–0.2 m y a lo sumo 1 s por tramo. No decide nada.
 2. Que el culo sea el de la ficha: una foto desde arriba con cinta.
 3. Culo → rueda motriz y entre ejes, por la batería. Pesa en los tiempos, no en si gira.
 4. Que la rueda llegue a 90°.
+
+## 24-nov · Pendiente v4: la rueda motriz NO está en el centro (y los topes no son ±90°)
+
+**Decía (v1–v3b):** bicicleta con la rueda motriz **sobre el eje del equipo**, entre ejes 1.562, topes ±90°: con 90°
+el equipo rota sobre el **punto medio del eje de carga**. **Es (medido el 23-nov):** entre ejes **1.69**, la motriz
+**corrida ~0.325 m** hacia el lado del timón (supuesto: la rueda de apoyo está a la misma distancia del eje) y topes
+**−104° / +79°**. **Qué lo tumbó:** las medidas de maje en el equipo funcional (`campo/2026-11-23/resultados.md`).
+
+Con la rueda corrida `e`, el centro de giro cae sobre la línea del eje de carga en `y = e + L / tan δ`:
+
+| Rueda | Centro de giro (desde el medio del eje) | Radio que barre el culo | vs v3 |
+|---|---|---|---|
+| modelo v3: centrada, 90° | 0 | 1.929 | — |
+| corrida 0.325, a 90° | +0.325 | 2.024 | **+9.5 cm** |
+| **tope largo, 104°** | **−0.096** | **1.949** | **+2 cm** |
+| tope corto, 79° | +0.653 | 2.171 | **+24 cm** |
+
+(`planificador_rutas.silueta` v3b con uñas; igual vacío y cargado: lo que barre es el culo.)
+
+- **Para rotar sobre el medio del eje hace falta δ = 90° + atan(e/L) = 100.9°.** El tope largo (104°) lo alcanza. **Lectura
+  (hipótesis): el tope asimétrico existe justamente para compensar la rueda corrida.** Hacia ese lado el giro de v3 se
+  mantiene con ~2 cm menos de margen; hacia el otro (79°) **no rota en el lugar**: el culo barre 24 cm más.
+- **Consecuencia:** el giro a la bahía probablemente tiene **un sentido preferido** (como la asimetría a/b de v2), y
+  el planificador tiene que saberlo. Las rutas v3b y la simulación del 09-nov suponen giros simétricos.
+- **Para cerrarlo:** (1) en el equipo, la rueda en el tope largo y avanzar despacio: si las dos ruedas de carga ruedan
+  igual y en sentido contrario, rota sobre el medio (tiza); (2) medir `e` con plomada (centro de la motriz ↔ eje del
+  equipo) y de qué lado está; (3) v4 del planificador: `step()` con `e`, entre ejes 1.688 y topes asimétricos, y rehacer
+  las rutas. `percepcion/odometria.py` y `ekf.py` también necesitan `e` y 1.688.
