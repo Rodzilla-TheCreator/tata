@@ -375,3 +375,22 @@ scroll). Los bytes que cambiaron hace < 1 s salen en invertido; columna «hace»
 marca, `f` filtra a dirección (184/5/6, 284/5/6, 704/5/6, 204/5/6, 304/5/6), `r` marca como ruido lo
 que cambió en los últimos 3 s (`R` limpia), `q` sale. Log crudo a `logs/direccion_<fecha>.log`.
 `py visor_can.py --log <archivo>` reproduce un log grabado. Con él salió la dirección (`docs/21`).
+
+## 26-nov · La placa aislada SOLDADA, loopback contra el TJA viejo (`loopback_dos/`)
+
+Un solo ESP, el CAN movido de pines: la placa aislada en 22/21 (sin tocar) y el TJA viejo en 17/16 (RX por 1k/2k),
+CANH↔CANH, CANL↔CANL, GND_bus puenteado a la GND del ESP solo para la prueba. NO_ACK, 20 tramas por camino.
+
+| Camino | Resultado |
+|---|---|
+| R1 · aislado → aislado | **20/20**, sin errores |
+| **A · aislado → bus → TJA viejo** | **20/20**, sin errores (la primera corrida dio 0: CANH mal conectado) |
+| R2 · viejo → viejo | 0, 135 errores RX |
+| B · viejo → bus → aislado | 0, 128 errores TX |
+
+- **La placa soldada transmite al bus y otro transceptor lo lee.** Con eso queda probada como reemplazo de la de
+  protoboard (que pasó en el equipo el 21-nov).
+- **El TJA viejo recibe bien y transmite mal:** A pasa con él escuchando; R2 y B, que necesitan que él transmita,
+  no. Calza con el 14-oct («el viejo queda solo para escuchar»). B no se pudo probar por eso.
+- Control (soltar CANH con la prueba corriendo → A a 0): pendiente al escribir esto.
+
