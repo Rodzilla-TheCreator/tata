@@ -384,7 +384,7 @@ CANH↔CANH, CANL↔CANL, GND_bus puenteado a la GND del ESP solo para la prueba
 | Camino | Resultado |
 |---|---|
 | R1 · aislado → aislado | **20/20**, sin errores |
-| **A · aislado → bus → TJA viejo** | **20/20**, sin errores (la primera corrida dio 0: CANH mal conectado) |
+| **A · aislado → bus → TJA viejo** | **20/20**, sin errores; **0 con el CANH desconectado** (control) |
 | R2 · viejo → viejo | 0, 135 errores RX |
 | B · viejo → bus → aislado | 0, 128 errores TX |
 
@@ -392,5 +392,6 @@ CANH↔CANH, CANL↔CANL, GND_bus puenteado a la GND del ESP solo para la prueba
   protoboard (que pasó en el equipo el 21-nov).
 - **El TJA viejo recibe bien y transmite mal:** A pasa con él escuchando; R2 y B, que necesitan que él transmita,
   no. Calza con el 14-oct («el viejo queda solo para escuchar»). B no se pudo probar por eso.
-- Control (soltar CANH con la prueba corriendo → A a 0): pendiente al escribir esto.
+- **Control hecho (en orden inverso, maje): en la primera corrida el CANH no estaba conectado → A = 0; conectado → A
+  = 20/20.** La prueba puede fallar y falló cuando debía: A mide el bus de verdad.
 
