@@ -140,3 +140,11 @@ saber las vueltas de tope a tope. El CAN no transmite nada.
 - Hardware: el del timón (GPIO25/26 → LM358 → nodo 4) + la cadena CAN aislada al DB9 (22/21). GND ESP = amarillo.
 - **Antes de usarlo en el equipo:** rueda motriz en el aire o el equipo parado y despejado; primer objetivo chico
   (`+20`), y mirar que vaya para el lado correcto.
+
+## Placa soldada (26-nov) — `banco_timon.py`
+
+Prueba de banco de la placa soldada con el ESP (`emulador_timon.ino`) y el Arduino leyendo
+(`caracterizador_timon.ino`, A0 = verde, A1 = café): `python banco_timon.py COM_ESP COM_ARDUINO --vref <5V real del Arduino>`.
+Hace 12 ángulos fijos (esperado contra medido), saca la recta por canal (y los k/o nuevos si la placa cambió la
+ganancia) y un barrido de 2 vueltas mirando el radio. Antes de dar voltaje: pruebas de multímetro (cortos 8↔4,
+Rf ≈ 5.1k, Rg ≈ 10k, R serie ≈ 100 Ω, zener en modo diodo) y conectar el ESP antes que los +11 V.
