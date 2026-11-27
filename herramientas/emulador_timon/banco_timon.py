@@ -15,8 +15,13 @@ Solo banco: nada de esto va al montacargas.
 import argparse, math, sys, threading, time
 import serial
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 VO, VA = 2.47, 1.98                 # sensor real (24-oct)
-K_OLD = {"verde": (1.381, 0.131), "cafe": (1.386, 0.115)}   # lo que tiene emulador_timon.ino
+K_OLD = {"verde": (1.380, 0.093), "cafe": (1.374, 0.123)}   # lo que tiene emulador_timon.ino (27-nov)
 
 
 def esperado(ang):
@@ -120,6 +125,7 @@ def main():
 
     # ---- 3) barrido ----
     print("\n 3) BARRIDO 2 vueltas a ~150 °/s ...")
+    P(0); time.sleep(0.5)          # sin esto, el salto 330->0 entra al barrido y da un radio falso (27-nov: 1.71)
     t = time.time(); ang = 0.0
     while ang <= 720:
         P(ang); ang += 3; time.sleep(0.02)

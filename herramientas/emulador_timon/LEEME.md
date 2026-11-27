@@ -148,3 +148,10 @@ Prueba de banco de la placa soldada con el ESP (`emulador_timon.ino`) y el Ardui
 Hace 12 ángulos fijos (esperado contra medido), saca la recta por canal (y los k/o nuevos si la placa cambió la
 ganancia) y un barrido de 2 vueltas mirando el radio. Antes de dar voltaje: pruebas de multímetro (cortos 8↔4,
 Rf ≈ 5.1k, Rg ≈ 10k, R serie ≈ 100 Ω, zener en modo diodo) y conectar el ESP antes que los +11 V.
+
+> **PASA 27-nov (placa soldada).** Con los k/o del protoboard el verde salía 0.04 V abajo, parejo (offset, no
+> ganancia). Calibración nueva **verde k=1.380 o=0.093 · café k=1.374 o=0.123**, ya puesta en
+> `emulador_timon.ino`, `timon_lazo.ino` y `teleop_wasd.ino`. Resultado: error máx 0.023 V en 12 ángulos, radio
+> 1.96–1.99 quieto, 1.94–2.03 barriendo a 150 °/s (sensor real 1.95–1.98). Logs en `logs/banco_soldado_2026-11-27*.txt`.
+> Decía: el barrido daba radio 1.71 → es: artefacto del script (el salto 330°→0° caía entre la lectura de A0 y la
+> de A1); corregido. Referencia = el 5 V del Arduino asumido 5.000 (no medido).

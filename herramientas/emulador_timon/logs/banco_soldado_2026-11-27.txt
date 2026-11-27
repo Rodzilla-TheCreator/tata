@@ -1,0 +1,28 @@
+
+ 1) ÁNGULOS FIJOS            verde                      café            radio
+   ang    esperado  medido     Δ      esperado  medido     Δ
+     0     4.450    4.407   -0.043      2.470    2.472   +0.002    1.937
+    30     4.185    4.140   -0.045      3.460    3.440   -0.020    1.931
+    60     3.460    3.420   -0.041      4.185    4.154   -0.031    1.933
+    90     2.470    2.440   -0.030      4.450    4.416   -0.034    1.946
+   120     1.480    1.422   -0.058      4.185    4.154   -0.030    1.984
+   150     0.755    0.723   -0.032      3.460    3.440   -0.020    1.998
+   180     0.490    0.455   -0.036      2.470    2.473   +0.003    2.016
+   210     0.755    0.724   -0.032      1.480    1.457   -0.023    2.019
+   240     1.480    1.421   -0.059      0.755    0.763   +0.008    2.003
+   270     2.470    2.441   -0.029      0.490    0.497   +0.007    1.973
+   300     3.460    3.419   -0.041      0.755    0.764   +0.009    1.952
+   330     4.185    4.140   -0.044      1.480    1.458   -0.022    1.953
+
+ 2) RECTA POR CANAL (medido = a·esperado + b)
+   verde  a=0.999  b=-0.038  residuo máx 0.019 V   ->  k=1.380  o=0.093
+   cafe   a=0.991  b=+0.009  residuo máx 0.019 V   ->  k=1.374  o=0.123
+
+ 3) BARRIDO 2 vueltas a ~150 °/s ...
+   131 muestras · radio min 1.910  max 2.055  (sensor real 1.95–1.98)
+
+ VEREDICTO
+   LINEAL pero descalibrada (error máx 0.059 V). Cambiar en emulador_timon.ino, timon_lazo.ino y teleop_wasd.ino:
+     const float kV = 1.380, oV = 0.093;
+     const float kC = 1.374, oC = 0.123;
+   y volver a correr esta prueba.

@@ -43,7 +43,7 @@ int mando = 0;
 
 // ================= timón (timon_lazo) =================
 const float Vo = 2.47, Va = 1.98;
-const float kV = 1.381, oV = 0.131, kC = 1.386, oC = 0.115;
+const float kV = 1.380, oV = 0.093, kC = 1.374, oC = 0.123;  // placa soldada, banco 27-nov (protoboard: 1.381/0.131, 1.386/0.115)
 const int DAC_V = 25, DAC_C = 26;
 const uint32_t ID_ANG = 0x184;
 // ---- odometría (23-nov): 0x188 b2-b3 int16 x 7.30e-4 = m/s de la rueda motriz (+ = hacia las uñas) ----

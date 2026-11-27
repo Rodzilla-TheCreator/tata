@@ -37,8 +37,8 @@
 
 // ---- Timón: calibración del 26-oct (igual que emulador_timon.ino) ----
 const float Vo = 2.47, Va = 1.98;
-const float kV = 1.381, oV = 0.131;  // verde (GPIO25)
-const float kC = 1.386, oC = 0.115;  // café  (GPIO26)
+const float kV = 1.380, oV = 0.093;  // verde (GPIO25) · placa soldada, banco 27-nov
+const float kC = 1.374, oC = 0.123;  // café  (GPIO26) · placa soldada, banco 27-nov
 const int DAC_V = 25, DAC_C = 26;
 
 // ---- CAN ----

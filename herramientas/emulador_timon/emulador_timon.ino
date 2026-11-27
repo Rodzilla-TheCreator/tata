@@ -26,8 +26,8 @@
 const float Vo = 2.47, Va = 1.98;   // objetivo (sensor real, 24-oct)
 
 // CALIBRACION POR CANAL (medida con el caracterizador, 26-oct): salida = k*Vdac + o
-const float kV = 1.381, oV = 0.131; // verde (GPIO25)
-const float kC = 1.386, oC = 0.115; // cafe  (GPIO26)
+const float kV = 1.380, oV = 0.093; // verde (GPIO25) · placa soldada, banco 27-nov (protoboard 26-oct: 1.381/0.131)
+const float kC = 1.374, oC = 0.123; // cafe  (GPIO26) · placa soldada, banco 27-nov (protoboard 26-oct: 1.386/0.115)
 
 const int DAC_V = 25, DAC_C = 26;
 
